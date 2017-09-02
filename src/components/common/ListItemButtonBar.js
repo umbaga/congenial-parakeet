@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DndButton from './DndButton';
+import { ButtonGroup } from 'react-bootstrap';
 
 class ListItemButtonBar extends React.Component {
     constructor(props, context) {
@@ -23,8 +24,10 @@ class ListItemButtonBar extends React.Component {
         return (
             <div className={wrapperClass}>
                 <div className="pull-right">
-                    <DndButton onClick={this._onEdit} buttonType="edit" />
-                    <DndButton onClick={this._onDelete} buttonType="delete" />
+                    <ButtonGroup>
+                        <DndButton onClick={this._onEdit} buttonType="edit" />
+                        <DndButton onClick={this._onDelete} buttonType="delete" />
+                    </ButtonGroup>
                 </div>
             </div>
         );

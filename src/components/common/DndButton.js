@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 
 const DndButton = ({onClick, buttonType}) => {
-    let bootstrapStyle = 'btn btn-';
+    let bootstrapStyle = '';
     let fontawesomeStyle = 'fa fa-';
     let extraText = '';
     switch(buttonType.toLowerCase()) {
@@ -40,12 +41,15 @@ const DndButton = ({onClick, buttonType}) => {
             bootstrapStyle += 'primary';
     }
     return (
-        <button onClick={onClick} className={bootstrapStyle}>
+        <Button bsStyle={bootstrapStyle} onClick={onClick}>
             <i className={fontawesomeStyle}></i>{extraText}
-        </button>
+        </Button>
     );
 };
-
+/*
+        <button onClick={onClick} className={bootstrapStyle}>
+            <i className={fontawesomeStyle}></i>{extraText}
+        </button>*/
 DndButton.propTypes = {
     buttonType: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired

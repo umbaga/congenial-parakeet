@@ -9,7 +9,7 @@ import * as actions from '../../../actions/admin/itemtypeActions';
 import util from '../../../util/util';
 import DndButton from '../../common/DndButton';
 
-class ItemtypesPage extends React.Component {
+class ItemtypeListPage extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.onCreate = this.onCreate.bind(this);
@@ -38,7 +38,7 @@ class ItemtypesPage extends React.Component {
                             </tr>
                             <tr>
                                 <th></th>
-                                <th>isPicklist</th>
+                                <th className="text-center">isPicklist</th>
                                 <th>
                                     <div className="pull-right">
                                         <DndButton onClick={this.onCreate} buttonType="create" />
@@ -54,7 +54,7 @@ class ItemtypesPage extends React.Component {
     }
 }
 
-ItemtypesPage.propTypes = {
+ItemtypeListPage.propTypes = {
     itemtypes: PropTypes.array.isRequired,
     children: PropTypes.object,
     actions: PropTypes.object
@@ -76,4 +76,4 @@ function mapDispatchToProps(dispatch) {
     return {actions: bindActionCreators(actions, dispatch)};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemtypesPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ItemtypeListPage);

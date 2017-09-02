@@ -86,7 +86,7 @@ class ItemtypeEntry extends React.Component {
     render() {
         return (
             <div>
-                <h1>itemtype data entry</h1>
+                <h3>{this.state.isCreate ? 'Create New' : 'Edit Existing'} Itemtype</h3>
                 <ItemtypeForm 
                     itemtype={this.state.itemtype} 
                     onSave={this.saveAndBackItemtype} 
