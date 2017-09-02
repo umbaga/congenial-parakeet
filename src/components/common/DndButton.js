@@ -36,6 +36,10 @@ const DndButton = ({onClick, buttonType}) => {
             fontawesomeStyle += 'file-text-o';
             bootstrapStyle += 'primary';
             break;
+        case 'back':
+            fontawesomeStyle += 'angle-left';
+            bootstrapStyle += 'default';
+            break;
         default:
             fontawesomeStyle += 'cog';
             bootstrapStyle += 'primary';

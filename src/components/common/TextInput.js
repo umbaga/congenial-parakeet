@@ -2,15 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const TextInput = ({name, label, onChange, placeholder, value, error, type="text"}) => {
-    let wrapperClass = 'form-group';
+    let wrapperClass = 'form-group form-horizontal row';
     if (error && error.length > 0) {
         wrapperClass += " " + 'has-error';
     }
 
     return (
         <div className={wrapperClass}>
-            <label htmlFor={name}>{label}</label>
-            <div className="field">
+            <div className="align-middle">
+            <label htmlFor={name} className="col-sm-2 control-label">{label}</label>
+                </div>
+            <div className="field col-sm-10">
                 <input
                     type={type}
                     name={name}

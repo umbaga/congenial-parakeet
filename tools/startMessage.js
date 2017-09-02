@@ -1,3 +1,5 @@
 import colors from 'colors';
 
-//console.log("starting app in dev mode...".green);
+/*eslint-disable no-console */
+
+console.log("starting app in dev mode...".green);

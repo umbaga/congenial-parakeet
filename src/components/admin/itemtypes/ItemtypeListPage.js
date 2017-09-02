@@ -31,6 +31,10 @@ class ItemtypeListPage extends React.Component {
         }
     }
 
+    backToAdminHome(event) {
+        browserHistory.push('/Home');
+    }
+    
     onCreate(event) {
         this.open();
         this.setState({isCreate: true, selectedId: 0});
@@ -58,7 +62,9 @@ class ItemtypeListPage extends React.Component {
                     <table className="table table-sm table-striped table-hover">
                         <thead>
                             <tr>
-                                <th colSpan="3"><h3>Itemtypes</h3></th>
+                                <th colSpan="3">
+                                    <h2><span><DndButton onClick={this.backToAdminHome} buttonType="back" /></span>Itemtypes</h2>
+                                </th>
                             </tr>
                             <tr>
                                 <th></th>
@@ -89,7 +95,6 @@ class ItemtypeListPage extends React.Component {
                             selectedId={this.state.selectedId}
                             />
                     </Modal.Body>
-                    <Modal.Footer></Modal.Footer>
                 </Modal>
             </div>
         );

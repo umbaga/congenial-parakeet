@@ -1,0 +1,14 @@
+
+.table-striped>tbody>tr:nth-child(odd)>td,
+tr.found{
+    background-color:#fffff0;
+}.table-striped>tbody>tr:nth-child(even)>td,
+tr.found{
+    background-color:#ffffd6;
+}
+.table-hover tbody tr:hover,
+            .table-hover tbody tr:hover td,
+            .table-hover tbody tr:hover th{
+                background:#fbfbae !important;
+            }
+

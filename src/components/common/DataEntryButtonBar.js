@@ -4,7 +4,7 @@ import DndButton from './DndButton';
 import { ButtonGroup } from 'react-bootstrap';
 
 const DataEntryButtonBar = ({isCreate, onCancel, onSave, onSaveNew, onDelete, saving}) => {
-    let wrapperClass = 'form-group pull-right';
+    let wrapperClass = 'form-group';
     let deleteButton = null;
     if(!isCreate) {
         deleteButton = <DndButton onClick={onDelete} buttonType="delete" />;
@@ -12,12 +12,15 @@ const DataEntryButtonBar = ({isCreate, onCancel, onSave, onSaveNew, onDelete, sa
 
     return (
         <div className={wrapperClass}>
-            <ButtonGroup>
-                {deleteButton}
-                <DndButton onClick={onCancel} buttonType="cancel" />
-                <DndButton onClick={onSave} buttonType="save" />
-                <DndButton onClick={onSaveNew} buttonType="savenew" />
-            </ButtonGroup>
+            <div className="pull-right">
+                <ButtonGroup>
+                    {deleteButton}
+                    <DndButton onClick={onCancel} buttonType="cancel" />
+                    <DndButton onClick={onSave} buttonType="save" />
+                    <DndButton onClick={onSaveNew} buttonType="savenew" />
+                </ButtonGroup>
+            </div>
+            <div>&nbsp;</div>
         </div>
     );
 };

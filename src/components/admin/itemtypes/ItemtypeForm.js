@@ -20,7 +20,7 @@ class ItemtypeForm extends React.Component {
                 <form>
                     <TextInput
                         name="name"
-                        label="name"
+                        label="Name"
                         value={this.props.itemtype.name}
                         onChange={this.props.onChange} />
                     <CheckBox

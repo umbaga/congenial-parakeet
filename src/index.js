@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';
 import routes from './routes';
 import {loadItemtypes} from './actions/admin/itemtypeActions';
+import './styles/my-css.css';
 
 const store = configureStore();
 
