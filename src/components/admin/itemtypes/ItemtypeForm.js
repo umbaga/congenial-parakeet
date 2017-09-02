@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextInput from '../../common/TextInput';
-import CheckBox from '../../common/CheckBox';
-import DataEntryButtonBar from '../../common/DataEntryButtonBar';
+import DndDataEntryButtonBar from '../../common/DndDataEntryButtonBar';
+import DndInput from '../../common/DndInput';
+import util from '../../../util/util';
 
 class ItemtypeForm extends React.Component {
     constructor(props) {
@@ -18,17 +18,19 @@ class ItemtypeForm extends React.Component {
         return (
             <div>
                 <form>
-                    <TextInput
+                    <DndInput
                         name="name"
                         label="Name"
+                        dataType={util.dataTypes.string.STRING}
                         value={this.props.itemtype.name}
                         onChange={this.props.onChange} />
-                    <CheckBox
+                    <DndInput
                         name="isPicklist"
                         label="Is Picklist"
+                        dataType={util.dataTypes.bool.YES_NO}
                         checked={this.props.itemtype.isPicklist}
                         onChange={this.props.onChange} />
-                    <DataEntryButtonBar
+                    <DndDataEntryButtonBar
                         onSave={this.props.onSave} 
                         onSaveNew={this.props.onSaveNew}
                         onCancel={this.props.onCancel}

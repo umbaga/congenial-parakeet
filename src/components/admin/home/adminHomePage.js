@@ -8,6 +8,7 @@ class AdminHomePage extends React.Component {
                 <h1>Admin</h1>
                 <p>Admin Categories Here:</p>
                 <ul>
+                    <li><Link to="admin/testbed">TESTBED</Link></li>
                     <li><Link to="admin/Itemtypes">Types</Link></li>
                     <li><Link to="admin/Picklists">Picklists</Link></li>
                 </ul>

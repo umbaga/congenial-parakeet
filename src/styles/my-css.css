@@ -10,4 +10,7 @@ tr.found{
 .table-hover tbody tr:hover th{
     background:#fbfbae !important;
 }
-
+.move-left {
+	width: 15px;
+    box-shadow: none;
+  }

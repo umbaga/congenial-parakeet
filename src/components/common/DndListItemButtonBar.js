@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import DndButton from './DndButton';
 import { ButtonGroup } from 'react-bootstrap';
 
-class ListItemButtonBar extends React.Component {
+class DndListItemButtonBar extends React.Component {
     constructor(props, context) {
         super(props, context);
         this._onEdit = this._onEdit.bind(this);
@@ -34,10 +34,10 @@ class ListItemButtonBar extends React.Component {
     }
 }
 
-ListItemButtonBar.propTypes = {
+DndListItemButtonBar.propTypes = {
     listItem: PropTypes.object.isRequired,
     onEdit: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired
 };
 
-export default ListItemButtonBar;
+export default DndListItemButtonBar;

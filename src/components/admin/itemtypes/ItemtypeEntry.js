@@ -49,7 +49,6 @@ class ItemtypeEntry extends React.Component {
 
     postAction() {
         this.props.closeModal();
-        //browserHistory.push('/admin/itemtypes');
     }
 
     saveItemtype(event) {

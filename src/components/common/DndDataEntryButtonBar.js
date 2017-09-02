@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import DndButton from './DndButton';
 import { ButtonGroup } from 'react-bootstrap';
 
-const DataEntryButtonBar = ({isCreate, onCancel, onSave, onSaveNew, onDelete, saving}) => {
+const DndDataEntryButtonBar = ({isCreate, onCancel, onSave, onSaveNew, onDelete, saving}) => {
     let wrapperClass = 'form-group';
     let deleteButton = null;
     if(!isCreate) {
@@ -25,7 +25,7 @@ const DataEntryButtonBar = ({isCreate, onCancel, onSave, onSaveNew, onDelete, sa
     );
 };
 
-DataEntryButtonBar.propTypes = {
+DndDataEntryButtonBar.propTypes = {
     isCreate: PropTypes.bool.isRequired,
     onCancel: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
@@ -34,4 +34,4 @@ DataEntryButtonBar.propTypes = {
     saving: PropTypes.bool
 };
 
-export default DataEntryButtonBar;
+export default DndDataEntryButtonBar;

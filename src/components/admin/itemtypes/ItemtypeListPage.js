@@ -4,7 +4,6 @@ import {Link, browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ItemtypeList from './ItemtypeList';
-//import NewItemtypePage from './NewItemtypePage';
 import ItemtypeEntry from './ItemtypeEntry';
 import * as actions from '../../../actions/admin/itemtypeActions';
 import util from '../../../util/util';
@@ -38,7 +37,6 @@ class ItemtypeListPage extends React.Component {
     onCreate(event) {
         this.open();
         this.setState({isCreate: true, selectedId: 0});
-        //browserHistory.push('/admin/Itemtype/0');
     }
     
     close() {
@@ -57,7 +55,6 @@ class ItemtypeListPage extends React.Component {
         const itemtypes = this.props.itemtypes;
         return (
             <div className="col-md-12">
-                <div>{this.props.children}</div>
                 <div>
                     <table className="table table-sm table-striped table-hover">
                         <thead>
