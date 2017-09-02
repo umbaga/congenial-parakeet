@@ -5,8 +5,8 @@ class AdminHomePage extends React.Component {
     render() {
         return (
             <div className="jumbotron">
-                <h1>Admin-----</h1>
-                <p>Admin Categories Here:bvx--xcfgg</p>
+                <h1>Admin</h1>
+                <p>Admin Categories Here:</p>
                 <ul>
                     <li><Link to="admin/Itemtypes">Types</Link></li>
                     <li><Link to="admin/Picklists">Picklists</Link></li>

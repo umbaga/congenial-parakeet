@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Link, browserHistory} from 'react-router';
-import ItemtypePage from './ItemtypePage';
 import util from '../../../util/util';
 import ListItemButtonBar from '../../common/ListItemButtonBar';
 import * as itemtypeActions from '../../../actions/admin/itemtypeActions';
@@ -11,6 +10,9 @@ import * as itemtypeActions from '../../../actions/admin/itemtypeActions';
 class ItemtypeListItem extends React.Component {
     constructor(props, context) {
         super(props, context);
+        this.state = {
+            selectedId: this.props.selectedId
+        };
         this.editItemtype = this.editItemtype.bind(this);
         this.deleteItemType = this.deleteItemType.bind(this);
     }
@@ -19,7 +21,10 @@ class ItemtypeListItem extends React.Component {
     }
     editItemtype(itemtype) {
         event.preventDefault();
-        browserHistory.push('/admin/Itemtype/' + this.props.itemtype.id);
+        this.props.openModal();
+        this.props.changeSelectedId(this.props.itemtype.id);
+        this.setState({selectedId: this.props.itemtype.id});
+        //browserHistory.push('/admin/Itemtype/' + this.props.itemtype.id);
     }
     deleteItemType(itemtype) {
         event.preventDefault();
@@ -48,8 +53,11 @@ function mapStateToProps(state, ownProps) {
 }
 
 ItemtypeListItem.propTypes = {
-itemtype: PropTypes.object.isRequired,
-actions: PropTypes.object
+    itemtype: PropTypes.object.isRequired,
+    actions: PropTypes.object,
+    openModal: PropTypes.func.isRequired,
+    selectedId: PropTypes.number.isRequired,
+    changeSelectedId: PropTypes.func.isRequired
 };
 
 function mapDispatchToProps(dispatch) {

@@ -4,15 +4,25 @@ import {Link, browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ItemtypeList from './ItemtypeList';
-import NewItemtypePage from './NewItemtypePage';
+//import NewItemtypePage from './NewItemtypePage';
+import ItemtypeEntry from './ItemtypeEntry';
 import * as actions from '../../../actions/admin/itemtypeActions';
 import util from '../../../util/util';
 import DndButton from '../../common/DndButton';
+import { Modal } from 'react-bootstrap';
 
 class ItemtypeListPage extends React.Component {
     constructor(props, context) {
         super(props, context);
+        this.state = {
+            showModal: false,
+            isCreate: false,
+            selectedId: 0
+        };
         this.onCreate = this.onCreate.bind(this);
+        this.close = this.close.bind(this);
+        this.open = this.open.bind(this);
+        this.changeSelectedId = this.changeSelectedId.bind(this);
     }
 
     componentWillMount() {
@@ -22,9 +32,23 @@ class ItemtypeListPage extends React.Component {
     }
 
     onCreate(event) {
-        browserHistory.push('/admin/Itemtype/0');
+        this.open();
+        this.setState({isCreate: true, selectedId: 0});
+        //browserHistory.push('/admin/Itemtype/0');
     }
-
+    
+    close() {
+        this.setState({ showModal: false });
+    }
+    
+    open() {
+        this.setState({ showModal: true });
+    }
+    
+    changeSelectedId(newId) {
+        this.setState({selectedId: parseInt(newId)});
+    }
+    
     render() {
         const itemtypes = this.props.itemtypes;
         return (
@@ -46,9 +70,27 @@ class ItemtypeListPage extends React.Component {
                                 </th>
                             </tr>
                         </thead>
-                        <ItemtypeList itemtypes={itemtypes} />
+                        <ItemtypeList 
+                            itemtypes={itemtypes}
+                            openModal={this.open}
+                            selectedId={this.state.selectedId}
+                            changeSelectedId={this.changeSelectedId}
+                            />
                     </table>
                 </div>
+                
+                <Modal show={this.state.showModal} onHide={this.close}>
+                    <Modal.Header closeButton><h4>{this.state.isCreate ? 'Create' : 'Edit'} Item Type</h4></Modal.Header>
+                    <Modal.Body>
+                        <ItemtypeEntry 
+                            closeModal={this.close} 
+                            itemtypes={itemtypes}
+                            isCreate={this.state.isCreate}
+                            selectedId={this.state.selectedId}
+                            />
+                    </Modal.Body>
+                    <Modal.Footer></Modal.Footer>
+                </Modal>
             </div>
         );
     }

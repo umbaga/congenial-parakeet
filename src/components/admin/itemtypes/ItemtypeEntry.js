@@ -20,7 +20,7 @@ class ItemtypeEntry extends React.Component {
         };
         this.cancelItemtype = this.cancelItemtype.bind(this);
         this.deleteItemtype = this.deleteItemtype.bind(this);
-        this.redirect = this.redirect.bind(this);
+        this.postAction = this.postAction.bind(this);
         this.saveItemtype = this.saveItemtype.bind(this);
         this.saveAndNewItemtype = this.saveAndNewItemtype.bind(this);
         this.saveAndBackItemtype = this.saveAndBackItemtype.bind(this);
@@ -36,19 +36,20 @@ class ItemtypeEntry extends React.Component {
 
     cancelItemtype(event) {
         event.preventDefault();
-        this.redirect();
+        this.postAction();
     }
 
     deleteItemtype(event) {
         event.preventDefault();
         if(confirm('are you sure?')) {
             this.props.actions.deleteItemtype(this.state.itemtype);
-            this.redirect();
+            this.postAction();
         }
     }
 
-    redirect() {
-        browserHistory.push('/admin/itemtypes');
+    postAction() {
+        this.props.closeModal();
+        //browserHistory.push('/admin/itemtypes');
     }
 
     saveItemtype(event) {
@@ -65,7 +66,7 @@ class ItemtypeEntry extends React.Component {
 
     saveAndBackItemtype(event) {
         this.saveItemtype(event);
-        this.redirect();
+        this.postAction();
     }
 
     updateFormState(event) {
@@ -86,7 +87,6 @@ class ItemtypeEntry extends React.Component {
     render() {
         return (
             <div>
-                <h3>{this.state.isCreate ? 'Create New' : 'Edit Existing'} Itemtype</h3>
                 <ItemtypeForm 
                     itemtype={this.state.itemtype} 
                     onSave={this.saveAndBackItemtype} 
@@ -95,7 +95,6 @@ class ItemtypeEntry extends React.Component {
                     onCancel={this.cancelItemtype}
                     onDelete={this.deleteItemtype}
                     isCreate={this.state.isCreate}
-                    redirect={this.redirect}
                     saving={this.state.saving} /> 
             </div>
         );
@@ -105,7 +104,8 @@ class ItemtypeEntry extends React.Component {
 ItemtypeEntry.propTypes = {
     itemtype: PropTypes.object,
     actions: PropTypes.object,
-    isCreate: PropTypes.bool
+    isCreate: PropTypes.bool,
+    closeModal: PropTypes.func.isRequired
 };
 
 function getItemtypeById(itemtypes, id) {
@@ -118,12 +118,12 @@ function getItemtypeById(itemtypes, id) {
 }
 
 function mapStateToProps(state, ownProps) {
-    let itemtype = Object.assign({}, util.objectModel.ITEMTYPE);//{name: '', isPicklist: false};
-    const itemtypeId = ownProps.params.id;
+    let itemtype = Object.assign({}, util.objectModel.ITEMTYPE);
+    const itemtypeId = ownProps.selectedId;
     let isCreate = true;
-    if(ownProps.params.id != 0) {
+    if(ownProps.selecetdId != 0) {
         if (itemtypeId && state.itemtypes.length > 0) {
-            itemtype = getItemtypeById(state.itemtypes, ownProps.params.id);
+            itemtype = getItemtypeById(state.itemtypes, ownProps.selectedId);
             isCreate = false;
         }
     }
