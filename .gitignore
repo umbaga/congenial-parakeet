@@ -1,0 +1,4 @@
+/node_modules/
+/public/
+/tools/
+npm-debug.log

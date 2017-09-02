@@ -1,0 +1,17 @@
+export const oneQuarter = '\u00BC';
+export const oneHalf = '\u00BD';
+export const threeQuarters = '\u00BE';
+export const oneNinth = '\u2151';
+export const oneTenth = '\u2152';
+export const oneThird = '\u2153';
+export const twoThirds = '\u2154';
+export const oneFifth = '\u2155';
+export const twoFifths = '\u2156';
+export const threeFifths = '\u2157';
+export const fourFifths = '\u2158';
+export const oneSixth = '\u2159';
+export const fiveSixths = '\u215A';
+export const oneEighth = '\u215B';
+export const threeEighths = '\u215C';
+export const fiveEighths = '\u215D';
+export const sevenEighths = '\u215E';

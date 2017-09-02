@@ -1,0 +1,1 @@
+export const ITEMTYPE = {id: 0, name: '', isPicklist: false};
