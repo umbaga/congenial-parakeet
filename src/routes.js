@@ -3,8 +3,9 @@ import { Route, IndexRoute } from 'react-router';
 import App from './components/App';
 
 import AdminHomePage from './components/admin/home/adminHomePage';
-import ItemtypeListPage from './components/admin/itemtypes/ItemtypeListPage';
 import testbed from './components/admin/_testbed/testbed';
+import ItemtypeListPage from './components/admin/itemtypes/ItemtypeListPage';
+import PicklistListPage from './components/admin/picklists/PicklistListPage';
 
 import HomePage from './components/home/HomePage';
 import AboutPage from './components/about/AboutPage';
@@ -15,8 +16,9 @@ export default (
     <Route path="/" component={App}>
         <IndexRoute component={AdminHomePage} />
         <Route path="/Home" component={AdminHomePage} />
-        <Route path="/admin/itemtypes" component={ItemtypeListPage} />
         <Route path="/admin/testbed" component={testbed} />
+        <Route path="/admin/itemtypes" component={ItemtypeListPage} />
+        <Route path="/admin/picklists" component={PicklistListPage} />
         <Route path="/login" component={LogInPage} />
         <Route path="/about" component={AboutPage} />
     </Route>

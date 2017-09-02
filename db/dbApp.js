@@ -1,6 +1,7 @@
 var express = require('express');
 
 var runItemtypes = require('./routes/itemtypes');
+var runPicklists = require('./routes/picklists');
 
 var pg = require('pg');
 
@@ -20,6 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true })); app.use(bodyParser.urlencode
 var async = require('async');
 
 runItemtypes(app, pg, async, pool);
+runPicklists(app, pg, async, pool);
 
 app.listen(5000);
 
