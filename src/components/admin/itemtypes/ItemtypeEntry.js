@@ -35,6 +35,7 @@ class ItemtypeEntry extends React.Component {
     }
 
     cancelItemtype(event) {
+        console.log('testing gitKraken');
         event.preventDefault();
         this.redirect();
     }
