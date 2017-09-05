@@ -17,26 +17,12 @@ class PicklistsApi {
         });
     }
 
-    static updatePicklist(picklist) {
+    static addPicklistItem(picklist, picklistItem) {
         const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
-        const request = new Request('http://localhost:5000/api/adm/picklist/' + picklist.id, {
-            method: 'PUT',
-            headers: headers, 
-            body: JSON.stringify({picklist: picklist})
-        });
-        return fetch(request).then(response => {
-            return response.json();
-        }).catch(error => {
-            return error;
-        });
-    }
-
-    static createPicklist(picklist) {
-        const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
-        const request = new Request('http://localhost:5000/api/adm/picklist', {
+        const request = new Request('http://localhost:5000/api/adm/picklist/item', {
             method: 'POST',
             headers: headers,
-            body: JSON.stringify({picklist: picklist})
+            body: JSON.stringify({picklistItem: picklistItem})
         });
         return fetch(request).then(response => {
             return response.json();
@@ -45,9 +31,9 @@ class PicklistsApi {
         });
     }
 
-    static deletePicklist(picklist) {
+    static removePicklistItem(picklist, picklistItem) {
         const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
-        const request = new Request('http://localhost:5000/api/adm/picklist/' + picklist.id, {
+        const request = new Request('http://localhost:5000/api/adm/picklist/item/' + picklistItem.id, {
             method: 'DELETE', 
             headers: headers
         });

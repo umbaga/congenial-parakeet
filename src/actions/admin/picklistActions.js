@@ -5,20 +5,12 @@ export function loadPicklistsSuccess(picklists) {
     return {type: types.LOAD_PICKLISTS_SUCCESS, picklists};
 }
 
-export function updatePicklistSuccess(picklist) {
-    return {type: types.UPDATE_PICKLIST_SUCCESS, picklist};
+export function addPicklistItemSuccess(picklist, picklistItem) {
+    return {type: types.ADD_PICKLISTITEM_SUCCESS, picklist, picklistItem};
 }
 
-export function createPicklistSuccess(picklist) {
-    return {type: types.CREATE_PICKLIST_SUCCESS, picklist};
-}
-
-export function deletePicklistSuccess(picklist) {
-    return {type: types.DELETE_PICKLIST_SUCCESS, picklist};
-}
-
-export function upsertPicklistSuccess(picklist) {
-    return {type: types.UPSERT_PICKLIST_SUCCESS, picklist};
+export function removePicklistItemSuccess(picklist, picklistItemId) {
+    return {type: types.REMOVE_PICKLISTITEM_SUCCESS, picklist, picklistItemId};
 }
 
 export function loadPicklists() {
@@ -31,58 +23,23 @@ export function loadPicklists() {
     };
 }
 
-export function updatePicklist(picklist) {
-    return function (dispatch) {
-        return picklistApi.updatePicklist(picklist).then(responsePicklist => {
-            dispatch(updatePicklistSuccess(responsePicklist.picklist));
-        }).catch(error => {
-            throw(error);
-        });
-    };
-}
-
-export function createPicklist(picklist) {
-    return function (dispatch) {
-        return picklistApi.createPicklist(picklist).then(responsePicklist => {
-            dispatch(createPicklistSuccess(responsePicklist.picklist));
-            return responsePicklist;
-        }).catch(error => {
-            throw(error);
-        });
-    };
-}
-
-export function deletePicklist(picklist) {
+export function addPicklistItem(picklist, picklistItem) {
     return function(dispatch) {
-        return picklistApi.deletePicklist(picklist).then(() => {
-            dispatch(deletePicklistSuccess(picklist));
-            return;
+        return picklistApi.addPicklistItem(picklist, picklistItem).then(responsePicklistItem => {
+            dispatch(addPicklistItemSuccess(picklist, responsePicklistItem.picklistItem));
+            return responsePicklistItem;
         }).catch(error => {
             throw(error);
         });
     };
 }
 
-export function upsertPicklist(picklist) {
+export function removePicklistItem(picklist, picklistItem) {
     return function(dispatch) {
-        if(picklist.id && picklist.id != 0) {
-            return picklistApi.updatePicklist(picklist).then(responsePicklist => {
-                dispatch(updatePicklistSuccess(responsePicklist.picklist));
-            }).catch(error => {
-                throw(error);
-            });
-        } else {
-            return picklistApi.createPicklist(picklist).then(responsePicklist => {
-                dispatch(createPicklistSuccess(responsePicklist.picklist));
-                return responsePicklist;
-            }).catch(error => {
-                throw(error);
-            });
-        }
+        return picklistApi.removePicklistItem(picklist, picklistItem).then(responsePicklistItem => {
+            dispatch(removePicklistItemSuccess(picklist, responsePicklistItem));
+        }).catch(error => {
+            throw(error);
+        });
     };
 }
-
-
-
-
-

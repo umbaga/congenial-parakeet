@@ -11,6 +11,16 @@ tr.found{
     background:#fbfbae !important;
 }
 .move-left {
-	width: 15px;
+    width: 15px;
     box-shadow: none;
-  }
+}
+.table td.truncate {
+    max-width: 177px;
+}
+.table td.truncate span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+}

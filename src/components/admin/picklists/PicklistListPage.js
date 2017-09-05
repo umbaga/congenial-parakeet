@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import {Link, browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-//import PicklistList from './PicklistList';
-//import PicklistEntry from './PicklistEntry';
+import PicklistList from './PicklistList';
+import PicklistEntry from './PicklistEntry';
 import * as actions from '../../../actions/admin/picklistActions';
 import util from '../../../util/util';
 import DndButton from '../../common/DndButton';
@@ -53,10 +53,43 @@ class PicklistListPage extends React.Component {
     
     render() {
         const picklists = this.props.picklists;
-        console.log(this.props.picklists);
         return (
             <div className="col-md-12">
-                PICKLISTS
+                <div>
+                    <table className="table table-sm table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th colSpan="3">
+                                    <h2><span><DndButton onClick={this.backToAdminHome} buttonType="back" /></span>Picklists</h2>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>Items</th>
+                                <th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <PicklistList 
+                            picklists={picklists}
+                            openModal={this.open}
+                            selectedId={this.state.selectedId}
+                            changeSelectedId={this.changeSelectedId}
+                            />
+                    </table>
+                </div>
+                
+                <Modal show={this.state.showModal} onHide={this.close}>
+                    <Modal.Header closeButton><h4>Add/Remove Items from Picklist</h4></Modal.Header>
+                    <Modal.Body>
+                        <PicklistEntry 
+                            closeModal={this.close} 
+                            picklists={picklists}
+                            isCreate={this.state.isCreate}
+                            selectedId={this.state.selectedId}
+                            />
+                    </Modal.Body>
+                </Modal>
             </div>
         );
     }

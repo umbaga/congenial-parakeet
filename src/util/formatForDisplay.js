@@ -1,5 +1,19 @@
 import * as vulgarFractions from './vulgarFractions';
 
+let array = {};
+array.commaDelimitedList = function(val) {
+    let retVal = '';
+    if(val) {
+        for(let q = 0; q < val.length; q++) {
+            retVal += val[q].name;
+            if (q < val.length - 1) {
+                retVal += ', ';
+            }
+        }
+    }
+    return retVal;
+};
+
 let bool = {};
 bool.asCheckBlank = function(val) {
     if(val) {
@@ -36,4 +50,4 @@ number.weight = function(val) {
     return val;
 };
 
-export {bool, string, number};
+export {bool, string, number, array};

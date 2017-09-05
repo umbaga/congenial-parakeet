@@ -20,13 +20,18 @@ class DndListItemButtonBar extends React.Component {
 
     render() {
         let wrapperClass = 'form-group';
-
+        let deleteButton = null;
+        if(this.props.hideDeleteButton) {
+            deleteButton = null;
+        } else {
+            deleteButton = (<DndButton onClick={this._onDelete} buttonType="delete" />);
+        }
         return (
             <div className={wrapperClass}>
                 <div className="pull-right">
                     <ButtonGroup>
                         <DndButton onClick={this._onEdit} buttonType="edit" />
-                        <DndButton onClick={this._onDelete} buttonType="delete" />
+                        {deleteButton}
                     </ButtonGroup>
                 </div>
             </div>
@@ -37,7 +42,8 @@ class DndListItemButtonBar extends React.Component {
 DndListItemButtonBar.propTypes = {
     listItem: PropTypes.object.isRequired,
     onEdit: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired
+    onDelete: PropTypes.func.isRequired,
+    hideDeleteButton: PropTypes.bool
 };
 
 export default DndListItemButtonBar;

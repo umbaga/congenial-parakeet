@@ -40,6 +40,14 @@ const DndButton = ({onClick, buttonType}) => {
             fontawesomeStyle += 'angle-left';
             bootstrapStyle += 'default';
             break;
+        case 'additem':
+            fontawesomeStyle += 'plus-circle';
+            bootstrapStyle += 'default';
+            break;
+        case 'removeitem':
+            fontawesomeStyle += 'minus-circle';
+            bootstrapStyle += 'default';
+            break;
         default:
             fontawesomeStyle += 'cog';
             bootstrapStyle += 'primary';
@@ -50,10 +58,7 @@ const DndButton = ({onClick, buttonType}) => {
         </Button>
     );
 };
-/*
-        <button onClick={onClick} className={bootstrapStyle}>
-            <i className={fontawesomeStyle}></i>{extraText}
-        </button>*/
+
 DndButton.propTypes = {
     buttonType: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired
