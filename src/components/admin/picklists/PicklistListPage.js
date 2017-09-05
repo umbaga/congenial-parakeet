@@ -25,7 +25,7 @@ class PicklistListPage extends React.Component {
     }
 
     componentWillMount() {
-        if (this.props.picklists[0].id == '') {
+        if (this.props.picklists[0] && this.props.picklists[0].id == '') {
             this.props.actions.loadPicklists();
         }
     }

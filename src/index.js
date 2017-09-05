@@ -9,11 +9,13 @@ import routes from './routes';
 import {loadItemtypes} from './actions/admin/itemtypeActions';
 import {loadPicklists} from './actions/admin/picklistActions';
 import './styles/my-css.css';
+import {loadDierolls} from './actions/admin/dierollActions';
 
 const store = configureStore();
 
 store.dispatch(loadItemtypes());
 store.dispatch(loadPicklists());
+store.dispatch(loadDierolls());
 
 render(
        <Provider store={store}>
