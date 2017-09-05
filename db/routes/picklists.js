@@ -8,7 +8,8 @@ module.exports = function(app, pg, async, pool) {
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'SELECT t.id, t."typeName" as name, t."isPicklist"';
-            sql += ', json_agg(i."itemName") AS "itemName", json_agg(i."id") AS "itemId"';
+            //sql += ', json_agg(i."itemName") AS "itemName", json_agg(i."id") AS "itemId"';
+            sql += ', json_agg((SELECT x FROM (SELECT i."itemName" AS "name", i."id", i."orderIndex") x ORDER BY i."orderIndex" DESC)) AS items';
             sql += ' FROM adm_type t';
             sql += ' LEFT OUTER JOIN v_adm_item_type i ON i."itemTypeId" = t.id';
             sql += ' WHERE t."isPicklist" = true';
@@ -16,7 +17,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' ORDER BY t."typeName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
-                var items = [];
+                /*var items = [];
                 for(var q = 0; q < row.itemName.length; q++) {
                     var newItem = {};
                     newItem.id = row.itemId[q];
@@ -25,7 +26,7 @@ module.exports = function(app, pg, async, pool) {
                 }
                 row.items = items;
                 delete row.itemName;
-                delete row.itemId;
+                delete row.itemId;*/
                 results.push(row);
             });
             query.on('end', function() {

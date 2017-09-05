@@ -47,6 +47,7 @@ class PicklistListItem extends React.Component {
             }
             return tmp;
         }
+        console.log(this.props.picklist);
         return (
             <tr key={this.props.picklist.id}>
                 <td>{this.props.picklist.name}</td>
