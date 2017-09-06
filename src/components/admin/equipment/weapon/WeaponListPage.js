@@ -4,7 +4,7 @@ import {Link, browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import WeaponList from './WeaponList';
-//import WeaponEntry from './WeaponEntry';
+import WeaponEntry from './WeaponEntry';
 import * as actions from '../../../../actions/admin/weaponActions';
 import util from '../../../../util/util';
 import DndButton from '../../../common/DndButton';
@@ -88,7 +88,12 @@ class WeaponListPage extends React.Component {
                 <Modal show={this.state.showModal} onHide={this.close}>
                     <Modal.Header closeButton><h4>{this.state.isCreate ? 'Create' : 'Edit'} Item Type</h4></Modal.Header>
                     <Modal.Body>
-                        TEST MODAL
+                        <WeaponEntry 
+                            closeModal={this.close} 
+                            weapons={weapons}
+                            isCreate={this.state.isCreate}
+                            selectedId={this.state.selectedId}
+                            />
                     </Modal.Body>
                 </Modal>
             </div>

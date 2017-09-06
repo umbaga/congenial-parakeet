@@ -6,8 +6,6 @@ import {browserHistory} from 'react-router';
 import * as itemtypeActions from '../../../actions/admin/itemtypeActions';
 import ItemtypeForm from './ItemtypeForm';
 import util from '../../../util/util';
-import TextInput from '../../common/TextInput';
-import CheckBox from '../../common/CheckBox';
 
 
 class ItemtypeEntry extends React.Component {

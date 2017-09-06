@@ -66,12 +66,12 @@ string.dieRoll = function(val) {
         if(val.dieCount == 0 || val.dieType == 0) {
             retVal = '-';
         } else if (val.dieType == 1) {
-            retVal = val.dieCount;
+            retVal = val.dieCount.toString();
         } else {
-            retVal = val.dieCount + 'd' + val.dieType;
+            retVal = val.dieCount.toString() + 'd' + val.dieType.toString();
         }
     }
-    return retVal;
+    return retVal.toString();
 };
 
 let number = {};
