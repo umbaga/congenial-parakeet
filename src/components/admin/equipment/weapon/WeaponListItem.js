@@ -32,7 +32,6 @@ class WeaponListItem extends React.Component {
         }
     }
     render() {
-        console.log(this.props.weapon);
         return (
             <tr key={this.props.weapon.id}>
                 <td>{this.props.weapon.name}</td>
