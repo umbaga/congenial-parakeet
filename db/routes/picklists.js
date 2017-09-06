@@ -1,4 +1,118 @@
 module.exports = function(app, pg, async, pool) {
+    app.get('/api/adm/picklist/weaponproperties', function(req, res) {
+        var results = [];
+        pool.connect(function(err, client, done) {
+            if(err) {
+                done();
+                console.log(err);
+                return res.status(500).json({ success: false, data: err});
+            }
+            sql = 'SELECT i.id, i."itemName" as name';
+            sql += ', wp."requireRange", wp."requireDamage", wp."requireDescription"';
+            sql += 'FROM adm_item i';
+            sql += 'INNER JOIN adm_def_weapon_property wp ON wp."weaponPropertyId"  = i.id';
+            sql += 'WHERE i."itemTypeId" = 86';
+            sql += 'ORDER BY i."itemName"';
+            var query = client.query(new pg.Query(sql));
+            query.on('row', function(row) {
+                results.push(row);
+            });
+            query.on('end', function() {
+                done();
+                return res.json(results);
+            });
+        });
+    });
+    app.get('/api/adm/picklist/weaponproficiencies', function(req, res) {
+        var results = [];
+        pool.connect(function(err, client, done) {
+            if(err) {
+                done();
+                console.log(err);
+                return res.status(500).json({ success: false, data: err});
+            }
+            sql = 'SELECT i.id, i."itemName" as name';
+            sql += 'FROM adm_item i';
+            sql += 'WHERE i."itemTypeId" = 82';
+            sql += 'ORDER BY i."itemName"';
+            var query = client.query(new pg.Query(sql));
+            query.on('row', function(row) {
+                results.push(row);
+            });
+            query.on('end', function() {
+                done();
+                return res.json(results);
+            });
+        });
+    });
+    app.get('/api/adm/picklist/weaponcategories', function(req, res) {
+        var results = [];
+        pool.connect(function(err, client, done) {
+            if(err) {
+                done();
+                console.log(err);
+                return res.status(500).json({ success: false, data: err});
+            }
+            sql = 'SELECT i.id, i."itemName" as name';
+            sql += 'FROM adm_item i';
+            sql += 'WHERE i."itemTypeId" = 83';
+            sql += 'ORDER BY i."itemName"';
+            var query = client.query(new pg.Query(sql));
+            query.on('row', function(row) {
+                results.push(row);
+            });
+            query.on('end', function() {
+                done();
+                return res.json(results);
+            });
+        });
+    });
+    app.get('/api/adm/picklist/armorproficiencies', function(req, res) {
+        var results = [];
+        pool.connect(function(err, client, done) {
+            if(err) {
+                done();
+                console.log(err);
+                return res.status(500).json({ success: false, data: err});
+            }
+            sql = 'SELECT i.id, i."itemName" as name';
+            sql += 'FROM adm_item i';
+            sql += 'WHERE i."itemTypeId" = 84';
+            sql += 'ORDER BY i."itemName"';
+            var query = client.query(new pg.Query(sql));
+            query.on('row', function(row) {
+                results.push(row);
+            });
+            query.on('end', function() {
+                done();
+                return res.json(results);
+            });
+        });
+    });
+    app.get('/api/adm/picklist/damagetypes', function(req, res) {
+        var results = [];
+        pool.connect(function(err, client, done) {
+            if(err) {
+                done();
+                console.log(err);
+                return res.status(500).json({ success: false, data: err});
+            }
+            sql = 'SELECT i.id, i."itemName" as name';
+            sql += ', dt."isWeaponDamageType"';
+            sql += 'FROM adm_item i';
+            sql += ' INNER JOIN adm_def_damage_type dt ON dt."damageTypeId" = i.id';
+            sql += 'WHERE i."itemTypeId" = 81';
+            sql += 'ORDER BY i."itemName"';
+            var query = client.query(new pg.Query(sql));
+            query.on('row', function(row) {
+                results.push(row);
+            });
+            query.on('end', function() {
+                done();
+                return res.json(results);
+            });
+        });
+    });
     app.get('/api/adm/picklists/all', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {

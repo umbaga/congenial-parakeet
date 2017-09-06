@@ -1,0 +1,1 @@
+export const longDash = '\u2014';

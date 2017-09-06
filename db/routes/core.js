@@ -20,4 +20,28 @@ module.exports = function(app, pg, async, pool) {
             });
         });
     });
+    app.post('/api/adm/core/dieroll', function(req, res){
+        var results = [];
+        pool.connect(function(err, client, done) {
+            if(err) {
+                done();
+                console.log(err);
+                return res.status(500).json({ success: false, data: err});
+            }
+            sql = 'INSERT INTO adm_core_dice';
+            sql += '("dieCount", "dieType")';
+            sql += 'VALUES ($1, $2) RETURNING id;';
+            vals = [req.body.dieRoll.dieCount, req.body.dieRoll.dieType];
+            var query = client.query(new pg.Query(sql, vals));
+            query.on('row', function(row) {
+                results.push(row);
+            });
+            query.on('end', function() {
+                done();
+                var resObj = req.body;
+                resObj.dieroll.id = parseInt(results[0].id);
+                return res.json(resObj);
+            });
+        });
+    });
 };

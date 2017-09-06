@@ -6,6 +6,7 @@ import AdminHomePage from './components/admin/home/adminHomePage';
 import testbed from './components/admin/_testbed/testbed';
 import ItemtypeListPage from './components/admin/itemtypes/ItemtypeListPage';
 import PicklistListPage from './components/admin/picklists/PicklistListPage';
+import WeaponListPage from './components/admin/equipment/weapon/WeaponListPage';
 
 import HomePage from './components/home/HomePage';
 import AboutPage from './components/about/AboutPage';
@@ -19,6 +20,7 @@ export default (
         <Route path="/admin/testbed" component={testbed} />
         <Route path="/admin/itemtypes" component={ItemtypeListPage} />
         <Route path="/admin/picklists" component={PicklistListPage} />
+        <Route path="/admin/equipment/weapons" component={WeaponListPage} />
         <Route path="/login" component={LogInPage} />
         <Route path="/about" component={AboutPage} />
     </Route>

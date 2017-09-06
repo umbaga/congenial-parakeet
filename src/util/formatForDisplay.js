@@ -1,4 +1,4 @@
-import * as vulgarFractions from './vulgarFractions';
+import util from './util';
 
 let array = {};
 array.commaDelimitedList = function(val) {
@@ -8,6 +8,25 @@ array.commaDelimitedList = function(val) {
             retVal += val[q].name;
             if (q < val.length - 1) {
                 retVal += ', ';
+            }
+        }
+    }
+    return retVal;
+};
+array.weaponProperties = function(obj) {
+    let retVal = util.unicode.punctuation.longDash;
+    if(obj) {
+        if(obj.weaponProperties && obj.weaponProperties.length > 0) {
+            retVal = '';
+            for (let x = 0; x < obj.weaponProperties.length; x++) {
+                retVal += obj.weaponProperties[x].name;
+                if(obj.weaponProperties[x].requireDamage) {
+                    retVal += ' (' + util.format.forDisplay.string.dieRoll(obj.versatileDamage) + ')';
+                }
+                if(obj.weaponProperties[x].requireRange) {
+                    retVal += ' (range ' + obj.range.normal + '/' + obj.range.maximum + ')';
+                }
+                retVal += x < obj.weaponProperties.length-1 ? ', ' : '';
             }
         }
     }
@@ -41,13 +60,34 @@ bool.asTrueFalse = function(val) {
 };
 
 let string = {};
+string.dieRoll = function(val) {
+    let retVal = '';
+    if(val) {
+        if(val.dieCount == 0 || val.dieType == 0) {
+            retVal = '-';
+        } else if (val.dieType == 1) {
+            retVal = val.dieCount;
+        } else {
+            retVal = val.dieCount + 'd' + val.dieType;
+        }
+    }
+    return retVal;
+};
 
 let number = {};
 number.coin = function(val) {
-    return val;
+    let retVal = '';
+    if(val) {
+        retVal = val.toString() + ' gp';
+    }
+    return retVal;
 };
 number.weight = function(val) {
-    return val;
+    let retVal = '';
+    if(val) {
+        retVal = val.toString() + ' lbs.';
+    }
+    return retVal;
 };
 
 export {bool, string, number, array};

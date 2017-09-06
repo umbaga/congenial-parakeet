@@ -1,6 +1,7 @@
 export default {
+    dierolls: [],
     itemtypes: [],
     picklists: [],
-    dierolls: [],
+    weapons: [],
     session: !!sessionStorage.jwt
 };

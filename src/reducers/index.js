@@ -1,13 +1,15 @@
 import {combineReducers} from 'redux';
 import session from './sessionReducer';
+import dierolls from './dierollReducer';
 import itemtypes from './itemtypeReducer';
 import picklists from './picklistReducer';
-import dierolls from './dierollReducer';
+import weapons from './weaponReducer';
 
 const rootReducer = combineReducers({
+    dierolls, 
     itemtypes,
     picklists,
-    dierolls, 
+    weapons,
     session
 });
 

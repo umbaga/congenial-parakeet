@@ -10,12 +10,14 @@ import {loadItemtypes} from './actions/admin/itemtypeActions';
 import {loadPicklists} from './actions/admin/picklistActions';
 import './styles/my-css.css';
 import {loadDierolls} from './actions/admin/dierollActions';
+import {loadWeapons} from './actions/admin/weaponActions';
 
 const store = configureStore();
 
+store.dispatch(loadDierolls());
 store.dispatch(loadItemtypes());
 store.dispatch(loadPicklists());
-store.dispatch(loadDierolls());
+store.dispatch(loadWeapons());
 
 render(
        <Provider store={store}>
