@@ -75,17 +75,42 @@ string.dieRoll = function(val) {
 };
 
 let number = {};
+number.addCommas = function(val) {
+    let retVal = '';
+    if(val) {
+        let commaRefIndex = 0;
+        for(let i = val.toString().length - 1; i >= 0; i--) {
+            if(commaRefIndex % 3 == 0 && commaRefIndex != 0) {
+                retVal = ',' + retVal;
+            }
+            retVal = val.toString().charAt(i) + retVal;
+            commaRefIndex++;
+        }
+    }
+    return retVal;
+};
 number.coin = function(val) {
     let retVal = '';
     if(val) {
-        retVal = val.toString() + ' gp';
+        let goldVal = Math.floor(val);
+        let silverVal = Math.floor((val - goldVal) * 10);
+        let copperVal = Math.round((val - goldVal - (silverVal / 10)) * 100);
+        if(goldVal != 0) {
+            retVal += util.format.forDisplay.number.addCommas(goldVal) + ' gp ';
+        }
+        if(silverVal != 0) {
+            retVal += silverVal + ' sp ';
+        }
+        if(copperVal != 0) {
+            retVal += copperVal + ' cp ';
+        }
     }
     return retVal;
 };
 number.weight = function(val) {
     let retVal = '';
     if(val) {
-        retVal = val.toString() + ' lbs.';
+        retVal = util.unicode.vulgarFractions.calculateFractionalValue(val) + ' lbs.';
     }
     return retVal;
 };

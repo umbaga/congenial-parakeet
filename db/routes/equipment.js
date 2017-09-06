@@ -7,7 +7,8 @@ module.exports = function(app, pg, async, pool) {
                 console.log(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            sql = 'SELECT i.id, i."itemName" as name, eq.cost, eq.weight, special."specialDescription"';
+            sql = 'SELECT i.id, i."itemName" as name, round(eq.cost, 3) AS cost, round(eq.weight, 3) AS weight, special."specialDescription"';
+            //sql += ', eq."weightDouble"';
             sql += ', json_build_object(\'dieCount\', dice."dieCount", \'dieType\', dice."dieType") AS "damage"';
             sql += ', json_build_object(\'name\', dmgtype."itemName", \'id\', dmgtype."id") AS "damageType"';
             sql += ', json_build_object(\'name\', wpnprof."itemName", \'id\', wpnprof."id") AS "weaponProficiency"';
@@ -72,6 +73,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' , wpncat.id, wpncat."itemName"';
             sql += ' , altdice."dieCount", altdice."dieType"';
             sql += ' , wpnrng."normalRange", wpnrng."maximumRange"';
+            //sql += ', eq."weightDouble"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
                 results.push(row);
