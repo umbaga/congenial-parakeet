@@ -93,6 +93,7 @@ class WeaponListPage extends React.Component {
                             weapons={weapons}
                             isCreate={this.state.isCreate}
                             selectedId={this.state.selectedId}
+                            picklists={this.props.picklists}
                             />
                     </Modal.Body>
                 </Modal>
@@ -102,19 +103,22 @@ class WeaponListPage extends React.Component {
 }
 
 WeaponListPage.propTypes = {
-    weapons: PropTypes.array.isRequired,
+    actions: PropTypes.object,
     children: PropTypes.object,
-    actions: PropTypes.object
+    picklists: PropTypes.array,
+    weapons: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
     if (state.weapons.length > 0) {
         return {
-            weapons: state.weapons
+            weapons: state.weapons,
+            picklists: state.picklists
         };
     } else {
         return {
-            weapons: [util.objectModel.WEAPON]
+            weapons: [util.objectModel.WEAPON],
+            picklists: [util.objectModel.PICKLIST]
         };
     }
 }

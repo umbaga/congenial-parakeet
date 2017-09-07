@@ -30,3 +30,38 @@ export const special = {
 export const string = {
     STRING: 'DATA_STRING_STANDARD'
 };
+
+export function compareDataType (val, dataType) {
+    let retVal = true;
+    let tmpDieCount = 0;
+    let tmpDieType = 0;
+    let tmpArr = [];
+    switch(dataType) {
+        case special.DICE_ROLL:
+            tmpArr = val.toLowerCase().split('d');
+            if(tmpArr.length == 2) {
+                if(Number.isInteger(parseInt(tmpArr[0]))) {
+                    tmpDieCount = parseInt(tmpArr[0]);
+                    if(Number.isInteger(parseInt(tmpArr[1]))) {
+                        tmpDieType = parseInt(tmpArr[1]);
+                        if(tmpDieType == 0 || tmpDieType == 1 || tmpDieType == 2 || 
+                           tmpDieType == 3 || tmpDieType == 4 || tmpDieType == 6 || 
+                           tmpDieType == 8 || tmpDieType == 10 || tmpDieType == 12 || 
+                           tmpDieType == 20 || tmpDieType == 100) {
+                            retVal = true;
+                        } else {
+                            retVal = false;
+                        }
+                    } else {
+                        retVal = false;
+                    }
+                } else {
+                    retVal = false;
+                }
+            } else {
+                retVal = false;
+            }
+            break;
+    }
+    return retVal;
+}

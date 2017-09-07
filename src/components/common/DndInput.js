@@ -13,7 +13,7 @@ class DndInput extends React.Component {
 
         let primaryInput = null;
         
-        let finalLabelCols = 3;
+        let finalLabelCols = 4;
         if(this.props.labelCols) {
             finalLabelCols = this.props.labelCols;
         }
@@ -53,6 +53,36 @@ class DndInput extends React.Component {
                                     onChange={this.props.onChange}
                                     className="form-control" />);
                 break;
+            case util.dataTypes.picklist.DAMAGE_TYPE:
+            case util.dataTypes.picklist.WEAPON_CATEGORY:
+            case util.dataTypes.picklist.WEAPON_PROFICIENCY:
+                primaryInput = (<select 
+                                    value={this.props.valueObj.id}
+                                    name={this.props.name}
+                                    className="form-control"
+                                    onChange={this.props.onChange}
+                                    datatype={this.props.dataType} >
+                        <option value="0">SELECT ONE</option>
+                        {this.props.picklist.map(picklistItem => 
+                                                 <option
+                                                     key={picklistItem.id}
+                                                     value={picklistItem.id}>
+                                                        {picklistItem.name}
+                                                 </option>
+                                                )}
+                    </select>);
+                break;
+            case util.dataTypes.special.DICE_ROLL:
+                primaryInput = (<input
+                                    type="text"
+                                    name={this.props.name}
+                                    placeholder={this.props.placeholder}
+                                    value={this.props.valueObj.rendered}
+                                    datatype={this.props.dataType}
+                                    onKeyUp={this.props.onChange}
+                                    onChange={this.props.onChange}
+                                    className="form-control" />);
+                break;
         }
 
         let labelClass = 'col-sm-' + finalLabelCols + ' control-label';
@@ -70,15 +100,7 @@ class DndInput extends React.Component {
         );
     }
 }
-/*
-                primaryInput = (<input
-                                    type="text"
-                                    name={this.props.name}
-                                    placeholder={this.props.placeholder}
-                                    value={this.props.value}
-                                    datatype={this.props.dataType}
-                                    onKeyDown={this.props.onChange}
-                                    className="form-control" />);*/
+
 DndInput.propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
@@ -89,7 +111,8 @@ DndInput.propTypes = {
     checked: PropTypes.bool,
     value: PropTypes.string,
     valueObj: PropTypes.object,
-    placeholder: PropTypes.string
+    placeholder: PropTypes.string,
+    picklist: PropTypes.array
 };
 
 export default DndInput;
