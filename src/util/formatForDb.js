@@ -25,6 +25,10 @@ bool.asTrueFalse = function(val) {
 };
 
 let string = {};
+string.dieRoll = function(val) {
+    let retVal = {};
+    return retVal;
+};
 
 let number = {};
 number.coin = function(val) {

@@ -28,6 +28,7 @@ class DndInput extends React.Component {
                                     type="checkbox"
                                     name={this.props.name}
                                     checked={this.props.checked}
+                                    datatype={this.props.dataType}
                                     onChange={this.props.onChange}
                                     className="form-control checkbox-inline"  />);
                 break;
@@ -37,6 +38,18 @@ class DndInput extends React.Component {
                                     name={this.props.name}
                                     placeholder={this.props.placeholder}
                                     value={this.props.value}
+                                    datatype={this.props.dataType}
+                                    onChange={this.props.onChange}
+                                    className="form-control" />);
+                break;
+            case util.dataTypes.number.COIN:
+            case util.dataTypes.number.WEIGHT:
+                primaryInput = (<input
+                                    type="number"
+                                    name={this.props.name}
+                                    placeholder={this.props.placeholder}
+                                    value={this.props.value}
+                                    datatype={this.props.dataType}
                                     onChange={this.props.onChange}
                                     className="form-control" />);
                 break;
@@ -57,7 +70,15 @@ class DndInput extends React.Component {
         );
     }
 }
-
+/*
+                primaryInput = (<input
+                                    type="text"
+                                    name={this.props.name}
+                                    placeholder={this.props.placeholder}
+                                    value={this.props.value}
+                                    datatype={this.props.dataType}
+                                    onKeyDown={this.props.onChange}
+                                    className="form-control" />);*/
 DndInput.propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
@@ -67,6 +88,7 @@ DndInput.propTypes = {
     inputCols: PropTypes.number,
     checked: PropTypes.bool,
     value: PropTypes.string,
+    valueObj: PropTypes.object,
     placeholder: PropTypes.string
 };
 
