@@ -53,6 +53,17 @@ class DndInput extends React.Component {
                                     onChange={this.props.onChange}
                                     className="form-control" />);
                 break;
+            case util.dataTypes.special.DICE_ROLL:
+                primaryInput = (<input
+                                    type="text"
+                                    name={this.props.name}
+                                    placeholder={this.props.placeholder}
+                                    value={this.props.valueObj.rendered}
+                                    datatype={this.props.dataType}
+                                    onKeyUp={this.props.onChange}
+                                    onChange={this.props.onChange}
+                                    className="form-control" />);
+                break;
             case util.dataTypes.picklist.DAMAGE_TYPE:
             case util.dataTypes.picklist.WEAPON_CATEGORY:
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
@@ -68,20 +79,47 @@ class DndInput extends React.Component {
                                                      key={picklistItem.id}
                                                      value={picklistItem.id}>
                                                         {picklistItem.name}
-                                                 </option>
-                                                )}
+                                                 </option>)}
                     </select>);
                 break;
-            case util.dataTypes.special.DICE_ROLL:
-                primaryInput = (<input
-                                    type="text"
-                                    name={this.props.name}
-                                    placeholder={this.props.placeholder}
-                                    value={this.props.valueObj.rendered}
-                                    datatype={this.props.dataType}
-                                    onKeyUp={this.props.onChange}
-                                    onChange={this.props.onChange}
-                                    className="form-control" />);
+            case util.dataTypes.array.WEAPON_PROPERTIES:
+                primaryInput = (
+                    <div>
+                        <div className="col-sm-5">
+                            <select
+                                name={this.props.name + 'Unassigned'}
+                                multiple
+                                size="6"
+                                datatype={this.props.dataType}
+                                onDoubleClick={this.props.onChange}>
+                                {util.picklistInfo.filterPicklistByAssigned(this.props.picklist, this.props.valueArray).map(picklistItem => 
+                                                                                                                            <option
+                                                                                                                                key={picklistItem.id}
+                                                                                                                                value={picklistItem.id}>
+                                                                                                                                {picklistItem.name}
+                                                                                                                            </option>)}
+                            </select>
+                        </div>
+                        <div className="col-sm-2">
+                            TEST
+                        </div>
+                        <div className="col-sm-5">
+                            <select
+                                name={this.props.name}
+                                multiple
+                                size="6"
+                                datatype={this.props.dataType}
+                                onDoubleClick={this.props.onChange}>
+                                {this.props.valueArray.map(picklistItem =>
+                                                           <option
+                                                               key={picklistItem.id}
+                                                               value={picklistItem.id}>
+                                                               {picklistItem.name}
+                                                           </option>)}
+                            </select>
+                        </div>
+                    </div>
+                );
                 break;
         }
 
@@ -110,6 +148,7 @@ DndInput.propTypes = {
     inputCols: PropTypes.number,
     checked: PropTypes.bool,
     value: PropTypes.string,
+    valueArray: PropTypes.array,
     valueObj: PropTypes.object,
     placeholder: PropTypes.string,
     picklist: PropTypes.array

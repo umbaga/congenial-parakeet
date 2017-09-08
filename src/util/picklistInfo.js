@@ -19,3 +19,27 @@ export function getPicklistItems (picklistArray, picklistId) {
     
     return retVal;
 }
+
+export function filterPicklistByAssigned (picklist, assigned) {
+    return picklist.filter((picklistItem) => {
+        for(let d = 0; d < assigned.length; d++) {
+            if(assigned[d].id == picklistItem.id) {
+                return false;
+            }
+        }
+        return true;
+    });
+}
+
+export function getPicklistItem(allPicklists, picklistItemId) {
+    for(let y = 0; y < allPicklists.length; y++) {
+        for(let z = 0; z < allPicklists[y].items.length; z++) {
+            if(allPicklists[y].items[z]) {
+                if(allPicklists[y].items[z].id == picklistItemId) {
+                    return allPicklists[y].items[z];
+                }
+            }
+        }
+    }
+    return null;
+}

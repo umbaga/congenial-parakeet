@@ -1,5 +1,5 @@
-export const arrayOf = {
-    WEAPON_PROPERTIES: 'DATA_ARRAYOF_WEAPON_PROPERTIES'
+export const array = {
+    WEAPON_PROPERTIES: 'DATA_ARRAY_WEAPON_PROPERTIES'
 };
 
 export const bool = {

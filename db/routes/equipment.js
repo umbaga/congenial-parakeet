@@ -27,12 +27,14 @@ module.exports = function(app, pg, async, pool) {
             sql += '	end AS "weaponProperties"';
             sql += '                	, case ';
             sql += '                		when count(altDice) = 0 ';
-            sql += '                			then \'{}\' ';
+            sql += '                			then null ';
+            //sql += '                			then \'{}\' ';
             sql += '                		else json_build_object(\'dieCount\', altdice."dieCount", \'dieType\', altdice."dieType") ';
             sql += '                		end AS "versatileDamage"';
             sql += '                	, case ';
             sql += '                		when count(wpnrng) = 0 ';
-            sql += '                			then \'{}\' ';
+            sql += '                			then null ';
+            //sql += '                			then \'{}\' ';
             sql += '                		else json_build_object(\'normal\', wpnrng."normalRange", \'maximum\', wpnrng."maximumRange") ';
             sql += '                		end AS "range"';
             sql += ' FROM adm_item i';

@@ -66,12 +66,18 @@ class WeaponEntry extends React.Component {
     }
 
     updateFormState(event) {
-        const field = event.target.name;
+        let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
         const weapon = this.state.weapon;
         let newSelectedValue = {};
         let newRenderedValue = '';
         let newDiceRollValue = {};
-        switch(event.target.getAttribute('dataType')) {
+        let isAssign = field.split('Unassigned').length == 2 ? true : false;
+        let removeThisId = event.target.value;
+        let removeThisIndex = -1;
+        let referencePicklistItem = util.picklistInfo.getPicklistItem(this.props.picklists, removeThisId);
+        
+        let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
+        switch(dataType) {
             case util.dataTypes.string.STRING:
                 weapon[field] = event.target.value;
                 break;
@@ -110,7 +116,19 @@ class WeaponEntry extends React.Component {
                 }
                 weapon[field].rendered = newRenderedValue;
                 break;
-            case util.dataTypes.picklist.WEAPON_PROPERTY:
+            case util.dataTypes.array.WEAPON_PROPERTIES:
+                if(isAssign) {
+                    field = field.split('Unassigned')[0];
+                    weapon[field].push(referencePicklistItem);
+                } else {
+                    for(let b = 0; b < weapon.weaponProperties.length; b++) {
+                        if(weapon.weaponProperties[b].id == referencePicklistItem.id) {
+                            removeThisIndex = b;
+                            break;
+                        }
+                    }
+                    weapon[field].splice(removeThisIndex, 1);
+                }
                 break;
             default:
         }

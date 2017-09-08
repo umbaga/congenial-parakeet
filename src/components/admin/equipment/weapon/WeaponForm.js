@@ -19,6 +19,7 @@ class WeaponForm extends React.Component {
         let weaponCategoryPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_CATEGORY);
         let weaponProficiencyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROFICIENCY);
         let weaponPropertyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROPERTY);
+        
         return (
             <div>
                 <form>
@@ -81,12 +82,22 @@ class WeaponForm extends React.Component {
                             valueObj={this.props.weapon.damage}
                             onChange={this.props.onChange} />
                     </div>
+                    <div className="col-md-12">
+                        <DndInput
+                            name="weaponProperties"
+                            label="Properties"
+                            dataType={util.dataTypes.array.WEAPON_PROPERTIES}
+                            valueArray={this.props.weapon.weaponProperties}
+                            onChange={this.props.onChange}
+                            picklist={weaponPropertyPicklist} />
+                    </div>
                     <DndDataEntryButtonBar
                         onSave={this.props.onSave} 
                         onSaveNew={this.props.onSaveNew}
                         onCancel={this.props.onCancel}
                         onDelete={this.props.onDelete}
                         isCreate={this.props.isCreate} />
+                    <div>&nbsp;</div>
                 </form>
             </div>
         );
