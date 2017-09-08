@@ -22,6 +22,7 @@ class DndInput extends React.Component {
         if(this.props.inputCols) {
             finalInputCols = this.props.inputCols;
         }
+        let longValue = '';
         switch(this.props.dataType) {
             case util.dataTypes.bool.YES_NO:
                 finalInputCols = 1;
@@ -149,7 +150,6 @@ class DndInput extends React.Component {
                 );
                 break;
             case util.dataTypes.string.LONG_STRING:
-                var longValue = '';
                 if(this.props.value) {
                     longValue = this.props.value;
                 }
