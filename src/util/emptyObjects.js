@@ -17,3 +17,18 @@ export const WEAPON = {
     proficiency: {id: 0, name: ''},
     weaponProperties: [],
     weight: "0"};
+export const ARMOR = {
+    id: 0,
+    name: '',
+    armorClass: {
+        applyDexModifier: false,
+        baseArmorClass: 10,
+        hasMaxDexModifier: false,
+        isCumulative: false,
+        maxDexModifier: 0
+    },
+    cost: "0",
+    proficiency: {id: 0, name: ''},
+    stealthDisadvantage: false,
+    weight: "0"
+};

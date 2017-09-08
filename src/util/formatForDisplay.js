@@ -36,15 +36,21 @@ array.weaponProperties = function(obj) {
 let bool = {};
 bool.asCheckBlank = function(val) {
     if(val) {
-        return '\u2713';
+        return util.unicode.punctuation.checkMark;
     }
     return '';
 };
+bool.hasDisadvantage = function(val) {
+    if(val) {
+        return 'Disadvantage';
+    }
+    return util.unicode.punctuation.longDash;
+};
 bool.asCheckX = function(val) {
     if(val) {
-        return '\u2713';
+        return util.unicode.punctuation.checkMark;
     }
-    return '\u2717';
+    return util.unicode.punctuation.xMark;
 };
 bool.asYesNo = function(val) {
     if(val) {
@@ -107,6 +113,13 @@ number.coin = function(val) {
     }
     return retVal;
 };
+number.abilityScoreMinimum = function(val, ability) {
+    if(val == 0) {
+        return util.unicode.punctuation.longDash;
+    } else {
+        return ability + ' ' + val.toString();
+    }
+};
 number.weight = function(val) {
     let retVal = '';
     if(val) {
@@ -115,4 +128,19 @@ number.weight = function(val) {
     return retVal;
 };
 
-export {bool, string, number, array};
+let obj = {};
+obj.armorClass = function(val) {
+    let retVal = '';
+    if(val.isCumulative) {
+        retVal += '+';
+    }
+    retVal += val.baseArmorClass.toString();
+    if(val.applyDexModifier) {
+        retVal += ' + Dex Modifier';
+        if(val.hasMaxDexModifier) {
+            retVal += ' (max ' + val.maxDexModifier.toString() + ')';
+        }
+    }
+    return retVal;
+};
+export {bool, string, number, array, obj};

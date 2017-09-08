@@ -5,6 +5,10 @@ export const WEAPON_CATEGORY = 83;
 export const WEAPON_PROFICIENCY = 82;
 export const WEAPON_PROPERTY = 86;
 
+export const HEAVY_ARMOR_PROFICIENCY = 58;
+export const LIGHT_ARMOR_PROFICIENCY = 43;
+export const MEDIUM_ARMOR_PROFICIENCY = 57;
+export const SHIELD_ARMOR_PROFICIENCY = 59;
 export const MELEE_WEAPON_CATEGORY = 65;
 export const RANGED_WEAPON_CATEGORY = 66;
 export const SIMPLE_WEAPON_PROFICIENCY = 67;
