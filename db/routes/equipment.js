@@ -119,10 +119,10 @@ module.exports = function(app, pg, async, pool) {
                     sql = 'UPDATE adm_def_equipment_weapon';
                     sql += ' SET "damageDiceId" = $1';
                     sql += ', "damageTypeId" = $2';
-                    sql += ', "weaponProficiencyId" = $3';
-                    sql += ', "weaponCategoryId" = $4';
+                    sql += ', "proficiencyId" = $3';
+                    sql += ', "categoryId" = $4';
                     sql += ' WHERE "equipmentId" = $5';
-                    vals = [resObj.weapon.damage.id, resObj.weapon.damageType.id, resObj.weapon.weaponProficiency.id, resObj.weapon.weaponCategory.id, req.params.id];
+                    vals = [resObj.weapon.damage.id, resObj.weapon.damageType.id, resObj.weapon.proficiency.id, resObj.weapon.category.id, req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
                     query.on('row', function(row) {
@@ -530,9 +530,9 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function insertWeapon(resObj, callback) {
                     sql = 'INSERT INTO adm_def_equipment_weapon';
-                    sql += ' ("equipmentId", "damageDiceId", "damageTypeId", "weaponProficiencyId", "weaponCategoryId")';
+                    sql += ' ("equipmentId", "damageDiceId", "damageTypeId", "proficiencyId", "categoryId")';
                     sql += ' VALUES ($1, $2, $3, $4, $5)';
-                    vals = [resObj.weapon.id, resObj.weapon.damage.id, resObj.weapon.damageType.id, resObj.weapon.weaponProficiency.id, resObj.weapon.weaponCategory.id];
+                    vals = [resObj.weapon.id, resObj.weapon.damage.id, resObj.weapon.damageType.id, resObj.weapon.proficiency.id, resObj.weapon.category.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
                     query.on('row', function(row) {
@@ -706,8 +706,8 @@ module.exports = function(app, pg, async, pool) {
             sql += ', special."specialDescription"';
             sql += ', json_build_object(\'id\', dice.id ,\'dieCount\', dice."dieCount", \'dieType\', dice."dieType", \'rendered\', concat_ws(\'d\', dice."dieCount"::text, dice."dieType"::text)) AS "damage"';
             sql += ', json_build_object(\'name\', dmgtype."itemName", \'id\', dmgtype."id") AS "damageType"';
-            sql += ', json_build_object(\'name\', wpnprof."itemName", \'id\', wpnprof."id") AS "weaponProficiency"';
-            sql += ', json_build_object(\'name\', wpncat."itemName", \'id\', wpncat."id") AS "weaponCategory"';
+            sql += ', json_build_object(\'name\', wpnprof."itemName", \'id\', wpnprof."id") AS "proficiency"';
+            sql += ', json_build_object(\'name\', wpncat."itemName", \'id\', wpncat."id") AS "category"';
             sql += ', case ';
             sql += '	when count(wpnprop) = 0 ';
             sql += '    	then \'[]\' ';
@@ -736,9 +736,9 @@ module.exports = function(app, pg, async, pool) {
             sql += ' 	INNER JOIN adm_item dmgtype ';
             sql += ' 		ON dmgtype.id = wpn."damageTypeId"';
             sql += ' 	INNER JOIN adm_item wpnprof ';
-            sql += ' 		ON wpnprof.id = wpn."weaponProficiencyId"';
+            sql += ' 		ON wpnprof.id = wpn."proficiencyId"';
             sql += ' 	INNER JOIN adm_item wpncat ';
-            sql += ' 		ON wpncat.id = wpn."weaponCategoryId"';
+            sql += ' 		ON wpncat.id = wpn."categoryId"';
             sql += ' 	INNER JOIN adm_core_dice dice ';
             sql += ' 		ON dice.id = wpn."damageDiceId"';
             sql += ' 	LEFT OUTER JOIN adm_link_weapon_property lnk ';

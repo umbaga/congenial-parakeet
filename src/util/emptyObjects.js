@@ -13,7 +13,7 @@ export const WEAPON = {
     requireVersatileDamage: false,
     specialDescription: '',
     versatileDamage: {},
-    weaponCategory: {id: 0, name: ''},
-    weaponProficiency: {id: 0, name: ''},
+    category: {id: 0, name: ''},
+    proficiency: {id: 0, name: ''},
     weaponProperties: [],
     weight: "0"};

@@ -16,8 +16,8 @@ class WeaponForm extends React.Component {
             deleteButton = <button onClick={this.props.onDelete} className="btn btn-default  ">Delete</button>;
         }
         let damageTypePicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.DAMAGE_TYPE);
-        let weaponCategoryPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_CATEGORY);
-        let weaponProficiencyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROFICIENCY);
+        let categoryPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_CATEGORY);
+        let proficiencyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROFICIENCY);
         let weaponPropertyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROPERTY);
         
         let versatileDamageInput = null;
@@ -86,21 +86,21 @@ class WeaponForm extends React.Component {
                     </div>
                     <div className="col-md-6">
                         <DndInput
-                            name="weaponProficiency"
+                            name="proficiency"
                             label="Proficiency"
                             dataType={util.dataTypes.picklist.WEAPON_PROFICIENCY}
-                            valueObj={this.props.weapon.weaponProficiency}
+                            valueObj={this.props.weapon.proficiency}
                             onChange={this.props.onChange}
-                            picklist={weaponProficiencyPicklist} />
+                            picklist={proficiencyPicklist} />
                     </div>
                     <div className="col-md-6">
                         <DndInput
-                            name="weaponCategory"
+                            name="category"
                             label="Category"
                             dataType={util.dataTypes.picklist.WEAPON_CATEGORY}
-                            valueObj={this.props.weapon.weaponCategory}
+                            valueObj={this.props.weapon.category}
                             onChange={this.props.onChange}
-                            picklist={weaponCategoryPicklist} />
+                            picklist={categoryPicklist} />
                     </div>
                     <div className="col-md-6">
                         <DndInput
