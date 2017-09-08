@@ -8,23 +8,20 @@ export default function weaponReducer(state = initialState.weapons, action) {
         case types.LOAD_WEAPONS_SUCCESS:
             return action.weapons;
         case types.CREATE_WEAPON_SUCCESS:
-            /*return [
+            return [
                 ...state.filter(weapon => weapon.id !== action.weapon.id),
                 Object.assign({}, action.weapon)
-            ];*/
-            return state;
+            ];
         case types.UPDATE_WEAPON_SUCCESS:
-            /*return [
+            return [
                 Object.assign({}, action.weapon),
                 ...state.filter(weapon => weapon.id !== action.weapon.id)
-            ];*/
-            return state;
+            ];
         case types.DELETE_WEAPON_SUCCESS: {
-            /*const newState = Object.assign([], state);
+            const newState = Object.assign([], state);
             const indexOfWeaponToDelete = state.findIndex(weapon => {return weapon.id == action.weapon.id;});
             newState.splice(indexOfWeaponToDelete, 1);
-            return newState;*/
-            return state;
+            return newState;
         }
         default: 
             return state;

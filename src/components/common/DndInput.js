@@ -149,11 +149,15 @@ class DndInput extends React.Component {
                 );
                 break;
             case util.dataTypes.string.LONG_STRING:
+                var longValue = '';
+                if(this.props.value) {
+                    longValue = this.props.value;
+                }
                 primaryInput = (
                     <textarea
                         name={this.props.name}
                         placeholder={this.props.placeholder}
-                        value={this.props.value}
+                        value={longValue}
                         datatype={this.props.dataType}
                         onKeyUp={this.props.onChange}
                         onChange={this.props.onChange}

@@ -47,7 +47,7 @@ class WeaponsApi {
 
     static deleteWeapon(weapon) {
         const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
-        const request = new Request('http://localhost:5000/api/adm/equipment/weaponn/' + weapon.id, {
+        const request = new Request('http://localhost:5000/api/adm/equipment/weapon/' + weapon.id, {
             method: 'DELETE', 
             headers: headers
         });

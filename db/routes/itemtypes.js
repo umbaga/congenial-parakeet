@@ -4,7 +4,7 @@ module.exports = function(app, pg, async, pool) {
         pool.connect(function(err, client, done) {
             if(err) {
                 done();
-                console.log(err);
+                console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'SELECT adm_type."id", adm_type."typeName" AS "name", adm_type."isPicklist"';
@@ -25,7 +25,7 @@ module.exports = function(app, pg, async, pool) {
         pool.connect(function(err, client, done) {
             if(err) {
                 done();
-                console.log(err);
+                console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'INSERT INTO adm_type';
@@ -49,7 +49,7 @@ module.exports = function(app, pg, async, pool) {
         pool.connect(function(err, client, done) {
             if(err) {
                 done();
-                console.log(err);
+                console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'UPDATE adm_type';
@@ -73,7 +73,7 @@ module.exports = function(app, pg, async, pool) {
         pool.connect(function(err, client, done) {
             if(err) {
                 done();
-                console.log(err);
+                console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'DELETE FROM adm_type';
