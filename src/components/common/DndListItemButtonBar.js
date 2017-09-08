@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DndButton from './DndButton';
-import { ButtonGroup } from 'react-bootstrap';
+import { ButtonGroup, Popover, OverlayTrigger } from 'react-bootstrap';
 
 class DndListItemButtonBar extends React.Component {
     constructor(props, context) {
@@ -26,18 +26,34 @@ class DndListItemButtonBar extends React.Component {
         } else {
             deleteButton = (<DndButton onClick={this._onDelete} buttonType="delete" />);
         }
+        const popoverButtons = (
+            <Popover id="options-popover">
+                <ButtonGroup>
+                    {deleteButton}
+                    <DndButton onClick={this._onEdit} buttonType="edit" />
+                </ButtonGroup>
+            </Popover>
+        );
         return (
             <div className={wrapperClass}>
+                <div className="pull-right">
+                    <OverlayTrigger trigger="click" rootClose placement="left" overlay={popoverButtons}>
+                        <DndButton buttonType="hamburger" />
+                    </OverlayTrigger>
+                </div>
+            </div>
+        );
+    }
+}
+                    //<OverlayTrigger trigger="click" rootClose placement="left" overlay={popoverButtons}>
+            /*<div className={wrapperClass}>
                 <div className="pull-right">
                     <ButtonGroup>
                         <DndButton onClick={this._onEdit} buttonType="edit" />
                         {deleteButton}
                     </ButtonGroup>
                 </div>
-            </div>
-        );
-    }
-}
+            </div>*/
 
 DndListItemButtonBar.propTypes = {
     listItem: PropTypes.object.isRequired,

@@ -24,3 +24,7 @@ tr.found{
     display: inline-block;
     max-width: 100%;
 }
+.popover-content {
+    background-color: aqua;
+    padding: 0px;
+}
