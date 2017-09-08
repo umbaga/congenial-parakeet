@@ -28,7 +28,8 @@ export const special = {
 };
 
 export const string = {
-    STRING: 'DATA_STRING_STANDARD'
+    STRING: 'DATA_STRING_STANDARD',
+    LONG_STRING: 'DATA_STRING_LONG'
 };
 
 export function compareDataType (val, dataType) {

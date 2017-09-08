@@ -10,6 +10,7 @@ class DndInput extends React.Component {
 
     render() {
         let wrapperClass = 'form-group form-horizontal row';
+        //let wrapperClass = 'form-group form-horizontal row';
 
         let primaryInput = null;
         
@@ -78,7 +79,7 @@ class DndInput extends React.Component {
                                                  <option
                                                      key={picklistItem.id}
                                                      value={picklistItem.id}>
-                                                        {picklistItem.name}
+                                                     {picklistItem.name}
                                                  </option>)}
                     </select>);
                 break;
@@ -121,14 +122,53 @@ class DndInput extends React.Component {
                     </div>
                 );
                 break;
-        }
+            case util.dataTypes.special.WEAPON_RANGE:
+                primaryInput = (
+                    <div name={this.props.name}>
+                        <div className="col-sm-6">
+                            <label htmlFor={this.props.name + '_normal'}>Normal</label>
+                            <input type="number"
+                                name={this.props.name + '_normal'}
+                                placeholder={this.props.placeholder}
+                                value={this.props.valueObj.normal}
+                                datatype={this.props.dataType}
+                                onChange={this.props.onChange}
+                                className="form-control"/>
+                        </div>
+                        <div className="col-sm-6">
+                            <label htmlFor={this.props.name + '_maximum'}>Maximum</label>
+                            <input type="number"
+                                name={this.props.name + '_maximum'}
+                                placeholder={this.props.placeholder}
+                                value={this.props.valueObj.maximum}
+                                datatype={this.props.dataType}
+                                onChange={this.props.onChange}
+                                className="form-control"/>
+                        </div>
+                    </div>
+                );
+                break;
+            case util.dataTypes.string.LONG_STRING:
+                primaryInput = (
+                    <textarea
+                        name={this.props.name}
+                        placeholder={this.props.placeholder}
+                        value={this.props.value}
+                        datatype={this.props.dataType}
+                        onKeyUp={this.props.onChange}
+                        onChange={this.props.onChange}
+                        className="form-control" />
+                );
+                break;
+            }
 
         let labelClass = 'col-sm-' + finalLabelCols + ' control-label';
+        let labelDivClass = 'align-middle';
         let inputDivClass = 'field col-sm-' + finalInputCols + '';
         
         return (
             <div className={wrapperClass}>
-                <div className="align-middle">
+                <div className={labelDivClass}>
                     <label htmlFor={this.props.name} className={labelClass}>{this.props.label}</label>
                 </div>
                 <div className={inputDivClass}>

@@ -39,7 +39,7 @@ class WeaponEntry extends React.Component {
     deleteWeapon(event) {
         event.preventDefault();
         if(confirm('are you sure?')) {
- //           this.props.actions.deleteWeapon(this.state.weapon);
+            this.props.actions.deleteWeapon(this.state.weapon);
             this.postAction();
         }
     }
@@ -51,7 +51,7 @@ class WeaponEntry extends React.Component {
     saveWeapon(event) {
         event.preventDefault();
         this.setState({saving: true});
-//        this.props.actions.upsertWeapon(this.state.weapon);
+        this.props.actions.upsertWeapon(this.state.weapon);
     } 
 
     saveAndNewWeapon(event) {
@@ -67,6 +67,7 @@ class WeaponEntry extends React.Component {
 
     updateFormState(event) {
         let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
+        let subfield = null;
         const weapon = this.state.weapon;
         let newSelectedValue = {};
         let newRenderedValue = '';
@@ -75,18 +76,17 @@ class WeaponEntry extends React.Component {
         let removeThisId = event.target.value;
         let removeThisIndex = -1;
         let referencePicklistItem = util.picklistInfo.getPicklistItem(this.props.picklists, removeThisId);
-        
         let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
+
         switch(dataType) {
             case util.dataTypes.string.STRING:
+            case util.dataTypes.string.LONG_STRING:
+            case util.dataTypes.number.COIN:
+            case util.dataTypes.number.WEIGHT:
                 weapon[field] = event.target.value;
                 break;
             case util.dataTypes.bool.YES_NO:
                 weapon[field] = !weapon[field];
-                break;
-            case util.dataTypes.number.COIN:
-            case util.dataTypes.number.WEIGHT:
-                weapon[field] = event.target.value;
                 break;
             case util.dataTypes.picklist.DAMAGE_TYPE:
             case util.dataTypes.picklist.WEAPON_CATEGORY:
@@ -123,12 +123,28 @@ class WeaponEntry extends React.Component {
                 } else {
                     for(let b = 0; b < weapon.weaponProperties.length; b++) {
                         if(weapon.weaponProperties[b].id == referencePicklistItem.id) {
+                            if(weapon.weaponProperties[b].requireDamage) {
+                                weapon.versatileDamage = {};
+                            }
+                            if(weapon.weaponProperties[b].requireDescription)  {
+                                weapon.specialDescription = null;
+                            }
+                            if(weapon.weaponProperties[b].requireRange)  {
+                                weapon.ramge = {};
+                            }
                             removeThisIndex = b;
                             break;
                         }
                     }
                     weapon[field].splice(removeThisIndex, 1);
                 }
+                break;
+            case util.dataTypes.special.WEAPON_RANGE:
+                if(field.split('_').length == 2) {
+                    subfield = field.split('_')[1];
+                    field = field.split('_')[0];
+                }
+                weapon[field][subfield] = parseInt(event.target.value);
                 break;
             default:
         }
