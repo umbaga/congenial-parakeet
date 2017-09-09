@@ -36,7 +36,7 @@ class ArmorListItem extends React.Component {
             <tr key={this.props.armor.id}>
                 <td>{this.props.armor.name}</td>
                 <td className="text-center">{util.format.forDisplay.number.coin(this.props.armor.cost)}</td>
-                <td>{util.format.forDisplay.obj.armorClass(this.props.armor.armorClass)}</td>
+                <td>{util.format.forDisplay.obj.armorClass(this.props.armor)}</td>
                 <td>{util.format.forDisplay.number.abilityScoreMinimum(this.props.armor.minimumStrength, 'Str')}</td>
                 <td>{util.format.forDisplay.bool.hasDisadvantage(this.props.armor.stealthDisadvantage)}</td>
                 <td className="text-center">{util.format.forDisplay.number.weight(this.props.armor.weight)}</td>

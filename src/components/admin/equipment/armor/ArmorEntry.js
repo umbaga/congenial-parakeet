@@ -69,88 +69,28 @@ class ArmorEntry extends React.Component {
         let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
         let subfield = null;
         const armor = this.state.armor;
-        /*let newSelectedValue = {};
-        let newRenderedValue = '';
-        let newDiceRollValue = {};
-        let isAssign = field.split('Unassigned').length == 2 ? true : false;
-        let removeThisId = event.target.value;
-        let removeThisIndex = -1;
-        let referencePicklistItem = util.picklistInfo.getPicklistItem(this.props.picklists, removeThisId);
-        let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
-
+        const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
+        let newSelectedValue = {};
         switch(dataType) {
             case util.dataTypes.string.STRING:
-            case util.dataTypes.string.LONG_STRING:
             case util.dataTypes.number.COIN:
             case util.dataTypes.number.WEIGHT:
+            case util.dataTypes.number.INT:
                 armor[field] = event.target.value;
                 break;
-            case util.dataTypes.bool.YES_NO:
-                armor[field] = !armor[field];
-                break;
-            case util.dataTypes.picklist.DAMAGE_TYPE:
-            case util.dataTypes.picklist.ARMOR_CATEGORY:
             case util.dataTypes.picklist.ARMOR_PROFICIENCY:
                 newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                 newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                 armor[field] = newSelectedValue;
                 break;
-            case util.dataTypes.special.DICE_ROLL:
-                newRenderedValue = '';
-                if(event.target.value && event.target.value.length != 0) {
-                    for(let y = 0; y < event.target.value.length; y++) {
-                        if(event.target.value.charAt(y) == '1' || event.target.value.charAt(y) == '2' || 
-                           event.target.value.charAt(y) == '3' || event.target.value.charAt(y) == '4' || 
-                           event.target.value.charAt(y) == '5' || event.target.value.charAt(y) == '6' || 
-                           event.target.value.charAt(y) == '7' || event.target.value.charAt(y) == '8' || 
-                           event.target.value.charAt(y) == '9' || event.target.value.charAt(y) == '0' || 
-                           event.target.value.charAt(y) == 'd' || event.target.value.charAt(y) == 'D') {
-                            newRenderedValue += event.target.value.charAt(y);
-                        }
-                    }
-                }
-                if(util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL)) {
-                    newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
-                    newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
-                    armor[field] = newDiceRollValue;
-                }
-                armor[field].rendered = newRenderedValue;
-                break;
-            case util.dataTypes.array.ARMOR_PROPERTIES:
-                if(isAssign) {
-                    field = field.split('Unassigned')[0];
-                    armor[field].push(referencePicklistItem);
-                } else {
-                    for(let b = 0; b < armor.armorProperties.length; b++) {
-                        if(armor.armorProperties[b].id == referencePicklistItem.id) {
-                            if(armor.armorProperties[b].requireDamage) {
-                                armor.versatileDamage = {};
-                            }
-                            if(armor.armorProperties[b].requireDescription)  {
-                                armor.specialDescription = null;
-                            }
-                            if(armor.armorProperties[b].requireRange)  {
-                                armor.ramge = {};
-                            }
-                            removeThisIndex = b;
-                            break;
-                        }
-                    }
-                    armor[field].splice(removeThisIndex, 1);
-                }
-                break;
-            case util.dataTypes.special.ARMOR_RANGE:
-                if(field.split('_').length == 2) {
-                    subfield = field.split('_')[1];
-                    field = field.split('_')[0];
-                }
-                armor[field][subfield] = parseInt(event.target.value);
+            case util.dataTypes.bool.BOOL:
+            case util.dataTypes.bool.HAS_DISADVANTAGE:
+                armor[field] = !armor[field];
                 break;
             default:
-        }*/
+        }
         return this.setState({armor: armor});
     }
-
     render() {
         return (
             <div>

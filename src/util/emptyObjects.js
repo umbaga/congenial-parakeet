@@ -20,14 +20,13 @@ export const WEAPON = {
 export const ARMOR = {
     id: 0,
     name: '',
-    armorClass: {
-        applyDexModifier: false,
-        baseArmorClass: 10,
-        hasMaxDexModifier: false,
-        isCumulative: false,
-        maxDexModifier: 0
-    },
+    applyDexModifier: false,
+    baseArmorClass: 10,
     cost: "0",
+    hasMaxDexModifier: false,
+    isCumulative: false,
+    maxDexModifier: 0,
+    minimumStrength: 0,
     proficiency: {id: 0, name: ''},
     stealthDisadvantage: false,
     weight: "0"

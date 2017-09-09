@@ -708,6 +708,8 @@ module.exports = function(app, pg, async, pool) {
             sql += ', json_build_object(\'name\', dmgtype."itemName", \'id\', dmgtype."id") AS "damageType"';
             sql += ', json_build_object(\'name\', wpnprof."itemName", \'id\', wpnprof."id") AS "proficiency"';
             sql += ', json_build_object(\'name\', wpncat."itemName", \'id\', wpncat."id") AS "category"';
+            sql += ', json_build_object(\'name\', rsrc."itemName", \'id\', rsrc."id") AS "resource"';
+            //sql += ', json_build_object(\'name\', rsrc."itemName", \'id\', rsrc."id") AS "resource"';
             sql += ', case ';
             sql += '	when count(wpnprop) = 0 ';
             sql += '    	then \'[]\' ';
@@ -741,6 +743,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' 		ON wpncat.id = wpn."categoryId"';
             sql += ' 	INNER JOIN adm_core_dice dice ';
             sql += ' 		ON dice.id = wpn."damageDiceId"';
+            sql += '    INNER JOIN adm_item rsrc ON rsrc.id = i."resourceId"';
             sql += ' 	LEFT OUTER JOIN adm_link_weapon_property lnk ';
             sql += ' 		ON lnk."weaponId" = wpn."equipmentId"';
             sql += ' 	LEFT OUTER JOIN adm_def_weapon_property wpnprop ';
@@ -763,6 +766,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' , wpncat.id, wpncat."itemName"';
             sql += ' , altdice.id, altdice."dieCount", altdice."dieType"';
             sql += ' , wpnrng."normalRange", wpnrng."maximumRange"';
+            sql += ' , rsrc.id, rsrc."itemName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
                 results.push(row);

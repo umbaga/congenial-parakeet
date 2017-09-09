@@ -15,8 +15,18 @@ class DndInput extends React.Component {
         let primaryInput = null;
         
         let finalLabelCols = 4;
+        if(this.props.dataType == util.dataTypes.bool.BOOL
+          || this.props.dataType == util.dataTypes.bool.HAS_DISADVANTAGE
+          || this.props.dataType == util.dataTypes.bool.YES_NO) {
+            finalLabelCols = 8;
+        }
         if(this.props.labelCols) {
             finalLabelCols = this.props.labelCols;
+        }
+        if(this.props.dataType == util.dataTypes.bool.BOOL
+          || this.props.dataType == util.dataTypes.bool.HAS_DISADVANTAGE
+          || this.props.dataType == util.dataTypes.bool.YES_NO) {
+                finalInputCols = 1;
         }
         let finalInputCols = 12 - finalLabelCols;
         if(this.props.inputCols) {
@@ -24,8 +34,9 @@ class DndInput extends React.Component {
         }
         let longValue = '';
         switch(this.props.dataType) {
+            case util.dataTypes.bool.BOOL:
+            case util.dataTypes.bool.HAS_DISADVANTAGE:
             case util.dataTypes.bool.YES_NO:
-                finalInputCols = 1;
                 primaryInput = (<input
                                     type="checkbox"
                                     name={this.props.name}
@@ -45,6 +56,7 @@ class DndInput extends React.Component {
                                     className="form-control" />);
                 break;
             case util.dataTypes.number.COIN:
+            case util.dataTypes.number.INT:
             case util.dataTypes.number.WEIGHT:
                 primaryInput = (<input
                                     type="number"
@@ -66,6 +78,7 @@ class DndInput extends React.Component {
                                     onChange={this.props.onChange}
                                     className="form-control" />);
                 break;
+            case util.dataTypes.picklist.ARMOR_PROFICIENCY:
             case util.dataTypes.picklist.DAMAGE_TYPE:
             case util.dataTypes.picklist.WEAPON_CATEGORY:
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
