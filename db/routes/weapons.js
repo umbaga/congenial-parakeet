@@ -515,7 +515,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function insertEquipment(resObj, callback) {
                     sql = 'INSERT INTO adm_def_equipment';
-                    sql += ' ("equipmentId", "weight", "cost", "equipmentCategoryId")';
+                    sql += ' ("equipmentId", "weight", "cost", "categoryId")';
                     sql += ' VALUES ($1, $2, $3, 97);';
                     vals = [resObj.weapon.id, resObj.weapon.weight, resObj.weapon.cost];
                     var query = client.query(new pg.Query(sql, vals));

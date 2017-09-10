@@ -150,7 +150,7 @@ module.exports = function(app, pg, async, pool) {
                 function insertItem(req, callback) {
                     sql = 'INSERT INTO adm_item';
                     sql += ' ("itemName", "itemTypeId")';
-                    sql += ' VALUES ($1, 85) returning id AS "equipmentId";';
+                    sql += ' VALUES ($1, 88) returning id AS "equipmentId";';
                     vals = [req.body.armor.name];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
@@ -165,7 +165,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function insertEquipment(resObj, callback) {
                     sql = 'INSERT INTO adm_def_equipment';
-                    sql += ' ("equipmentId", "weight", "cost", "equipmentCategoryId")';
+                    sql += ' ("equipmentId", "weight", "cost", "categoryId")';
                     sql += ' VALUES ($1, $2, $3, 178);';
                     vals = [resObj.armor.id, resObj.armor.weight, resObj.armor.cost];
                     var query = client.query(new pg.Query(sql, vals));

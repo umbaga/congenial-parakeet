@@ -1,15 +1,167 @@
+
 module.exports = function(app, pg, async, pool) {
-    app.get('/api/adm/itemtypes', function(req, res) {
+    app.delete('/api/adm/equipment/template/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
             if(err) {
                 done();
-                console.log(err);
+                console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            sql = 'SELECT adm_type."id", adm_type."typeName" AS "name", adm_type."isPicklist"';
-            sql += ' FROM adm_type';
-            sql += ' ORDER BY "typeName"';
+            async.waterfall([
+                function init(callback) {
+                    callback(null, req);
+                },
+                function deleteItemTable(req, callback) {
+                    sql = 'DELETE FROM adm_item';
+                    sql += ' WHERE "id" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteEquipmentTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_equipment';
+                    sql += ' WHERE "equipmentId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                }
+            ], function(error, result) {
+                if (error) {
+                    console.error(error);
+                }
+                return res.json(result);
+            });
+        });
+    });
+    app.put('/api/adm/equipment/template/:id', function(req, res) {
+        var results = [];
+        pool.connect(function(err, client, done) {
+            if(err) {
+                done();
+                console.error(err);
+                return res.status(500).json({ success: false, data: err});
+            }
+            async.waterfall([
+                function init(callback) {
+                    callback(null, req);
+                },
+                function updateItemTable(req, callback) {
+                    sql = 'UPDATE adm_item';
+                    sql += ' SET "itemName" = $1';
+                    sql += ' WHERE id = $2'
+                    vals = [req.body.template.name, req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = req.body;
+                        return callback(null, tmp);
+                    });
+                },
+                function updateEquipmentTable(resObj, callback) {
+                    sql = 'UPDATE adm_def_equipment';
+                    sql += ' SET weight = $1';
+                    sql += ', cost = $2';
+                    sql += ' WHERE "equipmentId" = $3';
+                    vals = [resObj.template.weight, resObj.template.cost, req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                }
+            ], function(error, result) {
+                if (error) {
+                    console.error(error);
+                }
+                return res.json(result);
+            });
+        });
+    });
+    app.post('/api/adm/equipment/template', function(req, res) {
+        var results = [];
+        pool.connect(function(err, client, done) {
+            if(err) {
+                done();
+                console.error(err);
+                return res.status(500).json({ success: false, data: err});
+            }
+            async.waterfall([
+                function init(callback) {
+                    callback(null, req);
+                },
+                function insertItemTable(req, callback) {
+                    sql = 'INSERT INTO adm_item';
+                    sql += ' ("itemName", "itemTypeId")';
+                    sql += ' VALUES ($1, 85) returning id AS "equipmentId";';
+                    vals = [req.body.template.name];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = req.body;
+                        tmp.template.id = results[0].equipmentId;
+                        return callback(null, tmp);
+                    });
+                },
+                function insertSecondTable(resObj, callback) {
+                    sql = 'INSERT INTO adm_def_equipment';
+                    sql += ' ("equipmentId", "weight", "cost", "categoryId")';
+                    sql += ' VALUES ($1, $2, $3, 178);';
+                    vals = [resObj.template.id, resObj.template.weight, resObj.template.cost];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                }
+            ], function(error, result) {
+                if (error) {
+                    console.error(error);
+                }
+                return res.json(result);
+            });
+        });
+    });
+    app.get('/api/adm/equipment/templates', function(req, res) {
+        var results = [];
+        pool.connect(function(err, client, done) {
+            if(err) {
+                done();
+                console.error(err);
+                return res.status(500).json({ success: false, data: err});
+            }
+            
+            sql = 'SELECT i."itemName" AS name, i.id';
+            sql += ' FROM adm_item i';
+            sql += ' ORDER BY i."itemName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
                 results.push(row);
@@ -17,76 +169,6 @@ module.exports = function(app, pg, async, pool) {
             query.on('end', function() {
                 done();
                 return res.json(results);
-            });
-        });
-    });
-    app.post('/api/adm/itemtype', function(req, res){
-        var results = [];
-        pool.connect(function(err, client, done) {
-            if(err) {
-                done();
-                console.log(err);
-                return res.status(500).json({ success: false, data: err});
-            }
-            sql = 'INSERT INTO adm_type';
-            sql += '("typeName", "isPicklist")';
-            sql += 'VALUES ($1, $2) RETURNING id;';
-            vals = [req.body.itemtype.name, req.body.itemtype.isPicklist];
-            var query = client.query(new pg.Query(sql, vals));
-            query.on('row', function(row) {
-                results.push(row);
-            });
-            query.on('end', function() {
-                done();
-                var resObj = req.body;
-                resObj.itemtype.id = parseInt(results[0].id);
-                return res.json(resObj);
-            });
-        });
-    });
-    app.put('/api/adm/itemtype/:id', function(req, res) {
-        var results = [];
-        pool.connect(function(err, client, done) {
-            if(err) {
-                done();
-                console.log(err);
-                return res.status(500).json({ success: false, data: err});
-            }
-            sql = 'UPDATE adm_type';
-            sql += ' SET "typeName" = $1';
-            sql += ', "isPicklist" = $2'
-            sql += ' WHERE id = $3';
-            vals = [req.body.itemtype.name, req.body.itemtype.isPicklist, req.params.id];
-            var query = client.query(new pg.Query(sql, vals));
-            query.on('row', function(row) {
-                results.push(row);
-            });
-            query.on('end', function() {
-                done();
-                var resObj = req.body;
-                return res.json(resObj);
-            });
-        });
-    });
-    app.delete('/api/adm/itemtype/:id', function(req, res) {
-        var results = [];
-        pool.connect(function(err, client, done) {
-            if(err) {
-                done();
-                console.log(err);
-                return res.status(500).json({ success: false, data: err});
-            }
-            sql = 'DELETE FROM adm_type';
-            sql += ' WHERE id = $1';
-            vals = [req.params.id];
-            var query = client.query(new pg.Query(sql, vals));
-            query.on('row', function(row) {
-                results.push(row);
-            });
-            query.on('end', function() {
-                done();
-                var resObj = req.params.id;
-                return res.json([resObj]);
             });
         });
     });
