@@ -6,7 +6,7 @@ const DndButton = ({onClick, buttonType}) => {
     let bootstrapStyle = '';
     let fontawesomeStyle = 'fa fa-';
     let extraText = '';
-    switch(buttonType.toLowerCase()) {
+    switch (buttonType.toLowerCase()) {
         case 'edit':
             fontawesomeStyle += 'edit';
             bootstrapStyle += 'primary';

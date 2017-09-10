@@ -26,7 +26,7 @@ export function loadEquipments() {
         return equipmentApi.getAllEquipments().then(equipments => {
             dispatch(loadEquipmentsSuccess(equipments));
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -36,7 +36,7 @@ export function updateEquipment(equipment) {
         return equipmentApi.updateEquipment(equipment).then(responseEquipment => {
             dispatch(updateEquipmentSuccess(responseEquipment.equipment));
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -47,7 +47,7 @@ export function createEquipment(equipment) {
             dispatch(createEquipmentSuccess(responseEquipment.equipment));
             return responseEquipment;
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -58,31 +58,26 @@ export function deleteEquipment(equipment) {
             dispatch(deleteEquipmentSuccess(equipment));
             return;
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
 
 export function upsertEquipment(equipment) {
     return function(dispatch) {
-        if(equipment.id && equipment.id != 0) {
+        if (equipment.id && equipment.id != 0) {
             return equipmentApi.updateEquipment(equipment).then(responseEquipment => {
                 dispatch(updateEquipmentSuccess(responseEquipment.equipment));
             }).catch(error => {
-                throw(error);
+                throw (error);
             });
         } else {
             return equipmentApi.createEquipment(equipment).then(responseEquipment => {
                 dispatch(createEquipmentSuccess(responseEquipment.equipment));
                 return responseEquipment;
             }).catch(error => {
-                throw(error);
+                throw (error);
             });
         }
     };
 }
-
-
-
-
-

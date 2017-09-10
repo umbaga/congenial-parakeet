@@ -3,7 +3,7 @@ export const ARMOR = {
     name: '',
     applyDexModifier: false,
     baseArmorClass: 10,
-    cost: "0",
+    cost: '0',
     hasMaxDexModifier: false,
     isCumulative: false,
     maxDexModifier: 0,
@@ -14,7 +14,7 @@ export const ARMOR = {
         name: ''
     },
     stealthDisadvantage: false,
-    weight: "0"
+    weight: '0'
 };
 export const EQUIPMENT = {
     id: 0,
@@ -23,22 +23,22 @@ export const EQUIPMENT = {
         id: 0,
         name: ''
     },
-    cost: "0",
+    cost: '0',
     count: 0,
     resource: {
         id: 0,
         name: ''
     },
     unit: '',
-    weight: "0"
+    weight: '0'
 };
 export const ITEMTYPE = {id: 0, name: '', isPicklist: false};
 export const PICKLIST = {id: 0, name: '', items: []};
 export const PICKLISTITEM = {id: 0, name: '', picklistId: 0, defaultSelected: false};
 export const WEAPON = {
-    id: 0, 
-    name: '', 
-    cost: "0",
+    id: 0,
+    name: '',
+    cost: '0',
     damage: {dieCount: 0, dieType: 0, rendered: ''},
     damageType: {id: 0, name: ''},
     range: {},
@@ -54,4 +54,5 @@ export const WEAPON = {
     category: {id: 0, name: ''},
     proficiency: {id: 0, name: ''},
     weaponProperties: [],
-    weight: "0"};
+    weight: ''
+};

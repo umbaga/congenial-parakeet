@@ -26,7 +26,7 @@ export function loadWeapons() {
         return weaponApi.getAllWeapons().then(weapons => {
             dispatch(loadWeaponsSuccess(weapons));
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -36,7 +36,7 @@ export function updateWeapon(weapon) {
         return weaponApi.updateWeapon(weapon).then(responseWeapon => {
             dispatch(updateWeaponSuccess(responseWeapon.weapon));
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -47,7 +47,7 @@ export function createWeapon(weapon) {
             dispatch(createWeaponSuccess(responseWeapon.weapon));
             return responseWeapon;
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -58,31 +58,26 @@ export function deleteWeapon(weapon) {
             dispatch(deleteWeaponSuccess(weapon));
             return;
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
 
 export function upsertWeapon(weapon) {
     return function(dispatch) {
-        if(weapon.id && weapon.id != 0) {
+        if (weapon.id && weapon.id != 0) {
             return weaponApi.updateWeapon(weapon).then(responseWeapon => {
                 dispatch(updateWeaponSuccess(responseWeapon.weapon));
             }).catch(error => {
-                throw(error);
+                throw (error);
             });
         } else {
             return weaponApi.createWeapon(weapon).then(responseWeapon => {
                 dispatch(createWeaponSuccess(responseWeapon.weapon));
                 return responseWeapon;
             }).catch(error => {
-                throw(error);
+                throw (error);
             });
         }
     };
 }
-
-
-
-
-

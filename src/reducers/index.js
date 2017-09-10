@@ -9,7 +9,7 @@ import weapons from './weaponReducer';
 
 const rootReducer = combineReducers({
     armors,
-    dierolls, 
+    dierolls,
     equipments,
     itemtypes,
     picklists,

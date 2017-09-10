@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link, browserHistory} from 'react-router';
+import {browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ArmorList from './ArmorList';
@@ -14,7 +14,7 @@ class ArmorListPage extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            showModal: false,    
+            showModal: false,
             isCreate: false,
             selectedId: 0
         };
@@ -30,29 +30,29 @@ class ArmorListPage extends React.Component {
         }
     }
 
-    backToAdminHome(event) {
+    backToAdminHome() {
         browserHistory.push('/Home');
     }
-    
-    onCreate(event) {
+
+    onCreate() {
         this.open();
         this.setState({isCreate: true, selectedId: 0});
     }
-    
+
     close() {
         this.setState({ showModal: false });
     }
-    
+
     open() {
         this.setState({ showModal: true });
     }
-    
+
     changeSelectedId(newId) {
         this.setState({selectedId: parseInt(newId)});
     }
-    
+
     render() {
-        const armors = this.props.armors;   
+        const armors = this.props.armors;
         return (
             <div className="col-md-12">
                 <div>
@@ -77,7 +77,7 @@ class ArmorListPage extends React.Component {
                                 </th>
                             </tr>
                         </thead>
-                        <ArmorList 
+                        <ArmorList
                             armors={armors}
                             openModal={this.open}
                             selectedId={this.state.selectedId}
@@ -85,18 +85,18 @@ class ArmorListPage extends React.Component {
                             />
                     </table>
                 </div>
-                
-                <DndModal 
-                    closeModal={this.close} 
+
+                <DndModal
+                    closeModal={this.close}
                     isCreate={this.state.isCreate}
                     showModal={this.state.showModal}>
-                        <ArmorEntry 
-                            closeModal={this.close} 
-                            armors={armors}
-                            isCreate={this.state.isCreate}
-                            selectedId={this.state.selectedId}
-                            picklists={this.props.picklists}
-                            />
+                    <ArmorEntry
+                        closeModal={this.close}
+                        armors={armors}
+                        isCreate={this.state.isCreate}
+                        selectedId={this.state.selectedId}
+                        picklists={this.props.picklists}
+                        />
                 </DndModal>
             </div>
         );
@@ -110,7 +110,7 @@ ArmorListPage.propTypes = {
     armors: PropTypes.array.isRequired
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     if (state.armors.length > 0) {
         return {
             armors: state.armors,

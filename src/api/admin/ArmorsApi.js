@@ -21,7 +21,7 @@ class ArmorsApi {
         const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
         const request = new Request('http://localhost:5000/api/adm/equipment/armor/' + armor.id, {
             method: 'PUT',
-            headers: headers, 
+            headers: headers,
             body: JSON.stringify({armor: armor})
         });
         return fetch(request).then(response => {
@@ -48,7 +48,7 @@ class ArmorsApi {
     static deleteArmor(armor) {
         const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
         const request = new Request('http://localhost:5000/api/adm/equipment/armor/' + armor.id, {
-            method: 'DELETE', 
+            method: 'DELETE',
             headers: headers
         });
         return fetch(request).then(response => {

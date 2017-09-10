@@ -21,7 +21,7 @@ class ItemtypesApi {
         const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
         const request = new Request('http://localhost:5000/api/adm/itemtype/' + itemtype.id, {
             method: 'PUT',
-            headers: headers, 
+            headers: headers,
             body: JSON.stringify({itemtype: itemtype})
         });
         return fetch(request).then(response => {
@@ -48,7 +48,7 @@ class ItemtypesApi {
     static deleteItemtype(itemtype) {
         const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
         const request = new Request('http://localhost:5000/api/adm/itemtype/' + itemtype.id, {
-            method: 'DELETE', 
+            method: 'DELETE',
             headers: headers
         });
         return fetch(request).then(response => {

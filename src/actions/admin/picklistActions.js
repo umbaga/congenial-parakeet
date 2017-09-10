@@ -18,7 +18,7 @@ export function loadPicklists() {
         return picklistApi.getAllPicklists().then(picklists => {
             dispatch(loadPicklistsSuccess(picklists));
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -29,7 +29,7 @@ export function addPicklistItem(picklist, picklistItem) {
             dispatch(addPicklistItemSuccess(picklist, responsePicklistItem.picklistItem));
             return responsePicklistItem;
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -39,7 +39,7 @@ export function removePicklistItem(picklist, picklistItem) {
         return picklistApi.removePicklistItem(picklist, picklistItem).then(responsePicklistItem => {
             dispatch(removePicklistItemSuccess(picklist, responsePicklistItem));
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }

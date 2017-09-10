@@ -1,10 +1,9 @@
 import * as types from '../actions/actionTypes';
 import initialState from './initialState';
-import {browserHistory} from 'react-router';
 
 
 export default function equipmentReducer(state = initialState.equipments, action) {
-    switch(action.type) {
+    switch (action.type) {
         case types.LOAD_EQUIPMENTS_SUCCESS:
             return action.equipments;
         case types.CREATE_EQUIPMENT_SUCCESS:
@@ -19,11 +18,13 @@ export default function equipmentReducer(state = initialState.equipments, action
             ];
         case types.DELETE_EQUIPMENT_SUCCESS: {
             const newState = Object.assign([], state);
-            const indexOfEquipmentToDelete = state.findIndex(equipment => {return equipment.id == action.equipment.id;});
+            const indexOfEquipmentToDelete = state.findIndex(equipment => {
+                return equipment.id == action.equipment.id;
+            });
             newState.splice(indexOfEquipmentToDelete, 1);
             return newState;
         }
-        default: 
+        default:
             return state;
     }
 }

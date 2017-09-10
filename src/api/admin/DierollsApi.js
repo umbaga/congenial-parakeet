@@ -16,9 +16,9 @@ class DierollsApi {
             return error;
         });
     }
-    
+
     static createDieroll(dieroll) {
-        /*const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
+        const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
         const request = new Request('http://localhost:5000/api/adm/dieroll', {
             method: 'POST',
             headers: headers,
@@ -28,9 +28,9 @@ class DierollsApi {
             return response.json();
         }).catch(error => {
             return error;
-        });*/
+        });
     }
-    
+
 }
 
 export default DierollsApi;

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Link, browserHistory} from 'react-router';
 import util from '../../../../util/util';
 import DndListItemButtonBar from '../../../common/DndListItemButtonBar';
 import * as armorActions from '../../../../actions/admin/armorActions';
@@ -16,18 +15,15 @@ class ArmorListItem extends React.Component {
         this.editArmor = this.editArmor.bind(this);
         this.deleteItemType = this.deleteItemType.bind(this);
     }
-    componentWillReceiveProps(nextProps) {
-        
-    }
-    editArmor(armor) {
+    editArmor() {
         event.preventDefault();
         this.props.openModal();
         this.props.changeSelectedId(this.props.armor.id);
         this.setState({selectedId: this.props.armor.id});
     }
-    deleteItemType(armor) {
+    deleteItemType() {
         event.preventDefault();
-        if(confirm('are you sure?')) {
+        if (confirm('are you sure?')) {
             this.props.actions.deleteArmor(this.props.armor);
         }
     }
@@ -41,9 +37,9 @@ class ArmorListItem extends React.Component {
                 <td>{util.format.forDisplay.bool.hasDisadvantage(this.props.armor.stealthDisadvantage)}</td>
                 <td className="text-center">{util.format.forDisplay.number.weight(this.props.armor.weight)}</td>
                 <td>
-                    <DndListItemButtonBar 
+                    <DndListItemButtonBar
                         listItem={this.props.armor}
-                        onEdit={this.editArmor} 
+                        onEdit={this.editArmor}
                         onDelete={this.deleteItemType} />
                 </td>
             </tr>

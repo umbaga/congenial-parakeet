@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link, browserHistory} from 'react-router';
+import {browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import PicklistList from './PicklistList';
@@ -30,27 +30,27 @@ class PicklistListPage extends React.Component {
         }
     }
 
-    backToAdminHome(event) {
+    backToAdminHome() {
         browserHistory.push('/Home');
     }
-    
-    onCreate(event) {
+
+    onCreate() {
         this.open();
         this.setState({isCreate: true, selectedId: 0});
     }
-    
+
     close() {
         this.setState({ showModal: false });
     }
-    
+
     open() {
         this.setState({ showModal: true });
     }
-    
+
     changeSelectedId(newId) {
         this.setState({selectedId: parseInt(newId)});
     }
-    
+
     render() {
         const picklists = this.props.picklists;
         return (
@@ -70,7 +70,7 @@ class PicklistListPage extends React.Component {
                                 </th>
                             </tr>
                         </thead>
-                        <PicklistList 
+                        <PicklistList
                             picklists={picklists}
                             openModal={this.open}
                             selectedId={this.state.selectedId}
@@ -78,12 +78,12 @@ class PicklistListPage extends React.Component {
                             />
                     </table>
                 </div>
-                <DndModal 
-                    closeModal={this.close} 
+                <DndModal
+                    closeModal={this.close}
                     isCreate={this.state.isCreate}
                     showModal={this.state.showModal}>
-                        <PicklistEntry 
-                            closeModal={this.close} 
+                        <PicklistEntry
+                            closeModal={this.close}
                             picklists={picklists}
                             isCreate={this.state.isCreate}
                             selectedId={this.state.selectedId}
@@ -100,7 +100,7 @@ PicklistListPage.propTypes = {
     actions: PropTypes.object
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     if (state.picklists.length > 0) {
         return {
             picklists: state.picklists

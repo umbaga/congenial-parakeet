@@ -8,24 +8,19 @@ class WeaponForm extends React.Component {
     constructor(props) {
         super(props);
     }
-    
+
     render() {
-        const isCreate = this.props.isCreate;
-        let deleteButton = null;
-        if(!isCreate) {
-            deleteButton = <button onClick={this.props.onDelete} className="btn btn-default  ">Delete</button>;
-        }
         let damageTypePicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.DAMAGE_TYPE);
         let categoryPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_CATEGORY);
         let proficiencyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROFICIENCY);
         let weaponPropertyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROPERTY);
-        
+
         let versatileDamageInput = null;
         let rangeInput = null;
         let specialDescriptionInput = null;
-        for(let v = 0; v < this.props.weapon.weaponProperties.length; v++){
-            if(this.props.weapon.weaponProperties[v]){
-                if(this.props.weapon.weaponProperties[v].requireDamage) {
+        for (let v = 0; v < this.props.weapon.weaponProperties.length; v++){
+            if (this.props.weapon.weaponProperties[v]){
+                if (this.props.weapon.weaponProperties[v].requireDamage) {
                     versatileDamageInput = (<div className="col-md-12">
                         <DndInput
                             name="versatileDamage"
@@ -35,7 +30,7 @@ class WeaponForm extends React.Component {
                             onChange={this.props.onChange} />
                     </div>);
                 }
-                if(this.props.weapon.weaponProperties[v].requireRange) {
+                if (this.props.weapon.weaponProperties[v].requireRange) {
                     rangeInput = (<div className="col-md-12">
                         <DndInput
                             name="range"
@@ -45,7 +40,7 @@ class WeaponForm extends React.Component {
                             onChange={this.props.onChange} />
                         </div>);
                 }
-                if(this.props.weapon.weaponProperties[v].requireDescription) {
+                if (this.props.weapon.weaponProperties[v].requireDescription) {
                     specialDescriptionInput = (<div className="col-md-12">
                             <DndInput
                                 name="specialDescription"
@@ -132,7 +127,7 @@ class WeaponForm extends React.Component {
                     {versatileDamageInput}
                     {specialDescriptionInput}
                     <DndDataEntryButtonBar
-                        onSave={this.props.onSave} 
+                        onSave={this.props.onSave}
                         onSaveNew={this.props.onSaveNew}
                         onCancel={this.props.onCancel}
                         onDelete={this.props.onDelete}

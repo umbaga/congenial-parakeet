@@ -14,7 +14,7 @@ export function loadDierolls() {
         return dierollApi.getAllDierolls().then(dierolls => {
             dispatch(loadDierollsSuccess(dierolls));
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -25,7 +25,7 @@ export function createDieroll(dieroll) {
             dispatch(createDierollSuccess(responseDieroll.dieroll));
             return responseDieroll;
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }

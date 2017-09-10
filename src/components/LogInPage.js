@@ -24,7 +24,7 @@ class LogInPage extends React.Component {
         event.preventDefault();
         this.props.actions.loginUser(this.state.credentials);
     }
-    
+
     render() {
         return (
             <div>

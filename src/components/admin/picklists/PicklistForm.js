@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndDataEntryButtonBar from '../../common/DndDataEntryButtonBar';
 import DndButton from '../../common/DndButton';
-import util from '../../../util/util';
 import PicklistItemRow from './PicklistItemRow';
 
 class PicklistForm extends React.Component {
@@ -10,12 +8,12 @@ class PicklistForm extends React.Component {
         super(props, context);
         this._onAdd = this._onAdd.bind(this);
     }
-    
+
     _onAdd(event) {
         event.preventDefault();
         this.props.addPicklistItem(this.props.picklistItem);
     }
-    
+
     render() {
         return (
             <div>
@@ -40,7 +38,7 @@ class PicklistForm extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.props.picklist.items.map(item => 
+                                {this.props.picklist.items.map(item =>
                                                                <PicklistItemRow key={item.id}
                                                                    picklistItem={item}
                                                                    removePicklistItem={this.props.removePicklistItem} />
@@ -55,11 +53,11 @@ class PicklistForm extends React.Component {
 }
 
 PicklistForm.propTypes = {
-    picklist: React.PropTypes.object.isRequired,
-    picklistItem: React.PropTypes.object.isRequired,
-    onChange: React.PropTypes.func.isRequired,
-    addPicklistItem: React.PropTypes.func.isRequired,
-    removePicklistItem: React.PropTypes.func.isRequired
+    picklist: PropTypes.object.isRequired,
+    picklistItem: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
+    addPicklistItem: PropTypes.func.isRequired,
+    removePicklistItem: PropTypes.func.isRequired
 };
 
 export default PicklistForm;

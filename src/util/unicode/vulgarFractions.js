@@ -23,87 +23,87 @@ export function calculateFractionalValue(val) {
     let tmpVal = parseFloat(val);
     let wholeComponent = util.format.forDisplay.number.addCommas(Math.floor(tmpVal)).toString();
     let fractionalComponent = (tmpVal - Math.floor(tmpVal)).toString().split('.');
-    if(fractionalComponent.length == 2) {
-        switch(fractionalComponent[1].substring(0, 4)) {
-            case "5":
+    if (fractionalComponent.length == 2) {
+        switch (fractionalComponent[1].substring(0, 4)) {
+            case '5':
                 retVal = wholeComponent + ' ' + oneHalf;
                 break;
-            case "25":
+            case '25':
                 retVal = wholeComponent + ' ' + oneQuarter;
                 break;
-            case "75":
+            case '75':
                 retVal = wholeComponent + ' ' + threeQuarters;
                 break;
-            case "3":
-            case "29":
-            case "33":
-            case "329":
-            case "333":
-            case "3299":
-            case "3329":
-            case "3333":
+            case '3':
+            case '29':
+            case '33':
+            case '329':
+            case '333':
+            case '3299':
+            case '3329':
+            case '3333':
                 retVal = wholeComponent + ' ' + oneThird;
                 break;
-            case "67":
-            case "667":
-            case "6667":
-            case "669":
-            case "6699":
-            case "6669":
+            case '67':
+            case '667':
+            case '6667':
+            case '669':
+            case '6699':
+            case '6669':
                 retVal = wholeComponent + ' ' + twoThirds;
                 break;
-            case "2":
-            case "1999":
-            case "2000":
+            case '2':
+            case '1999':
+            case '2000':
                 retVal = wholeComponent + ' ' + oneFifth;
                 break;
-            case "4":
-            case "3999":
-            case "4000":
+            case '4':
+            case '3999':
+            case '4000':
                 retVal = wholeComponent + ' ' + twoFifths;
                 break;
-            case "6":
-            case "5999":
-            case "6000":
+            case '6':
+            case '5999':
+            case '6000':
                 retVal = wholeComponent + ' ' + threeFifths;
                 break;
-            case "8":
-            case "7999":
-            case "8000":
+            case '8':
+            case '7999':
+            case '8000':
                 retVal = wholeComponent + ' ' + fourFifths;
                 break;
-            case "167":
-            case "1670":
+            case '167':
+            case '1670':
                 retVal = wholeComponent + ' ' + oneSixth;
                 break;
-            case "833":
-            case "8330":
+            case '833':
+            case '8330':
                 retVal = wholeComponent + ' ' + fiveSixths;
                 break;
-            case "125":
+            case '125':
                 retVal = wholeComponent + ' ' + oneEighth;
                 break;
-            case "375":
+            case '375':
                 retVal = wholeComponent + ' ' + threeEighths;
                 break;
-            case "625":
+            case '625':
                 retVal = wholeComponent + ' ' + fiveEighths;
                 break;
-            case "875":
+            case '875':
                 retVal = wholeComponent + ' ' + sevenEighths;
                 break;
-            case "11":
-            case "09":
-            case "111":
-            case "109":
-            case "1111":
-            case "1109":
+            case '11':
+            case '09':
+            case '111':
+            case '109':
+            case '1111':
+            case '1109':
                 retVal = wholeComponent + ' ' + oneNinth;
                 break;
-            case "1":
-            case "10":
-            case "100":
-            case "1000":
+            case '1':
+            case '10':
+            case '100':
+            case '1000':
                 retVal = wholeComponent + ' ' + oneTenth;
                 break;
             default:

@@ -26,7 +26,7 @@ export function loadArmors() {
         return armorApi.getAllArmors().then(armors => {
             dispatch(loadArmorsSuccess(armors));
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -36,7 +36,7 @@ export function updateArmor(armor) {
         return armorApi.updateArmor(armor).then(responseArmor => {
             dispatch(updateArmorSuccess(responseArmor.armor));
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -47,7 +47,7 @@ export function createArmor(armor) {
             dispatch(createArmorSuccess(responseArmor.armor));
             return responseArmor;
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -58,31 +58,26 @@ export function deleteArmor(armor) {
             dispatch(deleteArmorSuccess(armor));
             return;
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
 
 export function upsertArmor(armor) {
     return function(dispatch) {
-        if(armor.id && armor.id != 0) {
+        if (armor.id && armor.id != 0) {
             return armorApi.updateArmor(armor).then(responseArmor => {
                 dispatch(updateArmorSuccess(responseArmor.armor));
             }).catch(error => {
-                throw(error);
+                throw (error);
             });
         } else {
             return armorApi.createArmor(armor).then(responseArmor => {
                 dispatch(createArmorSuccess(responseArmor.armor));
                 return responseArmor;
             }).catch(error => {
-                throw(error);
+                throw (error);
             });
         }
     };
 }
-
-
-
-
-

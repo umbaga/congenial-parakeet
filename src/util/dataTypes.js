@@ -35,20 +35,18 @@ export const string = {
 
 export function compareDataType (val, dataType) {
     let retVal = true;
-    let tmpDieCount = 0;
     let tmpDieType = 0;
     let tmpArr = [];
-    switch(dataType) {
+    switch (dataType) {
         case special.DICE_ROLL:
             tmpArr = val.toLowerCase().split('d');
-            if(tmpArr.length == 2) {
-                if(Number.isInteger(parseInt(tmpArr[0]))) {
-                    tmpDieCount = parseInt(tmpArr[0]);
-                    if(Number.isInteger(parseInt(tmpArr[1]))) {
+            if (tmpArr.length == 2) {
+                if (Number.isInteger(parseInt(tmpArr[0]))) {
+                    if (Number.isInteger(parseInt(tmpArr[1]))) {
                         tmpDieType = parseInt(tmpArr[1]);
-                        if(tmpDieType == 0 || tmpDieType == 1 || tmpDieType == 2 || 
-                           tmpDieType == 3 || tmpDieType == 4 || tmpDieType == 6 || 
-                           tmpDieType == 8 || tmpDieType == 10 || tmpDieType == 12 || 
+                        if (tmpDieType == 0 || tmpDieType == 1 || tmpDieType == 2 ||
+                           tmpDieType == 3 || tmpDieType == 4 || tmpDieType == 6 ||
+                           tmpDieType == 8 || tmpDieType == 10 || tmpDieType == 12 ||
                            tmpDieType == 20 || tmpDieType == 100) {
                             retVal = true;
                         } else {
@@ -64,6 +62,7 @@ export function compareDataType (val, dataType) {
                 retVal = false;
             }
             break;
+        default:
     }
     return retVal;
 }

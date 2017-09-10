@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link, browserHistory} from 'react-router';
+import {browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import WeaponList from './WeaponList';
@@ -30,27 +30,27 @@ class WeaponListPage extends React.Component {
         }
     }
 
-    backToAdminHome(event) {
+    backToAdminHome() {
         browserHistory.push('/Home');
     }
-    
-    onCreate(event) {
+
+    onCreate() {
         this.open();
         this.setState({isCreate: true, selectedId: 0});
     }
-    
+
     close() {
         this.setState({ showModal: false });
     }
-    
+
     open() {
         this.setState({ showModal: true });
     }
-    
+
     changeSelectedId(newId) {
         this.setState({selectedId: parseInt(newId)});
     }
-    
+
     render() {
         const weapons = this.props.weapons;
         return (
@@ -76,7 +76,7 @@ class WeaponListPage extends React.Component {
                                 </th>
                             </tr>
                         </thead>
-                        <WeaponList 
+                        <WeaponList
                             weapons={weapons}
                             openModal={this.open}
                             selectedId={this.state.selectedId}
@@ -84,13 +84,12 @@ class WeaponListPage extends React.Component {
                             />
                     </table>
                 </div>
-                
-                <DndModal 
-                    closeModal={this.close} 
+                <DndModal
+                    closeModal={this.close}
                     isCreate={this.state.isCreate}
                     showModal={this.state.showModal}>
-                        <WeaponEntry 
-                            closeModal={this.close} 
+                        <WeaponEntry
+                            closeModal={this.close}
                             weapons={weapons}
                             isCreate={this.state.isCreate}
                             selectedId={this.state.selectedId}
@@ -109,7 +108,7 @@ WeaponListPage.propTypes = {
     weapons: PropTypes.array.isRequired
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     if (state.weapons.length > 0) {
         return {
             weapons: state.weapons,

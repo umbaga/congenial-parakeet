@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {browserHistory} from 'react-router';
 import * as weaponActions from '../../../../actions/admin/weaponActions';
 import WeaponForm from './WeaponForm';
 import util from '../../../../util/util';
@@ -11,7 +10,7 @@ class WeaponEntry extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            weapon: this.props.weapon, 
+            weapon: this.props.weapon,
             isCreate: this.props.isCreate,
             saving: false
         };
@@ -38,7 +37,7 @@ class WeaponEntry extends React.Component {
 
     deleteWeapon(event) {
         event.preventDefault();
-        if(confirm('are you sure?')) {
+        if (confirm('are you sure?')) {
             this.props.actions.deleteWeapon(this.state.weapon);
             this.postAction();
         }
@@ -52,7 +51,7 @@ class WeaponEntry extends React.Component {
         event.preventDefault();
         this.setState({saving: true});
         this.props.actions.upsertWeapon(this.state.weapon);
-    } 
+    }
 
     saveAndNewWeapon(event) {
         this.saveWeapon(event);
@@ -78,7 +77,7 @@ class WeaponEntry extends React.Component {
         let referencePicklistItem = util.picklistInfo.getPicklistItem(this.props.picklists, removeThisId);
         let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
 
-        switch(dataType) {
+        switch (dataType) {
             case util.dataTypes.string.STRING:
             case util.dataTypes.string.LONG_STRING:
             case util.dataTypes.number.COIN:
@@ -97,19 +96,19 @@ class WeaponEntry extends React.Component {
                 break;
             case util.dataTypes.special.DICE_ROLL:
                 newRenderedValue = '';
-                if(event.target.value && event.target.value.length != 0) {
-                    for(let y = 0; y < event.target.value.length; y++) {
-                        if(event.target.value.charAt(y) == '1' || event.target.value.charAt(y) == '2' || 
-                           event.target.value.charAt(y) == '3' || event.target.value.charAt(y) == '4' || 
-                           event.target.value.charAt(y) == '5' || event.target.value.charAt(y) == '6' || 
-                           event.target.value.charAt(y) == '7' || event.target.value.charAt(y) == '8' || 
-                           event.target.value.charAt(y) == '9' || event.target.value.charAt(y) == '0' || 
+                if (event.target.value && event.target.value.length != 0) {
+                    for (let y = 0; y < event.target.value.length; y++) {
+                        if (event.target.value.charAt(y) == '1' || event.target.value.charAt(y) == '2' ||
+                           event.target.value.charAt(y) == '3' || event.target.value.charAt(y) == '4' ||
+                           event.target.value.charAt(y) == '5' || event.target.value.charAt(y) == '6' ||
+                           event.target.value.charAt(y) == '7' || event.target.value.charAt(y) == '8' ||
+                           event.target.value.charAt(y) == '9' || event.target.value.charAt(y) == '0' ||
                            event.target.value.charAt(y) == 'd' || event.target.value.charAt(y) == 'D') {
                             newRenderedValue += event.target.value.charAt(y);
                         }
                     }
                 }
-                if(util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL)) {
+                if (util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL)) {
                     newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
                     newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
                     weapon[field] = newDiceRollValue;
@@ -117,19 +116,19 @@ class WeaponEntry extends React.Component {
                 weapon[field].rendered = newRenderedValue;
                 break;
             case util.dataTypes.array.WEAPON_PROPERTIES:
-                if(isAssign) {
+                if (isAssign) {
                     field = field.split('Unassigned')[0];
                     weapon[field].push(referencePicklistItem);
                 } else {
-                    for(let b = 0; b < weapon.weaponProperties.length; b++) {
-                        if(weapon.weaponProperties[b].id == referencePicklistItem.id) {
-                            if(weapon.weaponProperties[b].requireDamage) {
+                    for (let b = 0; b < weapon.weaponProperties.length; b++) {
+                        if (weapon.weaponProperties[b].id == referencePicklistItem.id) {
+                            if (weapon.weaponProperties[b].requireDamage) {
                                 weapon.versatileDamage = {};
                             }
-                            if(weapon.weaponProperties[b].requireDescription)  {
+                            if (weapon.weaponProperties[b].requireDescription) {
                                 weapon.specialDescription = null;
                             }
-                            if(weapon.weaponProperties[b].requireRange)  {
+                            if (weapon.weaponProperties[b].requireRange) {
                                 weapon.ramge = {};
                             }
                             removeThisIndex = b;
@@ -140,7 +139,7 @@ class WeaponEntry extends React.Component {
                 }
                 break;
             case util.dataTypes.special.WEAPON_RANGE:
-                if(field.split('_').length == 2) {
+                if (field.split('_').length == 2) {
                     subfield = field.split('_')[1];
                     field = field.split('_')[0];
                 }
@@ -154,16 +153,16 @@ class WeaponEntry extends React.Component {
     render() {
         return (
             <div>
-                <WeaponForm 
-                    weapon={this.state.weapon} 
-                    onSave={this.saveAndBackWeapon} 
+                <WeaponForm
+                    weapon={this.state.weapon}
+                    onSave={this.saveAndBackWeapon}
                     onSaveNew={this.saveAndNewWeapon}
-                    onChange={this.updateFormState} 
+                    onChange={this.updateFormState}
                     onCancel={this.cancelWeapon}
                     onDelete={this.deleteWeapon}
                     isCreate={this.state.isCreate}
                     saving={this.state.saving}
-                    picklists={this.props.picklists} /> 
+                    picklists={this.props.picklists} />
             </div>
         );
     }
@@ -178,7 +177,7 @@ WeaponEntry.propTypes = {
 };
 
 function getWeaponById(weapons, id) {
-    if(id != 0) {
+    if (id != 0) {
         let weapon = weapons.find(weapon => weapon.id == id);
         return Object.assign({}, weapon);
     } else {
@@ -190,7 +189,7 @@ function mapStateToProps(state, ownProps) {
     let weapon = Object.assign({}, util.objectModel.WEAPON);
     const weaponId = ownProps.selectedId;
     let isCreate = true;
-    if(ownProps.selecetdId != 0) {
+    if (ownProps.selecetdId != 0) {
         if (weaponId && state.weapons.length > 0) {
             weapon = getWeaponById(state.weapons, ownProps.selectedId);
             isCreate = false;

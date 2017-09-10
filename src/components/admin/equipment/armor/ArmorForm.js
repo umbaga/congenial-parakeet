@@ -8,22 +8,21 @@ class ArmorForm extends React.Component {
     constructor(props) {
         super(props);
     }
-    
+
     render() {
-        const isCreate = this.props.isCreate;
         let proficiencyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.ARMOR_PROFICIENCY);
-        
+
         let hasMaxDexInput = null;
         let maximumDexInput = null;
-        if(this.props.armor.applyDexModifier) {
-            if(this.props.armor.hasMaxDexModifier) {
+        if (this.props.armor.applyDexModifier) {
+            if (this.props.armor.hasMaxDexModifier) {
                 maximumDexInput = (
-                            <DndInput
-                                name="maxDexModifier"
-                                label="Max Dex Mod"
-                                dataType={util.dataTypes.number.INT}
-                                value={this.props.armor.maxDexModifier.toString()}
-                                onChange={this.props.onChange} />
+                    <DndInput
+                        name="maxDexModifier"
+                        label="Max Dex Mod"
+                        dataType={util.dataTypes.number.INT}
+                        value={this.props.armor.maxDexModifier.toString()}
+                        onChange={this.props.onChange} />
                 );
             }
             hasMaxDexInput = (
@@ -42,7 +41,7 @@ class ArmorForm extends React.Component {
                 </div>
             );
         }
-        
+
         return (
             <div>
                 <form>
@@ -121,7 +120,7 @@ class ArmorForm extends React.Component {
                             onChange={this.props.onChange} />
                     </div>
                     <DndDataEntryButtonBar
-                        onSave={this.props.onSave} 
+                        onSave={this.props.onSave}
                         onSaveNew={this.props.onSaveNew}
                         onCancel={this.props.onCancel}
                         onDelete={this.props.onDelete}

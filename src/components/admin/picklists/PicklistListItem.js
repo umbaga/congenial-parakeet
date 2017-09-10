@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Link, browserHistory} from 'react-router';
 import util from '../../../util/util';
 import DndListItemButtonBar from '../../common/DndListItemButtonBar';
 import * as picklistActions from '../../../actions/admin/picklistActions';
@@ -17,37 +16,34 @@ class PicklistListItem extends React.Component {
         this.editPicklist = this.editPicklist.bind(this);
         this.deletePicklist = this.deletePicklist.bind(this);
     }
-    componentWillReceiveProps(nextProps) {
-        
-    }
-    editPicklist(picklist) {
+    editPicklist() {
         event.preventDefault();
         this.props.openModal();
         this.props.changeSelectedId(this.props.picklist.id);
         this.setState({selectedId: this.props.picklist.id});
     }
-    deletePicklist(picklist) {
+    deletePicklist() {
         event.preventDefault();
-        if(confirm('are you sure?')) {
+        if (confirm('are you sure?')) {
             this.props.actions.deletePicklist(this.props.picklist);
         }
     }
     render() {
-        const itemArrayPopover =(
+        const itemArrayPopover = (
             <Popover id={this.props.picklist.id}>
                 {popoverContent(this.props.picklist.items)}
             </Popover>
         );
         function popoverContent(val) {
             let tmp = [];
-            if(val) {
-                for(let x = 0; x < val.length; x++) {
+            if (val) {
+                for (let x = 0; x < val.length; x++) {
                     tmp.push(<div key={val[x].id}>{val[x].name}</div>);
                 }
             }
             return tmp;
         }
-        
+
         return (
             <tr key={this.props.picklist.id}>
                 <td>{this.props.picklist.name}</td>
@@ -57,9 +53,9 @@ class PicklistListItem extends React.Component {
                     </OverlayTrigger>
                 </td>
                 <td>
-                    <DndListItemButtonBar 
+                    <DndListItemButtonBar
                         listItem={this.props.picklist}
-                        onEdit={this.editPicklist} 
+                        onEdit={this.editPicklist}
                         onDelete={this.deletePicklist}
                         hideDeleteButton />
                 </td>

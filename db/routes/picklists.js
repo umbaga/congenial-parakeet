@@ -2,7 +2,7 @@ module.exports = function(app, pg, async, pool) {
     app.get('/api/adm/picklist/weaponproperties', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -26,7 +26,7 @@ module.exports = function(app, pg, async, pool) {
     app.get('/api/adm/picklist/weaponproficiencies', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -48,7 +48,7 @@ module.exports = function(app, pg, async, pool) {
     app.get('/api/adm/picklist/weaponcategories', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -70,7 +70,7 @@ module.exports = function(app, pg, async, pool) {
     app.get('/api/adm/picklist/armorproficiencies', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -92,7 +92,7 @@ module.exports = function(app, pg, async, pool) {
     app.get('/api/adm/picklist/damagetypes', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -116,7 +116,7 @@ module.exports = function(app, pg, async, pool) {
     app.get('/api/adm/picklists/all', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -145,7 +145,7 @@ module.exports = function(app, pg, async, pool) {
     app.post('/api/adm/picklist/item', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err });
@@ -169,7 +169,7 @@ module.exports = function(app, pg, async, pool) {
     app.delete('/api/adm/picklist/item/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});

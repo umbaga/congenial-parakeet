@@ -2,7 +2,7 @@ module.exports = function(app, pg, async, pool) {
     app.get('/api/adm/core/dierolls', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.log(err);
                 return res.status(500).json({ success: false, data: err});
@@ -23,7 +23,7 @@ module.exports = function(app, pg, async, pool) {
     app.post('/api/adm/core/dieroll', function(req, res){
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.log(err);
                 return res.status(500).json({ success: false, data: err});

@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndDataEntryButtonBar from '../../common/DndDataEntryButtonBar';
 import DndButton from '../../common/DndButton';
-import util from '../../../util/util';
 
 
 class PicklistItemRow extends React.Component {
@@ -10,7 +8,7 @@ class PicklistItemRow extends React.Component {
         super(props, context);
         this._onRemove = this._onRemove.bind(this);
     }
-    _onRemove(event) {
+    _onRemove() {
         this.props.removePicklistItem(this.props.picklistItem);
     }
     render() {
@@ -25,11 +23,10 @@ class PicklistItemRow extends React.Component {
             </tr>
         );
     }
-    
 }
 PicklistItemRow.propTypes = {
-    picklistItem: React.PropTypes.object.isRequired,
-    removePicklistItem: React.PropTypes.func.isRequired
+    picklistItem: PropTypes.object.isRequired,
+    removePicklistItem: PropTypes.func.isRequired
 };
 
 export default PicklistItemRow;

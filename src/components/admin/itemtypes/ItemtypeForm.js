@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import DndDataEntryButtonBar from '../../common/DndDataEntryButtonBar';
 import DndInput from '../../common/DndInput';
 import util from '../../../util/util';
@@ -8,13 +7,8 @@ class ItemtypeForm extends React.Component {
     constructor(props) {
         super(props);
     }
-    
+
     render() {
-        const isCreate = this.props.isCreate;
-        let deleteButton = null;
-        if(!isCreate) {
-            deleteButton = <button onClick={this.props.onDelete} className="btn btn-default  ">Delete</button>;
-        }
         return (
             <div>
                 <form>
@@ -31,7 +25,7 @@ class ItemtypeForm extends React.Component {
                         checked={this.props.itemtype.isPicklist}
                         onChange={this.props.onChange} />
                     <DndDataEntryButtonBar
-                        onSave={this.props.onSave} 
+                        onSave={this.props.onSave}
                         onSaveNew={this.props.onSaveNew}
                         onCancel={this.props.onCancel}
                         onDelete={this.props.onDelete}

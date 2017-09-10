@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const CheckBox = ({name, label, onChange, placeholder, checked, error, type="checkbox"}) => {
+const CheckBox = ({name, label, onChange, placeholder, checked, error, type = 'checkbox'}) => {
     let wrapperClass = 'form-group form-horizontal row checkbox-row hidey';
     if (error && error.length > 0) {
-        wrapperClass += " " + 'has-error';
+        wrapperClass += ' has-error';
     }
 
     return (

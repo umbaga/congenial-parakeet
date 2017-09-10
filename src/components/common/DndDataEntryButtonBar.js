@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import DndButton from './DndButton';
 import { ButtonGroup } from 'react-bootstrap';
 
-const DndDataEntryButtonBar = ({isCreate, onCancel, onSave, onSaveNew, onDelete, saving}) => {
+const DndDataEntryButtonBar = ({isCreate, onCancel, onSave, onSaveNew, onDelete}) => {
     let wrapperClass = 'form-group';
     let deleteButton = null;
-    if(!isCreate) {
+    if (!isCreate) {
         deleteButton = <DndButton onClick={onDelete} buttonType="delete" />;
     }
 

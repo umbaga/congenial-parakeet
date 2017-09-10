@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {browserHistory} from 'react-router';
 import * as itemtypeActions from '../../../actions/admin/itemtypeActions';
 import ItemtypeForm from './ItemtypeForm';
 import util from '../../../util/util';
@@ -12,7 +11,7 @@ class ItemtypeEntry extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            itemtype: this.props.itemtype, 
+            itemtype: this.props.itemtype,
             isCreate: this.props.isCreate,
             saving: false
         };
@@ -39,7 +38,7 @@ class ItemtypeEntry extends React.Component {
 
     deleteItemtype(event) {
         event.preventDefault();
-        if(confirm('are you sure?')) {
+        if (confirm('are you sure?')) {
             this.props.actions.deleteItemtype(this.state.itemtype);
             this.postAction();
         }
@@ -53,7 +52,7 @@ class ItemtypeEntry extends React.Component {
         event.preventDefault();
         this.setState({saving: true});
         this.props.actions.upsertItemtype(this.state.itemtype);
-    } 
+    }
 
     saveAndNewItemtype(event) {
         this.saveItemtype(event);
@@ -69,11 +68,11 @@ class ItemtypeEntry extends React.Component {
     updateFormState(event) {
         const field = event.target.name;
         const itemtype = this.state.itemtype;
-        switch(event.target.type) {
-            case "text":
+        switch (event.target.type) {
+            case 'text':
                 itemtype[field] = event.target.value;
                 break;
-            case "checkbox":
+            case 'checkbox':
                 itemtype[field] = !itemtype[field];
                 break;
             default:
@@ -84,15 +83,15 @@ class ItemtypeEntry extends React.Component {
     render() {
         return (
             <div>
-                <ItemtypeForm 
-                    itemtype={this.state.itemtype} 
-                    onSave={this.saveAndBackItemtype} 
+                <ItemtypeForm
+                    itemtype={this.state.itemtype}
+                    onSave={this.saveAndBackItemtype}
                     onSaveNew={this.saveAndNewItemtype}
-                    onChange={this.updateFormState} 
+                    onChange={this.updateFormState}
                     onCancel={this.cancelItemtype}
                     onDelete={this.deleteItemtype}
                     isCreate={this.state.isCreate}
-                    saving={this.state.saving} /> 
+                    saving={this.state.saving} />
             </div>
         );
     }
@@ -106,7 +105,7 @@ ItemtypeEntry.propTypes = {
 };
 
 function getItemtypeById(itemtypes, id) {
-    if(id != 0) {
+    if (id != 0) {
         let itemtype = itemtypes.find(itemtype => itemtype.id == id);
         return Object.assign({}, itemtype);
     } else {
@@ -118,7 +117,7 @@ function mapStateToProps(state, ownProps) {
     let itemtype = Object.assign({}, util.objectModel.ITEMTYPE);
     const itemtypeId = ownProps.selectedId;
     let isCreate = true;
-    if(ownProps.selecetdId != 0) {
+    if (ownProps.selecetdId != 0) {
         if (itemtypeId && state.itemtypes.length > 0) {
             itemtype = getItemtypeById(state.itemtypes, ownProps.selectedId);
             isCreate = false;

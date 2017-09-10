@@ -5,7 +5,7 @@ import util from '../../util/util';
 class DndInput extends React.Component {
     constructor(props, context) {
         super(props, context);
-        
+
     }
 
     render() {
@@ -13,27 +13,27 @@ class DndInput extends React.Component {
         //let wrapperClass = 'form-group form-horizontal row';
 
         let primaryInput = null;
-        
+
         let finalLabelCols = 4;
-        if(this.props.dataType == util.dataTypes.bool.BOOL
+        if (this.props.dataType == util.dataTypes.bool.BOOL
           || this.props.dataType == util.dataTypes.bool.HAS_DISADVANTAGE
           || this.props.dataType == util.dataTypes.bool.YES_NO) {
             finalLabelCols = 8;
         }
-        if(this.props.labelCols) {
+        if (this.props.labelCols) {
             finalLabelCols = this.props.labelCols;
         }
-        if(this.props.dataType == util.dataTypes.bool.BOOL
+        if (this.props.dataType == util.dataTypes.bool.BOOL
           || this.props.dataType == util.dataTypes.bool.HAS_DISADVANTAGE
           || this.props.dataType == util.dataTypes.bool.YES_NO) {
-                finalInputCols = 1;
+            finalInputCols = 1;
         }
         let finalInputCols = 12 - finalLabelCols;
-        if(this.props.inputCols) {
+        if (this.props.inputCols) {
             finalInputCols = this.props.inputCols;
         }
         let longValue = '';
-        switch(this.props.dataType) {
+        switch (this.props.dataType) {
             case util.dataTypes.bool.BOOL:
             case util.dataTypes.bool.HAS_DISADVANTAGE:
             case util.dataTypes.bool.YES_NO:
@@ -43,7 +43,7 @@ class DndInput extends React.Component {
                                     checked={this.props.checked}
                                     datatype={this.props.dataType}
                                     onChange={this.props.onChange}
-                                    className="form-control checkbox-inline"  />);
+                                    className="form-control checkbox-inline" />);
                 break;
             case util.dataTypes.string.STRING:
                 primaryInput = (<input
@@ -83,14 +83,14 @@ class DndInput extends React.Component {
             case util.dataTypes.picklist.WEAPON_CATEGORY:
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
             case util.dataTypes.picklist.EQUIPMENT_CATEGORY:
-                primaryInput = (<select 
+                primaryInput = (<select
                                     value={this.props.picklist.id}
                                     name={this.props.name}
                                     className="form-control"
                                     onChange={this.props.onChange}
-                                    datatype={this.props.dataType} >
+                                    datatype={this.props.dataType}>
                         <option value="0">SELECT ONE</option>
-                        {this.props.picklist.map(picklistItem => 
+                        {this.props.picklist.map(picklistItem =>
                                                  <option
                                                      key={picklistItem.id}
                                                      value={picklistItem.id}>
@@ -108,7 +108,7 @@ class DndInput extends React.Component {
                                 size="6"
                                 datatype={this.props.dataType}
                                 onDoubleClick={this.props.onChange}>
-                                {util.picklistInfo.filterPicklistByAssigned(this.props.picklist, this.props.valueArray).map(picklistItem => 
+                                {util.picklistInfo.filterPicklistByAssigned(this.props.picklist, this.props.valueArray).map(picklistItem =>
                                                                                                                             <option
                                                                                                                                 key={picklistItem.id}
                                                                                                                                 value={picklistItem.id}>
@@ -164,7 +164,7 @@ class DndInput extends React.Component {
                 );
                 break;
             case util.dataTypes.string.LONG_STRING:
-                if(this.props.value) {
+                if (this.props.value) {
                     longValue = this.props.value;
                 }
                 primaryInput = (
@@ -178,12 +178,13 @@ class DndInput extends React.Component {
                         className="form-control" />
                 );
                 break;
-            }
+            default:
+        }
 
         let labelClass = 'col-sm-' + finalLabelCols + ' control-label';
         let labelDivClass = 'align-middle';
         let inputDivClass = 'field col-sm-' + finalInputCols + '';
-        
+
         return (
             <div className={wrapperClass}>
                 <div className={labelDivClass}>

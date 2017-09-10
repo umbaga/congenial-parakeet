@@ -3,7 +3,7 @@ module.exports = function(app, pg, async, pool) {
     app.delete('/api/adm/equipment/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -65,7 +65,7 @@ module.exports = function(app, pg, async, pool) {
     app.put('/api/adm/equipment/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -87,7 +87,7 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         var tmp = req.body;
                         tmp.equipment.needsCountUnit = false;
-                        if(tmp.equipment.count || tmp.equipment.unit) {
+                        if (tmp.equipment.count || tmp.equipment.unit) {
                             tmp.equipment.needsCountUnit = true;
                         }
                         return callback(null, tmp);
@@ -121,7 +121,7 @@ module.exports = function(app, pg, async, pool) {
                     query.on('end', function() {
                         done();
                         var countUnitExists = false;
-                        if(results.length > 0) {
+                        if (results.length > 0) {
                             countUnitExists = true;
                         }
                         return callback(null, resObj, countUnitExists);
@@ -129,7 +129,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function addEditCountUnit(resObj, countUnitExists, callback) {
                     sql = '';
-                    if(resObj.equipment.needsCountUnit && countUnitExists) {
+                    if (resObj.equipment.needsCountUnit && countUnitExists) {
                         //update
                         console.log('update');
                         sql = 'UPDATE adm_def_equipment_count_unit';
@@ -172,7 +172,7 @@ module.exports = function(app, pg, async, pool) {
     app.post('/api/adm/equipment', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -196,7 +196,7 @@ module.exports = function(app, pg, async, pool) {
                         tmp.equipment.needsCountUnit = false;
                         console.log(tmp.equipment.count);
                         console.log(tmp.equipment.unit);
-                        if(tmp.equipment.count || tmp.equipment.unit) {
+                        if (tmp.equipment.count || tmp.equipment.unit) {
                             console.log('needs');
                             tmp.equipment.needsCountUnit = true;
                         }
@@ -220,7 +220,7 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertCountUnitTable(resObj, callback) {
-                    if(resObj.equipment.needsCountUnit) {
+                    if (resObj.equipment.needsCountUnit) {
                         sql = 'INSERT INTO adm_def_equipment_count_unit';
                         sql += ' ("equipmentId", "itemCount", "unitName")';
                         sql += ' VALUES ($1, $2, $3);';
@@ -249,7 +249,7 @@ module.exports = function(app, pg, async, pool) {
     app.get('/api/adm/equipments', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});

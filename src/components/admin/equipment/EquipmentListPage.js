@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link, browserHistory} from 'react-router';
+import {browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import EquipmentList from './EquipmentList';
@@ -30,27 +30,27 @@ class EquipmentListPage extends React.Component {
         }
     }
 
-    backToAdminHome(event) {
+    backToAdminHome() {
         browserHistory.push('/Home');
     }
-    
-    onCreate(event) {
+
+    onCreate() {
         this.open();
         this.setState({isCreate: true, selectedId: 0});
     }
-    
+
     close() {
         this.setState({ showModal: false });
     }
-    
+
     open() {
         this.setState({ showModal: true });
     }
-    
+
     changeSelectedId(newId) {
         this.setState({selectedId: parseInt(newId)});
     }
-    
+
     render() {
         const equipments = this.props.equipments;
         return (
@@ -74,7 +74,7 @@ class EquipmentListPage extends React.Component {
                                 </th>
                             </tr>
                         </thead>
-                        <EquipmentList 
+                        <EquipmentList
                             equipments={equipments}
                             openModal={this.open}
                             selectedId={this.state.selectedId}
@@ -82,13 +82,12 @@ class EquipmentListPage extends React.Component {
                             />
                     </table>
                 </div>
-                
-                <DndModal 
-                    closeModal={this.close} 
+                <DndModal
+                    closeModal={this.close}
                     isCreate={this.state.isCreate}
                     showModal={this.state.showModal}>
-                        <EquipmentEntry 
-                            closeModal={this.close} 
+                        <EquipmentEntry
+                            closeModal={this.close}
                             equipments={equipments}
                             isCreate={this.state.isCreate}
                             selectedId={this.state.selectedId}
@@ -107,7 +106,7 @@ EquipmentListPage.propTypes = {
     equipments: PropTypes.array.isRequired
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     if (state.equipments.length > 0) {
         return {
             equipments: state.equipments,

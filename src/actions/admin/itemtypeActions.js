@@ -26,7 +26,7 @@ export function loadItemtypes() {
         return itemtypeApi.getAllItemtypes().then(itemtypes => {
             dispatch(loadItemtypesSuccess(itemtypes));
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -36,7 +36,7 @@ export function updateItemtype(itemtype) {
         return itemtypeApi.updateItemtype(itemtype).then(responseItemtype => {
             dispatch(updateItemtypeSuccess(responseItemtype.itemtype));
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -47,7 +47,7 @@ export function createItemtype(itemtype) {
             dispatch(createItemtypeSuccess(responseItemtype.itemtype));
             return responseItemtype;
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
@@ -58,31 +58,26 @@ export function deleteItemtype(itemtype) {
             dispatch(deleteItemtypeSuccess(itemtype));
             return;
         }).catch(error => {
-            throw(error);
+            throw (error);
         });
     };
 }
 
 export function upsertItemtype(itemtype) {
     return function(dispatch) {
-        if(itemtype.id && itemtype.id != 0) {
+        if (itemtype.id && itemtype.id != 0) {
             return itemtypeApi.updateItemtype(itemtype).then(responseItemtype => {
                 dispatch(updateItemtypeSuccess(responseItemtype.itemtype));
             }).catch(error => {
-                throw(error);
+                throw (error);
             });
         } else {
             return itemtypeApi.createItemtype(itemtype).then(responseItemtype => {
                 dispatch(createItemtypeSuccess(responseItemtype.itemtype));
                 return responseItemtype;
             }).catch(error => {
-                throw(error);
+                throw (error);
             });
         }
     };
 }
-
-
-
-
-

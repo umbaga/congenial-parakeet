@@ -9,14 +9,14 @@ class DndModal extends React.Component {
 
     render() {
         return (
-            
-                <Modal show={this.props.showModal} onHide={this.props.closeModal}>
-                    <Modal.Header closeButton><h4>{this.props.isCreate ? 'Create' : 'Edit'} Item Type</h4></Modal.Header>
-                    <Modal.Body>
-                        {this.props.children}
-                    </Modal.Body>
-                </Modal>
-            
+            <Modal show={this.props.showModal} onHide={this.props.closeModal}>
+                <Modal.Header closeButton>
+                    <h4>{this.props.isCreate ? 'Create' : 'Edit'} Item Type</h4>
+                </Modal.Header>
+                <Modal.Body>
+                    {this.props.children}
+                </Modal.Body>
+            </Modal>
         );
     }
 }
@@ -24,7 +24,8 @@ class DndModal extends React.Component {
 DndModal.propTypes = {
     closeModal: PropTypes.func.isRequired,
     isCreate: PropTypes.bool,
-    showModal: PropTypes.bool.isRequired
+    showModal: PropTypes.bool.isRequired,
+    children: PropTypes.object
 };
 
 export default DndModal;

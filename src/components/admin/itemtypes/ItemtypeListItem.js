@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Link, browserHistory} from 'react-router';
 import util from '../../../util/util';
 import DndListItemButtonBar from '../../common/DndListItemButtonBar';
 import * as itemtypeActions from '../../../actions/admin/itemtypeActions';
@@ -16,18 +15,15 @@ class ItemtypeListItem extends React.Component {
         this.editItemtype = this.editItemtype.bind(this);
         this.deleteItemType = this.deleteItemType.bind(this);
     }
-    componentWillReceiveProps(nextProps) {
-        
-    }
-    editItemtype(itemtype) {
+    editItemtype() {
         event.preventDefault();
         this.props.openModal();
         this.props.changeSelectedId(this.props.itemtype.id);
         this.setState({selectedId: this.props.itemtype.id});
     }
-    deleteItemType(itemtype) {
+    deleteItemType() {
         event.preventDefault();
-        if(confirm('are you sure?')) {
+        if (confirm('are you sure?')) {
             this.props.actions.deleteItemtype(this.props.itemtype);
         }
     }
@@ -37,9 +33,9 @@ class ItemtypeListItem extends React.Component {
                 <td>{this.props.itemtype.name}</td>
                 <td className="text-center">{util.format.forDisplay.bool.asCheckX(this.props.itemtype.isPicklist)}</td>
                 <td>
-                    <DndListItemButtonBar 
+                    <DndListItemButtonBar
                         listItem={this.props.itemtype}
-                        onEdit={this.editItemtype} 
+                        onEdit={this.editItemtype}
                         onDelete={this.deleteItemType} />
                 </td>
             </tr>

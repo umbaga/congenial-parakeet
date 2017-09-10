@@ -7,7 +7,7 @@ import * as sessionActions from '../../actions/sessionActions';
 
 
 class Header extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.logOut = this.logOut.bind(this);
     }
@@ -47,7 +47,7 @@ Header.propTypes = {
     logged_in: PropTypes.bool
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     return {logged_in: state.session};
 }
 

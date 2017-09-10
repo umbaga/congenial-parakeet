@@ -21,7 +21,7 @@ class DndListItemButtonBar extends React.Component {
     render() {
         let wrapperClass = 'form-group';
         let deleteButton = null;
-        if(this.props.hideDeleteButton) {
+        if (this.props.hideDeleteButton) {
             deleteButton = null;
         } else {
             deleteButton = (<DndButton onClick={this._onDelete} buttonType="delete" />);

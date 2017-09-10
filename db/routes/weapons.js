@@ -3,7 +3,7 @@ module.exports = function(app, pg, async, pool) {
     app.delete('/api/adm/equipment/weapon/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -24,7 +24,7 @@ module.exports = function(app, pg, async, pool) {
     app.put('/api/adm/equipment/weapon/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -48,14 +48,14 @@ module.exports = function(app, pg, async, pool) {
                         tmp.weapon.needsAltDamage = false;
                         tmp.weapon.needsRange = false;
                         tmp.weapon.needsSpecial = false;
-                        for(var j = 0; j < tmp.weapon.weaponProperties.length; j++) {
-                            if(tmp.weapon.weaponProperties[j].requireRange) {
+                        for (var j = 0; j < tmp.weapon.weaponProperties.length; j++) {
+                            if (tmp.weapon.weaponProperties[j].requireRange) {
                                 tmp.weapon.needsRange = true;
                             }
-                            if(tmp.weapon.weaponProperties[j].requireDamage) {
+                            if (tmp.weapon.weaponProperties[j].requireDamage) {
                                 tmp.weapon.needsAltDamage = true;
                             }
-                            if(tmp.weapon.weaponProperties[j].requireDescription) {
+                            if (tmp.weapon.weaponProperties[j].requireDescription) {
                                 tmp.weapon.needsSpecial = true;
                             }
                         }
@@ -136,19 +136,19 @@ module.exports = function(app, pg, async, pool) {
                 function deleteUnneededProperties(resObj, callback) {
                     sql = 'DELETE FROM adm_link_weapon_property';
                     sql += ' WHERE "weaponId" = $1';
-                    if(resObj.weapon.weaponProperties.length != 0) {
+                    if (resObj.weapon.weaponProperties.length != 0) {
                         sql += ' AND "propertyId" NOT IN (';
                     }
                     vals = [req.params.id];
-                    for(var k = 0; k < resObj.weapon.weaponProperties.length; k++) {
+                    for (var k = 0; k < resObj.weapon.weaponProperties.length; k++) {
                         var newParam = k + 2;
                         sql += '$' + newParam.toString();
-                        if(k < resObj.weapon.weaponProperties.length - 1) {
+                        if (k < resObj.weapon.weaponProperties.length - 1) {
                             sql += ',';
                         }
                         vals.push(resObj.weapon.weaponProperties[k].id);
                     }
-                    if(resObj.weapon.weaponProperties.length != 0) {
+                    if (resObj.weapon.weaponProperties.length != 0) {
                         sql += ');';
                     }
                     var query = client.query(new pg.Query(sql, vals));
@@ -165,19 +165,19 @@ module.exports = function(app, pg, async, pool) {
                     var theseIdsExist = [];
                     sql = 'SELECT * FROM adm_link_weapon_property';
                     sql += ' WHERE "weaponId" = $1';
-                    if(resObj.weapon.weaponProperties.length != 0) {
+                    if (resObj.weapon.weaponProperties.length != 0) {
                         sql += ' AND "propertyId" IN (';
                     }
                     vals = [req.params.id];
-                    for(var p = 0; p < resObj.weapon.weaponProperties.length; p++) {
+                    for (var p = 0; p < resObj.weapon.weaponProperties.length; p++) {
                         var newParam = p + 2;
                         sql += '$' + newParam.toString();
-                        if(p < resObj.weapon.weaponProperties.length - 1) {
+                        if (p < resObj.weapon.weaponProperties.length - 1) {
                             sql += ',';
                         }
                         vals.push(resObj.weapon.weaponProperties[p].id);
                     }
-                    if(resObj.weapon.weaponProperties.length != 0) {
+                    if (resObj.weapon.weaponProperties.length != 0) {
                         sql += ');';
                     }
                     var query = client.query(new pg.Query(sql, vals));
@@ -187,14 +187,14 @@ module.exports = function(app, pg, async, pool) {
                     });
                     query.on('end', function() {
                         done();
-                        for(var w = 0; w < results.length; w++) {
+                        for (var w = 0; w < results.length; w++) {
                             theseIdsExist.push(parseInt(results[w].propertyId));
                         }
                         return callback(null, resObj, theseIdsExist);
                     });
                 },
                 function addNeededProperties(resObj, theseIdsExist, callback) {
-                    if(resObj.weapon.weaponProperties.length != 0) {
+                    if (resObj.weapon.weaponProperties.length != 0) {
                         sql = 'INSERT INTO adm_link_weapon_property';
                         sql += ' ("weaponId", "propertyId")';
                         sql += ' VALUES ';
@@ -202,15 +202,15 @@ module.exports = function(app, pg, async, pool) {
                         var secondParam = 2;
                         var paramSql = '';
                         vals = [];
-                        for(var g = 0; g < resObj.weapon.weaponProperties.length; g++) {
+                        for (var g = 0; g < resObj.weapon.weaponProperties.length; g++) {
                             //cycle through assigned
                             var assignThis = true;
-                            for(var f = 0; f < theseIdsExist.length; f++) {
-                                if(resObj.weapon.weaponProperties[g].id == theseIdsExist[f]) {
+                            for (var f = 0; f < theseIdsExist.length; f++) {
+                                if (resObj.weapon.weaponProperties[g].id == theseIdsExist[f]) {
                                     assignThis = false;
                                 }
                             }
-                            if(assignThis) {
+                            if (assignThis) {
                                 paramSql += '($' + firstParam.toString() + ', $' + secondParam.toString() + '),';
                                 firstParam = firstParam + 2;
                                 secondParam = secondParam + 2;
@@ -219,7 +219,7 @@ module.exports = function(app, pg, async, pool) {
                         }
                         paramSql = paramSql.replace(/,\s*$/, "");
                         sql += paramSql;
-                        if(paramSql.length != 0) {
+                        if (paramSql.length != 0) {
                             var query = client.query(new pg.Query(sql, vals));
                             var results = [];
                             query.on('row', function(row) {
@@ -247,7 +247,7 @@ module.exports = function(app, pg, async, pool) {
                     query.on('end', function() {
                         done();
                         var specialExists = false;
-                        if(results.length > 0) {
+                        if (results.length > 0) {
                             specialExists = true;
                         }
                         return callback(null, resObj, specialExists);
@@ -255,7 +255,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function addEditSpecial(resObj, specialExists, callback) {
                     sql = '';
-                    if(resObj.weapon.needsSpecial && specialExists) {
+                    if (resObj.weapon.needsSpecial && specialExists) {
                         //update
                         sql = 'UPDATE adm_def_equipment_weapon_special';
                         sql += ' SET "specialDescription" = $1';
@@ -294,7 +294,7 @@ module.exports = function(app, pg, async, pool) {
                     query.on('end', function() {
                         done();
                         var rangeExists = false;
-                        if(results.length > 0) {
+                        if (results.length > 0) {
                             rangeExists = true;
                         }
                         return callback(null, resObj, rangeExists);
@@ -303,7 +303,7 @@ module.exports = function(app, pg, async, pool) {
                 function addEditRange(resObj, rangeExists, callback) {
                     sql = '';
                     vals = [];
-                    if(resObj.weapon.needsRange && rangeExists) {
+                    if (resObj.weapon.needsRange && rangeExists) {
                         //update
                         sql = 'UPDATE adm_def_equipment_weapon_range';
                         sql += ' SET "normalRange" = $1';
@@ -333,7 +333,7 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function conditionalInsertVersatileDamageDice(resObj, callback) {
-                    if(resObj.weapon.needsAltDamage) {
+                    if (resObj.weapon.needsAltDamage) {
                         sql = 'with vals as (';
                         sql += 'select $1 :: bigint as "dieCount", $2 :: bigint as "dieType"';
                         sql += ')';
@@ -357,7 +357,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function getVersatileDamageDiceId(resObj, callback) {
-                    if(resObj.weapon.needsAltDamage) {
+                    if (resObj.weapon.needsAltDamage) {
                         sql = 'SELECT * FROM adm_core_dice';
                         sql += ' WHERE "dieCount" = $1';
                         sql += ' AND "dieType" = $2';
@@ -388,7 +388,7 @@ module.exports = function(app, pg, async, pool) {
                     query.on('end', function() {
                         done();
                         var altDamageExists = false;
-                        if(results.length > 0) {
+                        if (results.length > 0) {
                             altDamageExists = true;
                         }
                         return callback(null, resObj, altDamageExists);
@@ -397,12 +397,12 @@ module.exports = function(app, pg, async, pool) {
                 function addEditVersatileDamage(resObj, altDamageExists, callback) {
                     sql = '';
                     vals = [];
-                    if(resObj.weapon.needsAltDamage && altDamageExists) {
+                    if (resObj.weapon.needsAltDamage && altDamageExists) {
                         sql = 'UPDATE adm_def_equipment_weapon_alt_damage'
                         sql += ' SET "damageDiceId" = $1';
                         sql += ' WHERE "weaponId" = $2';
                         vals = [resObj.weapon.versatileDamage.id, resObj.weapon.id];
-                    } else if(resObj.weapon.needsAltDamage && !altDamageExists) {
+                    } else if (resObj.weapon.needsAltDamage && !altDamageExists) {
                         sql = 'INSERT INTO adm_def_equipment_weapon_alt_damage';
                         sql += ' ("damageDiceId", "weaponId")';
                         sql += ' VALUES ($1, $2)';
@@ -433,7 +433,7 @@ module.exports = function(app, pg, async, pool) {
     app.post('/api/adm/equipment/weapon', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -458,13 +458,13 @@ module.exports = function(app, pg, async, pool) {
                         tmp.weapon.needsAltDamage = false;
                         tmp.weapon.needsRange = false;
                         tmp.weapon.needsSpecial = false;
-                        if(tmp.weapon.specialDescription && tmp.weapon.specialDescription.length != 0) {
+                        if (tmp.weapon.specialDescription && tmp.weapon.specialDescription.length != 0) {
                             tmp.weapon.needsSpecial = true;
                         }
-                        if(tmp.weapon.range.normal) {
+                        if (tmp.weapon.range.normal) {
                             tmp.weapon.needsRange = true;
                         }
-                        if(tmp.weapon.versatileDamage.dieCount) {
+                        if (tmp.weapon.versatileDamage.dieCount) {
                             tmp.weapon.needsAltDamage = true;
                         }
                         return callback(null, tmp);
@@ -488,7 +488,7 @@ module.exports = function(app, pg, async, pool) {
                     query.on('end', function() {
                         done();
                         var skipNext = false;
-                        if(results.length != 0){
+                        if (results.length != 0){
                             resObj.weapon.damage.id = parseInt(results[0].diceId);
                             skipNext = true;
                         }
@@ -496,7 +496,7 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function selectDice(resObj, skipThis, callback) {
-                    if(skipThis) {
+                    if (skipThis) {
                         return callback(null, resObj);
                     } else {
                         sql = 'SELECT id AS "diceId" FROM adm_core_dice  WHERE "dieCount" = $1 AND "dieType" = $2';
@@ -544,16 +544,16 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertProperties(resObj, callback) {
-                    if(resObj.weapon.weaponProperties.length != 0) {
+                    if (resObj.weapon.weaponProperties.length != 0) {
                         sql = 'INSERT INTO adm_link_weapon_property';
                         sql += ' ("weaponId", "propertyId")';
                         sql += ' VALUES ';
                         vals = [];
-                        for(var t = 0; t < resObj.weapon.weaponProperties.length; t++) {
+                        for (var t = 0; t < resObj.weapon.weaponProperties.length; t++) {
                             var first = (t * 2) + 1;
                             var second = first + 1;
                             sql += '($' + first.toString() + ', $' + second.toString() + ')';
-                            if(t < resObj.weapon.weaponProperties.length - 1) {
+                            if (t < resObj.weapon.weaponProperties.length - 1) {
                                 sql += ', ';
                             } else {
                                 sql += ';';
@@ -575,7 +575,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertRange(resObj, callback) {
-                    if(resObj.weapon.needsRange) {
+                    if (resObj.weapon.needsRange) {
                         sql = 'INSERT INTO adm_def_equipment_weapon_range';
                         sql += ' ("weaponId", "normalRange", "maximumRange")';
                         sql += ' VALUES ($1, $2, $3)';
@@ -594,7 +594,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertDescription(resObj, callback) {
-                    if(resObj.weapon.needsSpecial) {
+                    if (resObj.weapon.needsSpecial) {
                         sql = 'INSERT INTO adm_def_equipment_weapon_special';
                         sql += ' ("weaponId", "specialDescription")';
                         sql += ' VALUES ($1, $2);';
@@ -613,7 +613,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertVersatileDice(resObj, callback) {
-                    if(resObj.weapon.needsAltDamage) {
+                    if (resObj.weapon.needsAltDamage) {
                         sql = 'with vals as (';
                         sql += 'select $1 :: bigint as "dieCount", $2 :: bigint as "dieType"';
                         sql += ')';
@@ -631,7 +631,7 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             var skipNext = false;
-                            if(results.length != 0){
+                            if (results.length != 0){
                                 resObj.weapon.versatileDamage.id = parseInt(results[0].diceId);
                                 skipNext = true;
                             }
@@ -642,8 +642,8 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function selectVersatileDice(resObj, skipThis, callback) {
-                    if(resObj.weapon.needsAltDamage) {
-                        if(skipThis) {
+                    if (resObj.weapon.needsAltDamage) {
+                        if (skipThis) {
                             return callback(null, resObj);
                         } else {
                             sql = 'SELECT id AS "diceId"';
@@ -667,7 +667,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertVersatileDiceWeapon(resObj, callback) {
-                    if(resObj.weapon.needsAltDamage) {
+                    if (resObj.weapon.needsAltDamage) {
                         sql = 'INSERT INTO adm_def_equipment_weapon_alt_damage ("weaponId", "damageDiceId")';
                         sql += ' VALUES ($1, $2);';
                         vals = [resObj.weapon.id, resObj.weapon.versatileDamage.id];
@@ -695,7 +695,7 @@ module.exports = function(app, pg, async, pool) {
     app.get('/api/adm/equipment/weapons', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});

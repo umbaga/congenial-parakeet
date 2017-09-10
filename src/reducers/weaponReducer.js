@@ -1,10 +1,9 @@
 import * as types from '../actions/actionTypes';
 import initialState from './initialState';
-import {browserHistory} from 'react-router';
 
 
 export default function weaponReducer(state = initialState.weapons, action) {
-    switch(action.type) {
+    switch (action.type) {
         case types.LOAD_WEAPONS_SUCCESS:
             return action.weapons;
         case types.CREATE_WEAPON_SUCCESS:
@@ -19,11 +18,13 @@ export default function weaponReducer(state = initialState.weapons, action) {
             ];
         case types.DELETE_WEAPON_SUCCESS: {
             const newState = Object.assign([], state);
-            const indexOfWeaponToDelete = state.findIndex(weapon => {return weapon.id == action.weapon.id;});
+            const indexOfWeaponToDelete = state.findIndex(weapon => {
+                return weapon.id == action.weapon.id;
+            });
             newState.splice(indexOfWeaponToDelete, 1);
             return newState;
         }
-        default: 
+        default:
             return state;
     }
 }

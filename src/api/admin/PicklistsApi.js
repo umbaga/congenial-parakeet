@@ -34,7 +34,7 @@ class PicklistsApi {
     static removePicklistItem(picklist, picklistItem) {
         const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
         const request = new Request('http://localhost:5000/api/adm/picklist/item/' + picklistItem.id, {
-            method: 'DELETE', 
+            method: 'DELETE',
             headers: headers
         });
         return fetch(request).then(response => {

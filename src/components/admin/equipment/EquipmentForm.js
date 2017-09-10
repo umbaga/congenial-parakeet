@@ -8,9 +8,8 @@ class EquipmentForm extends React.Component {
     constructor(props) {
         super(props);
     }
-    
+
     render() {
-        const isCreate = this.props.isCreate;
         let categoryPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.EQUIPMENT_CATEGORY);
         return (
             <div>
@@ -68,7 +67,7 @@ class EquipmentForm extends React.Component {
                             onChange={this.props.onChange} />
                     </div>
                     <DndDataEntryButtonBar
-                        onSave={this.props.onSave} 
+                        onSave={this.props.onSave}
                         onSaveNew={this.props.onSaveNew}
                         onCancel={this.props.onCancel}
                         onDelete={this.props.onDelete}

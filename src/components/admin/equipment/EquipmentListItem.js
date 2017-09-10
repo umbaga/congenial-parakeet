@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Link, browserHistory} from 'react-router';
 import util from '../../../util/util';
 import DndListItemButtonBar from '../../common/DndListItemButtonBar';
 import * as equipmentActions from '../../../actions/admin/equipmentActions';
@@ -16,18 +15,15 @@ class EquipmentListItem extends React.Component {
         this.editEquipment = this.editEquipment.bind(this);
         this.deleteItemType = this.deleteItemType.bind(this);
     }
-    componentWillReceiveProps(nextProps) {
-        
-    }
-    editEquipment(equipment) {
+    editEquipment() {
         event.preventDefault();
         this.props.openModal();
         this.props.changeSelectedId(this.props.equipment.id);
         this.setState({selectedId: this.props.equipment.id});
     }
-    deleteItemType(equipment) {
+    deleteItemType() {
         event.preventDefault();
-        if(confirm('are you sure?')) {
+        if (confirm('are you sure?')) {
             this.props.actions.deleteEquipment(this.props.equipment);
         }
     }
@@ -38,9 +34,9 @@ class EquipmentListItem extends React.Component {
                 <td className="text-center">{util.format.forDisplay.number.coin(this.props.equipment.cost)}</td>
                 <td className="text-center">{util.format.forDisplay.number.weight(this.props.equipment.weight)}</td>
                 <td>
-                    <DndListItemButtonBar 
+                    <DndListItemButtonBar
                         listItem={this.props.equipment}
-                        onEdit={this.editEquipment} 
+                        onEdit={this.editEquipment}
                         onDelete={this.deleteItemType} />
                 </td>
             </tr>

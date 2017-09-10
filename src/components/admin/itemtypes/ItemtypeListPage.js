@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link, browserHistory} from 'react-router';
+import {browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ItemtypeList from './ItemtypeList';
@@ -30,27 +30,27 @@ class ItemtypeListPage extends React.Component {
         }
     }
 
-    backToAdminHome(event) {
+    backToAdminHome() {
         browserHistory.push('/Home');
     }
-    
-    onCreate(event) {
+
+    onCreate() {
         this.open();
         this.setState({isCreate: true, selectedId: 0});
     }
-    
+
     close() {
         this.setState({ showModal: false });
     }
-    
+
     open() {
         this.setState({ showModal: true });
     }
-    
+
     changeSelectedId(newId) {
         this.setState({selectedId: parseInt(newId)});
     }
-    
+
     render() {
         const itemtypes = this.props.itemtypes;
         return (
@@ -73,7 +73,7 @@ class ItemtypeListPage extends React.Component {
                                 </th>
                             </tr>
                         </thead>
-                        <ItemtypeList 
+                        <ItemtypeList
                             itemtypes={itemtypes}
                             openModal={this.open}
                             selectedId={this.state.selectedId}
@@ -81,12 +81,12 @@ class ItemtypeListPage extends React.Component {
                             />
                     </table>
                 </div>
-                <DndModal 
-                    closeModal={this.close} 
+                <DndModal
+                    closeModal={this.close}
                     isCreate={this.state.isCreate}
                     showModal={this.state.showModal}>
-                        <ItemtypeEntry 
-                            closeModal={this.close} 
+                        <ItemtypeEntry
+                            closeModal={this.close}
                             itemtypes={itemtypes}
                             isCreate={this.state.isCreate}
                             selectedId={this.state.selectedId}
@@ -96,25 +96,14 @@ class ItemtypeListPage extends React.Component {
         );
     }
 }
-/*
-                <Modal show={this.state.showModal} onHide={this.close}>
-                    <Modal.Header closeButton><h4>{this.state.isCreate ? 'Create' : 'Edit'} Item Type</h4></Modal.Header>
-                    <Modal.Body>
-                        <ItemtypeEntry 
-                            closeModal={this.close} 
-                            itemtypes={itemtypes}
-                            isCreate={this.state.isCreate}
-                            selectedId={this.state.selectedId}
-                            />
-                    </Modal.Body>
-                </Modal>*/
+
 ItemtypeListPage.propTypes = {
     itemtypes: PropTypes.array.isRequired,
     children: PropTypes.object,
     actions: PropTypes.object
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
     if (state.itemtypes.length > 0) {
         return {
             itemtypes: state.itemtypes

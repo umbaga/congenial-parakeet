@@ -3,7 +3,7 @@ module.exports = function(app, pg, async, pool) {
     app.delete('/api/adm/equipment/armor/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -65,7 +65,7 @@ module.exports = function(app, pg, async, pool) {
     app.put('/api/adm/equipment/armor/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -138,7 +138,7 @@ module.exports = function(app, pg, async, pool) {
     app.post('/api/adm/equipment/armor', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
@@ -205,7 +205,7 @@ module.exports = function(app, pg, async, pool) {
     app.get('/api/adm/equipment/armors', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
-            if(err) {
+            if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});

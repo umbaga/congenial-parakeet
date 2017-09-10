@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {browserHistory} from 'react-router';
 import * as armorActions from '../../../../actions/admin/armorActions';
 import ArmorForm from './ArmorForm';
 import util from '../../../../util/util';
@@ -11,7 +10,7 @@ class ArmorEntry extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            armor: this.props.armor, 
+            armor: this.props.armor,
             isCreate: this.props.isCreate,
             saving: false
         };
@@ -38,7 +37,7 @@ class ArmorEntry extends React.Component {
 
     deleteArmor(event) {
         event.preventDefault();
-        if(confirm('are you sure?')) {
+        if (confirm('are you sure?')) {
             this.props.actions.deleteArmor(this.state.armor);
             this.postAction();
         }
@@ -52,7 +51,7 @@ class ArmorEntry extends React.Component {
         event.preventDefault();
         this.setState({saving: true});
         this.props.actions.upsertArmor(this.state.armor);
-    } 
+    }
 
     saveAndNewArmor(event) {
         this.saveArmor(event);
@@ -67,11 +66,10 @@ class ArmorEntry extends React.Component {
 
     updateFormState(event) {
         let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
-        let subfield = null;
         const armor = this.state.armor;
         const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         let newSelectedValue = {};
-        switch(dataType) {
+        switch (dataType) {
             case util.dataTypes.string.STRING:
             case util.dataTypes.number.COIN:
             case util.dataTypes.number.WEIGHT:
@@ -94,16 +92,16 @@ class ArmorEntry extends React.Component {
     render() {
         return (
             <div>
-                <ArmorForm 
-                    armor={this.state.armor} 
-                    onSave={this.saveAndBackArmor} 
+                <ArmorForm
+                    armor={this.state.armor}
+                    onSave={this.saveAndBackArmor}
                     onSaveNew={this.saveAndNewArmor}
-                    onChange={this.updateFormState} 
+                    onChange={this.updateFormState}
                     onCancel={this.cancelArmor}
                     onDelete={this.deleteArmor}
                     isCreate={this.state.isCreate}
                     saving={this.state.saving}
-                    picklists={this.props.picklists} /> 
+                    picklists={this.props.picklists} />
             </div>
         );
     }
@@ -118,7 +116,7 @@ ArmorEntry.propTypes = {
 };
 
 function getArmorById(armors, id) {
-    if(id != 0) {
+    if (id != 0) {
         let armor = armors.find(armor => armor.id == id);
         return Object.assign({}, armor);
     } else {
@@ -130,7 +128,7 @@ function mapStateToProps(state, ownProps) {
     let armor = Object.assign({}, util.objectModel.ARMOR);
     const armorId = ownProps.selectedId;
     let isCreate = true;
-    if(ownProps.selecetdId != 0) {
+    if (ownProps.selecetdId != 0) {
         if (armorId && state.armors.length > 0) {
             armor = getArmorById(state.armors, ownProps.selectedId);
             isCreate = false;

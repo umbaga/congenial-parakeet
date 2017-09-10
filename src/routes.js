@@ -10,10 +10,9 @@ import PicklistListPage from './components/admin/picklists/PicklistListPage';
 import WeaponListPage from './components/admin/equipment/weapon/WeaponListPage';
 import ArmorListPage from './components/admin/equipment/armor/ArmorListPage';
 
-import HomePage from './components/home/HomePage';
 import AboutPage from './components/about/AboutPage';
 import LogInPage from './components/LogInPage';
-import auth from './auth/authenticator';
+//import auth from './auth/authenticator';
 
 export default (
     <Route path="/" component={App}>
@@ -30,11 +29,11 @@ export default (
     </Route>
 );
 
-function requireAuth(nextState, replace) {
+/*function requireAuth(nextState, replace) {
     if (!auth.loggedIn()) {
         replace({
             pathname: '/login',
             state: { nextPathname: nextState.location.pathname }
         });
     }
-}
+}*/
