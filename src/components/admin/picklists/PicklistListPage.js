@@ -8,7 +8,7 @@ import PicklistEntry from './PicklistEntry';
 import * as actions from '../../../actions/admin/picklistActions';
 import util from '../../../util/util';
 import DndButton from '../../common/DndButton';
-import { Modal } from 'react-bootstrap';
+import DndModal from '../../common/DndModal';
 
 class PicklistListPage extends React.Component {
     constructor(props, context) {
@@ -78,18 +78,17 @@ class PicklistListPage extends React.Component {
                             />
                     </table>
                 </div>
-                
-                <Modal show={this.state.showModal} onHide={this.close}>
-                    <Modal.Header closeButton><h4>Add/Remove Items from Picklist</h4></Modal.Header>
-                    <Modal.Body>
+                <DndModal 
+                    closeModal={this.close} 
+                    isCreate={this.state.isCreate}
+                    showModal={this.state.showModal}>
                         <PicklistEntry 
                             closeModal={this.close} 
                             picklists={picklists}
                             isCreate={this.state.isCreate}
                             selectedId={this.state.selectedId}
                             />
-                    </Modal.Body>
-                </Modal>
+                </DndModal>
             </div>
         );
     }

@@ -8,7 +8,7 @@ import ItemtypeEntry from './ItemtypeEntry';
 import * as actions from '../../../actions/admin/itemtypeActions';
 import util from '../../../util/util';
 import DndButton from '../../common/DndButton';
-import { Modal } from 'react-bootstrap';
+import DndModal from '../../common/DndModal';
 
 class ItemtypeListPage extends React.Component {
     constructor(props, context) {
@@ -81,7 +81,22 @@ class ItemtypeListPage extends React.Component {
                             />
                     </table>
                 </div>
-                
+                <DndModal 
+                    closeModal={this.close} 
+                    isCreate={this.state.isCreate}
+                    showModal={this.state.showModal}>
+                        <ItemtypeEntry 
+                            closeModal={this.close} 
+                            itemtypes={itemtypes}
+                            isCreate={this.state.isCreate}
+                            selectedId={this.state.selectedId}
+                            />
+                </DndModal>
+            </div>
+        );
+    }
+}
+/*
                 <Modal show={this.state.showModal} onHide={this.close}>
                     <Modal.Header closeButton><h4>{this.state.isCreate ? 'Create' : 'Edit'} Item Type</h4></Modal.Header>
                     <Modal.Body>
@@ -92,12 +107,7 @@ class ItemtypeListPage extends React.Component {
                             selectedId={this.state.selectedId}
                             />
                     </Modal.Body>
-                </Modal>
-            </div>
-        );
-    }
-}
-
+                </Modal>*/
 ItemtypeListPage.propTypes = {
     itemtypes: PropTypes.array.isRequired,
     children: PropTypes.object,

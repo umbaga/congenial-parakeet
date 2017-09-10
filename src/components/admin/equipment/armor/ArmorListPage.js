@@ -8,13 +8,13 @@ import ArmorEntry from './ArmorEntry';
 import * as actions from '../../../../actions/admin/armorActions';
 import util from '../../../../util/util';
 import DndButton from '../../../common/DndButton';
-import { Modal } from 'react-bootstrap';
+import DndModal from '../../../common/DndModal';
 
 class ArmorListPage extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            showModal: false,
+            showModal: false,    
             isCreate: false,
             selectedId: 0
         };
@@ -52,7 +52,7 @@ class ArmorListPage extends React.Component {
     }
     
     render() {
-        const armors = this.props.armors;
+        const armors = this.props.armors;   
         return (
             <div className="col-md-12">
                 <div>
@@ -86,9 +86,10 @@ class ArmorListPage extends React.Component {
                     </table>
                 </div>
                 
-                <Modal show={this.state.showModal} onHide={this.close}>
-                    <Modal.Header closeButton><h4>{this.state.isCreate ? 'Create' : 'Edit'} Armor</h4></Modal.Header>
-                    <Modal.Body>
+                <DndModal 
+                    closeModal={this.close} 
+                    isCreate={this.state.isCreate}
+                    showModal={this.state.showModal}>
                         <ArmorEntry 
                             closeModal={this.close} 
                             armors={armors}
@@ -96,8 +97,7 @@ class ArmorListPage extends React.Component {
                             selectedId={this.state.selectedId}
                             picklists={this.props.picklists}
                             />
-                    </Modal.Body>
-                </Modal>
+                </DndModal>
             </div>
         );
     }

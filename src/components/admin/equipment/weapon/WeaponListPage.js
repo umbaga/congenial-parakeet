@@ -8,7 +8,7 @@ import WeaponEntry from './WeaponEntry';
 import * as actions from '../../../../actions/admin/weaponActions';
 import util from '../../../../util/util';
 import DndButton from '../../../common/DndButton';
-import { Modal } from 'react-bootstrap';
+import DndModal from '../../../common/DndModal';
 
 class WeaponListPage extends React.Component {
     constructor(props, context) {
@@ -85,9 +85,10 @@ class WeaponListPage extends React.Component {
                     </table>
                 </div>
                 
-                <Modal show={this.state.showModal} onHide={this.close}>
-                    <Modal.Header closeButton><h4>{this.state.isCreate ? 'Create' : 'Edit'} Weapon</h4></Modal.Header>
-                    <Modal.Body>
+                <DndModal 
+                    closeModal={this.close} 
+                    isCreate={this.state.isCreate}
+                    showModal={this.state.showModal}>
                         <WeaponEntry 
                             closeModal={this.close} 
                             weapons={weapons}
@@ -95,8 +96,7 @@ class WeaponListPage extends React.Component {
                             selectedId={this.state.selectedId}
                             picklists={this.props.picklists}
                             />
-                    </Modal.Body>
-                </Modal>
+                </DndModal>
             </div>
         );
     }

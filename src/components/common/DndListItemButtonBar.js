@@ -45,15 +45,6 @@ class DndListItemButtonBar extends React.Component {
         );
     }
 }
-                    //<OverlayTrigger trigger="click" rootClose placement="left" overlay={popoverButtons}>
-            /*<div className={wrapperClass}>
-                <div className="pull-right">
-                    <ButtonGroup>
-                        <DndButton onClick={this._onEdit} buttonType="edit" />
-                        {deleteButton}
-                    </ButtonGroup>
-                </div>
-            </div>*/
 
 DndListItemButtonBar.propTypes = {
     listItem: PropTypes.object.isRequired,
