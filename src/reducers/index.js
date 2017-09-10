@@ -4,6 +4,7 @@ import armors from './armorReducer';
 import dierolls from './dierollReducer';
 import equipments from './equipmentReducer';
 import itemtypes from './itemtypeReducer';
+import packs from './packReducer';
 import picklists from './picklistReducer';
 import weapons from './weaponReducer';
 
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
     dierolls,
     equipments,
     itemtypes,
+    packs,
     picklists,
     weapons,
     session

@@ -3,6 +3,7 @@ export default {
     dierolls: [],
     equipments: [],
     itemtypes: [],
+    packs: [],
     picklists: [],
     weapons: [],
     session: !!sessionStorage.jwt

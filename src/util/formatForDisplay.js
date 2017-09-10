@@ -1,32 +1,56 @@
 import util from './util';
 
 let array = {};
-array.commaDelimitedList = function(val) {
+array.commaDelimitedList = function(arr) {
     let retVal = '';
-    if (val) {
-        for (let q = 0; q < val.length; q++) {
-            retVal += val[q].name;
-            if (q < val.length - 1) {
+    if (arr) {
+        for (let q = 0; q < arr.length; q++) {
+            retVal += arr[q].name;
+            if (q < arr.length - 1) {
                 retVal += ', ';
             }
         }
     }
     return retVal;
 };
-array.weaponProperties = function(obj) {
+array.equipmentPackItems = function(arr) {
     let retVal = util.unicode.punctuation.longDash;
-    if (obj) {
-        if (obj.weaponProperties && obj.weaponProperties.length > 0) {
+    if (arr.length != 0) {
+        retVal = '';
+        for (let a = 0; a < arr.length; a++) {
+            retVal += util.format.forDisplay.string.reorderCommaSeparatedString(arr[a].name);
+            let tmpCount = arr[a].count;
+            if (arr[a].itemCount != 0) {
+                tmpCount = tmpCount * arr[a].itemCount;
+            }
+            if (tmpCount != 1 && arr[a].unitName.length != 0) {
+                retVal += ' (' + tmpCount.toString() + ' ' + arr[a].unitName + ')';
+            } else if (tmpCount != 1 && arr[a].unitName.length == 0) {
+                retVal += ' (' + tmpCount.toString() + ')';
+            } else if (tmpCount == 1 && arr[a].unitName.length != 0) {
+                retVal += ' (' + arr[a].unitName + ')';
+            }
+            if (a < arr.length - 1) {
+                retVal += ', ';
+            }
+        }
+    }
+    return retVal;
+};
+array.weaponProperties = function(arr) {
+    let retVal = util.unicode.punctuation.longDash;
+    if (arr) {
+        if (arr.weaponProperties && arr.weaponProperties.length > 0) {
             retVal = '';
-            for (let x = 0; x < obj.weaponProperties.length; x++) {
-                retVal += obj.weaponProperties[x].name;
-                if (obj.weaponProperties[x].requireDamage) {
-                    retVal += ' (' + util.format.forDisplay.string.dieRoll(obj.versatileDamage) + ')';
+            for (let x = 0; x < arr.weaponProperties.length; x++) {
+                retVal += arr.weaponProperties[x].name;
+                if (arr.weaponProperties[x].requireDamage) {
+                    retVal += ' (' + util.format.forDisplay.string.dieRoll(arr.versatileDamage) + ')';
                 }
-                if (obj.weaponProperties[x].requireRange) {
-                    retVal += ' (range ' + obj.range.normal + '/' + obj.range.maximum + ')';
+                if (arr.weaponProperties[x].requireRange) {
+                    retVal += ' (range ' + arr.range.normal + '/' + arr.range.maximum + ')';
                 }
-                retVal += x < obj.weaponProperties.length - 1 ? ', ' : '';
+                retVal += x < arr.weaponProperties.length - 1 ? ', ' : '';
             }
         }
     }
@@ -39,12 +63,6 @@ bool.asCheckBlank = function(val) {
         return util.unicode.punctuation.checkMark;
     }
     return '';
-};
-bool.hasDisadvantage = function(val) {
-    if (val) {
-        return 'Disadvantage';
-    }
-    return util.unicode.punctuation.longDash;
 };
 bool.asCheckX = function(val) {
     if (val) {
@@ -64,23 +82,21 @@ bool.asTrueFalse = function(val) {
     }
     return 'False';
 };
-
-let string = {};
-string.dieRoll = function(val) {
-    let retVal = '';
+bool.hasDisadvantage = function(val) {
     if (val) {
-        if (val.dieCount == 0 || val.dieType == 0) {
-            retVal = '-';
-        } else if (val.dieType == 1) {
-            retVal = val.dieCount.toString();
-        } else {
-            retVal = val.dieCount.toString() + 'd' + val.dieType.toString();
-        }
+        return 'Disadvantage';
     }
-    return retVal.toString();
+    return util.unicode.punctuation.longDash;
 };
 
 let number = {};
+number.abilityScoreMinimum = function(val, ability) {
+    if (val == 0) {
+        return util.unicode.punctuation.longDash;
+    } else {
+        return ability + ' ' + val.toString();
+    }
+};
 number.addCommas = function(val) {
     let retVal = '';
     if (val) {
@@ -114,13 +130,6 @@ number.coin = function(val) {
     }
     return retVal;
 };
-number.abilityScoreMinimum = function(val, ability) {
-    if (val == 0) {
-        return util.unicode.punctuation.longDash;
-    } else {
-        return ability + ' ' + val.toString();
-    }
-};
 number.weight = function(val) {
     let retVal = util.unicode.punctuation.longDash;
     if (val && val != 0) {
@@ -152,6 +161,29 @@ obj.equipmentName = function(val) {
         retVal += ' (' + val.count.toString() + ')';
     } else if (val.count == 0 && val.unit.length != 0) {
         retVal += ' (' + val.unit + ')';
+    }
+    return retVal;
+};
+
+let string = {};
+string.dieRoll = function(val) {
+    let retVal = '';
+    if (val) {
+        if (val.dieCount == 0 || val.dieType == 0) {
+            retVal = '-';
+        } else if (val.dieType == 1) {
+            retVal = val.dieCount.toString();
+        } else {
+            retVal = val.dieCount.toString() + 'd' + val.dieType.toString();
+        }
+    }
+    return retVal.toString();
+};
+string.reorderCommaSeparatedString = function(val) {
+    let retVal = val;
+    if (val.split(', ').length != 1) {
+        let tmpArr = val.split(', ');
+        retVal = tmpArr[1] + ' ' + tmpArr[0];
     }
     return retVal;
 };

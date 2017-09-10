@@ -4,6 +4,7 @@ var runArmors = require('./routes/armors');
 var runCore = require('./routes/core');
 var runEquipment = require('./routes/equipment');
 var runItemtypes = require('./routes/itemtypes');
+var runPacks = require('./routes/packs');
 var runPicklists = require('./routes/picklists');
 var runWeapons = require('./routes/weapons');
 
@@ -28,6 +29,7 @@ runArmors(app, pg, async, pool);
 runCore(app, pg, async, pool);
 runEquipment(app, pg, async, pool);
 runItemtypes(app, pg, async, pool);
+runPacks(app, pg, async, pool);
 runPicklists(app, pg, async, pool);
 runWeapons(app, pg, async, pool);
 

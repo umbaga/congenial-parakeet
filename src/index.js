@@ -11,6 +11,7 @@ import {loadArmors} from './actions/admin/armorActions';
 import {loadDierolls} from './actions/admin/dierollActions';
 import {loadEquipments} from './actions/admin/equipmentActions';
 import {loadItemtypes} from './actions/admin/itemtypeActions';
+import {loadPacks} from './actions/admin/packActions';
 import {loadPicklists} from './actions/admin/picklistActions';
 import {loadWeapons} from './actions/admin/weaponActions';
 
@@ -20,6 +21,7 @@ store.dispatch(loadArmors());
 store.dispatch(loadDierolls());
 store.dispatch(loadEquipments());
 store.dispatch(loadItemtypes());
+store.dispatch(loadPacks());
 store.dispatch(loadPicklists());
 store.dispatch(loadWeapons());
 
