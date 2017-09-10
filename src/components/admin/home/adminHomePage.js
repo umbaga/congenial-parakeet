@@ -13,6 +13,7 @@ class AdminHomePage extends React.Component {
                     <li><Link to="admin/Picklists">Picklists</Link></li>
                     <li><Link to="admin/equipment/weapons">Weapons</Link></li>
                     <li><Link to="admin/equipment/armors">Armors</Link></li>
+                    <li><Link to="admin/equipment">Equipment</Link></li>
                 </ul>
             </div>
         );

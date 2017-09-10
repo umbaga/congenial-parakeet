@@ -9,6 +9,7 @@ import routes from './routes';
 import './styles/my-css.css';
 import {loadArmors} from './actions/admin/armorActions';
 import {loadDierolls} from './actions/admin/dierollActions';
+import {loadEquipments} from './actions/admin/equipmentActions';
 import {loadItemtypes} from './actions/admin/itemtypeActions';
 import {loadPicklists} from './actions/admin/picklistActions';
 import {loadWeapons} from './actions/admin/weaponActions';
@@ -17,6 +18,7 @@ const store = configureStore();
 
 store.dispatch(loadArmors());
 store.dispatch(loadDierolls());
+store.dispatch(loadEquipments());
 store.dispatch(loadItemtypes());
 store.dispatch(loadPicklists());
 store.dispatch(loadWeapons());

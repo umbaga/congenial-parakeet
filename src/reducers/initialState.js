@@ -1,6 +1,7 @@
 export default {
     armors: [],
     dierolls: [],
+    equipments: [],
     itemtypes: [],
     picklists: [],
     weapons: [],

@@ -96,8 +96,9 @@ number.addCommas = function(val) {
     return retVal;
 };
 number.coin = function(val) {
-    let retVal = '';
-    if(val) {
+    let retVal = util.unicode.punctuation.longDash;
+    if(val && val != 0) {
+        retVal = '';
         let goldVal = Math.floor(val);
         let silverVal = Math.floor((val - goldVal) * 10);
         let copperVal = Math.round((val - goldVal - (silverVal / 10)) * 100);
@@ -121,8 +122,8 @@ number.abilityScoreMinimum = function(val, ability) {
     }
 };
 number.weight = function(val) {
-    let retVal = '';
-    if(val) {
+    let retVal = util.unicode.punctuation.longDash;
+    if(val && val != 0) {
         retVal = util.unicode.vulgarFractions.calculateFractionalValue(val) + ' lbs.';
     }
     return retVal;
@@ -140,6 +141,17 @@ obj.armorClass = function(val) {
         if(val.hasMaxDexModifier) {
             retVal += ' (max ' + val.maxDexModifier.toString() + ')';
         }
+    }
+    return retVal;
+};
+obj.equipmentName = function(val) {
+    let retVal = val.name;
+    if (val.count != 0 && val.unit.length != 0) {
+        retVal += ' (' + val.count.toString() + ' ' + val.unit + ')';
+    } else if (val.count != 0 && val.unit.length == 0) {
+        retVal += ' (' + val.count.toString() + ')';
+    } else if (val.count == 0 && val.unit.length != 0) {
+        retVal += ' (' + val.unit + ')';
     }
     return retVal;
 };

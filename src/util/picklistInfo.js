@@ -1,3 +1,5 @@
+import util from './util';
+
 export const ARMOR_PROFICIENCY = 84;
 export const DAMAGE_TYPE = 81;
 export const EQUIPMENT_CATEGORY = 87;
@@ -13,6 +15,8 @@ export const MELEE_WEAPON_CATEGORY = 65;
 export const RANGED_WEAPON_CATEGORY = 66;
 export const SIMPLE_WEAPON_PROFICIENCY = 67;
 export const MARTIAL_WEAPON_PROFICIENCY = 68;
+
+export const GENERAL_EQUIPMENT_CATEGORY = 170;
 
 export function getPicklistItems (picklistArray, picklistId) {
     let retVal = [];
@@ -46,4 +50,13 @@ export function getPicklistItem(allPicklists, picklistItemId) {
         }
     }
     return null;
+}
+
+export function getDefaultSelectedItem (picklist) {
+    for(let i = 0; i < picklist.length; i++) {
+        if(picklist[i].defaultSelected) {
+            return picklist[i];
+        }
+    }
+    return Object.assign({}, util.objectModel.PICKLISTITEM);
 }
