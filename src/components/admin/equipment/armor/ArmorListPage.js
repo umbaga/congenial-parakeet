@@ -87,7 +87,7 @@ class ArmorListPage extends React.Component {
                 </div>
                 
                 <Modal show={this.state.showModal} onHide={this.close}>
-                    <Modal.Header closeButton><h4>{this.state.isCreate ? 'Create' : 'Edit'} Item Type</h4></Modal.Header>
+                    <Modal.Header closeButton><h4>{this.state.isCreate ? 'Create' : 'Edit'} Armor</h4></Modal.Header>
                     <Modal.Body>
                         <ArmorEntry 
                             closeModal={this.close} 

@@ -46,7 +46,6 @@ class ArmorForm extends React.Component {
         return (
             <div>
                 <form>
-                    <div>ARMOR FORM</div>
                     <div className="col-md-12">
                         <DndInput
                             name="name"
@@ -134,24 +133,6 @@ class ArmorForm extends React.Component {
         );
     }
 }
-/*
-                    <div className="col-md-12">
-                        <DndInput
-                            name="name"
-                            label="Name"
-                            dataType={util.dataTypes.string.STRING}
-                            value={this.props.armor.name}
-                            onChange={this.props.onChange} />
-                    </div>
-                    <div className="col-md-6">
-                        <DndInput
-                            name="cost"
-                            label="Cost"
-                            dataType={util.dataTypes.number.COIN}
-                            value={this.props.armor.cost}
-                            onChange={this.props.onChange} />
-                    </div>
-*/
 
 ArmorForm.propTypes = {
     armor: React.PropTypes.object.isRequired,

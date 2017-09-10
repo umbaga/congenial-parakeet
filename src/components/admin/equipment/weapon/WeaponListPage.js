@@ -86,7 +86,7 @@ class WeaponListPage extends React.Component {
                 </div>
                 
                 <Modal show={this.state.showModal} onHide={this.close}>
-                    <Modal.Header closeButton><h4>{this.state.isCreate ? 'Create' : 'Edit'} Item Type</h4></Modal.Header>
+                    <Modal.Header closeButton><h4>{this.state.isCreate ? 'Create' : 'Edit'} Weapon</h4></Modal.Header>
                     <Modal.Body>
                         <WeaponEntry 
                             closeModal={this.close} 
