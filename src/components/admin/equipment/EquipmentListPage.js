@@ -83,6 +83,7 @@ class EquipmentListPage extends React.Component {
                     </table>
                 </div>
                 <DndModal
+                    headingCaption="Equipment"
                     closeModal={this.close}
                     isCreate={this.state.isCreate}
                     showModal={this.state.showModal}>

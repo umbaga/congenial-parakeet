@@ -87,6 +87,7 @@ class ArmorListPage extends React.Component {
                 </div>
 
                 <DndModal
+                    headingCaption="Armor"
                     closeModal={this.close}
                     isCreate={this.state.isCreate}
                     showModal={this.state.showModal}>
