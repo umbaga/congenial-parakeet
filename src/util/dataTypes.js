@@ -13,7 +13,21 @@ export const number = {
     COIN: 'DATA_NUMBER_COIN',
     DEC: 'DATA_NUMBER_DECIMAL',
     INT: 'DATA_NUMBER_INTEGER',
-    WEIGHT: 'DATA_NUMBER_WEIGHT'
+    WEIGHT: 'DATA_NUMBER_WEIGHT',
+    getDecimalPlaces: function (val) {
+        let retVal = 0;
+        if (Math.floor(val) == val) {
+            retVal = 0;
+        } else if (Math.floor(val * 10) == val * 10) {
+            retVal = 1;
+        } else if (Math.floor(val * 100) == val * 100) {
+            retVal = 2;
+        }
+        return retVal;
+    },
+    getStepIncrement: function (val) {
+        return 1 / (Math.pow(10, this.getDecimalPlaces(val)));
+    }
 };
 
 export const picklist = {
