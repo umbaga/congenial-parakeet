@@ -7,17 +7,37 @@ const DndButton = ({onClick, buttonType}) => {
     let fontawesomeStyle = 'fa fa-';
     let extraText = '';
     switch (buttonType.toLowerCase()) {
-        case 'edit':
-            fontawesomeStyle += 'edit';
-            bootstrapStyle += 'primary';
+        case 'additem':
+            fontawesomeStyle += 'plus-circle';
+            bootstrapStyle += 'default';
+            break;
+        case 'back':
+            fontawesomeStyle += 'angle-left';
+            bootstrapStyle += 'default';
             break;
         case 'cancel':
             fontawesomeStyle += 'ban';
             bootstrapStyle += 'primary';
             break;
+        case 'create':
+            fontawesomeStyle += 'file-text-o';
+            bootstrapStyle += 'primary';
+            break;
         case 'delete':
             fontawesomeStyle += 'trash-o';
             bootstrapStyle += 'primary';
+            break;
+        case 'edit':
+            fontawesomeStyle += 'edit';
+            bootstrapStyle += 'primary';
+            break;
+        case 'hamburger':
+            fontawesomeStyle += 'bars';
+            bootstrapStyle += 'primary';
+            break;
+        case 'removeitem':
+            fontawesomeStyle += 'minus-circle';
+            bootstrapStyle += 'default';
             break;
         case 'save':
             fontawesomeStyle += 'floppy-o';
@@ -28,24 +48,8 @@ const DndButton = ({onClick, buttonType}) => {
             bootstrapStyle += 'primary';
             extraText += '+';
             break;
-        case 'hamburger':
-            fontawesomeStyle += 'bars';
-            bootstrapStyle += 'primary';
-            break;
-        case 'create':
-            fontawesomeStyle += 'file-text-o';
-            bootstrapStyle += 'primary';
-            break;
-        case 'back':
-            fontawesomeStyle += 'angle-left';
-            bootstrapStyle += 'default';
-            break;
-        case 'additem':
-            fontawesomeStyle += 'plus-circle';
-            bootstrapStyle += 'default';
-            break;
-        case 'removeitem':
-            fontawesomeStyle += 'minus-circle';
+        case 'search':
+            fontawesomeStyle += 'search';
             bootstrapStyle += 'default';
             break;
         default:

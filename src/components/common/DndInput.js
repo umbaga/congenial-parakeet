@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import util from '../../util/util';
+import DndInputWrapper from './DndInputWrapper';
+import DndToggleBoxes from './DndToggleBoxes';
 
 class DndInput extends React.Component {
     constructor(props, context) {
@@ -9,30 +11,11 @@ class DndInput extends React.Component {
     }
 
     render() {
-        let wrapperClass = 'form-group form-horizontal row';
-        //let wrapperClass = 'form-group form-horizontal row';
-
         let primaryInput = null;
-
-        let finalLabelCols = 4;
-        if (this.props.dataType == util.dataTypes.bool.BOOL
-          || this.props.dataType == util.dataTypes.bool.HAS_DISADVANTAGE
-          || this.props.dataType == util.dataTypes.bool.YES_NO) {
-            finalLabelCols = 8;
-        }
-        if (this.props.labelCols) {
-            finalLabelCols = this.props.labelCols;
-        }
-        if (this.props.dataType == util.dataTypes.bool.BOOL
-          || this.props.dataType == util.dataTypes.bool.HAS_DISADVANTAGE
-          || this.props.dataType == util.dataTypes.bool.YES_NO) {
-            finalInputCols = 1;
-        }
-        let finalInputCols = 12 - finalLabelCols;
-        if (this.props.inputCols) {
-            finalInputCols = this.props.inputCols;
-        }
         let longValue = '';
+        let isReadOnly = this.props.readOnly ? this.props.readOnly : false;
+        let numberMinVal = this.props.numberMinVal ? this.props.numberMinVal : 0;
+        let numberStepVal = this.props.numberStepVal ? this.props.numberStepVal : 1;
         switch (this.props.dataType) {
             case util.dataTypes.bool.BOOL:
             case util.dataTypes.bool.HAS_DISADVANTAGE:
@@ -53,7 +36,8 @@ class DndInput extends React.Component {
                                     value={this.props.value}
                                     datatype={this.props.dataType}
                                     onChange={this.props.onChange}
-                                    className="form-control" />);
+                                    className="form-control"
+                                    readOnly={isReadOnly} />);
                 break;
             case util.dataTypes.number.COIN:
             case util.dataTypes.number.INT:
@@ -65,7 +49,10 @@ class DndInput extends React.Component {
                                     value={this.props.value}
                                     datatype={this.props.dataType}
                                     onChange={this.props.onChange}
-                                    className="form-control" />);
+                                    className="form-control"
+                                    step={numberStepVal}
+                                    min={numberMinVal}
+                                    readOnly={isReadOnly} />);
                 break;
             case util.dataTypes.special.DICE_ROLL:
                 primaryInput = (<input
@@ -100,41 +87,14 @@ class DndInput extends React.Component {
                 break;
             case util.dataTypes.array.WEAPON_PROPERTIES:
                 primaryInput = (
-                    <div>
-                        <div className="col-sm-5">
-                            <select
-                                name={this.props.name + 'Unassigned'}
-                                multiple
-                                size="6"
-                                datatype={this.props.dataType}
-                                onDoubleClick={this.props.onChange}>
-                                {util.picklistInfo.filterPicklistByAssigned(this.props.picklist, this.props.valueArray).map(picklistItem =>
-                                                                                                                            <option
-                                                                                                                                key={picklistItem.id}
-                                                                                                                                value={picklistItem.id}>
-                                                                                                                                {picklistItem.name}
-                                                                                                                            </option>)}
-                            </select>
-                        </div>
-                        <div className="col-sm-2">
-                            TEST
-                        </div>
-                        <div className="col-sm-5">
-                            <select
-                                name={this.props.name}
-                                multiple
-                                size="6"
-                                datatype={this.props.dataType}
-                                onDoubleClick={this.props.onChange}>
-                                {this.props.valueArray.map(picklistItem =>
-                                                           <option
-                                                               key={picklistItem.id}
-                                                               value={picklistItem.id}>
-                                                               {picklistItem.name}
-                                                           </option>)}
-                            </select>
-                        </div>
-                    </div>
+                    <DndToggleBoxes
+                        dataType={this.props.dataType}
+                        toggleAddItem={this.props.onChange}
+                        toggleRemoveItem={this.props.onChange}
+                        unselectedItemArray={this.props.picklist}
+                        selectedItemArray={this.props.valueArray}
+                        name={this.props.name}
+                        />
                 );
                 break;
             case util.dataTypes.special.WEAPON_RANGE:
@@ -181,36 +141,37 @@ class DndInput extends React.Component {
             default:
         }
 
-        let labelClass = 'col-sm-' + finalLabelCols + ' control-label';
-        let labelDivClass = 'align-middle';
-        let inputDivClass = 'field col-sm-' + finalInputCols + '';
-
         return (
-            <div className={wrapperClass}>
-                <div className={labelDivClass}>
-                    <label htmlFor={this.props.name} className={labelClass}>{this.props.label}</label>
-                </div>
-                <div className={inputDivClass}>
+            <DndInputWrapper
+                label={this.props.label}
+                dataType={this.props.dataType}
+                inputCols={this.props.inputCols}
+                labelCols={this.props.labelCols}
+                >
+                <div>
                     {primaryInput}
                 </div>
-            </div>
+            </DndInputWrapper>
         );
     }
 }
 
 DndInput.propTypes = {
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    dataType: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    labelCols: PropTypes.number,
-    inputCols: PropTypes.number,
+    numberMinVal: PropTypes.number,
+    numberStepVal: PropTypes.number,
     checked: PropTypes.bool,
+    dataType: PropTypes.string.isRequired,
+    inputCols: PropTypes.number,
+    label: PropTypes.string.isRequired,
+    labelCols: PropTypes.number,
+    name: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    picklist: PropTypes.array,
+    placeholder: PropTypes.string,
+    readOnly: PropTypes.bool,
     value: PropTypes.string,
     valueArray: PropTypes.array,
-    valueObj: PropTypes.object,
-    placeholder: PropTypes.string,
-    picklist: PropTypes.array
+    valueObj: PropTypes.object
 };
 
 export default DndInput;

@@ -11,7 +11,7 @@ class DndModal extends React.Component {
         return (
             <Modal show={this.props.showModal} onHide={this.props.closeModal}>
                 <Modal.Header closeButton>
-                    <h4>{this.props.isCreate ? 'Create' : 'Edit'} Item Type</h4>
+                    <h4>{this.props.isCreate ? 'Create' : 'Edit'} {this.props.headingCaption}</h4>
                 </Modal.Header>
                 <Modal.Body>
                     {this.props.children}
@@ -22,6 +22,7 @@ class DndModal extends React.Component {
 }
 
 DndModal.propTypes = {
+    headingCaption: PropTypes.string.isRequired,
     closeModal: PropTypes.func.isRequired,
     isCreate: PropTypes.bool,
     showModal: PropTypes.bool.isRequired,
