@@ -81,14 +81,14 @@ class EquipmentForm extends React.Component {
 }
 
 EquipmentForm.propTypes = {
-    equipment: React.PropTypes.object.isRequired,
-    onSave: React.PropTypes.func.isRequired,
-    onSaveNew: React.PropTypes.func.isRequired,
-    onChange: React.PropTypes.func.isRequired,
-    onCancel: React.PropTypes.func.isRequired,
-    onDelete: React.PropTypes.func.isRequired,
-    isCreate: React.PropTypes.bool.isRequired,
-    saving: React.PropTypes.bool,
+    equipment: PropTypes.object.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onSaveNew: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    isCreate: PropTypes.bool.isRequired,
+    saving: PropTypes.bool,
     picklists: PropTypes.array
 };
 

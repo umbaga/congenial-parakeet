@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import DndDataEntryButtonBar from '../../common/DndDataEntryButtonBar';
 import DndInput from '../../common/DndInput';
 import util from '../../../util/util';
@@ -37,14 +38,14 @@ class ItemtypeForm extends React.Component {
 }
 
 ItemtypeForm.propTypes = {
-    itemtype: React.PropTypes.object.isRequired,
-    onSave: React.PropTypes.func.isRequired,
-    onSaveNew: React.PropTypes.func.isRequired,
-    onChange: React.PropTypes.func.isRequired,
-    onCancel: React.PropTypes.func.isRequired,
-    onDelete: React.PropTypes.func.isRequired,
-    isCreate: React.PropTypes.bool.isRequired,
-    saving: React.PropTypes.bool
+    itemtype: PropTypes.object.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onSaveNew: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    isCreate: PropTypes.bool.isRequired,
+    saving: PropTypes.bool
 };
 
 export default ItemtypeForm;
