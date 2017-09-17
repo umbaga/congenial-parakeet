@@ -67,7 +67,7 @@ class PackListPage extends React.Component {
                                 <th>Name</th>
                                 <th className="text-center">Cost</th>
                                 <th className="text-center">Weight</th>
-                                <th></th>
+                                <th>Contents</th>
                                 <th>
                                     <div className="pull-right">
                                         <DndButton onClick={this.onCreate} buttonType="create" />
@@ -84,6 +84,7 @@ class PackListPage extends React.Component {
                     </table>
                 </div>
                 <DndModal
+                    headingCaption="Equipment Packs"
                     closeModal={this.close}
                     isCreate={this.state.isCreate}
                     showModal={this.state.showModal}>
@@ -93,6 +94,7 @@ class PackListPage extends React.Component {
                             isCreate={this.state.isCreate}
                             selectedId={this.state.selectedId}
                             picklists={this.props.picklists}
+                            equipments={this.props.equipments}
                             />
                 </DndModal>
             </div>
@@ -104,12 +106,14 @@ PackListPage.propTypes = {
     actions: PropTypes.object,
     children: PropTypes.object,
     picklists: PropTypes.array,
-    packs: PropTypes.array.isRequired
+    packs: PropTypes.array.isRequired,
+    equipments: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {
     if (state.packs.length > 0) {
         return {
+            equipments: state.equipments,
             packs: state.packs,
             picklists: state.picklists
         };

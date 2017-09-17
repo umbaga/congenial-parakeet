@@ -66,84 +66,18 @@ class PackEntry extends React.Component {
 
     updateFormState(event) {
         let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
-        let subfield = null;
         const pack = this.state.pack;
-        let newSelectedValue = {};
-        let newRenderedValue = '';
-        let newDiceRollValue = {};
-        let isAssign = field.split('Unassigned').length == 2 ? true : false;
-        let removeThisId = event.target.value;
-        let removeThisIndex = -1;
-        let referencePicklistItem = util.picklistInfo.getPicklistItem(this.props.picklists, removeThisId);
         let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
-
+        console.log(event.target);
+        console.log(event.handler);
+        
         switch (dataType) {
             case util.dataTypes.string.STRING:
-            case util.dataTypes.string.LONG_STRING:
             case util.dataTypes.number.COIN:
             case util.dataTypes.number.WEIGHT:
                 pack[field] = event.target.value;
                 break;
-            case util.dataTypes.bool.YES_NO:
-                pack[field] = !pack[field];
-                break;
-            case util.dataTypes.picklist.DAMAGE_TYPE:
-            case util.dataTypes.picklist.PACK_CATEGORY:
-            case util.dataTypes.picklist.PACK_PROFICIENCY:
-                newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
-                newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
-                pack[field] = newSelectedValue;
-                break;
-            case util.dataTypes.special.DICE_ROLL:
-                newRenderedValue = '';
-                if (event.target.value && event.target.value.length != 0) {
-                    for (let y = 0; y < event.target.value.length; y++) {
-                        if (event.target.value.charAt(y) == '1' || event.target.value.charAt(y) == '2' ||
-                           event.target.value.charAt(y) == '3' || event.target.value.charAt(y) == '4' ||
-                           event.target.value.charAt(y) == '5' || event.target.value.charAt(y) == '6' ||
-                           event.target.value.charAt(y) == '7' || event.target.value.charAt(y) == '8' ||
-                           event.target.value.charAt(y) == '9' || event.target.value.charAt(y) == '0' ||
-                           event.target.value.charAt(y) == 'd' || event.target.value.charAt(y) == 'D') {
-                            newRenderedValue += event.target.value.charAt(y);
-                        }
-                    }
-                }
-                if (util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL)) {
-                    newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
-                    newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
-                    pack[field] = newDiceRollValue;
-                }
-                pack[field].rendered = newRenderedValue;
-                break;
-            case util.dataTypes.array.PACK_PROPERTIES:
-                if (isAssign) {
-                    field = field.split('Unassigned')[0];
-                    pack[field].push(referencePicklistItem);
-                } else {
-                    for (let b = 0; b < pack.packProperties.length; b++) {
-                        if (pack.packProperties[b].id == referencePicklistItem.id) {
-                            if (pack.packProperties[b].requireDamage) {
-                                pack.versatileDamage = {};
-                            }
-                            if (pack.packProperties[b].requireDescription) {
-                                pack.specialDescription = null;
-                            }
-                            if (pack.packProperties[b].requireRange) {
-                                pack.ramge = {};
-                            }
-                            removeThisIndex = b;
-                            break;
-                        }
-                    }
-                    pack[field].splice(removeThisIndex, 1);
-                }
-                break;
-            case util.dataTypes.special.PACK_RANGE:
-                if (field.split('_').length == 2) {
-                    subfield = field.split('_')[1];
-                    field = field.split('_')[0];
-                }
-                pack[field][subfield] = parseInt(event.target.value);
+            case util.dataTypes.array.ASSIGNED_EQUIPMENT:
                 break;
             default:
         }
@@ -151,9 +85,11 @@ class PackEntry extends React.Component {
     }
 
     render() {
+        console.log(this.props.equipments);
         return (
             <div>
                 <PackForm
+                    equipments={this.props.equipments}
                     pack={this.state.pack}
                     onSave={this.saveAndBackPack}
                     onSaveNew={this.saveAndNewPack}
@@ -173,7 +109,8 @@ PackEntry.propTypes = {
     actions: PropTypes.object,
     isCreate: PropTypes.bool,
     closeModal: PropTypes.func.isRequired,
-    picklists: PropTypes.array
+    picklists: PropTypes.array,
+    equipments: PropTypes.array
 };
 
 function getPackById(packs, id) {
