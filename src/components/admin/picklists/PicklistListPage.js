@@ -79,6 +79,7 @@ class PicklistListPage extends React.Component {
                     </table>
                 </div>
                 <DndModal
+                    headingCaption="Picklist"
                     closeModal={this.close}
                     isCreate={this.state.isCreate}
                     showModal={this.state.showModal}>
