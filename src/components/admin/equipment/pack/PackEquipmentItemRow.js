@@ -8,13 +8,16 @@ class PackEquipmentItemRow extends React.Component {
         this._onRemove = this._onRemove.bind(this);
         this._onChange = this._onChange.bind(this);
     }
+    
     _onRemove(event) {
         event.preventDefault();
         this.props.removePackEquipmentItem(this.props.equipmentItem);
     }
+    
     _onChange(event) {
         this.props.changeEquipmentCount(event, this.props.equipmentItem);
     }
+    
     render() {
         return (
             <tr>
@@ -24,14 +27,14 @@ class PackEquipmentItemRow extends React.Component {
                         className="form-control"
                         width="50"
                         type="number"
-                        value={this.props.equipmentItem.itemCount * this.props.equipmentItem.count}
-                        min={this.props.equipmentItem.itemCount}
-                        step={this.props.equipmentItem.itemCount}
+                        value={this.props.equipmentItem.assignedCount * this.props.equipmentItem.count}
+                        min={this.props.equipmentItem.count}
+                        step={this.props.equipmentItem.count}
                         onChange={this._onChange}
                         />
                 </td>
                 <td>
-                    {this.props.equipmentItem.unitName}
+                    {this.props.equipmentItem.unit}
                 </td>
                 <td>
                     <DndButton

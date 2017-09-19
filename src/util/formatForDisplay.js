@@ -19,16 +19,16 @@ array.equipmentPackItems = function(arr) {
         retVal = '';
         for (let a = 0; a < arr.length; a++) {
             retVal += util.format.forDisplay.string.reorderCommaSeparatedString(arr[a].name);
-            let tmpCount = arr[a].count;
-            if (arr[a].itemCount != 0) {
-                tmpCount = tmpCount * arr[a].itemCount;
+            let tmpCount = arr[a].assignedCount;
+            if (arr[a].count != 0) {
+                tmpCount = tmpCount * arr[a].count;
             }
-            if (tmpCount != 1 && arr[a].unitName.length != 0) {
-                retVal += ' (' + tmpCount.toString() + ' ' + arr[a].unitName + ')';
-            } else if (tmpCount != 1 && arr[a].unitName.length == 0) {
+            if (tmpCount != 1 && arr[a].unit.length != 0) {
+                retVal += ' (' + tmpCount.toString() + ' ' + arr[a].unit + ')';
+            } else if (tmpCount != 1 && arr[a].unit.length == 0) {
                 retVal += ' (' + tmpCount.toString() + ')';
-            } else if (tmpCount == 1 && arr[a].unitName.length != 0) {
-                retVal += ' (' + arr[a].unitName + ')';
+            } else if (tmpCount == 1 && arr[a].unit.length != 0) {
+                retVal += ' (' + arr[a].unit + ')';
             }
             if (a < arr.length - 1) {
                 retVal += ', ';

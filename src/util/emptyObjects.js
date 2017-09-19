@@ -50,18 +50,18 @@ export const EQUIPMENT_PACK = {
 export const EQUIPMENT_PACK_ASSIGNED_EQUIPMENT = {
     id: 0,
     name: '',
+    assignedCount: 0,
     category: {
         id: 0,
         name: ''
     },
     cost: '0',
     count: 0,
-    itemCount: 0,
     resource: {
         id: 0,
         name: ''
     },
-    unitName: '',
+    unit: '',
     weight: '0'
 };
 export const ITEMTYPE = {id: 0, name: '', isPicklist: false};

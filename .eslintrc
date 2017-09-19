@@ -29,7 +29,7 @@
           "nonwords": false
     }],
     "init-declarations": [1, "always"],
-    "no-trailing-spaces": 1,
+    "no-trailing-spaces": [1, { "skipBlankLines": true }],
     "no-multiple-empty-lines": [1, { "max": 2 }],
     "keyword-spacing": [1, { "before": true, "after": true }],
     "array-bracket-spacing": [1, "never"],

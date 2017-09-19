@@ -15,16 +15,20 @@ class PackForm extends React.Component {
         this._changeEquipmentCount = this._changeEquipmentCount.bind(this);
         this.renderEquipmentItemList = this.renderEquipmentItemList.bind(this);
     }
+    
     _addEquipmentItem () {
         event.preventDefault();
         this.props.addEquipmentToPack(this.props);
     }
+    
     _removeEquipmentItem (equipmentItem) {
         this.props.removeEquipmentFromPack(equipmentItem);
     }
+    
     _changeEquipmentCount (event, equipmentItem) {
         this.props.changeEquipmentCount(event, equipmentItem);
     }
+    
     renderEquipmentItemList () {
         const equipmentItemList = this.props.pack.assignedEquipment.length == 0 ? null : (
             <div>
@@ -57,6 +61,7 @@ class PackForm extends React.Component {
         );
         return equipmentItemList;
     }
+    
     render() {
         return (
             <div>
@@ -134,7 +139,7 @@ class PackForm extends React.Component {
         );
     }
 }
-//this.props.equipments.filter().map(equipmentItem =>
+
 PackForm.propTypes = {
     addEquipmentToPack: PropTypes.func.isRequired,
     removeEquipmentFromPack: PropTypes.func.isRequired,
