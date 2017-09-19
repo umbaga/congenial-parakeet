@@ -42,7 +42,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function deleteUnitCountTable(resObj, callback) {
                     sql = 'DELETE FROM adm_link_equipment_pack';
-                    sql += ' WHERE "equipmentId" = $1';
+                    sql += ' WHERE "packId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -97,9 +97,8 @@ module.exports = function(app, pg, async, pool) {
                     sql = 'UPDATE adm_def_equipment';
                     sql += ' SET weight = $1';
                     sql += ', cost = $2';
-                    sql += ', "categoryId" = $3';
-                    sql += ' WHERE "equipmentId" = $4';
-                    vals = [resObj.pack.weight, resObj.pack.cost, resObj.pack.category.id, req.params.id];
+                    sql += ' WHERE "equipmentId" = $3';
+                    vals = [resObj.pack.weight, resObj.pack.cost, req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
                     query.on('row', function(row) {
@@ -140,7 +139,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function checkNeededAssignedItems(resObj, callback) {
                     var theseIdsExist = [];
-                    sql = 'SELECT * FROM adm_link_weapon_property';
+                    sql = 'SELECT * FROM adm_link_equipment_pack';
                     sql += ' WHERE "packId" = $1';
                     if (resObj.pack.assignedEquipment.length != 0) {
                         sql += ' AND "equipmentId" IN (';
@@ -172,11 +171,12 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function addNeededAssignedItems(resObj, theseIdsExist, callback) {
                     if (resObj.pack.assignedEquipment.length != 0) {
-                        sql = 'INSERT INTO adm_link_weapon_property';
-                        sql += ' ("packId", "equipmentId")';
+                        sql = 'INSERT INTO adm_link_equipment_pack';
+                        sql += ' ("packId", "equipmentId", "assignedCount")';
                         sql += ' VALUES ';
                         var firstParam = 1;
                         var secondParam = 2;
+                        var thirdParam = 3;
                         var paramSql = '';
                         vals = [];
                         for (var g = 0; g < resObj.pack.assignedEquipment.length; g++) {
@@ -188,10 +188,11 @@ module.exports = function(app, pg, async, pool) {
                                 }
                             }
                             if (assignThis) {
-                                paramSql += '($' + firstParam.toString() + ', $' + secondParam.toString() + '),';
-                                firstParam = firstParam + 2;
-                                secondParam = secondParam + 2;
-                                vals.push(resObj.pack.id, resObj.pack.assignedEquipment[g].id);
+                                paramSql += '($' + firstParam.toString() + ', $' + secondParam.toString() + ', $' + thirdParam.toString() + '),';
+                                firstParam = firstParam + 3;
+                                secondParam = secondParam + 3;
+                                thirdParam = thirdParam + 3;
+                                vals.push(resObj.pack.id, resObj.pack.assignedEquipment[g].id, resObj.pack.assignedEquipment[g].assignedCount);
                             }
                         }
                         paramSql = paramSql.replace(/,\s*$/, "");
@@ -209,6 +210,41 @@ module.exports = function(app, pg, async, pool) {
                         } else {
                             return callback(null, resObj);
                         }
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function updateAssignedItems(resObj, callback) {
+                    vals = [];
+                    sql = 'UPDATE adm_link_equipment_pack as t';
+                    sql += ' SET "assignedCount" = c."assignedCount"';
+                    sql += ' FROM (VALUES';
+                    var firstParam = 1;
+                    var secondParam = 2;
+                    var thirdParam = 3;
+                    for(var x = 0; x < resObj.pack.assignedEquipment.length; x++) {
+                        sql += '($' + firstParam.toString() + '::bigint, $' + secondParam.toString() + '::bigint, $' + thirdParam.toString() + '::bigint)';
+                        vals.push(parseInt(resObj.pack.id), resObj.pack.assignedEquipment[x].id, resObj.pack.assignedEquipment[x].assignedCount);
+                        if (x < resObj.pack.assignedEquipment.length - 1) {
+                            sql += ',';
+                        }
+                        firstParam = firstParam + 3;
+                        secondParam = secondParam + 3;
+                        thirdParam = thirdParam + 3;
+                    }
+                    sql += ') AS c("packId", "equipmentId", "assignedCount")';
+                    sql += ' WHERE c."packId" = t."packId"';
+                    sql += ' AND c."equipmentId" = t."equipmentId"';
+                    if (resObj.pack.assignedEquipment.length != 0) {
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
                     } else {
                         return callback(null, resObj);
                     }
@@ -246,13 +282,10 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         var tmp = req.body;
                         tmp.pack.needsCountUnit = false;
-                        console.log(tmp.pack.count);
-                        console.log(tmp.pack.unit);
                         if (tmp.pack.count || tmp.pack.unit) {
-                            console.log('needs');
                             tmp.pack.needsCountUnit = true;
                         }
-                        tmp.pack.id = results[0].packId;
+                        tmp.pack.id = results[0].equipmentId;
                         return callback(null, tmp);
                     });
                 },
@@ -260,7 +293,7 @@ module.exports = function(app, pg, async, pool) {
                     sql = 'INSERT INTO adm_def_equipment';
                     sql += ' ("equipmentId", "weight", "cost", "categoryId")';
                     sql += ' VALUES ($1, $2, $3, 175);';
-                    vals = [resObj.pack.id, resObj.pack.weight, resObj.pack.cost, resObj.pack.category.id];
+                    vals = [resObj.pack.id, resObj.pack.weight, resObj.pack.cost];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
                     query.on('row', function(row) {
@@ -281,7 +314,7 @@ module.exports = function(app, pg, async, pool) {
                             var first = (t * 3) + 1;
                             var second = first + 1;
                             var third = first + 2;
-                            sql += '($' + first.toString() + ', $' + second.toString() + ')';
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
                             if (t < resObj.pack.assignedEquipment.length - 1) {
                                 sql += ', ';
                             } else {
@@ -289,7 +322,7 @@ module.exports = function(app, pg, async, pool) {
                             }
                             vals.push(resObj.pack.id);
                             vals.push(resObj.pack.assignedEquipment[t].id);
-                            vals.push(resObj.pack.assignedEquipment[t].count);
+                            vals.push(resObj.pack.assignedEquipment[t].assignedCount);
                         }
                         var query = client.query(new pg.Query(sql, vals));
                         var results = [];
@@ -312,7 +345,6 @@ module.exports = function(app, pg, async, pool) {
             });
         });
     });
-    
     app.get('/api/adm/equipment/packs', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {

@@ -4,7 +4,7 @@ module.exports = function(app, pg, async, pool) {
         pool.connect(function(err, client, done) {
             if (err) {
                 done();
-                console.log(err);
+                console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'SELECT dice.id, dice."dieCount", dice."dieType"';
@@ -25,7 +25,7 @@ module.exports = function(app, pg, async, pool) {
         pool.connect(function(err, client, done) {
             if (err) {
                 done();
-                console.log(err);
+                console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'INSERT INTO adm_core_dice';

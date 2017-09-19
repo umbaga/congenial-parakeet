@@ -57,12 +57,12 @@ class PackEntry extends React.Component {
         event.preventDefault();
         this.setState({saving: true});
         this.props.actions.upsertPack(this.state.pack);
+        let newPack = Object.assign({}, util.objectModel.EQUIPMENT_PACK);
+        this.setState({pack: newPack});
     }
     
     saveAndNewPack(event) {
         this.savePack(event);
-        let newPack = Object.assign({}, util.objectModel.EQUIPMENT_PACK);
-        this.setState({pack: newPack});
     }
     
     saveAndBackPack(event) {
@@ -182,6 +182,7 @@ function getPackById(packs, id) {
 
 function mapStateToProps(state, ownProps) {
     let pack = Object.assign({}, util.objectModel.EQUIPMENT_PACK);
+    pack.assignedEquipment = [];
     const packId = ownProps.selectedId;
     let isCreate = true;
     if (ownProps.selecetdId != 0) {

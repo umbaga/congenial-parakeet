@@ -35,6 +35,7 @@ class PackListPage extends React.Component {
     }
 
     onCreate() {
+        this.changeSelectedId(0);
         this.open();
         this.setState({isCreate: true, selectedId: 0});
     }

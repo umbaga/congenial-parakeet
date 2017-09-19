@@ -131,26 +131,22 @@ module.exports = function(app, pg, async, pool) {
                     sql = '';
                     if (resObj.equipment.needsCountUnit && countUnitExists) {
                         //update
-                        console.log('update');
                         sql = 'UPDATE adm_def_equipment_count_unit';
                         sql += ' SET "itemCount" = $1';
                         sql += ' WHERE "unitName" = $2';
                         vals = [resObj.equipment.count, resObj.equipment.unit];
                     } else if (resObj.equipment.needsSpecial && !countUnitExists) {
                         //insert
-                        console.log('insert');
                         sql = 'INSERT INTO adm_def_equipment_count_unit';
                         sql += ' ("specialDescription", "weaponId", "equipmentId")';
                         sql += ' VALUES ($1, $2)';
                         vals = [resObj.equipment.count, resObj.equipment.unit, resObj.equipment.id];
                     } else {
                         //delete
-                        console.log('delete');
                         sql = 'DELETE FROM adm_def_equipment_count_unit';
                         sql += ' WHERE "equipmentId" = $1';
                         vals = [resObj.equipment.id];
                     }
-                    console.log(sql);
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
                     query.on('row', function(row) {
@@ -194,10 +190,7 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         var tmp = req.body;
                         tmp.equipment.needsCountUnit = false;
-                        console.log(tmp.equipment.count);
-                        console.log(tmp.equipment.unit);
                         if (tmp.equipment.count || tmp.equipment.unit) {
-                            console.log('needs');
                             tmp.equipment.needsCountUnit = true;
                         }
                         tmp.equipment.id = results[0].equipmentId;
