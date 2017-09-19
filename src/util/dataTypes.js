@@ -30,6 +30,10 @@ export const number = {
     }
 };
 
+export const obj = {
+    EQUIPMENT: 'DATA_OBJ_EQUIPMENT'
+};
+
 export const picklist = {
     ARMOR_PROFICIENCY: 'DATA_PICKLIST_ARMOR_PROFICIENCY',
     DAMAGE_TYPE: 'DATA_PICKLIST_DAMAGE_TYPE',

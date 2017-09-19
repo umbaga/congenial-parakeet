@@ -10,6 +10,7 @@ class PackEntry extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
+            selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT),
             pack: this.props.pack,
             isCreate: this.props.isCreate,
             saving: false
@@ -21,20 +22,22 @@ class PackEntry extends React.Component {
         this.saveAndNewPack = this.saveAndNewPack.bind(this);
         this.saveAndBackPack = this.saveAndBackPack.bind(this);
         this.updateFormState = this.updateFormState.bind(this);
+        this.removeEquipmentFromPack = this.removeEquipmentFromPack.bind(this);
+        this.addEquipmentToPack = this.addEquipmentToPack.bind(this);
+        this.changeEquipmentCount = this.changeEquipmentCount.bind(this);
+        this.calculateCost = this.calculateCost.bind(this);
+        this.calculateWeight = this.calculateWeight.bind(this);
     }
-
     componentWillReceiveProps(nextProps) {
         if (this.props.pack.id != nextProps.pack.id) {
             this.setState({pack: nextProps.pack});
         }
         this.setState({saving: false});
     }
-
     cancelPack(event) {
         event.preventDefault();
         this.postAction();
     }
-
     deletePack(event) {
         event.preventDefault();
         if (confirm('are you sure?')) {
@@ -42,35 +45,72 @@ class PackEntry extends React.Component {
             this.postAction();
         }
     }
-
     postAction() {
         this.props.closeModal();
     }
-
     savePack(event) {
         event.preventDefault();
         this.setState({saving: true});
         this.props.actions.upsertPack(this.state.pack);
     }
-
     saveAndNewPack(event) {
         this.savePack(event);
         let newPack = Object.assign({}, util.objectModel.EQUIPMENT_PACK);
         this.setState({pack: newPack});
     }
-
     saveAndBackPack(event) {
         this.savePack(event);
         this.postAction();
     }
-
+    addEquipmentToPack () {
+        const pack = this.state.pack;
+        const selectedEquipment = this.state.selectedEquipment;
+        selectedEquipment.itemCount = selectedEquipment.count;
+        selectedEquipment.unitName = selectedEquipment.unit;
+        selectedEquipment.count = 1;
+        pack.assignedEquipment.push(selectedEquipment);
+        pack.cost = this.calculateCost(pack);
+        pack.weight = this.calculateWeight(pack);
+        return this.setState({pack: pack});
+    }
+    removeEquipmentFromPack (equipmentItem) {
+        const pack = this.state.pack;
+        const indexOfItemToRemove = this.props.pack.assignedEquipment.findIndex(item => {
+            return item.id == equipmentItem.id;
+        });
+        pack.assignedEquipment.splice(indexOfItemToRemove, 1);
+        pack.cost = this.calculateCost(pack);
+        pack.weight = this.calculateWeight(pack);
+        return this.setState({pack: pack});
+    }
+    changeEquipmentCount (event, equipmentItem) {
+        const pack = Object.assign({}, this.state.pack);
+        const itemIndex = this.props.pack.assignedEquipment.findIndex(item => {
+            return item.id == equipmentItem.id;
+        });
+        pack.assignedEquipment[itemIndex].count = event.target.value / pack.assignedEquipment[itemIndex].itemCount;
+        pack.cost = this.calculateCost(pack);
+        pack.weight = this.calculateWeight(pack);
+        return this.setState({pack: pack});
+    }
+    calculateCost (pack) {
+        let retVal = 0;
+        for (let x = 0; x < pack.assignedEquipment.length; x++) {
+            retVal += parseFloat(pack.assignedEquipment[x].cost) * pack.assignedEquipment[x].count;
+        }
+        return retVal.toString();
+    }
+    calculateWeight (pack) {
+        let retVal = 0;
+        for (let x = 0; x < pack.assignedEquipment.length; x++) {
+            retVal += parseFloat(pack.assignedEquipment[x].weight) * pack.assignedEquipment[x].count;
+        }
+        return retVal.toString();
+    }
     updateFormState(event) {
         let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
         const pack = this.state.pack;
         let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
-        console.log(event.target);
-        console.log(event.handler);
-        
         switch (dataType) {
             case util.dataTypes.string.STRING:
             case util.dataTypes.number.COIN:
@@ -79,16 +119,23 @@ class PackEntry extends React.Component {
                 break;
             case util.dataTypes.array.ASSIGNED_EQUIPMENT:
                 break;
+            case util.dataTypes.obj.EQUIPMENT:
+                if (event.target.value != 0) {
+                    return this.setState({selectedEquipment: this.props.equipments.filter((equipment) => equipment.id == event.target.value)[0]});
+                }
+                break;
             default:
         }
         return this.setState({pack: pack});
     }
 
     render() {
-        console.log(this.props.equipments);
         return (
             <div>
                 <PackForm
+                    addEquipmentToPack={this.addEquipmentToPack}
+                    removeEquipmentFromPack={this.removeEquipmentFromPack}
+                    changeEquipmentCount={this.changeEquipmentCount}
                     equipments={this.props.equipments}
                     pack={this.state.pack}
                     onSave={this.saveAndBackPack}

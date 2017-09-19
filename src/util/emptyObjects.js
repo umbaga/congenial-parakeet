@@ -47,6 +47,23 @@ export const EQUIPMENT_PACK = {
     },
     weight: '0'
 };
+export const EQUIPMENT_PACK_ASSIGNED_EQUIPMENT = {
+    id: 0,
+    name: '',
+    category: {
+        id: 0,
+        name: ''
+    },
+    cost: '0',
+    count: 0,
+    itemCount: 0,
+    resource: {
+        id: 0,
+        name: ''
+    },
+    unitName: '',
+    weight: '0'
+};
 export const ITEMTYPE = {id: 0, name: '', isPicklist: false};
 export const PICKLIST = {id: 0, name: '', items: []};
 export const PICKLISTITEM = {id: 0, name: '', picklistId: 0, defaultSelected: false};

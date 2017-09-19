@@ -312,6 +312,7 @@ module.exports = function(app, pg, async, pool) {
             });
         });
     });
+    
     app.get('/api/adm/equipment/packs', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -328,9 +329,9 @@ module.exports = function(app, pg, async, pool) {
             sql += ', case when cntunit."itemCount" IS NULL then 0 else cntunit."itemCount" end AS "count"';
             sql += ', case when cntunit."unitName" IS NULL then \'\' else cntunit."unitName" end AS "unit"';
             sql += ', case when count(asseq) = 0 then \'[]\' else json_agg((SELECT x FROM ';
-sql += ' (SELECT asseq.id, asseq."itemName" as "name", pack."assignedCount" AS "count"';
-sql += ', case when asscntunit."itemCount" IS NULL then 0 else asscntunit."itemCount" end';
-sql += ', case when asscntunit."unitName" IS NULL then \'\' else asscntunit."unitName" end) x)) end AS "assignedEquipment"';
+            sql += ' (SELECT asseq.id, asseqtbl.cost, asseqtbl.weight, asseq."itemName" as "name", pack."assignedCount" AS "count"';
+            sql += ', case when asscntunit."itemCount" IS NULL then 1 else asscntunit."itemCount" end';
+            sql += ', case when asscntunit."unitName" IS NULL then \'\' else asscntunit."unitName" end) x)) end AS "assignedEquipment"';
             sql += 'FROM adm_item i';
             sql += ' INNER JOIN adm_def_equipment equip ON equip."equipmentId" = i.id';
             sql += ' INNER JOIN adm_item cat ON cat.id = equip."categoryId"';
@@ -338,6 +339,7 @@ sql += ', case when asscntunit."unitName" IS NULL then \'\' else asscntunit."uni
             sql += ' LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = i.id';
             sql += ' LEFT OUTER JOIN adm_link_equipment_pack pack ON pack."packId" = i.id';
             sql += ' LEFT OUTER JOIN adm_item asseq ON asseq.id = pack."equipmentId"';
+            sql += ' LEFT OUTER JOIN adm_def_equipment asseqtbl ON asseqtbl."equipmentId" = asseq.id';
             sql += ' LEFT OUTER JOIN adm_def_equipment_count_unit asscntunit ON asscntunit."equipmentId" = asseq.id';
             sql += ' WHERE equip."categoryId" = 175';
             sql += ' GROUP BY i."itemName", i.id, equip.cost, equip.weight, cat."itemName", cat."id"';

@@ -259,7 +259,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ', equip.cost, equip.weight';
             sql += ', json_build_object(\'name\', cat."itemName", \'id\', cat."id") AS "category"';
             sql += ', json_build_object(\'name\', rsrc."itemName", \'id\', rsrc."id") AS "resource"';
-            sql += ', case when cntunit."itemCount" IS NULL then 0 else cntunit."itemCount" end AS "count"';
+            sql += ', case when cntunit."itemCount" IS NULL then 1 else cntunit."itemCount" end AS "count"';
             sql += ', case when cntunit."unitName" IS NULL then \'\' else cntunit."unitName" end AS "unit"';
             sql += ' FROM adm_item i';
             sql += ' INNER JOIN adm_def_equipment equip ON equip."equipmentId" = i.id';

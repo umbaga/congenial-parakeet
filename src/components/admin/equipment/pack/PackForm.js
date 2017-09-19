@@ -4,21 +4,58 @@ import DndDataEntryButtonBar from '../../../common/DndDataEntryButtonBar';
 import DndButton from '../../../common/DndButton';
 import DndInput from '../../../common/DndInput';
 import DndInputWrapper from '../../../common/DndInputWrapper';
-import DndToggleBoxes from '../../../common/DndToggleBoxes';
+import PackEquipmentItemRow from './PackEquipmentItemRow';
 import util from '../../../../util/util';
 
 class PackForm extends React.Component {
     constructor(props) {
         super(props);
-        this.searchEquipmentList = this.searchEquipmentList.bind(this);
-        this.addEquipmentItem = this.addEquipmentItem.bind(this);
+        this._addEquipmentItem = this._addEquipmentItem.bind(this);
+        this._removeEquipmentItem = this._removeEquipmentItem.bind(this);
+        this._changeEquipmentCount = this._changeEquipmentCount.bind(this);
+        this.renderEquipmentItemList = this.renderEquipmentItemList.bind(this);
     }
-
-    searchEquipmentList () {
-        console.log('search');
+    _addEquipmentItem () {
+        event.preventDefault();
+        this.props.addEquipmentToPack(this.props);
     }
-    addEquipmentItem () {
-        console.log('add item');
+    _removeEquipmentItem (equipmentItem) {
+        this.props.removeEquipmentFromPack(equipmentItem);
+    }
+    _changeEquipmentCount (event, equipmentItem) {
+        this.props.changeEquipmentCount(event, equipmentItem);
+    }
+    renderEquipmentItemList () {
+        const equipmentItemList = this.props.pack.assignedEquipment.length == 0 ? null : (
+            <div>
+                <table>
+                    <colgroup>
+                        <col width="50%"></col>
+                        <col width="20%"></col>
+                        <col width="20%"></col>
+                        <col width="10%"></col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Equipment</th>
+                            <th>Count</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.props.pack.assignedEquipment.map(equipmentItem =>
+                            <PackEquipmentItemRow
+                                key={equipmentItem.id}
+                                equipmentItem={equipmentItem}
+                                changeEquipmentCount={this._changeEquipmentCount}
+                                removePackEquipmentItem={this._removeEquipmentItem}
+                                />
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        );
+        return equipmentItemList;
     }
     render() {
         return (
@@ -40,6 +77,7 @@ class PackForm extends React.Component {
                             value={this.props.pack.cost}
                             onChange={this.props.onChange}
                             numberStepVal={util.dataTypes.number.getStepIncrement(this.props.pack.cost)}
+                            isReadOnly
                              />
                     </div>
                     <div className="col-md-6">
@@ -49,6 +87,7 @@ class PackForm extends React.Component {
                             dataType={util.dataTypes.number.WEIGHT}
                             value={this.props.pack.weight}
                             onChange={this.props.onChange}
+                            isReadOnly
                              />
                     </div>
                     <div className="col-md-12">
@@ -56,7 +95,29 @@ class PackForm extends React.Component {
                             dataType={util.dataTypes.array.ASSIGNED_EQUIPMENT}
                             label="Assigned Equipment">
                             <div>
-                                THIS WILL BE EQUIPMENT ASSIGNMENT
+                                <div className="input-group">
+                                    <select
+                                        name="selectedEquipment"
+                                        className="form-control"
+                                        onChange={this.props.onChange}
+                                        datatype={util.dataTypes.obj.EQUIPMENT}
+                                        >
+                                        <option value="0">SELECT ONE</option>
+                                        {util.picklistInfo.filterPicklistByAssigned(this.props.equipments, this.props.pack.assignedEquipment).map(equipmentItem =>
+                                                                 <option
+                                                                     key={equipmentItem.id}
+                                                                     value={equipmentItem.id}>
+                                                                     {equipmentItem.name}
+                                                                 </option>)}
+                                    </select>
+                                    <span className="input-group-btn">
+                                        <DndButton
+                                            buttonType="additem"
+                                            onClick={this._addEquipmentItem}
+                                            />
+                                    </span>
+                                </div>
+                                {this.renderEquipmentItemList()}
                             </div>
                         </DndInputWrapper>
                     </div>
@@ -73,16 +134,11 @@ class PackForm extends React.Component {
         );
     }
 }
-/*
-                        <DndInput
-                            name="assignedEquipment"
-                            label="Assign Equipment to Pack"
-                            dataType={util.dataTypes.array.ASSIGNED_EQUIPMENT}
-                            valueObj={this.props.pack.assignedEquipment}
-                            picklists={this.props.picklists}
-                            customInput={testCustomInput} />
-*/
+//this.props.equipments.filter().map(equipmentItem =>
 PackForm.propTypes = {
+    addEquipmentToPack: PropTypes.func.isRequired,
+    removeEquipmentFromPack: PropTypes.func.isRequired,
+    changeEquipmentCount: PropTypes.func.isRequired,
     pack: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
     onSaveNew: PropTypes.func.isRequired,

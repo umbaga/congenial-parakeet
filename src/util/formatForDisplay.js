@@ -155,11 +155,11 @@ obj.armorClass = function(val) {
 };
 obj.equipmentName = function(val) {
     let retVal = val.name;
-    if (val.count != 0 && val.unit.length != 0) {
+    if (val.count != 1 && val.unit.length != 0) {
         retVal += ' (' + val.count.toString() + ' ' + val.unit + ')';
-    } else if (val.count != 0 && val.unit.length == 0) {
+    } else if (val.count != 1 && val.unit.length == 0) {
         retVal += ' (' + val.count.toString() + ')';
-    } else if (val.count == 0 && val.unit.length != 0) {
+    } else if (val.count == 1 && val.unit.length != 0) {
         retVal += ' (' + val.unit + ')';
     }
     return retVal;

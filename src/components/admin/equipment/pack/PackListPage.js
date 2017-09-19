@@ -119,6 +119,7 @@ function mapStateToProps(state) {
         };
     } else {
         return {
+            equipments: [util.objectModel.EQUIPMENT_PACK],
             packs: [util.objectModel.EQUIPMENT_PACK],
             picklists: [util.objectModel.PICKLIST]
         };

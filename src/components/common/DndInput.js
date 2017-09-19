@@ -13,7 +13,7 @@ class DndInput extends React.Component {
     render() {
         let primaryInput = null;
         let longValue = '';
-        let isReadOnly = this.props.readOnly ? this.props.readOnly : false;
+        let isReadOnly = this.props.isReadOnly ? this.props.isReadOnly : false;
         let numberMinVal = this.props.numberMinVal ? this.props.numberMinVal : 0;
         let numberStepVal = this.props.numberStepVal ? this.props.numberStepVal : 1;
         switch (this.props.dataType) {
@@ -168,7 +168,7 @@ DndInput.propTypes = {
     onChange: PropTypes.func.isRequired,
     picklist: PropTypes.array,
     placeholder: PropTypes.string,
-    readOnly: PropTypes.bool,
+    isReadOnly: PropTypes.bool,
     value: PropTypes.string,
     valueArray: PropTypes.array,
     valueObj: PropTypes.object
