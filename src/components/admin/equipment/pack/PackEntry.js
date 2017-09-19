@@ -73,9 +73,7 @@ class PackEntry extends React.Component {
     addEquipmentToPack () {
         const pack = this.state.pack;
         const selectedEquipment = this.state.selectedEquipment;
-        //selectedEquipment.itemCount = selectedEquipment.count;
-        //selectedEquipment.unitName = selectedEquipment.unit;
-        selectedEquipment.count = 1;
+        selectedEquipment.assignedCount = 1;
         pack.assignedEquipment.push(selectedEquipment);
         pack.cost = this.calculateCost(pack);
         pack.weight = this.calculateWeight(pack);
