@@ -150,19 +150,46 @@ module.exports = function(app, pg, async, pool) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err });
             }
-            sql = 'INSERT INTO adm_item';
-            sql += ' ("itemName", "itemTypeId")';
-            sql += ' VALUES ($1, $2) RETURNING id;';
-            vals = [req.body.picklistItem.name, req.body.picklistItem.picklistId];
-            var query = client.query(new pg.Query(sql, vals));
-            query.on('row', function(row) {
-                results.push(row);
-            });
-            query.on('end', function() {
-                done();
-                var resObj = req.body;
-                resObj.picklistItem.id = parseInt(results[0].id);
-                return res.json(resObj);
+            async.waterfall([
+                function init(callback) {
+                    callback(null, req);
+                },
+                function insertItem (req, callback) {
+                    sql = 'INSERT INTO adm_item';
+                    sql += ' ("itemName", "itemTypeId")';
+                    sql += ' VALUES ($1, $2) RETURNING id;';
+                    vals = [req.body.picklistItem.name, req.body.picklistItem.picklistId];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var resObj = req.body;
+                        resObj.picklistItem.id = parseInt(results[0].id);
+                        return callback(null, resObj);//res.json(resObj);
+                    });
+                },
+                function insertPicklistItemDef(resObj, callback) {
+                    sql = 'INSERT INTO adm_def_picklist_item';
+                    sql += ' ("picklistItemId")';
+                    sql += ' VALUES ($1)';
+                    vals = [resObj.picklistItem.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                }
+            ], function(error, result) {
+                if (error) {
+                    console.error(error);
+                }
+                return res.json(result);
             });
         });
     });
