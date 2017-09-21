@@ -13,7 +13,7 @@ module.exports = function(app, pg, async, pool) {
                     callback(null, req);
                 },
                 function deleteItemTable(req, callback) {
-                    sql = 'DELETE FROM adm_item';
+                    sql = 'DELETE FROM adm_core_item';
                     sql += ' WHERE "id" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
@@ -75,7 +75,7 @@ module.exports = function(app, pg, async, pool) {
                     callback(null, req);
                 },
                 function updateItemTable(req, callback) {
-                    sql = 'UPDATE adm_item';
+                    sql = 'UPDATE adm_core_item';
                     sql += ' SET "itemName" = $1';
                     sql += ' WHERE id = $2'
                     vals = [req.body.equipment.name, req.params.id];
@@ -178,7 +178,7 @@ module.exports = function(app, pg, async, pool) {
                     callback(null, req);
                 },
                 function insertItemTable(req, callback) {
-                    sql = 'INSERT INTO adm_item';
+                    sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "itemTypeId")';
                     sql += ' VALUES ($1, 90) returning id AS "equipmentId";';
                     vals = [req.body.equipment.name];
@@ -254,10 +254,10 @@ module.exports = function(app, pg, async, pool) {
             sql += ', json_build_object(\'name\', rsrc."itemName", \'id\', rsrc."id") AS "resource"';
             sql += ', case when cntunit."itemCount" IS NULL then 1 else cntunit."itemCount" end AS "count"';
             sql += ', case when cntunit."unitName" IS NULL then \'\' else cntunit."unitName" end AS "unit"';
-            sql += ' FROM adm_item i';
+            sql += ' FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_equipment equip ON equip."equipmentId" = i.id';
-            sql += ' INNER JOIN adm_item cat ON cat.id = equip."categoryId"';
-            sql += ' INNER JOIN adm_item rsrc ON rsrc.id = i."resourceId"';
+            sql += ' INNER JOIN adm_core_item cat ON cat.id = equip."categoryId"';
+            sql += ' INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
             sql += ' LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = i.id';
             sql += ' WHERE equip."categoryId" NOT IN (97, 178, 175)';
             sql += ' ORDER BY i."itemName"';

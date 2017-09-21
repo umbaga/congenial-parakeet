@@ -9,7 +9,7 @@ module.exports = function(app, pg, async, pool) {
             }
             sql = 'SELECT i.id, i."itemName" as name';
             sql += ', wp."requireRange", wp."requireDamage", wp."requireDescription"';
-            sql += 'FROM adm_item i';
+            sql += 'FROM adm_core_item i';
             sql += 'INNER JOIN adm_def_weapon_property wp ON wp."weaponPropertyId"  = i.id';
             sql += 'WHERE i."itemTypeId" = 86';
             sql += 'ORDER BY i."itemName"';
@@ -32,7 +32,7 @@ module.exports = function(app, pg, async, pool) {
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'SELECT i.id, i."itemName" as name';
-            sql += 'FROM adm_item i';
+            sql += 'FROM adm_core_item i';
             sql += 'WHERE i."itemTypeId" = 82';
             sql += 'ORDER BY i."itemName"';
             var query = client.query(new pg.Query(sql));
@@ -54,7 +54,7 @@ module.exports = function(app, pg, async, pool) {
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'SELECT i.id, i."itemName" as name';
-            sql += 'FROM adm_item i';
+            sql += 'FROM adm_core_item i';
             sql += 'WHERE i."itemTypeId" = 83';
             sql += 'ORDER BY i."itemName"';
             var query = client.query(new pg.Query(sql));
@@ -76,7 +76,7 @@ module.exports = function(app, pg, async, pool) {
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'SELECT i.id, i."itemName" as name';
-            sql += 'FROM adm_item i';
+            sql += 'FROM adm_core_item i';
             sql += 'WHERE i."itemTypeId" = 84';
             sql += 'ORDER BY i."itemName"';
             var query = client.query(new pg.Query(sql));
@@ -99,7 +99,7 @@ module.exports = function(app, pg, async, pool) {
             }
             sql = 'SELECT i.id, i."itemName" as name';
             sql += ', dt."isWeaponDamageType"';
-            sql += 'FROM adm_item i';
+            sql += 'FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_damage_type dt ON dt."damageTypeId" = i.id';
             sql += 'WHERE i."itemTypeId" = 81';
             sql += 'ORDER BY i."itemName"';
@@ -126,7 +126,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ', wpnProp."requireRange"';
             sql += ', wpnProp."requireDamage"';
             sql += ', wpnProp."requireDescription") x ORDER BY i."orderIndex")) AS items';
-            sql += ' FROM adm_type t';
+            sql += ' FROM adm_core_type t';
             sql += ' LEFT OUTER JOIN v_adm_item_type i ON i."itemTypeId" = t.id';
             sql += ' LEFT OUTER JOIN adm_def_weapon_property wpnprop ON wpnprop."weaponPropertyId" = i.id';
             sql += ' WHERE t."isPicklist" = true';
@@ -155,7 +155,7 @@ module.exports = function(app, pg, async, pool) {
                     callback(null, req);
                 },
                 function insertItem (req, callback) {
-                    sql = 'INSERT INTO adm_item';
+                    sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "itemTypeId")';
                     sql += ' VALUES ($1, $2) RETURNING id;';
                     vals = [req.body.picklistItem.name, req.body.picklistItem.picklistId];
@@ -201,7 +201,7 @@ module.exports = function(app, pg, async, pool) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            sql = 'DELETE FROM adm_item';
+            sql = 'DELETE FROM adm_core_item';
             sql += ' WHERE id = $1';
             vals = [req.params.id];
             var query = client.query(new pg.Query(sql, vals));

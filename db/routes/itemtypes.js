@@ -7,7 +7,7 @@ module.exports = function(app, pg, async, pool) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            sql = 'DELETE FROM adm_type';
+            sql = 'DELETE FROM adm_core_type';
             sql += ' WHERE id = $1';
             vals = [req.params.id];
             var query = client.query(new pg.Query(sql, vals));
@@ -29,7 +29,7 @@ module.exports = function(app, pg, async, pool) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            sql = 'UPDATE adm_type';
+            sql = 'UPDATE adm_core_type';
             sql += ' SET "typeName" = $1';
             sql += ', "isPicklist" = $2'
             sql += ' WHERE id = $3';
@@ -53,7 +53,7 @@ module.exports = function(app, pg, async, pool) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            sql = 'INSERT INTO adm_type';
+            sql = 'INSERT INTO adm_core_type';
             sql += '("typeName", "isPicklist")';
             sql += 'VALUES ($1, $2) RETURNING id;';
             vals = [req.body.itemtype.name, req.body.itemtype.isPicklist];
@@ -77,8 +77,8 @@ module.exports = function(app, pg, async, pool) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            sql = 'SELECT adm_type."id", adm_type."typeName" AS "name", adm_type."isPicklist"';
-            sql += ' FROM adm_type';
+            sql = 'SELECT adm_core_type."id", adm_core_type."typeName" AS "name", adm_core_type."isPicklist"';
+            sql += ' FROM adm_core_type';
             sql += ' ORDER BY "typeName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {

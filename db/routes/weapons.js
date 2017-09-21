@@ -34,7 +34,7 @@ module.exports = function(app, pg, async, pool) {
                     cb(null, req);
                 },
                 function updateItemTable(req, callback) {
-                    sql = 'UPDATE adm_item';
+                    sql = 'UPDATE adm_core_item';
                     sql += ' SET "itemName" = $1';
                     sql += ' WHERE id = $2'
                     vals = [req.body.weapon.name, req.params.id];
@@ -443,7 +443,7 @@ module.exports = function(app, pg, async, pool) {
                     cb(null, req);
                 },
                 function insertItem(req, callback) {
-                    sql = 'INSERT INTO adm_item';
+                    sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "itemTypeId")';
                     sql += ' VALUES ($1, 85) returning id AS "equipmentId";';
                     vals = [req.body.weapon.name];
@@ -730,25 +730,25 @@ module.exports = function(app, pg, async, pool) {
             sql += '                			then \'{}\' ';
             sql += '                		else json_build_object(\'normal\', wpnrng."normalRange", \'maximum\', wpnrng."maximumRange") ';
             sql += '                		end AS "range"';
-            sql += ' FROM adm_item i';
+            sql += ' FROM adm_core_item i';
             sql += ' 	INNER JOIN adm_def_equipment eq ';
             sql += ' 		ON eq."equipmentId" = i.id';
             sql += ' 	INNER JOIN adm_def_equipment_weapon wpn ';
             sql += ' 		ON wpn."equipmentId" = i.id';
-            sql += ' 	INNER JOIN adm_item dmgtype ';
+            sql += ' 	INNER JOIN adm_core_item dmgtype ';
             sql += ' 		ON dmgtype.id = wpn."damageTypeId"';
-            sql += ' 	INNER JOIN adm_item wpnprof ';
+            sql += ' 	INNER JOIN adm_core_item wpnprof ';
             sql += ' 		ON wpnprof.id = wpn."proficiencyId"';
-            sql += ' 	INNER JOIN adm_item wpncat ';
+            sql += ' 	INNER JOIN adm_core_item wpncat ';
             sql += ' 		ON wpncat.id = wpn."categoryId"';
             sql += ' 	INNER JOIN adm_core_dice dice ';
             sql += ' 		ON dice.id = wpn."damageDiceId"';
-            sql += '    INNER JOIN adm_item rsrc ON rsrc.id = i."resourceId"';
+            sql += '    INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
             sql += ' 	LEFT OUTER JOIN adm_link_weapon_property lnk ';
             sql += ' 		ON lnk."weaponId" = wpn."equipmentId"';
             sql += ' 	LEFT OUTER JOIN adm_def_weapon_property wpnprop ';
             sql += ' 		ON wpnprop."weaponPropertyId" = lnk."propertyId"';
-            sql += ' 	LEFT OUTER JOIN adm_item propitem ';
+            sql += ' 	LEFT OUTER JOIN adm_core_item propitem ';
             sql += ' 		ON propitem.id = wpnprop."weaponPropertyId"';
             sql += ' 	LEFT OUTER JOIN adm_def_equipment_weapon_alt_damage altdmg ';
             sql += ' 		ON altdmg."weaponId" = i."id"';
