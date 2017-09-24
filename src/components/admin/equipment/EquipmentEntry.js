@@ -57,6 +57,7 @@ class EquipmentEntry extends React.Component {
         this.saveEquipment(event);
         let newEquipment = Object.assign({}, util.objectModel.EQUIPMENT);
         this.setState({equipment: newEquipment});
+        //this.refs.form.refs.name.setFocus();
     }
 
     saveAndBackEquipment(event) {
@@ -89,6 +90,7 @@ class EquipmentEntry extends React.Component {
         return (
             <div>
                 <EquipmentForm
+                    ref="form"
                     equipment={this.state.equipment}
                     onSave={this.saveAndBackEquipment}
                     onSaveNew={this.saveAndNewEquipment}

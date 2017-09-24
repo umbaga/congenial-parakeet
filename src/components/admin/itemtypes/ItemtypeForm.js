@@ -7,14 +7,24 @@ import util from '../../../util/util';
 class ItemtypeForm extends React.Component {
     constructor(props) {
         super(props);
+        this.setFocus = this.setFocus.bind(this);
     }
-
+    
+    componentDidMount() {
+        this.refs.name.setFocus();
+    }
+    
+    setFocus() {
+        this.refs.name.setFocus();
+    }
+    
     render() {
         return (
             <div>
                 <form>
                     <DndInput
                         name="name"
+                        ref="name"
                         label="Name"
                         dataType={util.dataTypes.string.STRING}
                         value={this.props.itemtype.name}

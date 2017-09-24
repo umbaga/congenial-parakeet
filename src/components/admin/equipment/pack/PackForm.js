@@ -14,8 +14,17 @@ class PackForm extends React.Component {
         this._removeEquipmentItem = this._removeEquipmentItem.bind(this);
         this._changeEquipmentCount = this._changeEquipmentCount.bind(this);
         this.renderEquipmentItemList = this.renderEquipmentItemList.bind(this);
+        this.setFocus = this.setFocus.bind(this);
     }
     
+    componentDidMount() {
+        this.refs.name.setFocus();
+    }
+    
+    setFocus() {
+        this.refs.name.setFocus();
+    }
+        
     _addEquipmentItem () {
         event.preventDefault();
         this.props.addEquipmentToPack(this.props);
@@ -69,6 +78,7 @@ class PackForm extends React.Component {
                     <div className="col-md-12">
                         <DndInput
                             name="name"
+                            ref="name"
                             label="Name"
                             dataType={util.dataTypes.string.STRING}
                             value={this.props.pack.name}

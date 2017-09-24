@@ -58,6 +58,8 @@ class ItemtypeEntry extends React.Component {
         this.saveItemtype(event);
         let newItemtype = Object.assign({}, util.objectModel.ITEMTYPE);
         this.setState({itemtype: newItemtype});
+        this.refs.form.refs.name.setFocus();
+        
     }
 
     saveAndBackItemtype(event) {
@@ -84,6 +86,7 @@ class ItemtypeEntry extends React.Component {
         return (
             <div>
                 <ItemtypeForm
+                    ref="form"
                     itemtype={this.state.itemtype}
                     onSave={this.saveAndBackItemtype}
                     onSaveNew={this.saveAndNewItemtype}

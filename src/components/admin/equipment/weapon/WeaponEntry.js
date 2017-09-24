@@ -57,6 +57,7 @@ class WeaponEntry extends React.Component {
         this.saveWeapon(event);
         let newWeapon = Object.assign({}, util.objectModel.WEAPON);
         this.setState({weapon: newWeapon});
+        this.refs.form.refs.name.setFocus();
     }
 
     saveAndBackWeapon(event) {
@@ -154,6 +155,7 @@ class WeaponEntry extends React.Component {
         return (
             <div>
                 <WeaponForm
+                    ref="form"
                     weapon={this.state.weapon}
                     onSave={this.saveAndBackWeapon}
                     onSaveNew={this.saveAndNewWeapon}

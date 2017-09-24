@@ -63,6 +63,7 @@ class PackEntry extends React.Component {
     
     saveAndNewPack(event) {
         this.savePack(event);
+        this.refs.form.refs.name.setFocus();
     }
     
     saveAndBackPack(event) {
@@ -144,6 +145,7 @@ class PackEntry extends React.Component {
         return (
             <div>
                 <PackForm
+                    ref="form"
                     addEquipmentToPack={this.addEquipmentToPack}
                     removeEquipmentFromPack={this.removeEquipmentFromPack}
                     changeEquipmentCount={this.changeEquipmentCount}

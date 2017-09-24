@@ -31,6 +31,10 @@ class PicklistEntry extends React.Component {
     addPicklistItem() {
         this.setState({picklistItem: {picklistId: this.props.picklist.id}});
         this.props.actions.addPicklistItem(this.props.picklist, this.state.picklistItem);
+        this.refs.form.setFocus();
+        const newItem = Object.assign({}, {id: 0, name: '', picklistId: this.props.picklist.id});
+        this.refs.form.refs.newPicklistItem.value = '';
+        //this.setState({picklistItem: newItem});
     }
 
     removePicklistItem(picklistItem) {
@@ -48,6 +52,7 @@ class PicklistEntry extends React.Component {
         return (
             <div>
                 <PicklistForm
+                    ref="form"
                     picklist={this.state.picklist}
                     picklistItem={this.state.picklistItem}
                     onChange={this.updateFormState}

@@ -9,7 +9,11 @@ class DndInput extends React.Component {
         super(props, context);
 
     }
-
+    
+    setFocus() {
+        this.refs[this.props.name].focus();
+    }
+    
     render() {
         let primaryInput = null;
         let longValue = '';
@@ -23,6 +27,7 @@ class DndInput extends React.Component {
                 primaryInput = (<input
                                     type="checkbox"
                                     name={this.props.name}
+                                    ref={this.props.name}
                                     checked={this.props.checked}
                                     datatype={this.props.dataType}
                                     onChange={this.props.onChange}
@@ -32,6 +37,7 @@ class DndInput extends React.Component {
                 primaryInput = (<input
                                     type="text"
                                     name={this.props.name}
+                                    ref={this.props.name}
                                     placeholder={this.props.placeholder}
                                     value={this.props.value}
                                     datatype={this.props.dataType}
@@ -45,6 +51,7 @@ class DndInput extends React.Component {
                 primaryInput = (<input
                                     type="number"
                                     name={this.props.name}
+                                    ref={this.props.name}
                                     placeholder={this.props.placeholder}
                                     value={this.props.value}
                                     datatype={this.props.dataType}
@@ -58,6 +65,7 @@ class DndInput extends React.Component {
                 primaryInput = (<input
                                     type="text"
                                     name={this.props.name}
+                                    ref={this.props.name}
                                     placeholder={this.props.placeholder}
                                     value={this.props.valueObj.rendered}
                                     datatype={this.props.dataType}
@@ -73,6 +81,7 @@ class DndInput extends React.Component {
                 primaryInput = (<select
                                     value={this.props.picklist.id}
                                     name={this.props.name}
+                                    ref={this.props.name}
                                     className="form-control"
                                     onChange={this.props.onChange}
                                     datatype={this.props.dataType}>
@@ -104,6 +113,7 @@ class DndInput extends React.Component {
                             <label htmlFor={this.props.name + '_normal'}>Normal</label>
                             <input type="number"
                                 name={this.props.name + '_normal'}
+                                ref={this.props.name + '_normal'}
                                 placeholder={this.props.placeholder}
                                 value={this.props.valueObj.normal}
                                 datatype={this.props.dataType}
@@ -114,6 +124,7 @@ class DndInput extends React.Component {
                             <label htmlFor={this.props.name + '_maximum'}>Maximum</label>
                             <input type="number"
                                 name={this.props.name + '_maximum'}
+                                ref={this.props.name + '_maximum'}
                                 placeholder={this.props.placeholder}
                                 value={this.props.valueObj.maximum}
                                 datatype={this.props.dataType}

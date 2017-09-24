@@ -57,6 +57,7 @@ class ArmorEntry extends React.Component {
         this.saveArmor(event);
         let newArmor = Object.assign({}, util.objectModel.ARMOR);
         this.setState({armor: newArmor});
+        this.refs.form.refs.name.setFocus();
     }
 
     saveAndBackArmor(event) {
@@ -93,6 +94,7 @@ class ArmorEntry extends React.Component {
         return (
             <div>
                 <ArmorForm
+                    ref="form"
                     armor={this.state.armor}
                     onSave={this.saveAndBackArmor}
                     onSaveNew={this.saveAndNewArmor}

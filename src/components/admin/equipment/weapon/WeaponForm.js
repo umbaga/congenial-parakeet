@@ -7,8 +7,17 @@ import util from '../../../../util/util';
 class WeaponForm extends React.Component {
     constructor(props) {
         super(props);
+        this.setFocus = this.setFocus.bind(this);
     }
-
+    
+    componentDidMount() {
+        this.refs.name.setFocus();
+    }
+    
+    setFocus() {
+        this.refs.name.setFocus();
+    }
+    
     render() {
         let damageTypePicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.DAMAGE_TYPE);
         let categoryPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_CATEGORY);
@@ -58,6 +67,7 @@ class WeaponForm extends React.Component {
                     <div className="col-md-12">
                         <DndInput
                             name="name"
+                            ref="name"
                             label="Name"
                             dataType={util.dataTypes.string.STRING}
                             value={this.props.weapon.name}

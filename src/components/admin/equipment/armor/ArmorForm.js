@@ -7,8 +7,17 @@ import util from '../../../../util/util';
 class ArmorForm extends React.Component {
     constructor(props) {
         super(props);
+        this.setFocus = this.setFocus.bind(this);
     }
-
+    
+    componentDidMount() {
+        this.refs.name.setFocus();
+    }
+    
+    setFocus() {
+        this.refs.name.setFocus();
+    }
+    
     render() {
         let proficiencyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.ARMOR_PROFICIENCY);
 
@@ -48,6 +57,7 @@ class ArmorForm extends React.Component {
                     <div className="col-md-12">
                         <DndInput
                             name="name"
+                            ref="name"
                             label="Name"
                             dataType={util.dataTypes.string.STRING}
                             value={this.props.armor.name}
