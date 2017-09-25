@@ -74,12 +74,16 @@ class EquipmentListPage extends React.Component {
                                 </th>
                             </tr>
                         </thead>
-                        <EquipmentList
-                            equipments={equipments}
-                            openModal={this.open}
-                            selectedId={this.state.selectedId}
-                            changeSelectedId={this.changeSelectedId}
-                            />
+                        {this.props.equipmentCategories.items.map(equipmentCategory =>
+                            <EquipmentList
+                                key={equipmentCategory.id}
+                                equipmentCategory={equipmentCategory}
+                                equipments={equipments}
+                                openModal={this.open}
+                                selectedId={this.state.selectedId}
+                                changeSelectedId={this.changeSelectedId}
+                                />
+                          )}
                     </table>
                 </div>
                 <DndModal
@@ -104,19 +108,30 @@ EquipmentListPage.propTypes = {
     actions: PropTypes.object,
     children: PropTypes.object,
     picklists: PropTypes.array,
-    equipments: PropTypes.array.isRequired
+    equipments: PropTypes.array.isRequired,
+    equipmentCategories: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {
+    let picklists = Object.assign([{}], [util.objectModel.PICKLIST]);
+    let equipmentCategories = Object.assign({}, util.objectModel.PICKLIST);
+    if (state.picklists.length > 0) {
+        picklists = Object.assign([{}], state.picklists);
+        equipmentCategories = state.picklists.filter(function(picklist) {
+            return picklist.id == 87;
+        })[0];
+    }
     if (state.equipments.length > 0) {
         return {
             equipments: state.equipments,
-            picklists: state.picklists
+            picklists: picklists,
+            equipmentCategories: equipmentCategories
         };
     } else {
         return {
             equipments: [util.objectModel.EQUIPMENT],
-            picklists: [util.objectModel.PICKLIST]
+            picklists: picklists,
+            equipmentCategories: equipmentCategories
         };
     }
 }

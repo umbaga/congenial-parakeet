@@ -11,7 +11,7 @@ class DndToggleBoxes extends React.Component {
     render() {
         let idKey = 'id';
         let textKey = 'name';
-        let selectBoxSize = 6;
+        let selectBoxSize = 10;
         return (
             <div>
                 <div className="col-sm-5">

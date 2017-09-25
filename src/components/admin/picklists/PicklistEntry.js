@@ -32,7 +32,7 @@ class PicklistEntry extends React.Component {
         this.setState({picklistItem: {picklistId: this.props.picklist.id}});
         this.props.actions.addPicklistItem(this.props.picklist, this.state.picklistItem);
         this.refs.form.setFocus();
-        const newItem = Object.assign({}, {id: 0, name: '', picklistId: this.props.picklist.id});
+        //const newItem = Object.assign({}, {id: 0, name: '', picklistId: this.props.picklist.id});
         this.refs.form.refs.newPicklistItem.value = '';
         //this.setState({picklistItem: newItem});
     }

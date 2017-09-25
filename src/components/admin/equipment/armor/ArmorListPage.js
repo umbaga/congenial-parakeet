@@ -112,15 +112,19 @@ ArmorListPage.propTypes = {
 };
 
 function mapStateToProps(state) {
+    let picklists = Object.assign([{}], [util.objectModel.PICKLIST]);
+    if (state.picklists.length > 0) {
+        picklists = Object.assign([{}], state.picklists);
+    }
     if (state.armors.length > 0) {
         return {
             armors: state.armors,
-            picklists: state.picklists
+            picklists: picklists
         };
     } else {
         return {
             armors: [util.objectModel.ARMOR],
-            picklists: [util.objectModel.PICKLIST]
+            picklists: picklists
         };
     }
 }

@@ -24,7 +24,7 @@ export const EQUIPMENT = {
         name: ''
     },
     cost: '0',
-    count: 0,
+    count: 1,
     resource: {
         id: 0,
         name: ''

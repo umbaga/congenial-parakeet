@@ -21,6 +21,7 @@ class WeaponEntry extends React.Component {
         this.saveAndNewWeapon = this.saveAndNewWeapon.bind(this);
         this.saveAndBackWeapon = this.saveAndBackWeapon.bind(this);
         this.updateFormState = this.updateFormState.bind(this);
+        this.resetForm = this.resetForm.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -32,9 +33,19 @@ class WeaponEntry extends React.Component {
 
     cancelWeapon(event) {
         event.preventDefault();
+        this.resetForm();
         this.postAction();
     }
 
+    resetForm() {
+        let newWeapon = Object.assign({}, util.objectModel.WEAPON);
+        newWeapon.damage.rendered = '';
+        newWeapon.weaponProperties = Object.assign([], []);
+        newWeapon.range = Object.assign({}, {});
+        newWeapon.versatileDamage = Object.assign({}, {rendered: ''});
+        return this.setState({weapon: newWeapon});
+    }
+    
     deleteWeapon(event) {
         event.preventDefault();
         if (confirm('are you sure?')) {
@@ -51,12 +62,11 @@ class WeaponEntry extends React.Component {
         event.preventDefault();
         this.setState({saving: true});
         this.props.actions.upsertWeapon(this.state.weapon);
+        this.resetForm();
     }
 
     saveAndNewWeapon(event) {
         this.saveWeapon(event);
-        let newWeapon = Object.assign({}, util.objectModel.WEAPON);
-        this.setState({weapon: newWeapon});
         this.refs.form.refs.name.setFocus();
     }
 
@@ -152,6 +162,7 @@ class WeaponEntry extends React.Component {
     }
 
     render() {
+        //console.log(this.state)
         return (
             <div>
                 <WeaponForm
@@ -183,12 +194,21 @@ function getWeaponById(weapons, id) {
         let weapon = weapons.find(weapon => weapon.id == id);
         return Object.assign({}, weapon);
     } else {
-        return Object.assign({}, util.objectModel.WEAPON);
+        let emptyWeapon = Object.assign({}, util.objectModel.WEAPON);
+        emptyWeapon.damage.rendered = '';
+        emptyWeapon.weaponProperties = Object.assign([], []);
+        emptyWeapon.range = Object.assign({}, {});
+        emptyWeapon.versatileDamage = Object.assign({}, {rendered: ''});
+        return emptyWeapon;
     }
 }
 
 function mapStateToProps(state, ownProps) {
     let weapon = Object.assign({}, util.objectModel.WEAPON);
+    weapon.damage.rendered = '';
+    weapon.weaponProperties = Object.assign([], []);
+    weapon.range = Object.assign({}, {});
+    weapon.versatileDamage = Object.assign({}, {rendered: ''});
     const weaponId = ownProps.selectedId;
     let isCreate = true;
     if (ownProps.selecetdId != 0) {

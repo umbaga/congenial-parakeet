@@ -112,17 +112,25 @@ PackListPage.propTypes = {
 };
 
 function mapStateToProps(state) {
+    let picklists = Object.assign([{}], [util.objectModel.PICKLIST]);
+    if (state.picklists.length > 0) {
+        picklists = Object.assign([{}], state.picklists);
+    }
+    let equipments = Object.assign([{}], [util.objectModel.EQUIPMENT]);
+    if (state.equipments.length > 0) {
+        equipments = Object.assign([{}], state.equipments);
+    }
     if (state.packs.length > 0) {
         return {
-            equipments: state.equipments,
+            equipments: equipments,
             packs: state.packs,
-            picklists: state.picklists
+            picklists: picklists
         };
     } else {
         return {
-            equipments: [util.objectModel.EQUIPMENT_PACK],
+            equipments: equipments,
             packs: [util.objectModel.EQUIPMENT_PACK],
-            picklists: [util.objectModel.PICKLIST]
+            picklists: picklists
         };
     }
 }

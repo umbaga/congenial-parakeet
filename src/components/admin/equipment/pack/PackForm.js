@@ -92,7 +92,6 @@ class PackForm extends React.Component {
                             value={this.props.pack.cost}
                             onChange={this.props.onChange}
                             numberStepVal={util.dataTypes.number.getStepIncrement(this.props.pack.cost)}
-                            isReadOnly
                              />
                     </div>
                     <div className="col-md-6">

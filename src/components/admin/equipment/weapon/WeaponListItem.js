@@ -32,7 +32,7 @@ class WeaponListItem extends React.Component {
             <tr key={this.props.weapon.id}>
                 <td>{this.props.weapon.name}</td>
                 <td className="text-center">{util.format.forDisplay.number.coin(this.props.weapon.cost)}</td>
-                <td>{util.format.forDisplay.string.dieRoll(this.props.weapon.damage) + ' ' + this.props.weapon.damageType.name}</td>
+                <td>{util.format.forDisplay.string.dieRoll(this.props.weapon.damage) + ' ' + (this.props.weapon.damage.dieCount == 0 ? '' : this.props.weapon.damageType.name)}</td>
                 <td className="text-center">{util.format.forDisplay.number.weight(this.props.weapon.weight)}</td>
                 <td>{util.format.forDisplay.array.weaponProperties(this.props.weapon)}</td>
                 <td>

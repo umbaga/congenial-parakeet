@@ -648,7 +648,7 @@ module.exports = function(app, pg, async, pool) {
                         } else {
                             sql = 'SELECT id AS "diceId"';
                             sql += ' FROM adm_core_dice';
-                            sql += ' WHERE "dieCount = $1';
+                            sql += ' WHERE "dieCount" = $1';
                             sql += ' AND "dieType" = $2';
                             vals = [resObj.weapon.versatileDamage.dieCount, resObj.weapon.versatileDamage.dieType];
                             var query = client.query(new pg.Query(sql, vals));
@@ -658,7 +658,7 @@ module.exports = function(app, pg, async, pool) {
                             });
                             query.on('end', function() {
                                 done();
-                                resObj.weapon.damage.id = parseInt(results[0].diceId);
+                                resObj.weapon.versatileDamage.id = parseInt(results[0].diceId);
                                 return callback(null, resObj);
                             });
                         }
