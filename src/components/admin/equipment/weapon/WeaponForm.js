@@ -23,10 +23,11 @@ class WeaponForm extends React.Component {
         let categoryPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_CATEGORY);
         let proficiencyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROFICIENCY);
         let weaponPropertyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROPERTY);
-
+        let ammunitionTypePicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.AMMUNITION_TYPE);
         let versatileDamageInput = null;
         let rangeInput = null;
         let specialDescriptionInput = null;
+        let ammunitionTypeInput = null;
         for (let v = 0; v < this.props.weapon.weaponProperties.length; v++){
             if (this.props.weapon.weaponProperties[v]){
                 if (this.props.weapon.weaponProperties[v].requireDamage) {
@@ -47,6 +48,17 @@ class WeaponForm extends React.Component {
                             dataType={util.dataTypes.special.WEAPON_RANGE}
                             valueObj={this.props.weapon.range}
                             onChange={this.props.onChange} />
+                        </div>);
+                }
+                if (this.props.weapon.weaponProperties[v].requireAmmunition) {
+                    ammunitionTypeInput = (<div className="col-md-12">
+                        <DndInput
+                            name="ammunition"
+                            label="Ammunition Type"
+                            dataType={util.dataTypes.picklist.AMMUNITION_TYPE}
+                            valueObj={this.props.weapon.ammunition}
+                            onChange={this.props.onChange}
+                            picklist={ammunitionTypePicklist} />
                         </div>);
                 }
                 if (this.props.weapon.weaponProperties[v].requireDescription) {
@@ -134,6 +146,7 @@ class WeaponForm extends React.Component {
                             picklist={weaponPropertyPicklist} />
                     </div>
                     {rangeInput}
+                    {ammunitionTypeInput}
                     {versatileDamageInput}
                     {specialDescriptionInput}
                     <DndDataEntryButtonBar

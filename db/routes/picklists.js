@@ -125,6 +125,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ', json_agg((SELECT x FROM (SELECT i."itemName" AS "name", i."id", i."orderIndex", i."defaultSelected"';
             sql += ', wpnProp."requireRange"';
             sql += ', wpnProp."requireDamage"';
+            sql += ', wpnProp."requireAmmunition"';
             sql += ', wpnProp."requireDescription") x ORDER BY i."orderIndex")) AS items';
             sql += ' FROM adm_core_type t';
             sql += ' LEFT OUTER JOIN v_adm_item_type i ON i."itemTypeId" = t.id';

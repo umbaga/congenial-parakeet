@@ -19,6 +19,10 @@ export const ARMOR = {
 export const EQUIPMENT = {
     id: 0,
     name: '',
+    ammunition: {
+        id: 0,
+        name: ''
+    },
     category: {
         id: 0,
         name: ''

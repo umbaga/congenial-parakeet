@@ -57,7 +57,6 @@ class EquipmentEntry extends React.Component {
         this.saveEquipment(event);
         let newEquipment = Object.assign({}, util.objectModel.EQUIPMENT);
         this.setState({equipment: newEquipment});
-        //this.refs.form.refs.name.setFocus();
     }
 
     saveAndBackEquipment(event) {
@@ -77,6 +76,7 @@ class EquipmentEntry extends React.Component {
             case util.dataTypes.number.WEIGHT:
                 equipment[field] = event.target.value;
                 break;
+            case util.dataTypes.picklist.AMMUNITION_TYPE:
             case util.dataTypes.picklist.EQUIPMENT_CATEGORY:
                 newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                 newSelectedValue.name = event.target.options[event.target.selectedIndex].text;

@@ -109,7 +109,7 @@ EquipmentListPage.propTypes = {
     children: PropTypes.object,
     picklists: PropTypes.array,
     equipments: PropTypes.array.isRequired,
-    equipmentCategories: PropTypes.array.isRequired
+    equipmentCategories: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {

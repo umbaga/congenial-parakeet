@@ -8,6 +8,7 @@ class EquipmentForm extends React.Component {
     constructor(props) {
         super(props);
         this.setFocus = this.setFocus.bind(this);
+        this.renderAmmunitionTypePicklist = this.renderAmmunitionTypePicklist.bind(this);
     }
     
     componentDidMount() {
@@ -16,6 +17,26 @@ class EquipmentForm extends React.Component {
     
     setFocus() {
         this.refs.name.setFocus();
+    }
+    
+    renderAmmunitionTypePicklist() {
+        let ammunitionTypePicklistField = null;
+        if (this.props.equipment.category.id == util.picklistInfo.AMMUNTION_EQUIPMENT_CATEGORY) {
+            let ammunitionTypePicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.AMMUNITION_TYPE);
+            ammunitionTypePicklistField = (
+                    <div className="col-md-6">
+                        <DndInput
+                            name="ammunition"
+                            label="Ammunition Type"
+                            dataType={util.dataTypes.picklist.AMMUNITION_TYPE}
+                            valueObj={this.props.equipment.ammunition}
+                            onChange={this.props.onChange}
+                            picklist={ammunitionTypePicklist} />
+                    </div>
+                
+            );
+        }
+        return ammunitionTypePicklistField;
     }
     
     render() {
@@ -76,6 +97,7 @@ class EquipmentForm extends React.Component {
                             value={this.props.equipment.unit}
                             onChange={this.props.onChange} />
                     </div>
+                    {this.renderAmmunitionTypePicklist()}
                     <DndDataEntryButtonBar
                         onSave={this.props.onSave}
                         onSaveNew={this.props.onSaveNew}

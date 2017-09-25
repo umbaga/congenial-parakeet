@@ -8,16 +8,127 @@ module.exports = function(app, pg, async, pool) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            sql = 'select * from delete_weapon($1);';
-            vals = [req.params.id];
-            var query = client.query(new pg.Query(sql, vals));
-            query.on('row', function(row) {
-                results.push(row);
-            });
-            query.on('end', function() {
-                done();
-                var resObj = req.params.id;
-                return res.json([resObj]);
+            async.waterfall([
+                function init(callback) {
+                    callback(null, req);
+                },
+                function deleteItemTable(req, callback) {
+                    sql = 'DELETE FROM adm_core_item';
+                    sql += ' WHERE "id" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteEquipmentTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_equipment';
+                    sql += ' WHERE "equipmentId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                },
+                function deleteWeaponTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_equipment_weapon';
+                    sql += ' WHERE "equipmentId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                },
+                function deleteWeaponPropertiesTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_link_weapon_property';
+                    sql += ' WHERE "weaponId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                },
+                function deleteRangeTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_equipment_weapon_range';
+                    sql += ' WHERE "weaponId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                },
+                function deleteDescriptionTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_equipment_weapon_special';
+                    sql += ' WHERE "weaponId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                },
+                function deleteAltDamageTypeTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_equipment_weapon_alt_table';
+                    sql += ' WHERE "weaponId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                },
+                function deleteAmmunitionTypeTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_equipment_weapon_ammunition';
+                    sql += ' WHERE "weaponId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                }
+            ], function(error, result) {
+                if (error) {
+                    console.error(error);
+                }
+                return res.json(result);
             });
         });
     });
@@ -421,6 +532,53 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function checkForAmmunition(resObj, callback) {
+                    sql = 'SELECT * FROM adm_def_equipment_weapon_ammunition WHERE "weaponId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var ammunitionExists = false;
+                        if (results.length > 0) {
+                            ammunitionExists = true;
+                        }
+                        return callback(null, resObj, ammunitionExists);
+                    });
+                },
+                function addEditAmmunition(resObj, ammunitionExists, callback) {
+                    sql = '';
+                    if (resObj.weapon.needsAmmunitionType && ammunitionExists) {
+                        //update
+                        sql = 'UPDATE adm_def_equipment_weapon_ammunition';
+                        sql += ' SET "ammunitionTypeId" = $1';
+                        sql += ' WHERE "weaponId" = $2';
+                        vals = [resObj.weapon.ammunition.id, resObj.weapon.id];
+                    } else if (resObj.weapon.needsAmmunitionType && !ammunitionExists) {
+                        //insert
+                        sql = 'INSERT INTO adm_def_equipment_weapon_ammunition';
+                        sql += ' ("weaponId", "ammunitionTypeId")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.weapon.id, resObj.weapon.ammunition.id];
+                    } else {
+                        //delete
+                        sql = 'DELETE FROM adm_def_equipment_weapon_ammunition';
+                        sql += ' WHERE "weaponId" = $1';
+                        vals = [resObj.weapon.id];
+                    }
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -458,6 +616,7 @@ module.exports = function(app, pg, async, pool) {
                         tmp.weapon.needsAltDamage = false;
                         tmp.weapon.needsRange = false;
                         tmp.weapon.needsSpecial = false;
+                        tmp.weapon.needsAmmunition = false;
                         if (tmp.weapon.specialDescription && tmp.weapon.specialDescription.length != 0) {
                             tmp.weapon.needsSpecial = true;
                         }
@@ -466,6 +625,9 @@ module.exports = function(app, pg, async, pool) {
                         }
                         if (tmp.weapon.versatileDamage.dieCount) {
                             tmp.weapon.needsAltDamage = true;
+                        }
+                        if (tmp.weapon.ammunition && tmp.weapon.ammunition.id) {
+                            tmp.weapon.needsAmmunition = true;
                         }
                         return callback(null, tmp);
                     });
@@ -683,6 +845,24 @@ module.exports = function(app, pg, async, pool) {
                     } else {
                         return callback(null, resObj);
                     }
+                },
+                function insertAmmunition(resObj, callback) {
+                    if (resObj.weapon.needsAltDamage) {
+                        sql = 'INSERT INTO adm_def_equipment_weapon_ammunition ("weaponId", "ammunitionTypeId")';
+                        sql += ' VALUES ($1, $2);';
+                        vals = [resObj.weapon.id, resObj.weapon.ammunition.id];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 }
             ], function(error, result) {
                 if (error) {
@@ -717,7 +897,7 @@ module.exports = function(app, pg, async, pool) {
             sql += '    	json_agg((';
             sql += '            SELECT x FROM (';
             sql += '                SELECT propitem.id, propitem."itemName" as "name", ';
-            sql += '                	wpnprop."requireRange", wpnprop."requireDamage", wpnprop."requireDescription"';
+            sql += '                	wpnprop."requireRange", wpnprop."requireDamage", wpnprop."requireDescription", wpnprop."requireAmmunition"';
             sql += '            ) x)) ';
             sql += '	end AS "weaponProperties"';
             sql += '                	, case ';
@@ -730,6 +910,17 @@ module.exports = function(app, pg, async, pool) {
             sql += '                			then \'{}\' ';
             sql += '                		else json_build_object(\'normal\', wpnrng."normalRange", \'maximum\', wpnrng."maximumRange") ';
             sql += '                		end AS "range"';
+            sql += '                	, case ';
+            sql += '                		when count(ammo) = 0 ';
+            sql += '                			then \'{}\' ';
+            sql += '                		else json_build_object(\'id\', ammo."id", \'name\', ammo."itemName") ';
+            sql += '                		end AS "ammunition"';
+            /*sql += ', case ';
+            sql += '    when count(ammo) = 0';
+            sql += '        then \'{}\' ';
+            sql += '    else ';
+            sql += '        json_build_object(\'id\', ammo.id, \'name\', ammo."itemName" AS name) ';
+            sql += '    end AS ammunition';*/
             sql += ' FROM adm_core_item i';
             sql += ' 	INNER JOIN adm_def_equipment eq ';
             sql += ' 		ON eq."equipmentId" = i.id';
@@ -758,6 +949,8 @@ module.exports = function(app, pg, async, pool) {
             sql += ' 		ON wpnrng."weaponId" = i.id';
             sql += ' 	LEFT OUTER JOIN adm_def_equipment_weapon_special special ';
             sql += ' 		ON special."weaponId" = i.id';
+            sql += '    LEFT OUTER JOIN adm_def_equipment_weapon_ammunition ammolink ON ammolink."weaponId" = i."id"';
+            sql += '    LEFT OUTER JOIN adm_core_item ammo ON ammo.id = ammolink."ammunitionTypeId"';
             sql += ' GROUP BY i.id, eq.cost, eq.weight';
             sql += ' , special."specialDescription"';
             sql += ' , dice.id, dice."dieCount", dice."dieType"';
@@ -767,6 +960,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' , altdice.id, altdice."dieCount", altdice."dieType"';
             sql += ' , wpnrng."normalRange", wpnrng."maximumRange"';
             sql += ' , rsrc.id, rsrc."itemName"';
+            sql += ' , ammo.id, ammo."itemName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
                 results.push(row);

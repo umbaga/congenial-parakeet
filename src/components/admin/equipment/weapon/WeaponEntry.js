@@ -98,6 +98,7 @@ class WeaponEntry extends React.Component {
             case util.dataTypes.bool.YES_NO:
                 weapon[field] = !weapon[field];
                 break;
+            case util.dataTypes.picklist.AMMUNITION_TYPE:
             case util.dataTypes.picklist.DAMAGE_TYPE:
             case util.dataTypes.picklist.WEAPON_CATEGORY:
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
@@ -142,6 +143,9 @@ class WeaponEntry extends React.Component {
                             if (weapon.weaponProperties[b].requireRange) {
                                 weapon.ramge = {};
                             }
+                            if (weapon.weaponProperties[b].requireAmmunition) {
+                                weapon.ammunition = {};
+                            }
                             removeThisIndex = b;
                             break;
                         }
@@ -162,7 +166,6 @@ class WeaponEntry extends React.Component {
     }
 
     render() {
-        //console.log(this.state)
         return (
             <div>
                 <WeaponForm

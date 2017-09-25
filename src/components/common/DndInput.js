@@ -73,13 +73,14 @@ class DndInput extends React.Component {
                                     onChange={this.props.onChange}
                                     className="form-control" />);
                 break;
+            case util.dataTypes.picklist.AMMUNITION_TYPE:
             case util.dataTypes.picklist.ARMOR_PROFICIENCY:
             case util.dataTypes.picklist.DAMAGE_TYPE:
             case util.dataTypes.picklist.WEAPON_CATEGORY:
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
             case util.dataTypes.picklist.EQUIPMENT_CATEGORY:
                 primaryInput = (<select
-                                    value={this.props.picklist.id}
+                                    value={this.props.valueObj.id}
                                     name={this.props.name}
                                     ref={this.props.name}
                                     className="form-control"

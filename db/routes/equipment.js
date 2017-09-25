@@ -53,6 +53,20 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function deleteAmmunitionTypeTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_equipment_ammunition';
+                    sql += ' WHERE "equipmentId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -89,6 +103,10 @@ module.exports = function(app, pg, async, pool) {
                         tmp.equipment.needsCountUnit = false;
                         if (tmp.equipment.count || tmp.equipment.unit) {
                             tmp.equipment.needsCountUnit = true;
+                        }
+                        tmp.equipment.needsAmmunitionType = false;
+                        if (tmp.equipment.category.id == 171) {
+                        tmp.equipment.needsAmmunitionType = true;
                         }
                         return callback(null, tmp);
                     });
@@ -156,6 +174,53 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function checkForAmmunition(resObj, callback) {
+                    sql = 'SELECT * FROM adm_def_equipment_ammunition WHERE "equipmentId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var ammunitionExists = false;
+                        if (results.length > 0) {
+                            ammunitionExists = true;
+                        }
+                        return callback(null, resObj, ammunitionExists);
+                    });
+                },
+                function addEditAmmunition(resObj, ammunitionExists, callback) {
+                    sql = '';
+                    if (resObj.equipment.needsAmmunitionType && ammunitionExists) {
+                        //update
+                        sql = 'UPDATE adm_def_equipment_ammunition';
+                        sql += ' SET "ammunitionTypeId" = $1';
+                        sql += ' WHERE "equipmentId" = $2';
+                        vals = [resObj.equipment.ammunition.id, resObj.equipment.id];
+                    } else if (resObj.equipment.needsAmmunitionType && !ammunitionExists) {
+                        //insert
+                        sql = 'INSERT INTO adm_def_equipment_ammunition';
+                        sql += ' ("equipmentId", "ammunitionTypeId")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.equipment.id, resObj.equipment.ammunition.id];
+                    } else {
+                        //delete
+                        sql = 'DELETE FROM adm_def_equipment_ammunition';
+                        sql += ' WHERE "equipmentId" = $1';
+                        vals = [resObj.equipment.id];
+                    }
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -192,6 +257,10 @@ module.exports = function(app, pg, async, pool) {
                         tmp.equipment.needsCountUnit = false;
                         if (tmp.equipment.count || tmp.equipment.unit) {
                             tmp.equipment.needsCountUnit = true;
+                        }
+                        tmp.equipment.needsAmmunitionType = false;
+                        if (tmp.equipment.category.id == 171) {
+                            tmp.equipment.needsAmmunitionType = true;
                         }
                         tmp.equipment.id = results[0].equipmentId;
                         return callback(null, tmp);
@@ -230,6 +299,25 @@ module.exports = function(app, pg, async, pool) {
                     } else {
                         return callback(null, resObj);
                     }
+                },
+                function insertAmmunitionTypeTable(resObj, callback) {
+                    if (resObj.equipment.needsAmmunitionType) {
+                        sql = 'INSERT INTO adm_def_equipment_ammunition';
+                        sql += ' ("equipmentId", "ammunitionTypeId")';
+                        sql += ' VALUES ($1, $2);';
+                        vals = [resObj.equipment.id, resObj.equipment.ammunition.id];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 }
             ], function(error, result) {
                 if (error) {
@@ -254,12 +342,24 @@ module.exports = function(app, pg, async, pool) {
             sql += ', json_build_object(\'name\', rsrc."itemName", \'id\', rsrc."id") AS "resource"';
             sql += ', case when cntunit."itemCount" IS NULL then 1 else cntunit."itemCount" end AS "count"';
             sql += ', case when cntunit."unitName" IS NULL then \'\' else cntunit."unitName" end AS "unit"';
+            sql += '                	, case ';
+            sql += '                		when count(ammo) = 0 ';
+            sql += '                			then \'{}\' ';
+            sql += '                		else json_build_object(\'id\', ammo."id", \'name\', ammo."itemName") ';
+            sql += '                		end AS "ammunition"';
             sql += ' FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_equipment equip ON equip."equipmentId" = i.id';
             sql += ' INNER JOIN adm_core_item cat ON cat.id = equip."categoryId"';
             sql += ' INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
             sql += ' LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = i.id';
+            sql += '    LEFT OUTER JOIN adm_def_equipment_ammunition ammolink ON ammolink."equipmentId" = i."id"';
+            sql += '    LEFT OUTER JOIN adm_core_item ammo ON ammo.id = ammolink."ammunitionTypeId"';
             sql += ' WHERE equip."categoryId" NOT IN (97, 178, 175)';
+            sql += ' GROUP BY i.id, equip.cost, equip.weight';
+            sql += ', cat.id, cat."itemName"';
+            sql += ', rsrc.id, rsrc."itemName"';
+            sql += ' , ammo.id, ammo."itemName"';
+            sql += ' , cntunit."itemCount", cntunit."unitName"';
             sql += ' ORDER BY i."itemName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {

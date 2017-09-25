@@ -1,5 +1,6 @@
 import util from './util';
 
+export const AMMUNITION_TYPE = 106;
 export const ARMOR_PROFICIENCY = 84;
 export const DAMAGE_TYPE = 81;
 export const EQUIPMENT = 90;
