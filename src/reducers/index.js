@@ -6,6 +6,7 @@ import equipments from './equipmentReducer';
 import itemtypes from './itemtypeReducer';
 import packs from './packReducer';
 import picklists from './picklistReducer';
+import proficiencies from './proficiencyReducer';
 import weapons from './weaponReducer';
 
 const rootReducer = combineReducers({
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     itemtypes,
     packs,
     picklists,
+    proficiencies,
     weapons,
     session
 });

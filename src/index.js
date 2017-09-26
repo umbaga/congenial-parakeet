@@ -13,6 +13,7 @@ import {loadEquipments} from './actions/admin/equipmentActions';
 import {loadItemtypes} from './actions/admin/itemtypeActions';
 import {loadPacks} from './actions/admin/packActions';
 import {loadPicklists} from './actions/admin/picklistActions';
+import {loadProficiencies} from './actions/admin/proficiencyActions';
 import {loadWeapons} from './actions/admin/weaponActions';
 
 const store = configureStore();
@@ -23,6 +24,7 @@ store.dispatch(loadEquipments());
 store.dispatch(loadItemtypes());
 store.dispatch(loadPacks());
 store.dispatch(loadPicklists());
+store.dispatch(loadProficiencies());
 store.dispatch(loadWeapons());
 
 render(

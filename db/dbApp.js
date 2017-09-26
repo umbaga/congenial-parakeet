@@ -6,6 +6,7 @@ var runEquipment = require('./routes/equipment');
 var runItemtypes = require('./routes/itemtypes');
 var runPacks = require('./routes/packs');
 var runPicklists = require('./routes/picklists');
+var runProficiency = require('./routes/proficiency');
 var runWeapons = require('./routes/weapons');
 
 var pg = require('pg');
@@ -31,6 +32,7 @@ runEquipment(app, pg, async, pool);
 runItemtypes(app, pg, async, pool);
 runPacks(app, pg, async, pool);
 runPicklists(app, pg, async, pool);
+runProficiency(app, pg, async, pool);
 runWeapons(app, pg, async, pool);
 
 app.listen(5000);

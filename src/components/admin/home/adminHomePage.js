@@ -15,6 +15,7 @@ class AdminHomePage extends React.Component {
                     <li><Link to="admin/equipment/armors">Armors</Link></li>
                     <li><Link to="admin/equipment">Equipment</Link></li>
                     <li><Link to="admin/equipment/packs">Equipment Packs</Link></li>
+                    <li><Link to="admin/proficiencies">Proficiencies</Link></li>
                 </ul>
             </div>
         );

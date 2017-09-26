@@ -10,6 +10,7 @@ import EquipmentListPage from './components/admin/equipment/EquipmentListPage';
 import ItemtypeListPage from './components/admin/itemtypes/ItemtypeListPage';
 import PackListPage from './components/admin/equipment/pack/PackListPage';
 import PicklistListPage from './components/admin/picklists/PicklistListPage';
+import ProficiencyListPage from './components/admin/proficiencies/ProficiencyListPage';
 import WeaponListPage from './components/admin/equipment/weapon/WeaponListPage';
 
 import AboutPage from './components/about/AboutPage';
@@ -27,6 +28,7 @@ export default (
         <Route path="/admin/equipment/weapons" component={WeaponListPage} />
         <Route path="/admin/itemtypes" component={ItemtypeListPage} />
         <Route path="/admin/picklists" component={PicklistListPage} />
+        <Route path="/admin/proficiencies" component={ProficiencyListPage} />
         <Route path="/login" component={LogInPage} />
         <Route path="/about" component={AboutPage} />
     </Route>

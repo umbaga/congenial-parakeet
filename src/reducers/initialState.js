@@ -5,6 +5,7 @@ export default {
     itemtypes: [],
     packs: [],
     picklists: [],
+    proficiencies: [],
     weapons: [],
     session: !!sessionStorage.jwt
 };
