@@ -123,6 +123,20 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function deleteProficiencyTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_proficiency';
+                    sql += ' WHERE "proficiencyId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -851,6 +865,24 @@ module.exports = function(app, pg, async, pool) {
                         sql = 'INSERT INTO adm_def_equipment_weapon_ammunition ("weaponId", "ammunitionTypeId")';
                         sql += ' VALUES ($1, $2);';
                         vals = [resObj.weapon.id, resObj.weapon.ammunition.id];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertProficiency(resObj, callback) {
+                    if (resObj.weapon.needsAltDamage) {
+                        sql = 'INSERT INTO adm_def_proficiency ("proficiencyId", "categoryId")';
+                        sql += ' VALUES ($1, 236);';
+                        vals = [resObj.weapon.id];
                         var query = client.query(new pg.Query(sql, vals));
                         var results = [];
                         query.on('row', function(row) {

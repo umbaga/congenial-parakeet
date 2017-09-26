@@ -126,15 +126,30 @@ module.exports = function(app, pg, async, pool) {
             sql += ', wpnProp."requireRange"';
             sql += ', wpnProp."requireDamage"';
             sql += ', wpnProp."requireAmmunition"';
-            sql += ', wpnProp."requireDescription") x ORDER BY i."orderIndex")) AS items';
+            sql += ', wpnProp."requireDescription"';
+            sql += ', profcat."isEquipmentBased"';
+            sql += ', profcat."requireAbilityScore"';
+            sql += ', profcat."requireLanguageInfo") x ORDER BY i."orderIndex", i."itemName")) AS items';
             sql += ' FROM adm_core_type t';
             sql += ' LEFT OUTER JOIN v_adm_item_type i ON i."itemTypeId" = t.id';
             sql += ' LEFT OUTER JOIN adm_def_weapon_property wpnprop ON wpnprop."weaponPropertyId" = i.id';
+            sql += ' LEFT OUTER JOIN adm_def_proficiency_category profcat ON profcat."proficiencyCategoryId" = i.id';
             sql += ' WHERE t."isPicklist" = true';
             sql += ' GROUP BY t.id';
             sql += ' ORDER BY t."typeName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
+                //this loop removes null values properties of item objects
+                for (var x = 0; x < row.items.length; x++) {
+                    var tmp = row.items[x];
+                    for (var key in row.items[x]) {
+                        if(row.items[x].hasOwnProperty(key)) {
+                            if(row.items[x][key] === null) {
+                                delete row.items[x][key];
+                            }
+                        }
+                    }
+                }
                 results.push(row);
             });
             query.on('end', function() {

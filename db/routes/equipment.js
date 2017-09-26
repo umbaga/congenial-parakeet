@@ -67,6 +67,20 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function deleteProficiencyTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_proficiency';
+                    sql += ' WHERE "proficiencyId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -308,6 +322,42 @@ module.exports = function(app, pg, async, pool) {
                         vals = [resObj.equipment.id, resObj.equipment.ammunition.id];
                         var query = client.query(new pg.Query(sql, vals));
                         var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function getProficiencyInfoFromMapTable(resObj, callback) {
+                    sql = 'SELECT * FROM adm_map_proficiency_equipment_category';
+                    sql += ' WHERE "equipmentCategoryId" = $1';
+                    vals = [resObj.equipment.category.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        if(results.length == 0) {
+                            return callback(null, resObj, 0);
+                        } else {
+                            return callback(null, resObj, results[0].proficiencyCategoryId);
+                        }
+                    });
+                },
+                function insertProficiencyTable(resObj, proficiencyCategoryId, callback) {
+                    if(proficiencyCategoryId != 0) {
+                        sql = 'INSERT INTO adm_def_proficiency';
+                        sql += ' ("proficiencyId", "categoryId")';
+                        sql += ' VALUES ($1, $2)';
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [resObj.equipment.id, proficiencyCategoryId];
                         query.on('row', function(row) {
                             results.push(row);
                         });
