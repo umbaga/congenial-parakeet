@@ -22,7 +22,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' LEFT OUTER JOIN adm_def_proficiency_language proflang ON proflang."proficiencyId" = i.id';
             sql += ' LEFT OUTER JOIN adm_core_item script ON script.id = proflang."scriptId"';
             sql += ' LEFT OUTER JOIN adm_core_item langtype ON langtype.id = proflang."languageTypeId"';
-            sql += ' ORDER BY i."itemName"';
+            sql += ' ORDER BY cat."itemName", i."itemName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
                 results.push(row);

@@ -71,6 +71,14 @@ export const EQUIPMENT_PACK_ASSIGNED_EQUIPMENT = {
 export const ITEMTYPE = {id: 0, name: '', isPicklist: false};
 export const PICKLIST = {id: 0, name: '', items: []};
 export const PICKLISTITEM = {id: 0, name: '', picklistId: 0, defaultSelected: false};
+export const PROFICIENCY = {
+    id: 0,
+    name: '',
+    category: {
+        id: 0,
+        name: ''
+    }
+};
 export const WEAPON = {
     id: 0,
     name: '',

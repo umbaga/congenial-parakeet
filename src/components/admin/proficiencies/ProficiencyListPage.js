@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-//import ProficiencyList from './ProficiencyList';
+import ProficiencyList from './ProficiencyList';
 //import ProficiencyEntry from './ProficiencyEntry';
 import * as actions from '../../../actions/admin/proficiencyActions';
 import util from '../../../util/util';
@@ -25,9 +25,9 @@ class ProficiencyListPage extends React.Component {
     }
 
     componentWillMount() {
-        /*if (this.props.proficiencies[0].id == '') {
+        if (this.props.proficiencies[0].id == '') {
             this.props.actions.loadProficiencies();
-        }*/
+        }
     }
 
     backToAdminHome() {
@@ -53,20 +53,46 @@ class ProficiencyListPage extends React.Component {
 
     render() {
         const proficiencies = this.props.proficiencies;
-        const picklists = this.props.picklists;
-        console.log(this.props);
-        console.log(proficiencies);
-        console.log(picklists);
+        const proficiencyCategories = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.PROFICIENCY_CATEGORY);
+        
         return (
             <div className="col-md-12">
                 <div>
                     <table className="table table-sm table-striped table-hover">
                         <thead>
                             <tr>
-                                <th colSpan="6">
+                                <th colSpan="4">
                                     <h2><span><DndButton onClick={this.backToAdminHome} buttonType="back" /></span>Proficiency</h2>
                                 </th>
+                                <th></th>
                             </tr>
+                        </thead>
+                            {proficiencyCategories.map(proficiencyCategory =>
+                                                       <ProficiencyList
+                                                           key={proficiencyCategory.id}
+                                                           proficiencyCategory={proficiencyCategory}
+                                                           proficiencies={proficiencies}
+                                                           openModal={this.open}
+                                                           selectedId={this.state.selectedId}
+                                                           changeSelectedId={this.changeSelectedId}
+                                                           onCreate={this.onCreate}
+                                                           />
+                                                      )}
+                    </table>
+                </div>
+                <DndModal
+                    headingCaption="Proficiency"
+                    closeModal={this.close}
+                    isCreate={this.state.isCreate}
+                    showModal={this.state.showModal}>
+                        <div>XXXX</div>
+                </DndModal>
+            </div>
+        );
+    }
+}
+/*                           */
+/*
                             <tr>
                                 <th>Name</th>
                                 <th className="text-center">Cost</th>
@@ -76,14 +102,7 @@ class ProficiencyListPage extends React.Component {
                                         <DndButton onClick={this.onCreate} buttonType="create" />
                                     </div>
                                 </th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
-        );
-    }
-}
+                            </tr>*/
 /*
                 <DndModal
                     headingCaption="Proficiency"
