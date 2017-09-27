@@ -24,7 +24,7 @@ class proficiencyListItem extends React.Component {
     deleteProficiency() {
         event.preventDefault();
         if (confirm('are you sure?')) {
-            this.props.actions.deleteproficiency(this.props.proficiency);
+            this.props.actions.deleteProficiency(this.props.proficiency);
         }
     }
     render() {
@@ -49,7 +49,7 @@ class proficiencyListItem extends React.Component {
                 <tr>
                     <td>{proficiency.name}</td>
                     <td>{proficiency.abilityScore.name}</td>
-                    <td>{proficiency.language.type.name}</td>
+                    <td>{proficiency.language.rarity.name}</td>
                     <td>{proficiency.language.script.name}</td>
                     {editButton}
                 </tr>
@@ -58,7 +58,7 @@ class proficiencyListItem extends React.Component {
             return (
                 <tr>
                     <td>{proficiency.name}</td>
-                    <td>{proficiency.language.type.name}</td>
+                    <td>{proficiency.language.rarity.name}</td>
                     <td colSpan="2">{proficiency.language.script.name}</td>
                     {editButton}
                 </tr>

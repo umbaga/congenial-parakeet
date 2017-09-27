@@ -1,10 +1,13 @@
 import util from './util';
 
+export const ABILITY_SCORE = 96;
 export const AMMUNITION_TYPE = 106;
 export const ARMOR_PROFICIENCY = 84;
 export const DAMAGE_TYPE = 81;
 export const EQUIPMENT = 90;
 export const EQUIPMENT_CATEGORY = 87;
+export const LANGUAGE_RARITY = 111;
+export const LANGUAGE_SCRIPT = 103;
 export const PROFICIENCY_CATEGORY = 101;
 export const WEAPON_CATEGORY = 83;
 export const WEAPON_PROFICIENCY = 82;

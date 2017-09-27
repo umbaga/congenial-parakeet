@@ -4,7 +4,7 @@ import {browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ProficiencyList from './ProficiencyList';
-//import ProficiencyEntry from './ProficiencyEntry';
+import ProficiencyEntry from './ProficiencyEntry';
 import * as actions from '../../../actions/admin/proficiencyActions';
 import util from '../../../util/util';
 import DndButton from '../../common/DndButton';
@@ -66,6 +66,14 @@ class ProficiencyListPage extends React.Component {
                                 </th>
                                 <th></th>
                             </tr>
+                            <tr>
+                                <th colSpan="4">Name</th>
+                                <th>
+                                    <div className="pull-right">
+                                        <DndButton onClick={this.onCreate} buttonType="create" />
+                                    </div>
+                                </th>
+                            </tr>
                         </thead>
                             {proficiencyCategories.map(proficiencyCategory =>
                                                        <ProficiencyList
@@ -85,7 +93,13 @@ class ProficiencyListPage extends React.Component {
                     closeModal={this.close}
                     isCreate={this.state.isCreate}
                     showModal={this.state.showModal}>
-                        <div>XXXX</div>
+                        <ProficiencyEntry
+                            closeModal={this.close}
+                            proficiencies={proficiencies}
+                            isCreate={this.state.isCreate}
+                            selectedId={this.state.selectedId}
+                            picklists={this.props.picklists}
+                            />
                 </DndModal>
             </div>
         );

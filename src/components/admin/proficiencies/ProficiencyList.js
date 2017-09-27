@@ -1,22 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ProficiencyListItem from './ProficiencyListItem';
-import DndButton from '../../common/DndButton';
 
-const ProficiencyList = ({proficiencies, proficiencyCategory, openModal, onCreate, selectedId, changeSelectedId}) => {
+const ProficiencyList = ({proficiencies, proficiencyCategory, openModal, selectedId, changeSelectedId}) => {
     let listHeader = null;
-                                /**/
-    const createButton = proficiencyCategory.isEquipmentBased
-    ?
-    (<th></th>)
-    :
-    (
-        <th>
-            <div className="pull-right">
-                <DndButton onClick={onCreate} buttonType="create" />
-            </div>
-        </th>
-    );
+                                
     if (proficiencyCategory.requireLanguageInfo && proficiencyCategory.requireAbilityScore) {
         listHeader = (
             <tr>
@@ -24,7 +12,7 @@ const ProficiencyList = ({proficiencies, proficiencyCategory, openModal, onCreat
                 <th>Ability Score</th>
                 <th>Type</th>
                 <th>Script</th>
-                {createButton}
+                <th></th>
             </tr>
         );
     } else if (proficiencyCategory.requireLanguageInfo && !proficiencyCategory.requireAbilityScore) {
@@ -33,7 +21,7 @@ const ProficiencyList = ({proficiencies, proficiencyCategory, openModal, onCreat
                 <th>{proficiencyCategory.name}</th>
                 <th>Type</th>
                 <th colSpan="2">Script</th>
-                {createButton}
+                <th></th>
             </tr>
         );
     } else if (!proficiencyCategory.requireLanguageInfo && proficiencyCategory.requireAbilityScore) {
@@ -41,14 +29,14 @@ const ProficiencyList = ({proficiencies, proficiencyCategory, openModal, onCreat
             <tr>
                 <th>{proficiencyCategory.name}</th>
                 <th colSpan="3">Ability Score</th>
-                {createButton}
+                <th></th>
             </tr>
         );
     } else {
         listHeader = (
             <tr>
                 <th colSpan="4">{proficiencyCategory.name}</th>
-                {createButton}
+                <th></th>
             </tr>
         );
     }

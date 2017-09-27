@@ -77,6 +77,20 @@ export const PROFICIENCY = {
     category: {
         id: 0,
         name: ''
+    },
+    abilityScore: {
+        id: 0,
+        name: ''
+    },
+    language: {
+        rarity: {
+            id: 0,
+            name: ''
+        },
+        script: {
+            id: 0,
+            name: ''
+        }
     }
 };
 export const WEAPON = {
