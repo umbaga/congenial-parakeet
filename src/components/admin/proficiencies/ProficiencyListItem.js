@@ -74,7 +74,7 @@ class proficiencyListItem extends React.Component {
         } else {
             return (
                 <tr>
-                    <td colSpan="4">{proficiency.name}--</td>
+                    <td colSpan="4">{proficiency.name}</td>
                     {editButton}
                 </tr>
             );
