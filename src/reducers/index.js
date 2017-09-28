@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 import session from './sessionReducer';
 import armors from './armorReducer';
+import backgrounds from './backgroundReducer';
 import dierolls from './dierollReducer';
 import equipments from './equipmentReducer';
 import itemtypes from './itemtypeReducer';
@@ -11,6 +12,7 @@ import weapons from './weaponReducer';
 
 const rootReducer = combineReducers({
     armors,
+    backgrounds,
     dierolls,
     equipments,
     itemtypes,

@@ -1,6 +1,7 @@
 var express = require('express');
 
 var runArmors = require('./routes/armors');
+var runBackgrounds = require('./routes/backgrounds');
 var runCore = require('./routes/core');
 var runEquipment = require('./routes/equipment');
 var runItemtypes = require('./routes/itemtypes');
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true })); app.use(bodyParser.urlencode
 var async = require('async');
 
 runArmors(app, pg, async, pool);
+runBackgrounds(app, pg, async, pool);
 runCore(app, pg, async, pool);
 runEquipment(app, pg, async, pool);
 runItemtypes(app, pg, async, pool);

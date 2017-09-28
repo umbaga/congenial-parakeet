@@ -6,6 +6,7 @@ import AdminHomePage from './components/admin/home/adminHomePage';
 import testbed from './components/admin/_testbed/testbed';
 
 import ArmorListPage from './components/admin/equipment/armor/ArmorListPage';
+import BackgroundListPage from './components/admin/background/BackgroundListPage';
 import EquipmentListPage from './components/admin/equipment/EquipmentListPage';
 import ItemtypeListPage from './components/admin/itemtypes/ItemtypeListPage';
 import PackListPage from './components/admin/equipment/pack/PackListPage';
@@ -22,6 +23,7 @@ export default (
         <IndexRoute component={AdminHomePage} />
         <Route path="/Home" component={AdminHomePage} />
         <Route path="/admin/testbed" component={testbed} />
+        <Route path="/admin/backgrounds" component={BackgroundListPage} />
         <Route path="/admin/equipment" component={EquipmentListPage} />
         <Route path="/admin/equipment/armors" component={ArmorListPage} />
         <Route path="/admin/equipment/packs" component={PackListPage} />

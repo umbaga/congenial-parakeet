@@ -1,5 +1,6 @@
 export default {
     armors: [],
+    backgrounds: [],
     dierolls: [],
     equipments: [],
     itemtypes: [],
