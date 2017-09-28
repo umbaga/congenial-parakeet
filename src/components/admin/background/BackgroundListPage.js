@@ -86,7 +86,7 @@ class BackgroundListPage extends React.Component {
                     closeModal={this.close}
                     isCreate={this.state.isCreate}
                     showModal={this.state.showModal}>
-                    OOOOOO
+                    <div>OOOOOO</div>
                 </DndModal>
             </div>
         );
