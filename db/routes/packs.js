@@ -41,8 +41,8 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function deleteUnitCountTable(resObj, callback) {
-                    sql = 'DELETE FROM adm_link_equipment_pack';
-                    sql += ' WHERE "packId" = $1';
+                    sql = 'DELETE FROM adm_link_equipment';
+                    sql += ' WHERE "referenceId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -110,8 +110,8 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function deleteUnneededAssignedItems(resObj, callback) {
-                    sql = 'DELETE FROM adm_link_equipment_pack';
-                    sql += ' WHERE "packId" = $1';
+                    sql = 'DELETE FROM adm_link_equipment';
+                    sql += ' WHERE "referenceId" = $1';
                     if (resObj.pack.assignedEquipment.length != 0) {
                         sql += ' AND "equipmentId" NOT IN (';
                     }
@@ -139,8 +139,8 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function checkNeededAssignedItems(resObj, callback) {
                     var theseIdsExist = [];
-                    sql = 'SELECT * FROM adm_link_equipment_pack';
-                    sql += ' WHERE "packId" = $1';
+                    sql = 'SELECT * FROM adm_link_equipment';
+                    sql += ' WHERE "referenceId" = $1';
                     if (resObj.pack.assignedEquipment.length != 0) {
                         sql += ' AND "equipmentId" IN (';
                     }
@@ -171,8 +171,8 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function addNeededAssignedItems(resObj, theseIdsExist, callback) {
                     if (resObj.pack.assignedEquipment.length != 0) {
-                        sql = 'INSERT INTO adm_link_equipment_pack';
-                        sql += ' ("packId", "equipmentId", "assignedCount")';
+                        sql = 'INSERT INTO adm_link_equipment';
+                        sql += ' ("referenceId", "equipmentId", "assignedCount")';
                         sql += ' VALUES ';
                         var firstParam = 1;
                         var secondParam = 2;
@@ -216,7 +216,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function updateAssignedItems(resObj, callback) {
                     vals = [];
-                    sql = 'UPDATE adm_link_equipment_pack as t';
+                    sql = 'UPDATE adm_link_equipment as t';
                     sql += ' SET "assignedCount" = c."assignedCount"';
                     sql += ' FROM (VALUES';
                     var firstParam = 1;
@@ -232,8 +232,8 @@ module.exports = function(app, pg, async, pool) {
                         secondParam = secondParam + 3;
                         thirdParam = thirdParam + 3;
                     }
-                    sql += ') AS c("packId", "equipmentId", "assignedCount")';
-                    sql += ' WHERE c."packId" = t."packId"';
+                    sql += ') AS c("referenceId", "equipmentId", "assignedCount")';
+                    sql += ' WHERE c."referenceId" = t."referenceId"';
                     sql += ' AND c."equipmentId" = t."equipmentId"';
                     if (resObj.pack.assignedEquipment.length != 0) {
                         var query = client.query(new pg.Query(sql, vals));
@@ -306,8 +306,8 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function insertAssignedItemsTable(resObj, callback) {
                     if (resObj.pack.assignedEquipment.length != 0) {
-                        sql = 'INSERT INTO adm_link_equipment_pack';
-                        sql += ' ("packId", "equipmentId", "assignedCount")';
+                        sql = 'INSERT INTO adm_link_equipment';
+                        sql += ' ("referenceId", "equipmentId", "assignedCount")';
                         sql += ' VALUES ';
                         vals = [];
                         for (var t = 0; t < resObj.pack.assignedEquipment.length; t++) {
@@ -369,7 +369,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' INNER JOIN adm_core_item cat ON cat.id = equip."categoryId"';
             sql += ' INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
             sql += ' LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = i.id';
-            sql += ' LEFT OUTER JOIN adm_link_equipment_pack pack ON pack."packId" = i.id';
+            sql += ' LEFT OUTER JOIN adm_link_equipment pack ON pack."referenceId" = i.id';
             sql += ' LEFT OUTER JOIN adm_core_item asseq ON asseq.id = pack."equipmentId"';
             sql += ' LEFT OUTER JOIN adm_def_equipment asseqtbl ON asseqtbl."equipmentId" = asseq.id';
             sql += ' LEFT OUTER JOIN adm_def_equipment_count_unit asscntunit ON asscntunit."equipmentId" = asseq.id';

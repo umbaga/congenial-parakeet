@@ -56,7 +56,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function deleteWeaponPropertiesTable(resObj, callback) {
                     sql = 'DELETE FROM adm_link_weapon_property';
-                    sql += ' WHERE "weaponId" = $1';
+                    sql += ' WHERE "referenceId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -260,7 +260,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function deleteUnneededProperties(resObj, callback) {
                     sql = 'DELETE FROM adm_link_weapon_property';
-                    sql += ' WHERE "weaponId" = $1';
+                    sql += ' WHERE "referenceId" = $1';
                     if (resObj.weapon.weaponProperties.length != 0) {
                         sql += ' AND "propertyId" NOT IN (';
                     }
@@ -289,7 +289,7 @@ module.exports = function(app, pg, async, pool) {
                 function checkNeededProperties(resObj, callback) {
                     var theseIdsExist = [];
                     sql = 'SELECT * FROM adm_link_weapon_property';
-                    sql += ' WHERE "weaponId" = $1';
+                    sql += ' WHERE "referenceId" = $1';
                     if (resObj.weapon.weaponProperties.length != 0) {
                         sql += ' AND "propertyId" IN (';
                     }
@@ -321,7 +321,7 @@ module.exports = function(app, pg, async, pool) {
                 function addNeededProperties(resObj, theseIdsExist, callback) {
                     if (resObj.weapon.weaponProperties.length != 0) {
                         sql = 'INSERT INTO adm_link_weapon_property';
-                        sql += ' ("weaponId", "propertyId")';
+                        sql += ' ("referenceId", "propertyId")';
                         sql += ' VALUES ';
                         var firstParam = 1;
                         var secondParam = 2;
@@ -722,7 +722,7 @@ module.exports = function(app, pg, async, pool) {
                 function insertProperties(resObj, callback) {
                     if (resObj.weapon.weaponProperties.length != 0) {
                         sql = 'INSERT INTO adm_link_weapon_property';
-                        sql += ' ("weaponId", "propertyId")';
+                        sql += ' ("referenceId", "propertyId")';
                         sql += ' VALUES ';
                         vals = [];
                         for (var t = 0; t < resObj.weapon.weaponProperties.length; t++) {
@@ -968,7 +968,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' 		ON dice.id = wpn."damageDiceId"';
             sql += '    INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
             sql += ' 	LEFT OUTER JOIN adm_link_weapon_property lnk ';
-            sql += ' 		ON lnk."weaponId" = wpn."equipmentId"';
+            sql += ' 		ON lnk."referenceId" = wpn."equipmentId"';
             sql += ' 	LEFT OUTER JOIN adm_def_weapon_property wpnprop ';
             sql += ' 		ON wpnprop."weaponPropertyId" = lnk."propertyId"';
             sql += ' 	LEFT OUTER JOIN adm_core_item propitem ';
