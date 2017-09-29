@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import {browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-//import BackgroundList from './BackgroundList';
-//import BackgroundEntry from './BackgroundEntry';
+import BackgroundList from './BackgroundList';
+import BackgroundEntry from './BackgroundEntry';
 import * as actions from '../../../actions/admin/backgroundActions';
 import util from '../../../util/util';
 import DndButton from '../../common/DndButton';
@@ -14,14 +14,17 @@ class BackgroundListPage extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            showModal: false,
+            canEdit: true,
             isCreate: false,
-            selectedId: 0
+            selectedId: 0,
+            showModal: false
         };
-        this.onCreate = this.onCreate.bind(this);
+        this.changeSelectedId = this.changeSelectedId.bind(this);
         this.close = this.close.bind(this);
         this.open = this.open.bind(this);
-        this.changeSelectedId = this.changeSelectedId.bind(this);
+        this.onCreate = this.onCreate.bind(this);
+        this.onEdit = this.onEdit.bind(this);
+        this.onViewDetails = this.onViewDetails.bind(this);
     }
 
     componentWillMount() {
@@ -34,11 +37,10 @@ class BackgroundListPage extends React.Component {
         browserHistory.push('/Home');
     }
 
-    onCreate() {
-        this.open();
-        this.setState({isCreate: true, selectedId: 0});
+    changeSelectedId(newId) {
+        this.setState({selectedId: parseInt(newId)});
     }
-
+    
     close() {
         this.setState({ showModal: false });
     }
@@ -47,13 +49,22 @@ class BackgroundListPage extends React.Component {
         this.setState({ showModal: true });
     }
 
-    changeSelectedId(newId) {
-        this.setState({selectedId: parseInt(newId)});
+    onCreate() {
+        this.changeSelectedId(0);
+        this.open();
+        this.setState({isCreate: true, selectedId: 0, canEdit: true});
+    }
+
+    onEdit() {
+        this.setState({isCreate: false, selectedId: 0, canEdit: true});
+    }
+    
+    onViewDetails() {
+        this.setState({isCreate: false, canEdit: false});
     }
 
     render() {
         const backgrounds = this.props.backgrounds;
-        console.log(backgrounds);
         return (
             <div className="col-md-12">
                 <div>
@@ -66,11 +77,6 @@ class BackgroundListPage extends React.Component {
                             </tr>
                             <tr>
                                 <th>Name</th>
-                                <th className="text-center">Cost</th>
-                                <th>Background Class (AC)</th>
-                                <th>Strength</th>
-                                <th>Stealth</th>
-                                <th className="text-center">Weight</th>
                                 <th>
                                     <div className="pull-right">
                                         <DndButton onClick={this.onCreate} buttonType="create" />
@@ -78,6 +84,14 @@ class BackgroundListPage extends React.Component {
                                 </th>
                             </tr>
                         </thead>
+                        <BackgroundList
+                            backgrounds={backgrounds}
+                            openModal={this.open}
+                            selectedId={this.state.selectedId}
+                            changeSelectedId={this.changeSelectedId}
+                            onEdit={this.onEdit}
+                            onViewDetails={this.onViewDetails}
+                            />
                     </table>
                 </div>
 
@@ -85,33 +99,27 @@ class BackgroundListPage extends React.Component {
                     headingCaption="Background"
                     closeModal={this.close}
                     isCreate={this.state.isCreate}
+                    canEdit={this.state.canEdit}
                     showModal={this.state.showModal}>
-                    <div>OOOOOO</div>
+                    <BackgroundEntry
+                        closeModal={this.close}
+                        backgrounds={backgrounds}
+                        isCreate={this.state.isCreate}
+                        canEdit={this.state.canEdit}
+                        selectedId={this.state.selectedId}
+                        picklists={this.props.picklists}
+                        />
                 </DndModal>
             </div>
         );
     }
 }
-/*
-                        <BackgroundList
-                            backgrounds={backgrounds}
-                            openModal={this.open}
-                            selectedId={this.state.selectedId}
-                            changeSelectedId={this.changeSelectedId}
-                            />*/
-/*
-                    <BackgroundEntry
-                        closeModal={this.close}
-                        backgrounds={backgrounds}
-                        isCreate={this.state.isCreate}
-                        selectedId={this.state.selectedId}
-                        picklists={this.props.picklists}
-                        />*/
+
 BackgroundListPage.propTypes = {
+    backgrounds: PropTypes.array.isRequired,
     actions: PropTypes.object,
     children: PropTypes.object,
-    picklists: PropTypes.array,
-    backgrounds: PropTypes.array.isRequired
+    picklists: PropTypes.array
 };
 
 function mapStateToProps(state) {

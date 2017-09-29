@@ -26,12 +26,23 @@ export const BACKGROUND = {
         name: '',
         description: ''
     },
-    startingGold: '0'
+    proficiencyGroups: [],
+    startingGold: '0',
+    variants: []
+};
+export const BACKGROUND_VARIANT = {
+    id: 0,
+    name: '',
+    feature: {
+        id: 0,
+        name: '',
+        description: ''
+    }
 };
 export const CHART = {
     id: 0,
     title: '',
-    dieRoll: {id: 0, dieCount: 0, dieType: 0, rendered: ''},
+    dieRoll: {dieCount: 0, dieType: 0, rendered: ''},
     entries: []
 };
 export const CHART_ENTRY = {
@@ -121,6 +132,16 @@ export const PROFICIENCY = {
             name: ''
         }
     }
+};
+export const PROFICIENCY_GROUP = {
+    id: 0,
+    name: '',
+    mechanic: {
+        id: 0,
+        name: ''
+    },
+    proficiencies: [],
+    selectCount: 0
 };
 export const WEAPON = {
     id: 0,
