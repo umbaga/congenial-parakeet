@@ -26,6 +26,7 @@ class DndModal extends React.Component {
                 <Modal.Body>
                     {this.props.children}
                 </Modal.Body>
+                <Modal.Footer />
             </Modal>
         );
     }

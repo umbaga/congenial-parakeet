@@ -104,8 +104,6 @@ class EquipmentForm extends React.Component {
                         onCancel={this.props.onCancel}
                         onDelete={this.props.onDelete}
                         isCreate={this.props.isCreate} />
-                    <div>&nbsp;</div>
-                    <div>&nbsp;</div>
                 </form>
             </div>
         );
