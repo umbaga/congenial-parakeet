@@ -9,6 +9,7 @@ export const EQUIPMENT_CATEGORY = 87;
 export const LANGUAGE_RARITY = 111;
 export const LANGUAGE_SCRIPT = 103;
 export const PROFICIENCY_CATEGORY = 101;
+export const RESOURCE = 89;
 export const WEAPON_CATEGORY = 83;
 export const WEAPON_PROFICIENCY = 82;
 export const WEAPON_PROPERTY = 86;

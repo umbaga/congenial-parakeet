@@ -66,6 +66,20 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function deleteDescription(resObj, callback) {
+                    sql = 'DELETE FROM adm_core_description';
+                    sql += ' WHERE "itemId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -105,7 +119,11 @@ module.exports = function(app, pg, async, pool) {
                         }
                         tmp.proficiency.needsLanguage = false;
                         if (tmp.proficiency.language && tmp.proficiency.language.script && tmp.proficiency.language.script.id != 0) {
-                        tmp.proficiency.needsLanguage = true;
+                            tmp.proficiency.needsLanguage = true;
+                        }
+                        tmp.proficiency.needsDescription = false;
+                        if(tmp.proficiency.description) {
+                            tmp.proficiency.needsDescription = true;
                         }
                         return callback(null, tmp);
                     });
@@ -225,6 +243,53 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function checkForDescription(resObj, callback) {
+                    sql = 'SELECT * FROM adm_core_description WHERE "itemId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var descriptionExists = false;
+                        if (results.length > 0) {
+                            descriptionExists = true;
+                        }
+                        return callback(null, resObj, descriptionExists);
+                    });
+                },
+                function addEditDescription(resObj, descriptionExists, callback) {
+                    sql = '';
+                    if (resObj.proficiency.needsDescription && descriptionExists) {
+                        //update
+                        sql = 'UPDATE adm_core_description';
+                        sql += ' SET "description" = $1';
+                        sql += ' WHERE "itemId" = $2';
+                        vals = [resObj.proficiency.description, resObj.proficiency.id];
+                    } else if (resObj.proficiency.needsDescription && !descriptionExists) {
+                        //insert
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.proficiency.id, resObj.proficiency.ammunition.id];
+                    } else {
+                        //delete
+                        sql = 'DELETE FROM adm_core_description';
+                        sql += ' WHERE "itemId" = $1';
+                        vals = [resObj.proficiency.id];
+                    }
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -249,7 +314,7 @@ module.exports = function(app, pg, async, pool) {
                 function insertItemTable(req, callback) {
                     var itemTypeId = 0;
                     switch (req.body.proficiency.category.id) {
-                        case 236://weapon
+                        case 236://proficiency
                             itemTypeId = 82;
                             break;
                         case 235://armmor
@@ -343,6 +408,25 @@ module.exports = function(app, pg, async, pool) {
                     } else {
                         return callback(null, resObj);
                     }
+                },
+                function insertDescription(resObj, callback) {
+                    if (resObj.proficiency.description) {
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.proficiency.id, resObj.proficiency.description];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 }
             ], function(error, result) {
                 if (error) {
@@ -361,12 +445,14 @@ module.exports = function(app, pg, async, pool) {
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'SELECT i.id, i."itemName" as name';
+            sql += ', description.description';
             sql += ' , json_build_object(\'name\', cat."itemName", \'id\', cat."id", \'isTool\', CASE WHEN cat."id" IN (238, 241, 242, 243, 541) THEN true ELSE false END) AS "category"';
             sql += ' , CASE WHEN ability.id IS NULL THEN \'{}\' ';
             sql += ' ELSE json_build_object(\'name\', ability."itemName", \'id\', ability."id") END AS "abilityScore"';
             sql += ' , CASE WHEN script."id" IS NULL THEN \'{}\' ';
             sql += ' ELSE json_build_object(\'script\', json_build_object(\'name\', script."itemName", \'id\', script.id), ';
             sql += '                        \'rarity\', json_build_object(\'name\', langtype."itemName", \'id\', langtype.id)) END AS "language"';
+            sql += ', json_build_object(\'name\', rsrc."itemName", \'id\', rsrc."id") AS "resource"';
             sql += ' FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_proficiency prof ON prof."proficiencyId" = i.id';
             sql += ' INNER JOIN adm_core_item cat ON cat.id = prof."categoryId"';
@@ -375,6 +461,8 @@ module.exports = function(app, pg, async, pool) {
             sql += ' LEFT OUTER JOIN adm_def_proficiency_language proflang ON proflang."proficiencyId" = i.id';
             sql += ' LEFT OUTER JOIN adm_core_item script ON script.id = proflang."scriptId"';
             sql += ' LEFT OUTER JOIN adm_core_item langtype ON langtype.id = proflang."languageTypeId"';
+            sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id';
+            sql += ' INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
             sql += ' ORDER BY cat."itemName", i."itemName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {

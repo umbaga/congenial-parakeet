@@ -1,4 +1,3 @@
-
 module.exports = function(app, pg, async, pool) {
     app.delete('/api/adm/equipment/:id', function(req, res) {
         var results = [];
@@ -81,6 +80,20 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function deleteDescription(resObj, callback) {
+                    sql = 'DELETE FROM adm_core_description';
+                    sql += ' WHERE "itemId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -120,7 +133,11 @@ module.exports = function(app, pg, async, pool) {
                         }
                         tmp.equipment.needsAmmunitionType = false;
                         if (tmp.equipment.category.id == 171) {
-                        tmp.equipment.needsAmmunitionType = true;
+                            tmp.equipment.needsAmmunitionType = true;
+                        }
+                        tmp.equipment.needsDescription = false;
+                        if(tmp.equipment.description) {
+                            tmp.equipment.needsDescription = true;
                         }
                         return callback(null, tmp);
                     });
@@ -170,7 +187,7 @@ module.exports = function(app, pg, async, pool) {
                     } else if (resObj.equipment.needsSpecial && !countUnitExists) {
                         //insert
                         sql = 'INSERT INTO adm_def_equipment_count_unit';
-                        sql += ' ("specialDescription", "weaponId", "equipmentId")';
+                        sql += ' ("specialDescription", "equipmentId", "equipmentId")';
                         sql += ' VALUES ($1, $2)';
                         vals = [resObj.equipment.count, resObj.equipment.unit, resObj.equipment.id];
                     } else {
@@ -224,6 +241,53 @@ module.exports = function(app, pg, async, pool) {
                         //delete
                         sql = 'DELETE FROM adm_def_equipment_ammunition';
                         sql += ' WHERE "equipmentId" = $1';
+                        vals = [resObj.equipment.id];
+                    }
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                },
+                function checkForDescription(resObj, callback) {
+                    sql = 'SELECT * FROM adm_core_description WHERE "itemId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var descriptionExists = false;
+                        if (results.length > 0) {
+                            descriptionExists = true;
+                        }
+                        return callback(null, resObj, descriptionExists);
+                    });
+                },
+                function addEditDescription(resObj, descriptionExists, callback) {
+                    sql = '';
+                    if (resObj.equipment.needsDescription && descriptionExists) {
+                        //update
+                        sql = 'UPDATE adm_core_description';
+                        sql += ' SET "description" = $1';
+                        sql += ' WHERE "itemId" = $2';
+                        vals = [resObj.equipment.description, resObj.equipment.id];
+                    } else if (resObj.equipment.needsDescription && !descriptionExists) {
+                        //insert
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.equipment.id, resObj.equipment.ammunition.id];
+                    } else {
+                        //delete
+                        sql = 'DELETE FROM adm_core_description';
+                        sql += ' WHERE "itemId" = $1';
                         vals = [resObj.equipment.id];
                     }
                     var query = client.query(new pg.Query(sql, vals));
@@ -368,6 +432,25 @@ module.exports = function(app, pg, async, pool) {
                     } else {
                         return callback(null, resObj);
                     }
+                },
+                function insertDescription(resObj, callback) {
+                    if (resObj.equipment.description) {
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.equipment.id, resObj.equipment.description];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 }
             ], function(error, result) {
                 if (error) {
@@ -388,6 +471,7 @@ module.exports = function(app, pg, async, pool) {
             
             sql = 'SELECT i."itemName" AS name, i.id';
             sql += ', equip.cost, equip.weight';
+            sql += ', description.description';
             sql += ', json_build_object(\'name\', cat."itemName", \'id\', cat."id") AS "category"';
             sql += ', json_build_object(\'name\', rsrc."itemName", \'id\', rsrc."id") AS "resource"';
             sql += ', case when cntunit."itemCount" IS NULL then 1 else cntunit."itemCount" end AS "count"';
@@ -402,14 +486,16 @@ module.exports = function(app, pg, async, pool) {
             sql += ' INNER JOIN adm_core_item cat ON cat.id = equip."categoryId"';
             sql += ' INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
             sql += ' LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = i.id';
-            sql += '    LEFT OUTER JOIN adm_def_equipment_ammunition ammolink ON ammolink."equipmentId" = i."id"';
-            sql += '    LEFT OUTER JOIN adm_core_item ammo ON ammo.id = ammolink."ammunitionTypeId"';
+            sql += ' LEFT OUTER JOIN adm_def_equipment_ammunition ammolink ON ammolink."equipmentId" = i."id"';
+            sql += ' LEFT OUTER JOIN adm_core_item ammo ON ammo.id = ammolink."ammunitionTypeId"';
+            sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id';
             sql += ' WHERE equip."categoryId" NOT IN (97, 178, 175)';
             sql += ' GROUP BY i.id, equip.cost, equip.weight';
             sql += ', cat.id, cat."itemName"';
             sql += ', rsrc.id, rsrc."itemName"';
             sql += ' , ammo.id, ammo."itemName"';
             sql += ' , cntunit."itemCount", cntunit."unitName"';
+            sql += ', description.description';
             sql += ' ORDER BY i."itemName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {

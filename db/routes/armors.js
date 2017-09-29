@@ -1,4 +1,3 @@
-
 module.exports = function(app, pg, async, pool) {
     app.delete('/api/adm/equipment/armor/:id', function(req, res) {
         var results = [];
@@ -86,6 +85,10 @@ module.exports = function(app, pg, async, pool) {
                     query.on('end', function() {
                         done();
                         var tmp = req.body;
+                        tmp.armor.needsDescription = false;
+                        if(tmp.armor.description) {
+                            tmp.armor.needsDescription = true;
+                        }
                         return callback(null, tmp);
                     });
                 },
@@ -117,6 +120,53 @@ module.exports = function(app, pg, async, pool) {
                     sql += ', "isCumulative" = $8';
                     sql += ' WHERE "equipmentId" = $9';
                     vals = [resObj.armor.proficiency.id, resObj.armor.baseArmorClass, resObj.armor.applyDexModifier, resObj.armor.hasMaxDexModifier, resObj.armor.maxDexModifier, resObj.armor.minimumStrength, resObj.armor.stealthDisadvantage, resObj.armor.isCumulative, resObj.armor.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                },
+                function checkForDescription(resObj, callback) {
+                    sql = 'SELECT * FROM adm_core_description WHERE "itemId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var descriptionExists = false;
+                        if (results.length > 0) {
+                            descriptionExists = true;
+                        }
+                        return callback(null, resObj, descriptionExists);
+                    });
+                },
+                function addEditDescription(resObj, descriptionExists, callback) {
+                    sql = '';
+                    if (resObj.armor.needsDescription && descriptionExists) {
+                        //update
+                        sql = 'UPDATE adm_core_description';
+                        sql += ' SET "description" = $1';
+                        sql += ' WHERE "itemId" = $2';
+                        vals = [resObj.armor.description, resObj.armor.id];
+                    } else if (resObj.armor.needsDescription && !descriptionExists) {
+                        //insert
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.armor.id, resObj.armor.ammunition.id];
+                    } else {
+                        //delete
+                        sql = 'DELETE FROM adm_core_description';
+                        sql += ' WHERE "itemId" = $1';
+                        vals = [resObj.armor.id];
+                    }
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
                     query.on('row', function(row) {
@@ -193,6 +243,39 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function insertDescription(resObj, callback) {
+                    if (resObj.armor.description) {
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.armor.id, resObj.armor.description];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function deleteDescription(resObj, callback) {
+                    sql = 'DELETE FROM adm_core_description';
+                    sql += ' WHERE "itemId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -213,6 +296,7 @@ module.exports = function(app, pg, async, pool) {
             
             sql = 'SELECT i."itemName" AS name, i.id, eq.cost, eq.weight, arm."stealthDisadvantage", arm."minimumStrength"';
             sql += ', arm."baseArmorClass", arm."applyDexModifier", arm."hasMaxDexModifier", arm."maxDexModifier", arm."isCumulative"';
+            sql += ', description.description';
             //sql += ',json_build_object(\'baseArmorClass\', arm."baseArmorClass", \'applyDexModifier\', arm."applyDexModifier", \'hasMaxDexModifier\', arm."hasMaxDexModifier", \'maxDexModifier\', arm."maxDexModifier", \'isCumulative\', arm."isCumulative") AS "armorClass"';
             sql += ', json_build_object(\'name\', armprof."itemName", \'id\', armprof."id") AS "proficiency"';
             sql += ', json_build_object(\'name\', rsrc."itemName", \'id\', rsrc."id") AS "resource"';
@@ -221,6 +305,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' INNER JOIN adm_def_equipment_armor arm ON arm."equipmentId" = i.id';
             sql += ' INNER JOIN adm_core_item armprof ON armprof.id = arm."proficiencyId"';
             sql += ' INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
+            sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id';
             sql += ' ORDER BY arm."baseArmorClass"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {

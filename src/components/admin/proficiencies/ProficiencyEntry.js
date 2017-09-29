@@ -77,11 +77,13 @@ class ProficiencyEntry extends React.Component {
         const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         let newSelectedValue = {};
         switch (dataType) {
+            case util.dataTypes.string.DESCRIPTION:
             case util.dataTypes.string.STRING:
                 proficiency[field] = event.target.value;
                 break;
             case util.dataTypes.picklist.ABILITY_SCORE:
             case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
+            case util.dataTypes.picklist.RESOURCE:
                 newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                 newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                 proficiency[field] = newSelectedValue;

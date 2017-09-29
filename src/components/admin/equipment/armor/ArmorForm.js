@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DndInput from '../../../common/DndInput';
+import DndUniversalInput from '../../../common/DndUniversalInput';
 import util from '../../../../util/util';
 
 class ArmorForm extends React.Component {
@@ -53,15 +54,12 @@ class ArmorForm extends React.Component {
         return (
             <div>
                 <form>
-                    <div className="col-md-12">
-                        <DndInput
-                            name="name"
-                            ref="name"
-                            label="Name"
-                            dataType={util.dataTypes.string.STRING}
-                            value={this.props.armor.name}
-                            onChange={this.props.onChange} />
-                    </div>
+                    <DndUniversalInput
+                        ref="name"
+                        referenceObject={this.props.armor}
+                        onChange={this.props.onChange}
+                        picklists={this.props.picklists}
+                        />
                     <div className="col-md-6">
                         <DndInput
                             name="cost"

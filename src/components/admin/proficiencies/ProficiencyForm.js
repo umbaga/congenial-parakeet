@@ -1,23 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DndInput from '../../common/DndInput';
+import DndUniversalInput from '../../common/DndUniversalInput';
 import util from '../../../util/util';
 
 class ProficiencyForm extends React.Component {
     constructor(props) {
         super(props);
-        this.setFocus = this.setFocus.bind(this);
-        //this.renderAmmunitionTypePicklist = this.renderAmmunitionTypePicklist.bind(this);
     }
     
     componentDidMount() {
         this.refs.name.setFocus();
     }
     
-    setFocus() {
-        this.refs.name.setFocus();
-    }
-        
     render() {
         const categoryPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.PROFICIENCY_CATEGORY).filter(function(category) {
             return !category.isEquipmentBased;
@@ -69,15 +64,12 @@ class ProficiencyForm extends React.Component {
         return (
             <div>
                 <form>
-                    <div className="col-md-12">
-                        <DndInput
-                            name="name"
-                            ref="name"
-                            label="Name"
-                            dataType={util.dataTypes.string.STRING}
-                            value={this.props.proficiency.name}
-                            onChange={this.props.onChange} />
-                    </div>
+                    <DndUniversalInput
+                        ref="name"
+                        referenceObject={this.props.proficiency}
+                        onChange={this.props.onChange}
+                        picklists={this.props.picklists}
+                        />
                     <div className="col-md-12">
                         <DndInput
                             name="category"

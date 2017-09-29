@@ -102,6 +102,7 @@ class WeaponEntry extends React.Component {
                 break;
             case util.dataTypes.picklist.AMMUNITION_TYPE:
             case util.dataTypes.picklist.DAMAGE_TYPE:
+            case util.dataTypes.picklist.RESOURCE:
             case util.dataTypes.picklist.WEAPON_CATEGORY:
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
                 newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);

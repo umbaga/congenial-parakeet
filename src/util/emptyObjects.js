@@ -27,6 +27,10 @@ export const BACKGROUND = {
         description: ''
     },
     proficiencyGroups: [],
+    resource: {
+        id: 0,
+        name: ''
+    },
     startingGold: '0',
     variants: []
 };
@@ -37,6 +41,10 @@ export const BACKGROUND_VARIANT = {
         id: 0,
         name: '',
         description: ''
+    },
+    resource: {
+        id: 0,
+        name: ''
     }
 };
 export const CHART = {
@@ -131,6 +139,10 @@ export const PROFICIENCY = {
             id: 0,
             name: ''
         }
+    },
+    resource: {
+        id: 0,
+        name: ''
     }
 };
 export const PROFICIENCY_GROUP = {

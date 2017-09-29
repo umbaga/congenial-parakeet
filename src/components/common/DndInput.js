@@ -81,6 +81,7 @@ class DndInput extends React.Component {
             case util.dataTypes.picklist.LANGUAGE_RARITY:
             case util.dataTypes.picklist.LANGUAGE_SCRIPT:
             case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
+            case util.dataTypes.picklist.RESOURCE:
             case util.dataTypes.picklist.WEAPON_CATEGORY:
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
                 primaryInput = (<select
@@ -146,6 +147,22 @@ class DndInput extends React.Component {
                 primaryInput = (
                     <textarea
                         name={this.props.name}
+                        placeholder={this.props.placeholder}
+                        value={longValue}
+                        datatype={this.props.dataType}
+                        onKeyUp={this.props.onChange}
+                        onChange={this.props.onChange}
+                        className="form-control" />
+                );
+                break;
+            case util.dataTypes.string.DESCRIPTION:
+                if (this.props.value) {
+                    longValue = this.props.value;
+                }
+                primaryInput = (
+                    <textarea
+                        name={this.props.name}
+                        rows="6"
                         placeholder={this.props.placeholder}
                         value={longValue}
                         datatype={this.props.dataType}

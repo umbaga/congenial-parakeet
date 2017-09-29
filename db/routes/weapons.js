@@ -1,4 +1,3 @@
-
 module.exports = function(app, pg, async, pool) {
     app.delete('/api/adm/equipment/weapon/:id', function(req, res) {
         var results = [];
@@ -183,6 +182,10 @@ module.exports = function(app, pg, async, pool) {
                             if (tmp.weapon.weaponProperties[j].requireDescription) {
                                 tmp.weapon.needsSpecial = true;
                             }
+                        }
+                        tmp.weapon.needsDescription = false;
+                        if(tmp.weapon.description) {
+                            tmp.weapon.needsDescription = true;
                         }
                         return callback(null, tmp);
                     });
@@ -593,6 +596,53 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function checkForDescription(resObj, callback) {
+                    sql = 'SELECT * FROM adm_core_description WHERE "itemId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var descriptionExists = false;
+                        if (results.length > 0) {
+                            descriptionExists = true;
+                        }
+                        return callback(null, resObj, descriptionExists);
+                    });
+                },
+                function addEditDescription(resObj, descriptionExists, callback) {
+                    sql = '';
+                    if (resObj.weapon.needsDescription && descriptionExists) {
+                        //update
+                        sql = 'UPDATE adm_core_description';
+                        sql += ' SET "description" = $1';
+                        sql += ' WHERE "itemId" = $2';
+                        vals = [resObj.weapon.description, resObj.weapon.id];
+                    } else if (resObj.weapon.needsDescription && !descriptionExists) {
+                        //insert
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.weapon.id, resObj.weapon.ammunition.id];
+                    } else {
+                        //delete
+                        sql = 'DELETE FROM adm_core_description';
+                        sql += ' WHERE "itemId" = $1';
+                        vals = [resObj.weapon.id];
+                    }
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -895,6 +945,25 @@ module.exports = function(app, pg, async, pool) {
                     } else {
                         return callback(null, resObj);
                     }
+                },
+                function insertDescription(resObj, callback) {
+                    if (resObj.weapon.description) {
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.weapon.id, resObj.weapon.description];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 }
             ], function(error, result) {
                 if (error) {
@@ -915,6 +984,7 @@ module.exports = function(app, pg, async, pool) {
             
             sql = 'SELECT i.id, i."itemName" as name';
             sql += ', eq.cost, eq.weight';
+            sql += ', description.description';
             sql += ', special."specialDescription"';
             sql += ', json_build_object(\'id\', dice.id ,\'dieCount\', dice."dieCount", \'dieType\', dice."dieType", \'rendered\', concat_ws(\'d\', dice."dieCount"::text, dice."dieType"::text)) AS "damage"';
             sql += ', json_build_object(\'name\', dmgtype."itemName", \'id\', dmgtype."id") AS "damageType"';
@@ -983,6 +1053,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' 		ON special."weaponId" = i.id';
             sql += '    LEFT OUTER JOIN adm_def_equipment_weapon_ammunition ammolink ON ammolink."weaponId" = i."id"';
             sql += '    LEFT OUTER JOIN adm_core_item ammo ON ammo.id = ammolink."ammunitionTypeId"';
+            sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id';
             sql += ' GROUP BY i.id, eq.cost, eq.weight';
             sql += ' , special."specialDescription"';
             sql += ' , dice.id, dice."dieCount", dice."dieType"';
@@ -993,6 +1064,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' , wpnrng."normalRange", wpnrng."maximumRange"';
             sql += ' , rsrc.id, rsrc."itemName"';
             sql += ' , ammo.id, ammo."itemName"';
+            sql += ', description.description';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
                 results.push(row);

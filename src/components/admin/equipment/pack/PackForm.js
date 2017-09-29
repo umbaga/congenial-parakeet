@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DndButton from '../../../common/DndButton';
 import DndInput from '../../../common/DndInput';
+import DndUniversalInput from '../../../common/DndUniversalInput';
 import DndInputWrapper from '../../../common/DndInputWrapper';
 import PackEquipmentItemRow from './PackEquipmentItemRow';
 import util from '../../../../util/util';
@@ -74,15 +75,12 @@ class PackForm extends React.Component {
         return (
             <div>
                 <form>
-                    <div className="col-md-12">
-                        <DndInput
-                            name="name"
-                            ref="name"
-                            label="Name"
-                            dataType={util.dataTypes.string.STRING}
-                            value={this.props.pack.name}
-                            onChange={this.props.onChange} />
-                    </div>
+                    <DndUniversalInput
+                        ref="name"
+                        referenceObject={this.props.pack}
+                        onChange={this.props.onChange}
+                        picklists={this.props.picklists}
+                        />
                     <div className="col-md-6">
                         <DndInput
                             name="cost"

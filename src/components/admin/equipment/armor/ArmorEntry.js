@@ -80,6 +80,7 @@ class ArmorEntry extends React.Component {
                 armor[field] = event.target.value;
                 break;
             case util.dataTypes.picklist.ARMOR_PROFICIENCY:
+            case util.dataTypes.picklist.RESOURCE:
                 newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                 newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                 armor[field] = newSelectedValue;

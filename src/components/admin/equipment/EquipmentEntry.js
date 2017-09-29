@@ -80,6 +80,7 @@ class EquipmentEntry extends React.Component {
                 break;
             case util.dataTypes.picklist.AMMUNITION_TYPE:
             case util.dataTypes.picklist.EQUIPMENT_CATEGORY:
+            case util.dataTypes.picklist.RESOURCE:
                 newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                 newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                 equipment[field] = newSelectedValue;
