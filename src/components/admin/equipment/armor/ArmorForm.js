@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndDataEntryButtonBar from '../../../common/DndDataEntryButtonBar';
 import DndInput from '../../../common/DndInput';
 import util from '../../../../util/util';
 
@@ -129,12 +128,6 @@ class ArmorForm extends React.Component {
                             value={this.props.armor.minimumStrength.toString()}
                             onChange={this.props.onChange} />
                     </div>
-                    <DndDataEntryButtonBar
-                        onSave={this.props.onSave}
-                        onSaveNew={this.props.onSaveNew}
-                        onCancel={this.props.onCancel}
-                        onDelete={this.props.onDelete}
-                        isCreate={this.props.isCreate} />
                 </form>
             </div>
         );

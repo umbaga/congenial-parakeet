@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndDataEntryButtonBar from '../../../common/DndDataEntryButtonBar';
 import DndButton from '../../../common/DndButton';
 import DndInput from '../../../common/DndInput';
 import DndInputWrapper from '../../../common/DndInputWrapper';
@@ -135,12 +134,6 @@ class PackForm extends React.Component {
                             </div>
                         </DndInputWrapper>
                     </div>
-                    <DndDataEntryButtonBar
-                        onSave={this.props.onSave}
-                        onSaveNew={this.props.onSaveNew}
-                        onCancel={this.props.onCancel}
-                        onDelete={this.props.onDelete}
-                        isCreate={this.props.isCreate} />
                 </form>
             </div>
         );

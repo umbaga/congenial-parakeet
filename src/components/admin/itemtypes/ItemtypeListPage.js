@@ -8,7 +8,6 @@ import ItemtypeEntry from './ItemtypeEntry';
 import * as actions from '../../../actions/admin/itemtypeActions';
 import util from '../../../util/util';
 import DndButton from '../../common/DndButton';
-import DndModal from '../../common/DndModal';
 
 class ItemtypeListPage extends React.Component {
     constructor(props, context) {
@@ -43,7 +42,7 @@ class ItemtypeListPage extends React.Component {
     }
 
     onEdit() {
-        this.setState({isCreate: false, selectedId: 0, canEdit: true});
+        this.setState({isCreate: false, canEdit: true});
     }
 
     close() {
@@ -89,20 +88,16 @@ class ItemtypeListPage extends React.Component {
                             />
                     </table>
                 </div>
-                <DndModal
-                    headingCaption="Item Type"
+                <ItemtypeEntry
                     closeModal={this.close}
+                    openModal={this.open}
+                    itemtypes={itemtypes}
                     isCreate={this.state.isCreate}
                     canEdit={this.state.canEdit}
-                    showModal={this.state.showModal}>
-                        <ItemtypeEntry
-                            closeModal={this.close}
-                            itemtypes={itemtypes}
-                            isCreate={this.state.isCreate}
-                            canEdit={this.state.canEdit}
-                            selectedId={this.state.selectedId}
-                            />
-                </DndModal>
+                    selectedId={this.state.selectedId}
+                    showModal={this.state.showModal}
+                    onEdit={this.onEdit}
+                    />
             </div>
         );
     }

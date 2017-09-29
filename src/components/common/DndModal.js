@@ -19,7 +19,6 @@ class DndModal extends React.Component {
         } else {
             actionText = 'View';
         }
-        console.log(this.props.isCreate);
         return (
             <Modal show={this.props.showModal} onHide={this.props.closeModal}>
                 <Modal.Header closeButton>

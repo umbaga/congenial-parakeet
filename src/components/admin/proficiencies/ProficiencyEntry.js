@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as proficiencyActions from '../../../actions/admin/proficiencyActions';
 import ProficiencyForm from './ProficiencyForm';
 import util from '../../../util/util';
+import DndModal from '../../common/DndModal';
 
 class ProficiencyEntry extends React.Component {
     constructor(props, context) {
@@ -12,6 +13,7 @@ class ProficiencyEntry extends React.Component {
         this.state = {
             proficiency: this.props.proficiency,
             isCreate: this.props.isCreate,
+            canEdit: this.props.canEdit,
             saving: false
         };
         this.cancelProficiency = this.cancelProficiency.bind(this);
@@ -96,7 +98,17 @@ class ProficiencyEntry extends React.Component {
     }
     render() {
         return (
-            <div>
+            <DndModal
+                headingCaption="Proficiency"
+                closeModal={this.props.closeModal}
+                isCreate={this.props.isCreate}
+                canEdit={this.props.canEdit}
+                openModal={this.props.openModal}
+                showModal={this.props.showModal}
+                onCancel={this.cancelProficiency}
+                onDelete={this.deleteProficiency}
+                onSave={this.saveAndBackProficiency}
+                onSaveNew={this.saveAndNewProficiency}>
                 <ProficiencyForm
                     ref="form"
                     proficiency={this.state.proficiency}
@@ -107,18 +119,21 @@ class ProficiencyEntry extends React.Component {
                     onDelete={this.deleteProficiency}
                     isCreate={this.state.isCreate}
                     saving={this.state.saving}
-                    picklists={this.props.picklists} />
-            </div>
+                    picklists={this.props.picklists}
+                    />
+            </DndModal>
         );
     }
 }
 
 ProficiencyEntry.propTypes = {
     proficiency: PropTypes.object,
-    proficiencyCategories: PropTypes.array,
     actions: PropTypes.object,
-    isCreate: PropTypes.bool,
+    canEdit: PropTypes.bool,
     closeModal: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
+    showModal: PropTypes.bool.isRequired,
+    isCreate: PropTypes.bool,
     picklists: PropTypes.array
 };
 

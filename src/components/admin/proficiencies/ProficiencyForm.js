@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndDataEntryButtonBar from '../../common/DndDataEntryButtonBar';
 import DndInput from '../../common/DndInput';
 import util from '../../../util/util';
 
@@ -90,37 +89,12 @@ class ProficiencyForm extends React.Component {
                     </div>
                     {languageForm}
                     {abilityScoreForm}
-                    <DndDataEntryButtonBar
-                        onSave={this.props.onSave}
-                        onSaveNew={this.props.onSaveNew}
-                        onCancel={this.props.onCancel}
-                        onDelete={this.props.onDelete}
-                        isCreate={this.props.isCreate} />
                 </form>
             </div>
         );
     }
 }
-/*
-                    <div className="col-md-6">
-                        <DndInput
-                            name="languageRarity"
-                            label="Rarity"
-                            dataType={util.dataTypes.picklist.LANGUAGE_RARITY}
-                            valueObj={this.props.proficiency.langauge.type}
-                            onChange={this.props.onChange}
-                            picklist={languageRarityPicklist} />
-                    </div>*/
-/*
-                    <div className="col-md-6">
-                        <DndInput
-                            name="category"
-                            label="Category"
-                            dataType={util.dataTypes.picklist.PROFICIENCY_CATEGORY}
-                            valueObj={this.props.proficiency.category}
-                            onChange={this.props.onChange}
-                            picklist={categoryPicklist} />
-                    </div>*/
+
 ProficiencyForm.propTypes = {
     proficiency: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,

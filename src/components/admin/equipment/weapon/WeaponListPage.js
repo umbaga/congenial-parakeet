@@ -8,7 +8,6 @@ import WeaponEntry from './WeaponEntry';
 import * as actions from '../../../../actions/admin/weaponActions';
 import util from '../../../../util/util';
 import DndButton from '../../../common/DndButton';
-import DndModal from '../../../common/DndModal';
 
 class WeaponListPage extends React.Component {
     constructor(props, context) {
@@ -43,7 +42,7 @@ class WeaponListPage extends React.Component {
     }
 
     onEdit() {
-        this.setState({isCreate: false, selectedId: 0, canEdit: true});
+        this.setState({isCreate: false, canEdit: true});
     }
 
     close() {
@@ -92,21 +91,17 @@ class WeaponListPage extends React.Component {
                             />
                     </table>
                 </div>
-                <DndModal
-                    headingCaption="Weapon"
+                <WeaponEntry
                     closeModal={this.close}
+                    openModal={this.open}
+                    weapons={weapons}
                     isCreate={this.state.isCreate}
                     canEdit={this.state.canEdit}
-                    showModal={this.state.showModal}>
-                        <WeaponEntry
-                            closeModal={this.close}
-                            weapons={weapons}
-                            isCreate={this.state.isCreate}
-                            canEdit={this.state.canEdit}
-                            selectedId={this.state.selectedId}
-                            picklists={this.props.picklists}
-                            />
-                </DndModal>
+                    selectedId={this.state.selectedId}
+                    picklists={this.props.picklists}
+                    showModal={this.state.showModal}
+                    onEdit={this.onEdit}
+                    />
             </div>
         );
     }

@@ -8,7 +8,6 @@ import PicklistEntry from './PicklistEntry';
 import * as actions from '../../../actions/admin/picklistActions';
 import util from '../../../util/util';
 import DndButton from '../../common/DndButton';
-import DndModal from '../../common/DndModal';
 
 class PicklistListPage extends React.Component {
     constructor(props, context) {
@@ -43,7 +42,7 @@ class PicklistListPage extends React.Component {
     }
 
     onEdit() {
-        this.setState({isCreate: false, selectedId: 0, canEdit: true});
+        this.setState({isCreate: false, canEdit: true});
     }
 
     close() {
@@ -86,20 +85,16 @@ class PicklistListPage extends React.Component {
                             />
                     </table>
                 </div>
-                <DndModal
-                    headingCaption="Picklist"
+                <PicklistEntry
                     closeModal={this.close}
+                    openModal={this.open}
+                    picklists={picklists}
                     isCreate={this.state.isCreate}
                     canEdit={this.state.canEdit}
-                    showModal={this.state.showModal}>
-                        <PicklistEntry
-                            closeModal={this.close}
-                            picklists={picklists}
-                            isCreate={this.state.isCreate}
-                            canEdit={this.state.canEdit}
-                            selectedId={this.state.selectedId}
-                            />
-                </DndModal>
+                    selectedId={this.state.selectedId}
+                    showModal={this.state.showModal}
+                    onEdit={this.onEdit}
+                    />
             </div>
         );
     }

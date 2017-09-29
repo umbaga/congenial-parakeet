@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as weaponActions from '../../../../actions/admin/weaponActions';
 import WeaponForm from './WeaponForm';
 import util from '../../../../util/util';
+import DndModal from '../../../common/DndModal';
 
 class WeaponEntry extends React.Component {
     constructor(props, context) {
@@ -12,6 +13,7 @@ class WeaponEntry extends React.Component {
         this.state = {
             weapon: this.props.weapon,
             isCreate: this.props.isCreate,
+            canEdit: this.props.canEdit,
             saving: false
         };
         this.cancelWeapon = this.cancelWeapon.bind(this);
@@ -167,7 +169,17 @@ class WeaponEntry extends React.Component {
 
     render() {
         return (
-            <div>
+            <DndModal
+                headingCaption="Weapon"
+                closeModal={this.props.closeModal}
+                isCreate={this.props.isCreate}
+                canEdit={this.props.canEdit}
+                openModal={this.props.openModal}
+                showModal={this.props.showModal}
+                onCancel={this.cancelWeapon}
+                onDelete={this.deleteWeapon}
+                onSave={this.saveAndBackWeapon}
+                onSaveNew={this.saveAndNewWeapon}>
                 <WeaponForm
                     ref="form"
                     weapon={this.state.weapon}
@@ -178,8 +190,9 @@ class WeaponEntry extends React.Component {
                     onDelete={this.deleteWeapon}
                     isCreate={this.state.isCreate}
                     saving={this.state.saving}
-                    picklists={this.props.picklists} />
-            </div>
+                    picklists={this.props.picklists}
+                    />
+            </DndModal>
         );
     }
 }
@@ -187,8 +200,11 @@ class WeaponEntry extends React.Component {
 WeaponEntry.propTypes = {
     weapon: PropTypes.object,
     actions: PropTypes.object,
-    isCreate: PropTypes.bool,
+    canEdit: PropTypes.bool,
     closeModal: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
+    showModal: PropTypes.bool.isRequired,
+    isCreate: PropTypes.bool,
     picklists: PropTypes.array
 };
 

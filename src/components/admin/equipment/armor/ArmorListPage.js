@@ -8,7 +8,6 @@ import ArmorEntry from './ArmorEntry';
 import * as actions from '../../../../actions/admin/armorActions';
 import util from '../../../../util/util';
 import DndButton from '../../../common/DndButton';
-import DndModal from '../../../common/DndModal';
 
 class ArmorListPage extends React.Component {
     constructor(props, context) {
@@ -43,7 +42,7 @@ class ArmorListPage extends React.Component {
     }
 
     onEdit() {
-        this.setState({isCreate: false, selectedId: 0, canEdit: true});
+        this.setState({isCreate: false, canEdit: true});
     }
 
     close() {
@@ -93,22 +92,17 @@ class ArmorListPage extends React.Component {
                             />
                     </table>
                 </div>
-
-                <DndModal
-                    headingCaption="Armor"
+                <ArmorEntry
                     closeModal={this.close}
+                    openModal={this.open}
+                    armors={armors}
                     isCreate={this.state.isCreate}
                     canEdit={this.state.canEdit}
-                    showModal={this.state.showModal}>
-                    <ArmorEntry
-                        closeModal={this.close}
-                        armors={armors}
-                        isCreate={this.state.isCreate}
-                        canEdit={this.state.canEdit}
-                        selectedId={this.state.selectedId}
-                        picklists={this.props.picklists}
-                        />
-                </DndModal>
+                    selectedId={this.state.selectedId}
+                    picklists={this.props.picklists}
+                    showModal={this.state.showModal}
+                    onEdit={this.onEdit}
+                    />
             </div>
         );
     }

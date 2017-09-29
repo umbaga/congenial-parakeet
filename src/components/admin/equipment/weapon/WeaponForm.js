@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndDataEntryButtonBar from '../../../common/DndDataEntryButtonBar';
 import DndInput from '../../../common/DndInput';
 import util from '../../../../util/util';
 
@@ -149,12 +148,6 @@ class WeaponForm extends React.Component {
                     {ammunitionTypeInput}
                     {versatileDamageInput}
                     {specialDescriptionInput}
-                    <DndDataEntryButtonBar
-                        onSave={this.props.onSave}
-                        onSaveNew={this.props.onSaveNew}
-                        onCancel={this.props.onCancel}
-                        onDelete={this.props.onDelete}
-                        isCreate={this.props.isCreate} />
                 </form>
             </div>
         );

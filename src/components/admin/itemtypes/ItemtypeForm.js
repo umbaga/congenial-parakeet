@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndDataEntryButtonBar from '../../common/DndDataEntryButtonBar';
 import DndInput from '../../common/DndInput';
 import util from '../../../util/util';
 
@@ -35,12 +34,6 @@ class ItemtypeForm extends React.Component {
                         dataType={util.dataTypes.bool.YES_NO}
                         checked={this.props.itemtype.isPicklist}
                         onChange={this.props.onChange} />
-                    <DndDataEntryButtonBar
-                        onSave={this.props.onSave}
-                        onSaveNew={this.props.onSaveNew}
-                        onCancel={this.props.onCancel}
-                        onDelete={this.props.onDelete}
-                        isCreate={this.props.isCreate}/>
                 </form>
             </div>
         );

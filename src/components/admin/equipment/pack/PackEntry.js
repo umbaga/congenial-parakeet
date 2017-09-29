@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as packActions from '../../../../actions/admin/packActions';
 import PackForm from './PackForm';
 import util from '../../../../util/util';
+import DndModal from '../../../common/DndModal';
 
 class PackEntry extends React.Component {
     constructor(props, context) {
@@ -13,6 +14,7 @@ class PackEntry extends React.Component {
             selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT),
             pack: this.props.pack,
             isCreate: this.props.isCreate,
+            canEdit: this.props.canEdit,
             saving: false
         };
         this.cancelPack = this.cancelPack.bind(this);
@@ -143,7 +145,17 @@ class PackEntry extends React.Component {
 
     render() {
         return (
-            <div>
+            <DndModal
+                headingCaption="Equipment Packs"
+                closeModal={this.props.closeModal}
+                isCreate={this.props.isCreate}
+                canEdit={this.props.canEdit}
+                openModal={this.props.openModal}
+                showModal={this.props.showModal}
+                onCancel={this.cancelPack}
+                onDelete={this.deletePack}
+                onSave={this.saveAndBackPack}
+                onSaveNew={this.saveAndNewPack}>
                 <PackForm
                     ref="form"
                     addEquipmentToPack={this.addEquipmentToPack}
@@ -158,8 +170,9 @@ class PackEntry extends React.Component {
                     onDelete={this.deletePack}
                     isCreate={this.state.isCreate}
                     saving={this.state.saving}
-                    picklists={this.props.picklists} />
-            </div>
+                    picklists={this.props.picklists}
+                    />
+            </DndModal>
         );
     }
 }
@@ -167,8 +180,11 @@ class PackEntry extends React.Component {
 PackEntry.propTypes = {
     pack: PropTypes.object,
     actions: PropTypes.object,
-    isCreate: PropTypes.bool,
+    canEdit: PropTypes.bool,
     closeModal: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
+    showModal: PropTypes.bool.isRequired,
+    isCreate: PropTypes.bool,
     picklists: PropTypes.array,
     equipments: PropTypes.array
 };

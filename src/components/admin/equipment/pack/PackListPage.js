@@ -8,7 +8,6 @@ import PackEntry from './PackEntry';
 import * as actions from '../../../../actions/admin/packActions';
 import util from '../../../../util/util';
 import DndButton from '../../../common/DndButton';
-import DndModal from '../../../common/DndModal';
 
 class PackListPage extends React.Component {
     constructor(props, context) {
@@ -43,7 +42,7 @@ class PackListPage extends React.Component {
     }
 
     onEdit() {
-        this.setState({isCreate: false, selectedId: 0, canEdit: true});
+        this.setState({isCreate: false, canEdit: true});
     }
 
     close() {
@@ -91,22 +90,18 @@ class PackListPage extends React.Component {
                             />
                     </table>
                 </div>
-                <DndModal
-                    headingCaption="Equipment Packs"
+                <PackEntry
                     closeModal={this.close}
+                    openModal={this.open}
+                    packs={packs}
                     isCreate={this.state.isCreate}
                     canEdit={this.state.canEdit}
-                    showModal={this.state.showModal}>
-                        <PackEntry
-                            closeModal={this.close}
-                            packs={packs}
-                            isCreate={this.state.isCreate}
-                            canEdit={this.state.canEdit}
-                            selectedId={this.state.selectedId}
-                            picklists={this.props.picklists}
-                            equipments={this.props.equipments}
-                            />
-                </DndModal>
+                    selectedId={this.state.selectedId}
+                    picklists={this.props.picklists}
+                    equipments={this.props.equipments}
+                    showModal={this.state.showModal}
+                    onEdit={this.onEdit}
+                    />
             </div>
         );
     }

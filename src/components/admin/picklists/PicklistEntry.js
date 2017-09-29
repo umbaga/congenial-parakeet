@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as picklistActions from '../../../actions/admin/picklistActions';
 import PicklistForm from './PicklistForm';
 import util from '../../../util/util';
+import DndModal from '../../common/DndModal';
 
 
 class PicklistEntry extends React.Component {
@@ -14,6 +15,7 @@ class PicklistEntry extends React.Component {
             picklist: this.props.picklist,
             picklistItem: Object.assign({}, {id: 0, name: '', picklistId: this.props.picklist.id}),
             isCreate: this.props.isCreate,
+            canEdit: this.props.canEdit,
             saving: false
         };
         this.addPicklistItem = this.addPicklistItem.bind(this);
@@ -50,15 +52,26 @@ class PicklistEntry extends React.Component {
 
     render() {
         return (
-            <div>
+            <DndModal
+                headingCaption="Picklist"
+                closeModal={this.props.closeModal}
+                isCreate={this.props.isCreate}
+                canEdit={this.props.canEdit}
+                openModal={this.props.openModal}
+                showModal={this.props.showModal}
+                onCancel={this.cancelPicklist}
+                onDelete={this.deletePicklist}
+                onSave={this.saveAndBackPicklist}
+                onSaveNew={this.saveAndNewPicklist}>
                 <PicklistForm
                     ref="form"
                     picklist={this.state.picklist}
                     picklistItem={this.state.picklistItem}
                     onChange={this.updateFormState}
                     addPicklistItem={this.addPicklistItem}
-                    removePicklistItem={this.removePicklistItem} />
-            </div>
+                    removePicklistItem={this.removePicklistItem}
+                    />
+            </DndModal>
         );
     }
 }
@@ -66,8 +79,11 @@ class PicklistEntry extends React.Component {
 PicklistEntry.propTypes = {
     picklist: PropTypes.object,
     actions: PropTypes.object,
-    isCreate: PropTypes.bool,
-    closeModal: PropTypes.func.isRequired
+    canEdit: PropTypes.bool,
+    closeModal: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
+    showModal: PropTypes.bool.isRequired,
+    isCreate: PropTypes.bool
 };
 
 function getPicklistById(picklists, id) {

@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import * as itemtypeActions from '../../../actions/admin/itemtypeActions';
 import ItemtypeForm from './ItemtypeForm';
 import util from '../../../util/util';
+import DndModal from '../../common/DndModal';
 
 
 class ItemtypeEntry extends React.Component {
@@ -13,6 +14,7 @@ class ItemtypeEntry extends React.Component {
         this.state = {
             itemtype: this.props.itemtype,
             isCreate: this.props.isCreate,
+            canEdit: this.props.canEdit,
             saving: false
         };
         this.cancelItemtype = this.cancelItemtype.bind(this);
@@ -84,7 +86,17 @@ class ItemtypeEntry extends React.Component {
 
     render() {
         return (
-            <div>
+            <DndModal
+                headingCaption="Item Type"
+                closeModal={this.props.closeModal}
+                isCreate={this.props.isCreate}
+                canEdit={this.props.canEdit}
+                openModal={this.props.openModal}
+                showModal={this.props.showModal}
+                onCancel={this.cancelItemtype}
+                onDelete={this.deleteItemtype}
+                onSave={this.saveAndBackItemtype}
+                onSaveNew={this.saveAndNewItemtype}>
                 <ItemtypeForm
                     ref="form"
                     itemtype={this.state.itemtype}
@@ -94,8 +106,9 @@ class ItemtypeEntry extends React.Component {
                     onCancel={this.cancelItemtype}
                     onDelete={this.deleteItemtype}
                     isCreate={this.state.isCreate}
-                    saving={this.state.saving} />
-            </div>
+                    saving={this.state.saving}
+                    />
+            </DndModal>
         );
     }
 }
@@ -103,8 +116,11 @@ class ItemtypeEntry extends React.Component {
 ItemtypeEntry.propTypes = {
     itemtype: PropTypes.object,
     actions: PropTypes.object,
-    isCreate: PropTypes.bool,
-    closeModal: PropTypes.func.isRequired
+    canEdit: PropTypes.bool,
+    closeModal: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
+    showModal: PropTypes.bool.isRequired,
+    isCreate: PropTypes.bool
 };
 
 function getItemtypeById(itemtypes, id) {

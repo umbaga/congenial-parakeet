@@ -8,7 +8,6 @@ import ProficiencyEntry from './ProficiencyEntry';
 import * as actions from '../../../actions/admin/proficiencyActions';
 import util from '../../../util/util';
 import DndButton from '../../common/DndButton';
-import DndModal from '../../common/DndModal';
 
 class ProficiencyListPage extends React.Component {
     constructor(props, context) {
@@ -43,7 +42,7 @@ class ProficiencyListPage extends React.Component {
     }
 
     onEdit() {
-        this.setState({isCreate: false, selectedId: 0, canEdit: true});
+        this.setState({isCreate: false, canEdit: true});
     }
 
     close() {
@@ -96,51 +95,22 @@ class ProficiencyListPage extends React.Component {
                                                       )}
                     </table>
                 </div>
-                <DndModal
-                    headingCaption="Proficiency"
+                <ProficiencyEntry
                     closeModal={this.close}
+                    openModal={this.open}
+                    proficiencies={proficiencies}
                     isCreate={this.state.isCreate}
                     canEdit={this.state.canEdit}
-                    showModal={this.state.showModal}>
-                        <ProficiencyEntry
-                            closeModal={this.close}
-                            proficiencies={proficiencies}
-                            isCreate={this.state.isCreate}
-                            canEdit={this.state.canEdit}
-                            selectedId={this.state.selectedId}
-                            picklists={this.props.picklists}
-                            />
-                </DndModal>
+                    selectedId={this.state.selectedId}
+                    picklists={this.props.picklists}
+                    showModal={this.state.showModal}
+                    onEdit={this.onEdit}
+                    />
             </div>
         );
     }
 }
-/*                           */
-/*
-                            <tr>
-                                <th>Name</th>
-                                <th className="text-center">Cost</th>
-                                <th className="text-center">Weight</th>
-                                <th>
-                                    <div className="pull-right">
-                                        <DndButton onClick={this.onCreate} buttonType="create" />
-                                    </div>
-                                </th>
-                            </tr>*/
-/*
-                <DndModal
-                    headingCaption="Proficiency"
-                    closeModal={this.close}
-                    isCreate={this.state.isCreate}
-                    showModal={this.state.showModal}>
-                        <ProficiencyEntry
-                            closeModal={this.close}
-                            proficiencies={proficiencies}
-                            isCreate={this.state.isCreate}
-                            selectedId={this.state.selectedId}
-                            picklists={this.props.picklists}
-                            />
-                </DndModal>*/
+
 ProficiencyListPage.propTypes = {
     actions: PropTypes.object,
     children: PropTypes.object,

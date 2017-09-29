@@ -95,19 +95,18 @@ class BackgroundListPage extends React.Component {
                             />
                     </table>
                 </div>
-
-                    <BackgroundEntry
-                        closeModal={this.close}
-                        openModal={this.open}
-                        backgrounds={backgrounds}
-                        isCreate={this.state.isCreate}
-                        canEdit={this.state.canEdit}
-                        selectedId={this.state.selectedId}
-                        picklists={this.props.picklists}
-                        showModal={this.state.showModal}
-                        onEdit={this.onEdit}
-                        onViewDetails={this.onViewDetails}
-                        />
+                <BackgroundEntry
+                    closeModal={this.close}
+                    openModal={this.open}
+                    backgrounds={backgrounds}
+                    isCreate={this.state.isCreate}
+                    canEdit={this.state.canEdit}
+                    selectedId={this.state.selectedId}
+                    picklists={this.props.picklists}
+                    showModal={this.state.showModal}
+                    onEdit={this.onEdit}
+                    onViewDetails={this.onViewDetails}
+                    />
             </div>
         );
     }
