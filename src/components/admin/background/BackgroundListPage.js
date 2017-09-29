@@ -8,7 +8,6 @@ import BackgroundEntry from './BackgroundEntry';
 import * as actions from '../../../actions/admin/backgroundActions';
 import util from '../../../util/util';
 import DndButton from '../../common/DndButton';
-import DndModal from '../../common/DndModal';
 
 class BackgroundListPage extends React.Component {
     constructor(props, context) {
@@ -56,7 +55,9 @@ class BackgroundListPage extends React.Component {
     }
 
     onEdit() {
-        this.setState({isCreate: false, selectedId: 0, canEdit: true});
+        console.log('onEdit');
+        this.setState({isCreate: false, canEdit: true});
+        console.log(this.state);
     }
     
     onViewDetails() {
@@ -95,21 +96,18 @@ class BackgroundListPage extends React.Component {
                     </table>
                 </div>
 
-                <DndModal
-                    headingCaption="Background"
-                    closeModal={this.close}
-                    isCreate={this.state.isCreate}
-                    canEdit={this.state.canEdit}
-                    showModal={this.state.showModal}>
                     <BackgroundEntry
                         closeModal={this.close}
+                        openModal={this.open}
                         backgrounds={backgrounds}
                         isCreate={this.state.isCreate}
                         canEdit={this.state.canEdit}
                         selectedId={this.state.selectedId}
                         picklists={this.props.picklists}
+                        showModal={this.state.showModal}
+                        onEdit={this.onEdit}
+                        onViewDetails={this.onViewDetails}
                         />
-                </DndModal>
             </div>
         );
     }

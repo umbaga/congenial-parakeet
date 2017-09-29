@@ -6,6 +6,7 @@ import * as backgroundActions from '../../../actions/admin/backgroundActions';
 import BackgroundForm from './BackgroundForm';
 import BackgroundDetails from './BackgroundDetails';
 import util from '../../../util/util';
+import DndModal from '../../common/DndModal';
 
 class BackgroundEntry extends React.Component {
     constructor(props, context) {
@@ -39,8 +40,9 @@ class BackgroundEntry extends React.Component {
 
     deleteBackground(event) {
         event.preventDefault();
+        console.log('delete button pushed');
         if (confirm('are you sure?')) {
-            this.props.actions.deleteBackground(this.state.background);
+            //this.props.actions.deleteBackground(this.state.background);
             this.postAction();
         }
     }
@@ -64,7 +66,8 @@ class BackgroundEntry extends React.Component {
     saveBackground(event) {
         event.preventDefault();
         this.setState({saving: true});
-        this.props.actions.upsertBackground(this.state.background);
+        console.log('save button pushed');
+        //this.props.actions.upsertBackground(this.state.background);
     }
 
     updateFormState(event) {
@@ -103,21 +106,27 @@ class BackgroundEntry extends React.Component {
                 <BackgroundForm
                     ref="form"
                     background={this.state.background}
-                    isCreate={this.state.isCreate}
-                    onCancel={this.cancelBackground}
-                    onChange={this.updateFormState}
-                    onDelete={this.deleteBackground}
-                    onSave={this.saveAndBackBackground}
-                    onSaveNew={this.saveAndNewBackground}
+                    isCreate={this.props.isCreate}
                     picklists={this.props.picklists}
                     saving={this.state.saving}
+                    onChange={this.updateFormState}
                     />
             );
         }
         return (
-            <div>
+            <DndModal
+                headingCaption="Background"
+                closeModal={this.props.closeModal}
+                isCreate={this.props.isCreate}
+                canEdit={this.props.canEdit}
+                openModal={this.props.openModal}
+                showModal={this.props.showModal}
+                onCancel={this.cancelBackground}
+                onDelete={this.deleteBackground}
+                onSave={this.saveAndBackBackground}
+                onSaveNew={this.saveAndNewBackground}>
                 {contents}
-            </div>
+            </DndModal>
         );
     }
 }
@@ -127,6 +136,8 @@ BackgroundEntry.propTypes = {
     actions: PropTypes.object,
     canEdit: PropTypes.bool,
     closeModal: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
+    showModal: PropTypes.bool.isRequired,
     isCreate: PropTypes.bool,
     picklists: PropTypes.array
 };

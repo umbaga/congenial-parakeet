@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndDataEntryButtonBar from '../../common/DndDataEntryButtonBar';
 import DndInput from '../../common/DndInput';
 import util from '../../../util/util';
 
@@ -31,14 +30,6 @@ class BackgroundForm extends React.Component {
                             value={this.props.background.name}
                             onChange={this.props.onChange} />
                     </div>
-                    <DndDataEntryButtonBar
-                        onSave={this.props.onSave}
-                        onSaveNew={this.props.onSaveNew}
-                        onCancel={this.props.onCancel}
-                        onDelete={this.props.onDelete}
-                        isCreate={this.props.isCreate} />
-                    <div>&nbsp;</div>
-                    <div>&nbsp;</div>
                 </form>
             </div>
         );
@@ -47,12 +38,10 @@ class BackgroundForm extends React.Component {
 
 BackgroundForm.propTypes = {
     background: PropTypes.object.isRequired,
-    onSave: PropTypes.func.isRequired,
-    onSaveNew: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
     isCreate: PropTypes.bool.isRequired,
+    onEdit: PropTypes.func,
+    onViewDetails: PropTypes.func,
     saving: PropTypes.bool,
     picklists: PropTypes.array
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
+import DndDataEntryButtonBar from './DndDataEntryButtonBar';
 
 class DndModal extends React.Component {
     constructor(props, context) {
@@ -18,6 +19,7 @@ class DndModal extends React.Component {
         } else {
             actionText = 'View';
         }
+        console.log(this.props.isCreate);
         return (
             <Modal show={this.props.showModal} onHide={this.props.closeModal}>
                 <Modal.Header closeButton>
@@ -26,7 +28,14 @@ class DndModal extends React.Component {
                 <Modal.Body>
                     {this.props.children}
                 </Modal.Body>
-                <Modal.Footer />
+                <Modal.Footer>
+                    <DndDataEntryButtonBar
+                        onSave={this.props.onSave}
+                        onSaveNew={this.props.onSaveNew}
+                        onCancel={this.props.onCancel}
+                        onDelete={this.props.onDelete}
+                        isCreate={this.props.isCreate} />
+                </Modal.Footer>
             </Modal>
         );
     }
@@ -38,7 +47,11 @@ DndModal.propTypes = {
     isCreate: PropTypes.bool,
     showModal: PropTypes.bool.isRequired,
     children: PropTypes.object,
-    canEdit: PropTypes.bool
+    canEdit: PropTypes.bool,
+    onCancel: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onSaveNew: PropTypes.func.isRequired
 };
 
 export default DndModal;
