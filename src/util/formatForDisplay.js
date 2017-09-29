@@ -133,7 +133,12 @@ number.coin = function(val) {
 number.weight = function(val) {
     let retVal = util.unicode.punctuation.longDash;
     if (val && val != 0) {
-        retVal = util.unicode.vulgarFractions.calculateFractionalValue(val) + ' lbs.';
+        retVal = util.unicode.vulgarFractions.calculateFractionalValue(val);
+        if (val > 1) {
+            retVal += ' lb.';
+        } else {
+            retVal += ' lbs.';
+        }
     }
     return retVal;
 };
