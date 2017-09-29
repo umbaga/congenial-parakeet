@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import EquipmentListItem from './EquipmentListItem';
 
-const EquipmentList = ({equipments, equipmentCategory, openModal, selectedId, changeSelectedId}) => {
+const EquipmentList = ({equipments, equipmentCategory, openModal, selectedId, changeSelectedId, onEdit}) => {
     return (
         <tbody>
             <tr>
@@ -18,6 +18,7 @@ const EquipmentList = ({equipments, equipmentCategory, openModal, selectedId, ch
                                 openModal={openModal}
                                 selectedId={selectedId}
                                 changeSelectedId={changeSelectedId}
+                            onEdit={onEdit}
                                />
                           )}
         </tbody>
@@ -29,7 +30,8 @@ EquipmentList.propTypes = {
     equipments: PropTypes.array.isRequired,
     openModal: PropTypes.func.isRequired,
     changeSelectedId: PropTypes.func.isRequired,
-    selectedId: PropTypes.number.isRequired
+    selectedId: PropTypes.number.isRequired,
+    onEdit: PropTypes.func
 };
 
 export default EquipmentList;

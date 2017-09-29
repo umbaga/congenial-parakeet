@@ -13,15 +13,16 @@ class PackListItem extends React.Component {
             selectedId: this.props.selectedId
         };
         this.editPack = this.editPack.bind(this);
-        this.deleteItemType = this.deleteItemType.bind(this);
+        this.deletePack = this.deletePack.bind(this);
     }
     editPack() {
         event.preventDefault();
         this.props.openModal();
         this.props.changeSelectedId(this.props.pack.id);
+        this.props.onEdit();
         this.setState({selectedId: this.props.pack.id});
     }
-    deleteItemType() {
+    deletePack() {
         event.preventDefault();
         if (confirm('are you sure?')) {
             this.props.actions.deletePack(this.props.pack);
@@ -38,7 +39,7 @@ class PackListItem extends React.Component {
                     <DndListItemButtonBar
                         listItem={this.props.pack}
                         onEdit={this.editPack}
-                        onDelete={this.deleteItemType} />
+                        onDelete={this.deletePack} />
                 </td>
             </tr>
         );
@@ -54,7 +55,8 @@ PackListItem.propTypes = {
     actions: PropTypes.object,
     openModal: PropTypes.func.isRequired,
     selectedId: PropTypes.number.isRequired,
-    changeSelectedId: PropTypes.func.isRequired
+    changeSelectedId: PropTypes.func.isRequired,
+    onEdit: PropTypes.func
 };
 
 function mapDispatchToProps(dispatch) {

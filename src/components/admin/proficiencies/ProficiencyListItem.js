@@ -19,6 +19,7 @@ class proficiencyListItem extends React.Component {
         event.preventDefault();
         this.props.openModal();
         this.props.changeSelectedId(this.props.proficiency.id);
+        this.props.onEdit();
         this.setState({selectedId: this.props.proficiency.id});
     }
     deleteProficiency() {
@@ -92,7 +93,8 @@ proficiencyListItem.propTypes = {
     actions: PropTypes.object,
     openModal: PropTypes.func.isRequired,
     selectedId: PropTypes.number.isRequired,
-    changeSelectedId: PropTypes.func.isRequired
+    changeSelectedId: PropTypes.func.isRequired,
+    onEdit: PropTypes.func
 };
 
 function mapDispatchToProps(dispatch) {

@@ -14,14 +14,16 @@ class WeaponListPage extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            showModal: false,
+            canEdit: true,
             isCreate: false,
-            selectedId: 0
+            selectedId: 0,
+            showModal: false
         };
-        this.onCreate = this.onCreate.bind(this);
         this.close = this.close.bind(this);
         this.open = this.open.bind(this);
         this.changeSelectedId = this.changeSelectedId.bind(this);
+        this.onCreate = this.onCreate.bind(this);
+        this.onEdit = this.onEdit.bind(this);
     }
 
     componentWillMount() {
@@ -35,8 +37,13 @@ class WeaponListPage extends React.Component {
     }
 
     onCreate() {
+        this.changeSelectedId(0);
         this.open();
-        this.setState({isCreate: true, selectedId: 0});
+        this.setState({isCreate: true, selectedId: 0, canEdit: true});
+    }
+
+    onEdit() {
+        this.setState({isCreate: false, selectedId: 0, canEdit: true});
     }
 
     close() {
@@ -81,6 +88,7 @@ class WeaponListPage extends React.Component {
                             openModal={this.open}
                             selectedId={this.state.selectedId}
                             changeSelectedId={this.changeSelectedId}
+                            onEdit={this.onEdit}
                             />
                     </table>
                 </div>
@@ -88,11 +96,13 @@ class WeaponListPage extends React.Component {
                     headingCaption="Weapon"
                     closeModal={this.close}
                     isCreate={this.state.isCreate}
+                    canEdit={this.state.canEdit}
                     showModal={this.state.showModal}>
                         <WeaponEntry
                             closeModal={this.close}
                             weapons={weapons}
                             isCreate={this.state.isCreate}
+                            canEdit={this.state.canEdit}
                             selectedId={this.state.selectedId}
                             picklists={this.props.picklists}
                             />

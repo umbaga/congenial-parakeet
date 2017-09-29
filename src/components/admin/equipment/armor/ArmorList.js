@@ -4,7 +4,7 @@ import ArmorListItem from './ArmorListItem';
 import util from '../../../../util/util';
 
 
-const ArmorList = ({armors, openModal, selectedId, changeSelectedId}) => {
+const ArmorList = ({armors, openModal, selectedId, changeSelectedId, onEdit}) => {
     return (
         <tbody>
             <tr>
@@ -20,6 +20,7 @@ const ArmorList = ({armors, openModal, selectedId, changeSelectedId}) => {
                            openModal={openModal}
                            selectedId={selectedId}
                            changeSelectedId={changeSelectedId}
+                            onEdit={onEdit}
                            />
                           )}
             <tr>
@@ -35,6 +36,7 @@ const ArmorList = ({armors, openModal, selectedId, changeSelectedId}) => {
                            openModal={openModal}
                            selectedId={selectedId}
                            changeSelectedId={changeSelectedId}
+                            onEdit={onEdit}
                            />
                           )}
             <tr>
@@ -50,6 +52,7 @@ const ArmorList = ({armors, openModal, selectedId, changeSelectedId}) => {
                            openModal={openModal}
                            selectedId={selectedId}
                            changeSelectedId={changeSelectedId}
+                            onEdit={onEdit}
                            />
                           )}
             <tr>
@@ -65,6 +68,7 @@ const ArmorList = ({armors, openModal, selectedId, changeSelectedId}) => {
                            openModal={openModal}
                            selectedId={selectedId}
                            changeSelectedId={changeSelectedId}
+                            onEdit={onEdit}
                            />
                           )}
         </tbody>
@@ -75,7 +79,8 @@ ArmorList.propTypes = {
     armors: PropTypes.array.isRequired,
     openModal: PropTypes.func.isRequired,
     changeSelectedId: PropTypes.func.isRequired,
-    selectedId: PropTypes.number.isRequired
+    selectedId: PropTypes.number.isRequired,
+    onEdit: PropTypes.func
 };
 
 export default ArmorList;

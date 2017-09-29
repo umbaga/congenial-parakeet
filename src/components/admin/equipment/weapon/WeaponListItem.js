@@ -13,15 +13,16 @@ class WeaponListItem extends React.Component {
             selectedId: this.props.selectedId
         };
         this.editWeapon = this.editWeapon.bind(this);
-        this.deleteItemType = this.deleteItemType.bind(this);
+        this.deleteWeapon = this.deleteWeapon.bind(this);
     }
     editWeapon() {
         event.preventDefault();
         this.props.openModal();
         this.props.changeSelectedId(this.props.weapon.id);
+        this.props.onEdit();
         this.setState({selectedId: this.props.weapon.id});
     }
-    deleteItemType() {
+    deleteWeapon() {
         event.preventDefault();
         if (confirm('are you sure?')) {
             this.props.actions.deleteWeapon(this.props.weapon);
@@ -39,7 +40,7 @@ class WeaponListItem extends React.Component {
                     <DndListItemButtonBar
                         listItem={this.props.weapon}
                         onEdit={this.editWeapon}
-                        onDelete={this.deleteItemType} />
+                        onDelete={this.deleteWeapon} />
                 </td>
             </tr>
         );
@@ -55,7 +56,8 @@ WeaponListItem.propTypes = {
     actions: PropTypes.object,
     openModal: PropTypes.func.isRequired,
     selectedId: PropTypes.number.isRequired,
-    changeSelectedId: PropTypes.func.isRequired
+    changeSelectedId: PropTypes.func.isRequired,
+    onEdit: PropTypes.func
 };
 
 function mapDispatchToProps(dispatch) {

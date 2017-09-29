@@ -52,6 +52,10 @@ const DndButton = ({onClick, buttonType}) => {
             fontawesomeStyle += 'search';
             bootstrapStyle += 'default';
             break;
+        case 'view':
+            fontawesomeStyle += 'eye';
+            bootstrapStyle += 'primary';
+            break;
         default:
             fontawesomeStyle += 'cog';
             bootstrapStyle += 'primary';

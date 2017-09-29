@@ -8,6 +8,7 @@ class DndListItemButtonBar extends React.Component {
         super(props, context);
         this._onEdit = this._onEdit.bind(this);
         this._onDelete = this._onDelete.bind(this);
+        this._onViewDetails = this._onViewDetails.bind(this);
     }
 
     _onEdit() {
@@ -16,6 +17,10 @@ class DndListItemButtonBar extends React.Component {
 
     _onDelete() {
         this.props.onDelete(this.props.listItem.id);
+    }
+    
+    _onViewDetails() {
+        this.props.onViewDetails(this.props.listItem.id);
     }
 
     render() {
@@ -26,10 +31,17 @@ class DndListItemButtonBar extends React.Component {
         } else {
             deleteButton = (<DndButton onClick={this._onDelete} buttonType="delete" />);
         }
+        let detailsButton = null;
+        if (this.props.showDetailsButton) {
+            detailsButton = (<DndButton onClick={this._onViewDetails} buttonType="view" />);
+        } else {
+            detailsButton = null;
+        }
         const popoverButtons = (
             <Popover id="options-popover">
                 <ButtonGroup>
                     {deleteButton}
+                    {detailsButton}
                     <DndButton onClick={this._onEdit} buttonType="edit" />
                 </ButtonGroup>
             </Popover>
@@ -49,8 +61,10 @@ class DndListItemButtonBar extends React.Component {
 DndListItemButtonBar.propTypes = {
     listItem: PropTypes.object.isRequired,
     onEdit: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    hideDeleteButton: PropTypes.bool
+    onDelete: PropTypes.func,
+    onViewDetails: PropTypes.func,
+    hideDeleteButton: PropTypes.bool,
+    showDetailsButton: PropTypes.bool
 };
 
 export default DndListItemButtonBar;

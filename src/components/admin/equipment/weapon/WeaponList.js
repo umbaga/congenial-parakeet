@@ -4,7 +4,7 @@ import WeaponListItem from './WeaponListItem';
 import util from '../../../../util/util';
 
 
-const WeaponList = ({weapons, openModal, selectedId, changeSelectedId}) => {
+const WeaponList = ({weapons, openModal, selectedId, changeSelectedId, onEdit}) => {
     return (
         <tbody>
             <tr>
@@ -20,6 +20,7 @@ const WeaponList = ({weapons, openModal, selectedId, changeSelectedId}) => {
                                 openModal={openModal}
                                 selectedId={selectedId}
                                 changeSelectedId={changeSelectedId}
+                            onEdit={onEdit}
                                />
                           )}
             <tr>
@@ -35,6 +36,7 @@ const WeaponList = ({weapons, openModal, selectedId, changeSelectedId}) => {
                                 openModal={openModal}
                                 selectedId={selectedId}
                                 changeSelectedId={changeSelectedId}
+                            onEdit={onEdit}
                                />
                           )}
             <tr>
@@ -50,6 +52,7 @@ const WeaponList = ({weapons, openModal, selectedId, changeSelectedId}) => {
                                 openModal={openModal}
                                 selectedId={selectedId}
                                 changeSelectedId={changeSelectedId}
+                            onEdit={onEdit}
                                />
                           )}
             <tr>
@@ -65,6 +68,7 @@ const WeaponList = ({weapons, openModal, selectedId, changeSelectedId}) => {
                                 openModal={openModal}
                                 selectedId={selectedId}
                                 changeSelectedId={changeSelectedId}
+                            onEdit={onEdit}
                                />
                           )}
         </tbody>
@@ -75,7 +79,8 @@ WeaponList.propTypes = {
     weapons: PropTypes.array.isRequired,
     openModal: PropTypes.func.isRequired,
     changeSelectedId: PropTypes.func.isRequired,
-    selectedId: PropTypes.number.isRequired
+    selectedId: PropTypes.number.isRequired,
+    onEdit: PropTypes.func
 };
 
 export default WeaponList;

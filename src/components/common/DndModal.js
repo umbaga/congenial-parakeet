@@ -8,10 +8,20 @@ class DndModal extends React.Component {
     }
 
     render() {
+        let actionText = '';
+        if (this.props.canEdit) {
+            if (this.props.isCreate) {
+                actionText = 'Create';
+            } else {
+                actionText = 'Edit';
+            }
+        } else {
+            actionText = 'View';
+        }
         return (
             <Modal show={this.props.showModal} onHide={this.props.closeModal}>
                 <Modal.Header closeButton>
-                    <h4>{this.props.isCreate ? 'Create' : 'Edit'} {this.props.headingCaption}</h4>
+                    <h4>{actionText} {this.props.headingCaption}</h4>
                 </Modal.Header>
                 <Modal.Body>
                     {this.props.children}
@@ -26,7 +36,8 @@ DndModal.propTypes = {
     closeModal: PropTypes.func.isRequired,
     isCreate: PropTypes.bool,
     showModal: PropTypes.bool.isRequired,
-    children: PropTypes.object
+    children: PropTypes.object,
+    canEdit: PropTypes.bool
 };
 
 export default DndModal;

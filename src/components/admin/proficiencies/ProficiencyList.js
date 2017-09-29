@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ProficiencyListItem from './ProficiencyListItem';
 
-const ProficiencyList = ({proficiencies, proficiencyCategory, openModal, selectedId, changeSelectedId}) => {
+const ProficiencyList = ({proficiencies, proficiencyCategory, openModal, selectedId, changeSelectedId, onEdit}) => {
     let listHeader = null;
                                 
     if (proficiencyCategory.requireLanguageInfo && proficiencyCategory.requireAbilityScore) {
@@ -54,6 +54,7 @@ const ProficiencyList = ({proficiencies, proficiencyCategory, openModal, selecte
                                 selectedId={selectedId}
                                proficiencyCategory={proficiencyCategory}
                                 changeSelectedId={changeSelectedId}
+                            onEdit={onEdit}
                                />
             )}
         </tbody>
@@ -66,7 +67,8 @@ ProficiencyList.propTypes = {
     onCreate: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
     changeSelectedId: PropTypes.func.isRequired,
-    selectedId: PropTypes.number.isRequired
+    selectedId: PropTypes.number.isRequired,
+    onEdit: PropTypes.func
 };
 
 export default ProficiencyList;

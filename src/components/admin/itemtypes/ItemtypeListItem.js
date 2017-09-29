@@ -19,6 +19,7 @@ class ItemtypeListItem extends React.Component {
         event.preventDefault();
         this.props.openModal();
         this.props.changeSelectedId(this.props.itemtype.id);
+        this.props.onEdit();
         this.setState({selectedId: this.props.itemtype.id});
     }
     deleteItemType() {
@@ -52,7 +53,8 @@ ItemtypeListItem.propTypes = {
     actions: PropTypes.object,
     openModal: PropTypes.func.isRequired,
     selectedId: PropTypes.number.isRequired,
-    changeSelectedId: PropTypes.func.isRequired
+    changeSelectedId: PropTypes.func.isRequired,
+    onEdit: PropTypes.func
 };
 
 function mapDispatchToProps(dispatch) {
