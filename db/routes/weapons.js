@@ -160,8 +160,9 @@ module.exports = function(app, pg, async, pool) {
                 function updateItemTable(req, callback) {
                     sql = 'UPDATE adm_core_item';
                     sql += ' SET "itemName" = $1';
-                    sql += ' WHERE id = $2'
-                    vals = [req.body.weapon.name, req.params.id];
+                    sql += ', "resourceId" = $2';
+                    sql += ' WHERE id = $3';
+                    vals = [req.body.weapon.name, req.body.weapon.resource.id, req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -666,9 +667,9 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function insertItem(req, callback) {
                     sql = 'INSERT INTO adm_core_item';
-                    sql += ' ("itemName", "itemTypeId")';
-                    sql += ' VALUES ($1, 85) returning id AS "equipmentId";';
-                    vals = [req.body.weapon.name];
+                    sql += ' ("itemName", "resourceId", "itemTypeId")';
+                    sql += ' VALUES ($1, $2, 85) returning id AS "equipmentId";';
+                    vals = [req.body.weapon.name, req.body.weapon.resource.id];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
