@@ -8,18 +8,26 @@ class DndListItemButtonBar extends React.Component {
         super(props, context);
         this._onEdit = this._onEdit.bind(this);
         this._onDelete = this._onDelete.bind(this);
+        this._hidePopover = this._hidePopover.bind(this);
         this._onViewDetails = this._onViewDetails.bind(this);
     }
 
     _onEdit() {
+        this._hidePopover();
         this.props.onEdit(this.props.listItem.id);
     }
 
     _onDelete() {
+        this._hidePopover();
         this.props.onDelete(this.props.listItem.id);
     }
     
+    _hidePopover() {
+        this.refs.buttonPopover.hide();
+    }
+    
     _onViewDetails() {
+        this._hidePopover();
         this.props.onViewDetails(this.props.listItem.id);
     }
 
@@ -49,7 +57,7 @@ class DndListItemButtonBar extends React.Component {
         return (
             <div className={wrapperClass}>
                 <div className="pull-right">
-                    <OverlayTrigger trigger="click" rootClose placement="left" overlay={popoverButtons}>
+                    <OverlayTrigger trigger="click" rootClose placement="left" overlay={popoverButtons} ref="buttonPopover">
                         <DndButton buttonType="hamburger" />
                     </OverlayTrigger>
                 </div>
