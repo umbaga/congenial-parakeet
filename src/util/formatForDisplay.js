@@ -111,21 +111,96 @@ number.addCommas = function(val) {
     }
     return retVal;
 };
-number.coin = function(val) {
+number.renderAsWord = function(val) {
+    let retVal = '';
+    switch (val) {
+        case 1:
+            retVal = 'one';
+            break;
+        case 2:
+            retVal = 'two';
+            break;
+        case 3:
+            retVal = 'three';
+            break;
+        case 4:
+            retVal = 'four';
+            break;
+        case 5:
+            retVal = 'five';
+            break;
+        case 6:
+            retVal = 'six';
+            break;
+        case 7:
+            retVal = 'seven';
+            break;
+        case 8:
+            retVal = 'eight';
+            break;
+        case 9:
+            retVal = 'nine';
+            break;
+        case 10:
+            retVal = 'ten';
+            break;
+        case 11:
+            retVal = 'eleven';
+            break;
+        case 12:
+            retVal = 'twelve';
+            break;
+        default:
+            retVal = val.toString();
+    }
+    return retVal;
+};
+number.coin = function(val, fullNames) {
     let retVal = util.unicode.punctuation.longDash;
+    let coinTypes = ['gp', 'sp', 'cp'];
+    if (fullNames) {
+        coinTypes = ['gold piece', 'silver piece', 'copper piece'];
+    }
     if (val && val != 0) {
         retVal = '';
         let goldVal = Math.floor(val);
         let silverVal = Math.floor((val - goldVal) * 10 + 0.1);
         let copperVal = Math.round((val - goldVal - (silverVal / 10)) * 100);
         if (goldVal != 0) {
-            retVal += util.format.forDisplay.number.addCommas(goldVal) + ' gp ';
+            retVal += util.format.forDisplay.number.addCommas(goldVal) + ' ';
+            if (fullNames) {
+                retVal += util.format.forDisplay.string.renderSingularPlural(coinTypes[0], goldVal);
+            } else {
+                retVal += coinTypes[0];
+            }
+            if (goldVal != 0) {
+                if (silverVal != 0 || copperVal != 0) {
+                    if (silverVal != 0 && copperVal != 0) {
+                        retVal += ', ';
+                    } else {
+                        retVal += ' and ';
+                    }
+                }
+            }
         }
         if (silverVal != 0) {
-            retVal += silverVal + ' sp ';
+            retVal += silverVal + ' ';
+            if (fullNames) {
+                retVal += util.format.forDisplay.string.renderSingularPlural(coinTypes[1], silverVal);
+            } else {
+                retVal += coinTypes[1];
+            }
+            if (copperVal != 0) {
+                retVal += ' and ';
+            }
         }
         if (copperVal != 0) {
-            retVal += copperVal + ' cp ';
+            retVal += copperVal + ' ';
+            if (fullNames) {
+                retVal += util.format.forDisplay.string.renderSingularPlural(coinTypes[2], copperVal);
+            } else {
+                retVal += coinTypes[2];
+            }
         }
     }
     return retVal;
@@ -158,6 +233,14 @@ obj.armorClass = function(val) {
     }
     return retVal;
 };
+obj.equipmentList = function(val) {
+    let retVal = '';
+    for (let y = 0; y < val.assignedEquipment.length; y++) {
+        retVal += val.assignedEquipment[y].name + ', ';
+    }
+    retVal += ' and a pouch containing ' + util.format.forDisplay.number.coin(val.startingGold, true) + '.';
+    return retVal;
+};
 obj.equipmentName = function(val) {
     let retVal = val.name;
     if (val.count != 1 && val.unit.length != 0) {
@@ -166,6 +249,33 @@ obj.equipmentName = function(val) {
         retVal += ' (' + val.count.toString() + ')';
     } else if (val.count == 1 && val.unit.length != 0) {
         retVal += ' (' + val.unit + ')';
+    }
+    return retVal;
+};
+obj.proficiencyGroup = function(val) {
+    let retVal = '';
+    switch (val.mechanic.id) {
+        case util.picklistInfo.ASSIGNMENT_PROFICIENCY_MECHANIC:
+            for (let x = 0; x < val.proficiencies.length; x++) {
+                retVal += val.proficiencies[x].name;
+                if (x < val.proficiencies.length - 1) {
+                    retVal += ', ';
+                }
+            }
+            break;
+        case util.picklistInfo.SELECT_FROM_CATEGORY_PROFICIENCY_MECHANIC:
+            retVal = 'You gain proficiency with ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount);
+            break;
+        case util.picklistInfo.SELECT_FROM_LIST_PROFICIENCY_MECHANIC:
+            retVal = 'Select ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' from the following ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount) + ': ';
+            for (let x = 0; x < val.proficiencies.length; x++) {
+                retVal += val.proficiencies[x].name;
+                if (x < val.proficiencies.length - 1) {
+                    retVal += ', ';
+                }
+            }
+            break;
+        default:
     }
     return retVal;
 };
@@ -191,5 +301,16 @@ string.reorderCommaSeparatedString = function(val) {
         retVal = tmpArr[1] + ' ' + tmpArr[0];
     }
     return retVal;
+};
+string.renderSingularPlural = function(val, count) {
+    if (count == 1) {
+        return val;
+    } else {
+        if (val.charAt(val.length - 1).toLowerCase() == 'y') {
+            return val.toString().substring(0, val.length - 1) + 'ies';
+        } else {
+            return val + 's';
+        }
+    }
 };
 export {bool, string, number, array, obj};

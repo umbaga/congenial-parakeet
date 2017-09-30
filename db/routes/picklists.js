@@ -128,6 +128,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ', wpnProp."requireAmmunition"';
             sql += ', wpnProp."requireDescription"';
             sql += ', profcat."isEquipmentBased"';
+            sql += ', profcat."parentId"';
             sql += ', profcat."requireAbilityScore"';
             sql += ', profcat."requireLanguageInfo") x ORDER BY i."orderIndex", i."itemName")) AS items';
             sql += ' FROM adm_core_type t';

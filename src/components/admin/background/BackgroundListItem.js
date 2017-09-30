@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import util from '../../../util/util';
 import DndListItemButtonBar from '../../common/DndListItemButtonBar';
 import * as backgroundActions from '../../../actions/admin/backgroundActions';
 
@@ -39,7 +38,7 @@ class BackgroundListItem extends React.Component {
     render() {
         return (
             <tr key={this.props.background.id}>
-                <td>{this.props.background.name} - {util.format.forDisplay.bool.asCheckX(true)}</td>
+                <td>{this.props.background.name}</td>
                 <td>
                     <DndListItemButtonBar
                         listItem={this.props.background}

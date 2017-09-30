@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import util from '../../../util/util';
+import DndProficiencyGroupDisplay from '../../common/display/DndProficiencyGroupDisplay';
+import DndChartDisplay from '../../common/display/DndChartDisplay';
 
 class BackgroundDetails extends React.Component {
     constructor(props) {
@@ -12,26 +14,24 @@ class BackgroundDetails extends React.Component {
     }
     
     render() {
-        console.log(this.props.background);
+        const background = this.props.background;
+        //const proficiencyCategories = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.PROFICIENCY_CATEGORY);
+        console.log(background);
+        console.log(this.props.picklists);
         return (
-            <div className="col-md-12">
-                DETAILS
-                {this.props.background.name}
-                {util.format.forDisplay.bool.asCheckX(true)}
-                <div className="col-md-12">
-                    DETAILS
-                    {this.props.background.name}
-                    {util.format.forDisplay.bool.asCheckX(true)}
-                </div>
-                <div className="col-md-12">
-                    DETAILS
-                    {this.props.background.name}
-                    {util.format.forDisplay.bool.asCheckX(true)}
-                </div>
-                <div className="col-md-12">
-                    DETAILS
-                    {this.props.background.name}
-                    {util.format.forDisplay.bool.asCheckX(true)}
+            <div>
+                <div>{background.name}</div>
+                <div>{background.description}</div>
+                <DndProficiencyGroupDisplay
+                    proficiencyGroups={background.proficiencyGroups}
+                    />
+                <div>
+                    <div>
+                        <div>Equipment:</div>
+                        <div>
+                            {util.format.forDisplay.obj.equipmentList(background)}
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -39,7 +39,8 @@ class BackgroundDetails extends React.Component {
 }
 
 BackgroundDetails.propTypes = {
-    background: PropTypes.object.isRequired
+    background: PropTypes.object.isRequired,
+    picklists: PropTypes.array
 };
 
 export default BackgroundDetails;

@@ -55,9 +55,7 @@ class BackgroundListPage extends React.Component {
     }
 
     onEdit() {
-        console.log('onEdit');
         this.setState({isCreate: false, canEdit: true});
-        console.log(this.state);
     }
     
     onViewDetails() {

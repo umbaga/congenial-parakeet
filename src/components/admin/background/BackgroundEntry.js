@@ -40,7 +40,6 @@ class BackgroundEntry extends React.Component {
 
     deleteBackground(event) {
         event.preventDefault();
-        console.log('delete button pushed');
         if (confirm('are you sure?')) {
             //this.props.actions.deleteBackground(this.state.background);
             this.postAction();
@@ -66,7 +65,6 @@ class BackgroundEntry extends React.Component {
     saveBackground(event) {
         event.preventDefault();
         this.setState({saving: true});
-        console.log('save button pushed');
         //this.props.actions.upsertBackground(this.state.background);
     }
 
@@ -99,6 +97,7 @@ class BackgroundEntry extends React.Component {
         let contents = (
             <BackgroundDetails
                 background={this.state.background}
+                picklists={this.props.picklists}
                 />
         );
         if (this.props.canEdit) {
