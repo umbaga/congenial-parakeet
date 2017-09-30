@@ -219,6 +219,7 @@ module.exports = function(app, pg, async, pool) {
             sql += '          SELECT  ';
             sql += '              c.id,       ';
             sql += '              c.title,';
+            sql += '          	cd.description,';
             sql += '          	bgcht."orderIndex",';
             sql += '              json_agg(cm) AS entries';
             sql += '              , json_build_object(';
@@ -233,7 +234,8 @@ module.exports = function(app, pg, async, pool) {
             sql += '          INNER JOIN adm_link_chart bgcht ON bgcht."chartId" = c.id';
             sql += '          INNER JOIN adm_def_chart_entry cm ON (cm."chartId" = c.id) ';
             sql += '          INNER JOIN adm_core_dice dice ON dice.id = c."diceId"';
-            sql += '          GROUP BY c.id, dice."dieType", dice."dieCount", bgcht."orderIndex"';
+            sql += '          LEFT OUTER JOIN adm_core_description cd ON cd."itemId" = c.id';
+            sql += '          GROUP BY c.id, dice."dieType", dice."dieCount", bgcht."orderIndex", cd.description';
             sql += '          ORDER BY bgcht."orderIndex"';
             sql += '      ) chart_row ON (chart_row.id = dc."chartId")';
             sql += '      GROUP BY d.id';
@@ -329,6 +331,16 @@ module.exports = function(app, pg, async, pool) {
             });
             query.on('end', function() {
                 done();
+                for (var t = 0; t < results.length; t++) {
+                    results[t].charts = results[t].charts.sort(function (a, b) {
+                        return a.orderIndex - b.orderIndex;
+                    })
+                    for (var x = 0; x < results[t].charts.length; x++) {
+                        results[t].charts[x].entries = results[t].charts[x].entries.sort(function (a, b) {
+                            return a.minimum - b.minimum;
+                        });
+                    }
+                }
                 return res.json(results);
             });
         });

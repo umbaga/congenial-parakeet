@@ -7,17 +7,58 @@ import DndChartDisplay from '../../common/display/DndChartDisplay';
 class BackgroundDetails extends React.Component {
     constructor(props) {
         super(props);
+        this.renderEquipmentInfo = this.renderEquipmentInfo.bind(this);
+        this.renderFeatureInfo = this.renderFeatureInfo.bind(this);
+        this.renderVariantInfo = this.renderVariantInfo.bind(this);
     }
     
     componentDidMount() {
         
     }
     
+    renderEquipmentInfo(background) {
+        return (
+            <div>
+                <div>
+                    <div>Equipment:</div>
+                    <div>
+                        {util.format.forDisplay.obj.equipmentList(background)}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    
+    renderFeatureInfo(feature, isVariant) {
+        let heading = 'Feature';
+        if (isVariant) {
+            heading = 'Feature Variant';
+        }
+        return (
+            <div>
+                <div>{heading}: {feature.name}</div>
+                <div>{feature.description}</div>
+            </div>
+        );
+    }
+    
+    renderVariantInfo(background) {
+        if (background.variants.length == 0) {
+            return null;
+        } else {
+            let variantDisplay = null;
+            variantDisplay = background.variants.map(variant =>
+                <div key={variant.id}>
+                    <div>Variant: {variant.name}</div>
+                    {this.renderFeatureInfo(variant.feature, true)}
+                </div>
+            );
+            return (<div>{variantDisplay}</div>);
+        }
+    }
+    
     render() {
         const background = this.props.background;
-        //const proficiencyCategories = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.PROFICIENCY_CATEGORY);
-        console.log(background);
-        console.log(this.props.picklists);
         return (
             <div>
                 <div>{background.name}</div>
@@ -25,14 +66,17 @@ class BackgroundDetails extends React.Component {
                 <DndProficiencyGroupDisplay
                     proficiencyGroups={background.proficiencyGroups}
                     />
-                <div>
-                    <div>
-                        <div>Equipment:</div>
-                        <div>
-                            {util.format.forDisplay.obj.equipmentList(background)}
-                        </div>
-                    </div>
-                </div>
+                {this.renderEquipmentInfo(background)}
+                {this.renderFeatureInfo(background.feature)}
+                {this.renderVariantInfo(background)}
+                {
+                    background.charts.map(chart =>
+                                          <DndChartDisplay
+                                              key={chart.id}
+                                              chart={chart}
+                                              />
+)
+                }
             </div>
         );
     }

@@ -281,7 +281,7 @@ obj.proficiencyGroup = function(val) {
 };
 
 let string = {};
-string.dieRoll = function(val) {
+string.dieRoll = function(val, omitOnes) {
     let retVal = '';
     if (val) {
         if (val.dieCount == 0 || val.dieType == 0) {
@@ -289,10 +289,23 @@ string.dieRoll = function(val) {
         } else if (val.dieType == 1) {
             retVal = val.dieCount.toString();
         } else {
-            retVal = val.dieCount.toString() + 'd' + val.dieType.toString();
+            if (omitOnes) {
+                if (val.dieCount != 1) {
+                    retVal = val.dieCount.toString();
+                }
+                retVal += 'd' + val.dieType.toString();
+            } else {
+                retVal = val.dieCount.toString() + 'd' + val.dieType.toString();
+            }
         }
     }
     return retVal.toString();
+};
+string.dieRollValueRange = function(val) {
+    if (val.minimum == val.maximum) {
+        return val.minimum.toString();
+    }
+    return val.minimum + '-' + val.maximum;
 };
 string.reorderCommaSeparatedString = function(val) {
     let retVal = val;
