@@ -25,7 +25,9 @@ class DndModal extends React.Component {
                     <h4>{actionText} {this.props.headingCaption}</h4>
                 </Modal.Header>
                 <Modal.Body>
-                    {this.props.children}
+                    <div className="clearfix">
+                        {this.props.children}
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <DndDataEntryButtonBar
