@@ -24,6 +24,9 @@ class BackgroundEntry extends React.Component {
         this.saveAndNewBackground = this.saveAndNewBackground.bind(this);
         this.saveBackground = this.saveBackground.bind(this);
         this.updateFormState = this.updateFormState.bind(this);
+        this.removeEquipment = this.removeEquipment.bind(this);
+        this.addEquipment = this.addEquipment.bind(this);
+        this.changeEquipmentCount = this.changeEquipmentCount.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -31,6 +34,32 @@ class BackgroundEntry extends React.Component {
             this.setState({background: nextProps.background});
         }
         this.setState({saving: false});
+    }
+    
+    addEquipment () {
+        const background = this.state.background;
+        const selectedEquipment = this.state.selectedEquipment;
+        selectedEquipment.assignedCount = 1;
+        background.assignedEquipment.push(selectedEquipment);
+        return this.setState({background: background});
+    }
+    
+    removeEquipment (equipmentItem) {
+        const background = this.state.background;
+        const indexOfItemToRemove = this.props.background.assignedEquipment.findIndex(item => {
+            return item.id == equipmentItem.id;
+        });
+        background.assignedEquipment.splice(indexOfItemToRemove, 1);
+        return this.setState({background: background});
+    }
+    
+    changeEquipmentCount (event, equipmentItem) {
+        const background = Object.assign({}, this.state.background);
+        const itemIndex = this.props.background.assignedEquipment.findIndex(item => {
+            return item.id == equipmentItem.id;
+        });
+        background.assignedEquipment[itemIndex].assignedCount = event.target.value / background.assignedEquipment[itemIndex].count;
+        return this.setState({background: background});
     }
 
     cancelBackground(event) {
@@ -74,16 +103,19 @@ class BackgroundEntry extends React.Component {
         const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         let newSelectedValue = {};
         switch (dataType) {
-            case util.dataTypes.number.COIN:
-            case util.dataTypes.number.INT:
             case util.dataTypes.string.STRING:
-            case util.dataTypes.number.WEIGHT:
+            case util.dataTypes.number.DESCRIPTION:
                 background[field] = event.target.value;
                 break;
-            case util.dataTypes.picklist.BACKGROUND_PROFICIENCY:
+            case util.dataTypes.picklist.RESOURCE:
                 newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                 newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                 background[field] = newSelectedValue;
+                break;
+            case util.dataTypes.obj.EQUIPMENT:
+                if (event.target.value != 0) {
+                    return this.setState({selectedEquipment: this.props.equipments.filter((equipment) => equipment.id == event.target.value)[0]});
+                }
                 break;
             case util.dataTypes.bool.BOOL:
             case util.dataTypes.bool.HAS_DISADVANTAGE:
@@ -109,6 +141,10 @@ class BackgroundEntry extends React.Component {
                     picklists={this.props.picklists}
                     saving={this.state.saving}
                     onChange={this.updateFormState}
+                    addEquipment={this.addEquipment}
+                    removeEquipment={this.removeEquipment}
+                    changeEquipmentCount={this.changeEquipmentCount}
+                    equipments={this.props.equipments}
                     />
             );
         }
@@ -138,7 +174,8 @@ BackgroundEntry.propTypes = {
     openModal: PropTypes.func.isRequired,
     showModal: PropTypes.bool.isRequired,
     isCreate: PropTypes.bool,
-    picklists: PropTypes.array
+    picklists: PropTypes.array,
+    equipments: PropTypes.array
 };
 
 function getBackgroundById(backgrounds, id) {

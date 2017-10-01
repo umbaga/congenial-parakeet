@@ -104,6 +104,7 @@ class BackgroundListPage extends React.Component {
                     showModal={this.state.showModal}
                     onEdit={this.onEdit}
                     onViewDetails={this.onViewDetails}
+                    equipments={this.props.equipments}
                     />
             </div>
         );
@@ -114,7 +115,8 @@ BackgroundListPage.propTypes = {
     backgrounds: PropTypes.array.isRequired,
     actions: PropTypes.object,
     children: PropTypes.object,
-    picklists: PropTypes.array
+    picklists: PropTypes.array,
+    equipments: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {
@@ -122,14 +124,20 @@ function mapStateToProps(state) {
     if (state.picklists.length > 0) {
         picklists = Object.assign([{}], state.picklists);
     }
+    let equipments = Object.assign([{}], [util.objectModel.EQUIPMENT]);
+    if (state.equipments.length > 0) {
+        equipments = Object.assign([{}], state.equipments);
+    }
     if (state.backgrounds.length > 0) {
         return {
+            equipments: equipments,
             backgrounds: state.backgrounds,
             picklists: picklists
         };
     } else {
         return {
-            backgrounds: [util.objectModel.BACKGROUND],
+            equipments: equipments,
+            backgrounds: [util.objectModel.EQUIPMENT_PACK],
             picklists: picklists
         };
     }

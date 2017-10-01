@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndButton from '../../../common/DndButton';
 import DndInput from '../../../common/DndInput';
 import DndUniversalInput from '../../../common/DndUniversalInput';
-import DndInputWrapper from '../../../common/DndInputWrapper';
+import DndManageAssignedItems from '../../../common/DndManageAssignedItems';
 import PackEquipmentItemRow from './PackEquipmentItemRow';
 import util from '../../../../util/util';
 
@@ -102,35 +101,20 @@ class PackForm extends React.Component {
                              />
                     </div>
                     <div className="col-md-12">
-                        <DndInputWrapper
+                        <DndManageAssignedItems
+                            name="selectedEquipment"
                             dataType={util.dataTypes.array.ASSIGNED_EQUIPMENT}
-                            label="Assigned Equipment">
-                            <div>
-                                <div className="input-group">
-                                    <select
-                                        name="selectedEquipment"
-                                        className="form-control"
-                                        onChange={this.props.onChange}
-                                        datatype={util.dataTypes.obj.EQUIPMENT}
-                                        >
-                                        <option value="0">SELECT ONE</option>
-                                        {util.picklistInfo.filterPicklistByAssigned(this.props.equipments, this.props.pack.assignedEquipment).map(equipmentItem =>
-                                                                 <option
-                                                                     key={equipmentItem.id}
-                                                                     value={equipmentItem.id}>
-                                                                     {equipmentItem.name}
-                                                                 </option>)}
-                                    </select>
-                                    <span className="input-group-btn">
-                                        <DndButton
-                                            buttonType="additem"
-                                            onClick={this._addEquipmentItem}
-                                            />
-                                    </span>
-                                </div>
-                                {this.renderEquipmentItemList()}
-                            </div>
-                        </DndInputWrapper>
+                            label="Assigned Equipment"
+                            picklist={this.props.equipments}
+                            valueArray={this.props.pack.assignedEquipment}
+                            addItem={this._addEquipmentItem}
+                            onChange={this.props.onChange}
+                            removeItem={this._removeEquipmentItem}
+                            changeCount={this._changeEquipmentCount}
+                            itemListTitle="Equipment"
+                            showCount
+                            supplementalText="unit"
+                            />
                     </div>
                 </form>
             </div>
