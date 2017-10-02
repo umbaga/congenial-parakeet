@@ -256,11 +256,16 @@ module.exports = function(app, pg, async, pool) {
             sql += '                  \'name\', feature."itemName",';
             sql += '                  \'description\', featuredesc.description';
             sql += '              ) AS "feature"';
+          	sql += '              , json_build_object(';
+            sql += '                  	\'id\', varres."id",';
+            sql += '                  	\'name\', varres."itemName"';
+            sql += '                  ) AS "resource"
             sql += '          FROM adm_core_item c';
             sql += '          INNER JOIN adm_def_background_variant bgcht ON bgcht."variantBackgroundId" = c.id';
             sql += '          INNER JOIN adm_core_item feature ON (feature."id" = bgcht."featureId") ';
             sql += '          INNER JOIN adm_core_description featuredesc ON featuredesc."itemId" = bgcht."featureId"';
-            sql += '          GROUP BY c.id, feature."id", feature."itemName", featuredesc.description';
+            sql += '          INNER JOIN adm_core_item varres ON varres.id = c."resourceId"';
+            sql += '          GROUP BY c.id, feature."id", feature."itemName", featuredesc.description, varres."id"';
             sql += '      ) variant_row ON (variant_row.id = dc."variantBackgroundId")';
             sql += '      GROUP BY dc."backgroundId"';
             sql += '  ) r(variants, id) WHERE id = i.id) AS variants';
