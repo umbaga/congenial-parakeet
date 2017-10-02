@@ -81,6 +81,7 @@ class DndInput extends React.Component {
             case util.dataTypes.picklist.LANGUAGE_RARITY:
             case util.dataTypes.picklist.LANGUAGE_SCRIPT:
             case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
+            case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
             case util.dataTypes.picklist.RESOURCE:
             case util.dataTypes.picklist.WEAPON_CATEGORY:
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
@@ -100,6 +101,7 @@ class DndInput extends React.Component {
                                                  </option>)}
                     </select>);
                 break;
+            case util.dataTypes.array.PROFICIENCIES:
             case util.dataTypes.array.WEAPON_PROPERTIES:
                 primaryInput = (
                     <DndToggleBoxes

@@ -5,6 +5,7 @@ import DndUniversalInput from '../../common/DndUniversalInput';
 import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
 import DndManageAssignedItems from '../../common/DndManageAssignedItems';
+import DndManageProficiencyGroups from '../../common/DndManageProficiencyGroups';
 
 class BackgroundForm extends React.Component {
     constructor(props) {
@@ -54,11 +55,32 @@ class BackgroundForm extends React.Component {
                                 onChange={this.props.onChange}
                                 picklists={this.props.picklists}
                                 />
+                            <DndInput
+                                name="feature.name"
+                                label="Feature Name"
+                                dataType={util.dataTypes.string.STRING}
+                                value={this.props.background.feature.name}
+                                onChange={this.props.onChange} />
+                            <DndInput
+                                name="feature.description"
+                                label="Feature Description"
+                                dataType={util.dataTypes.string.DESCRIPTION}
+                                value={this.props.background.feature.description}
+                                onChange={this.props.onChange} />
                         </Tab>
                         <Tab eventKey={2} title="Proficiencies">
                             <div>&nbsp;</div>
-                            <div>Form Elements Here</div>
-                            <div>List of Proficiency Groups</div>
+                            <DndManageProficiencyGroups
+                                proficiencyGroups={this.props.background.proficiencyGroups}
+                                onChange={this.props.onChange}
+                                onProficiencyGroupChange={this.props.onProficiencyGroupChange}
+                                picklists={this.props.picklists}
+                                proficiencies={this.props.proficiencies}
+                                proficiencyGroup={this.props.proficiencyGroup}
+                                addProficiencyGroup={this.props.addProficiencyGroup}
+                                removeProficiencyGroup={this.props.removeProficiencyGroup}
+                                resetProficiencyGroup={this.props.resetProficiencyGroup}
+                                />
                         </Tab>
                         <Tab eventKey={3} title="Equipment">
                             <div>&nbsp;</div>
@@ -89,6 +111,10 @@ class BackgroundForm extends React.Component {
                             <div>&nbsp;</div>
                             <div>MANAGE Charts goes here</div>
                         </Tab>
+                        <Tab eventKey={5} title="Varaint Features">
+                            <div>&nbsp;</div>
+                            <div>MANAGE Variants goes here</div>
+                        </Tab>
                     </Tabs>
                 </form>
             </div>
@@ -108,7 +134,13 @@ BackgroundForm.propTypes = {
     onViewDetails: PropTypes.func,
     saving: PropTypes.bool,
     picklists: PropTypes.array,
-    equipments: PropTypes.array
+    equipments: PropTypes.array,
+    proficiencies: PropTypes.array,
+    proficiencyGroup: PropTypes.object.isRequired,
+    onProficiencyGroupChange: PropTypes.func.isRequired,
+    addProficiencyGroup: PropTypes.func.isRequired,
+    removeProficiencyGroup: PropTypes.func.isRequired,
+    resetProficiencyGroup: PropTypes.func.isRequired
 };
 
 export default BackgroundForm;

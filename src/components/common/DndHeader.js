@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as sessionActions from '../../actions/sessionActions';
 
-
 class Header extends React.Component {
     constructor() {
         super();

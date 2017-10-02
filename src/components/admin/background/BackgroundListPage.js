@@ -105,6 +105,7 @@ class BackgroundListPage extends React.Component {
                     onEdit={this.onEdit}
                     onViewDetails={this.onViewDetails}
                     equipments={this.props.equipments}
+                    proficiencies={this.props.proficiencies}
                     />
             </div>
         );
@@ -116,7 +117,8 @@ BackgroundListPage.propTypes = {
     actions: PropTypes.object,
     children: PropTypes.object,
     picklists: PropTypes.array,
-    equipments: PropTypes.array.isRequired
+    equipments: PropTypes.array.isRequired,
+    proficiencies: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {
@@ -132,13 +134,15 @@ function mapStateToProps(state) {
         return {
             equipments: equipments,
             backgrounds: state.backgrounds,
-            picklists: picklists
+            picklists: picklists,
+            proficiencies: state.proficiencies
         };
     } else {
         return {
             equipments: equipments,
             backgrounds: [util.objectModel.EQUIPMENT_PACK],
-            picklists: picklists
+            picklists: picklists,
+            proficiencies: [util.objectModel.PROFICIENCY]
         };
     }
 }

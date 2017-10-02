@@ -39,6 +39,10 @@ const DndButton = ({onClick, buttonType}) => {
             fontawesomeStyle += 'minus-circle';
             bootstrapStyle += 'default';
             break;
+        case 'reset':
+            fontawesomeStyle += 'undo';
+            bootstrapStyle += 'primary';
+            break;
         case 'save':
             fontawesomeStyle += 'floppy-o';
             bootstrapStyle += 'primary';

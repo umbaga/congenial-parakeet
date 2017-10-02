@@ -15,6 +15,7 @@ class BackgroundEntry extends React.Component {
             background: this.props.background,
             isCreate: this.props.isCreate,
             canEdit: this.props.canEdit,
+            proficiencyGroup: Object.assign({}, util.objectModel.PROFICIENCY_GROUP),
             saving: false
         };
         this.cancelBackground = this.cancelBackground.bind(this);
@@ -27,6 +28,10 @@ class BackgroundEntry extends React.Component {
         this.removeEquipment = this.removeEquipment.bind(this);
         this.addEquipment = this.addEquipment.bind(this);
         this.changeEquipmentCount = this.changeEquipmentCount.bind(this);
+        this.updateProficiencyGroupState = this.updateProficiencyGroupState.bind(this);
+        this.addProficiencyGroup = this.addProficiencyGroup.bind(this);
+        this.removeProficiencyGroup = this.removeProficiencyGroup.bind(this);
+        this.resetProficiencyGroup = this.resetProficiencyGroup.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -97,15 +102,64 @@ class BackgroundEntry extends React.Component {
         //this.props.actions.upsertBackground(this.state.background);
     }
 
+    updateProficiencyGroupState(event) {
+        let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
+        const groupItemCount = -1 * this.state.background.proficiencyGroups.length;
+        const proficiencyGroup = this.state.proficiencyGroup;
+        proficiencyGroup.id = groupItemCount;
+        let newSelectedValue = {};
+        let isAssign = field.split('Unassigned').length == 2 ? true : false;
+        let removeThisId = event.target.value;
+        let removeThisIndex = -1;
+        let referencePicklistItem = util.picklistInfo.getPicklistItemFromSinglePicklist(this.props.proficiencies, removeThisId);
+        let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
+        switch (dataType) {
+            case util.dataTypes.number.INT:
+                proficiencyGroup[field] = event.target.value;
+                break;
+            case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
+            case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
+                newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                proficiencyGroup[field] = newSelectedValue;
+                break;
+            case util.dataTypes.array.PROFICIENCIES:
+                if (isAssign) {
+                    field = field.split('Unassigned')[0];
+                    proficiencyGroup[field].push(referencePicklistItem);
+                } else {
+                    for (let b = 0; b < proficiencyGroup.proficiencies.length; b++) {
+                        if (proficiencyGroup.proficiencies[b].id == referencePicklistItem.id) {
+                            removeThisIndex = b;
+                            break;
+                        }
+                    }
+                    proficiencyGroup[field].splice(removeThisIndex, 1);
+                }
+                break;
+            default:
+        }
+        return this.setState({proficiencyGroup: proficiencyGroup});
+    }
+    
     updateFormState(event) {
         let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
         const background = this.state.background;
         const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         let newSelectedValue = {};
+        let field2 = null;
+        if (field.split('.').length > 1) {
+            field2 = field.split('.')[1];
+            field = field.split('.')[0];
+        }
         switch (dataType) {
             case util.dataTypes.string.STRING:
-            case util.dataTypes.number.DESCRIPTION:
-                background[field] = event.target.value;
+            case util.dataTypes.string.DESCRIPTION:
+                if (field2) {
+                    background[field][field2] = event.target.value;
+                } else {
+                    background[field] = event.target.value;
+                }
                 break;
             case util.dataTypes.picklist.RESOURCE:
                 newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
@@ -117,14 +171,39 @@ class BackgroundEntry extends React.Component {
                     return this.setState({selectedEquipment: this.props.equipments.filter((equipment) => equipment.id == event.target.value)[0]});
                 }
                 break;
-            case util.dataTypes.bool.BOOL:
-            case util.dataTypes.bool.HAS_DISADVANTAGE:
-                background[field] = !background[field];
-                break;
             default:
         }
         return this.setState({background: background});
     }
+    
+    addProficiencyGroup() {
+        const background = this.state.background;
+        background.proficiencyGroups.push(this.state.proficiencyGroup);
+        const newProficiencyGroup = Object.assign({}, util.objectModel.PROFICIENCY_GROUP);
+        newProficiencyGroup.proficiencies = Object.assign([], []);
+        return this.setState({background: background, proficiencyGroup: newProficiencyGroup});
+    }
+    
+    removeProficiencyGroup(group) {
+        const background = this.state.background;
+        let removeIndex = -1;
+        for (let g = 0; g < background.proficiencyGroups.length; g++) {
+            if (background.proficiencyGroups[g].id == group.id) {
+                removeIndex = g;
+            }
+        }
+        if (removeIndex != -1) {
+            background.proficiencyGroups.splice(removeIndex, 1);
+        }
+        return this.setState({background: background});
+    }
+    
+    resetProficiencyGroup() {
+        const proficiencyGroup = Object.assign({}, util.objectModel.PROFICIENCY_GROUP);
+        proficiencyGroup.proficiencies = Object.assign([], []);
+        return this.setState({proficiencyGroup: proficiencyGroup});
+    }
+        
     render() {
         let contents = (
             <BackgroundDetails
@@ -145,6 +224,12 @@ class BackgroundEntry extends React.Component {
                     removeEquipment={this.removeEquipment}
                     changeEquipmentCount={this.changeEquipmentCount}
                     equipments={this.props.equipments}
+                    proficiencies={this.props.proficiencies}
+                    onProficiencyGroupChange={this.updateProficiencyGroupState}
+                    proficiencyGroup={this.state.proficiencyGroup}
+                    addProficiencyGroup={this.addProficiencyGroup}
+                    removeProficiencyGroup={this.removeProficiencyGroup}
+                    resetProficiencyGroup={this.resetProficiencyGroup}
                     />
             );
         }
@@ -175,7 +260,8 @@ BackgroundEntry.propTypes = {
     showModal: PropTypes.bool.isRequired,
     isCreate: PropTypes.bool,
     picklists: PropTypes.array,
-    equipments: PropTypes.array
+    equipments: PropTypes.array,
+    proficiencies: PropTypes.array
 };
 
 function getBackgroundById(backgrounds, id) {

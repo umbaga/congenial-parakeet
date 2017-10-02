@@ -24,6 +24,12 @@ bool.asTrueFalse = function(val) {
     return 'False';
 };
 
+let obj = {};
+obj.profiencyGroupName = function(val, moduleName) {
+    let retVal = moduleName + ' - ' + val.mechanic.name;
+    return retVal;
+};
+
 let string = {};
 string.dieRoll = function(val) {
     let retVal = val;

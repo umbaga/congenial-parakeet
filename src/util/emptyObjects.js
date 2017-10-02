@@ -148,6 +148,11 @@ export const PROFICIENCY = {
 export const PROFICIENCY_GROUP = {
     id: 0,
     name: '',
+    category: {
+        id: 0,
+        name: '',
+        parentId: 0
+    },
     mechanic: {
         id: 0,
         name: ''

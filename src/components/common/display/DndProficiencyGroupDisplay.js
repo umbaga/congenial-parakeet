@@ -17,22 +17,22 @@ class DndProficiencyGroupDisplay extends React.Component {
         let showTool = false;
         let showWeapon = false;
         for (let x = 0; x < proficiencyGroups.length; x++) {
-            if (proficiencyGroups[x].category.id == util.picklistInfo.ARMOR_PROFICIENCY_CATEGORY || proficiencyGroups[x].category.parentId == util.picklistInfo.ARMOR_PROFICIENCY_CATEGORY) {
+            if (proficiencyGroups[x].category.id == util.picklistInfo.PROFICIENCY_CATEGORY_ARMOR || proficiencyGroups[x].category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_ARMOR) {
                 showArmor = true;
             }
-            if (proficiencyGroups[x].category.id == util.picklistInfo.LANGUAGE_PROFICIENCY_CATEGORY || proficiencyGroups[x].category.parentId == util.picklistInfo.LANGUAGE_PROFICIENCY_CATEGORY) {
+            if (proficiencyGroups[x].category.id == util.picklistInfo.PROFICIENCY_CATEGORY_LANGUAGE || proficiencyGroups[x].category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_LANGUAGE) {
                 showLanguage = true;
             }
-            if (proficiencyGroups[x].category.id == util.picklistInfo.SAVING_THROW_PROFICIENCY_CATEGORY || proficiencyGroups[x].category.parentId == util.picklistInfo.SAVING_THROW_PROFICIENCY_CATEGORY) {
+            if (proficiencyGroups[x].category.id == util.picklistInfo.PROFICIENCY_CATEGORY_SAVING_THROW || proficiencyGroups[x].category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_SAVING_THROW) {
                 showSavingThrow = true;
             }
-            if (proficiencyGroups[x].category.id == util.picklistInfo.SKILL_PROFICIENCY_CATEGORY || proficiencyGroups[x].category.parentId == util.picklistInfo.SKILL_PROFICIENCY_CATEGORY) {
+            if (proficiencyGroups[x].category.id == util.picklistInfo.PROFICIENCY_CATEGORY_SKILL || proficiencyGroups[x].category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_SKILL) {
                 showSkill = true;
             }
-            if (proficiencyGroups[x].category.id == util.picklistInfo.TOOL_PROFICIENCY_CATEGORY || proficiencyGroups[x].category.parentId == util.picklistInfo.TOOL_PROFICIENCY_CATEGORY) {
+            if (proficiencyGroups[x].category.id == util.picklistInfo.PROFICIENCY_CATEGORY_TOOL || proficiencyGroups[x].category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_TOOL) {
                 showTool = true;
             }
-            if (proficiencyGroups[x].category.id == util.picklistInfo.WEAPON_PROFICIENCY_CATEGORY || proficiencyGroups[x].category.parentId == util.picklistInfo.WEAPON_PROFICIENCY_CATEGORY) {
+            if (proficiencyGroups[x].category.id == util.picklistInfo.PROFICIENCY_CATEGORY_WEAPON || proficiencyGroups[x].category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_WEAPON) {
                 showWeapon = true;
             }
         }
@@ -48,7 +48,7 @@ class DndProficiencyGroupDisplay extends React.Component {
                     <span>Armor:</span>
                     <span>
                         {proficiencyGroups.filter(function(group) {
-                            return group.category.id == util.picklistInfo.ARMOR_PROFICIENCY_CATEGORY || group.category.parentId == util.picklistInfo.ARMOR_PROFICIENCY_CATEGORY;
+                            return group.category.id == util.picklistInfo.PROFICIENCY_CATEGORY_ARMOR || group.category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_ARMOR;
                         }).map(group =>
                                <DndProficiencyGroupItem
                                    key={group.id}
@@ -65,7 +65,7 @@ class DndProficiencyGroupDisplay extends React.Component {
                     <span>Languages:</span>
                     <span>
                         {proficiencyGroups.filter(function(group) {
-                            return group.category.id == util.picklistInfo.LANGUAGE_PROFICIENCY_CATEGORY || group.category.parentId == util.picklistInfo.LANGUAGE_PROFICIENCY_CATEGORY;
+                            return group.category.id == util.picklistInfo.PROFICIENCY_CATEGORY_LANGUAGE || group.category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_LANGUAGE;
                         }).map(group =>
                                <DndProficiencyGroupItem
                                    key={group.id}
@@ -82,7 +82,7 @@ class DndProficiencyGroupDisplay extends React.Component {
                     <span>Saving Throws:</span>
                     <span>
                         {proficiencyGroups.filter(function(group) {
-                            return group.category.id == util.picklistInfo.SAVING_THROW_PROFICIENCY_CATEGORY || group.category.parentId == util.picklistInfo.SAVING_THROW_PROFICIENCY_CATEGORY;
+                            return group.category.id == util.picklistInfo.PROFICIENCY_CATEGORY_SAVING_THROW || group.category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_SAVING_THROW;
                         }).map(group =>
                                <DndProficiencyGroupItem
                                    key={group.id}
@@ -99,7 +99,7 @@ class DndProficiencyGroupDisplay extends React.Component {
                     <span>Skills:</span>
                     <span>
                         {proficiencyGroups.filter(function(group) {
-                            return group.category.id == util.picklistInfo.SKILL_PROFICIENCY_CATEGORY || group.category.parentId == util.picklistInfo.SKILL_PROFICIENCY_CATEGORY;
+                            return group.category.id == util.picklistInfo.PROFICIENCY_CATEGORY_SKILL || group.category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_SKILL;
                         }).map(group =>
                                <DndProficiencyGroupItem
                                    key={group.id}
@@ -116,7 +116,7 @@ class DndProficiencyGroupDisplay extends React.Component {
                     <span>Tools:</span>
                     <span>
                         {proficiencyGroups.filter(function(group) {
-                            return group.category.id == util.picklistInfo.TOOL_PROFICIENCY_CATEGORY || group.category.parentId == util.picklistInfo.TOOL_PROFICIENCY_CATEGORY;
+                            return group.category.id == util.picklistInfo.PROFICIENCY_CATEGORY_TOOL || group.category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_TOOL;
                         }).map(group =>
                                <DndProficiencyGroupItem
                                    key={group.id}
@@ -133,7 +133,7 @@ class DndProficiencyGroupDisplay extends React.Component {
                     <span>Weapons:</span>
                     <span>
                         {proficiencyGroups.filter(function(group) {
-                            return group.category.id == util.picklistInfo.WEAPON_PROFICIENCY_CATEGORY || group.category.parentId == util.picklistInfo.WEAPON_PROFICIENCY_CATEGORY;
+                            return group.category.id == util.picklistInfo.PROFICIENCY_CATEGORY_WEAPON || group.category.parentId == util.picklistInfo.PROFICIENCY_CATEGORY_WEAPON;
                         }).map(group =>
                                <DndProficiencyGroupItem
                                    key={group.id}

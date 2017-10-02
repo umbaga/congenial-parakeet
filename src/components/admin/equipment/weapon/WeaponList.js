@@ -12,7 +12,7 @@ const WeaponList = ({weapons, openModal, selectedId, changeSelectedId, onEdit}) 
             </tr>
             {weapons.filter(
                 function(weapon) {
-                    return weapon.proficiency.id == util.picklistInfo.SIMPLE_WEAPON_PROFICIENCY && weapon.category.id == util.picklistInfo.MELEE_WEAPON_CATEGORY;
+                    return weapon.proficiency.id == util.picklistInfo.WEAPON_PROFICIENCY_SIMPLE && weapon.category.id == util.picklistInfo.WEAPON_CATEGORY_MELEE;
                 }).map(weapon =>
                            <WeaponListItem
                                 key={weapon.id}
@@ -28,7 +28,7 @@ const WeaponList = ({weapons, openModal, selectedId, changeSelectedId, onEdit}) 
             </tr>
             {weapons.filter(
                 function(weapon) {
-                    return weapon.proficiency.id == util.picklistInfo.SIMPLE_WEAPON_PROFICIENCY && weapon.category.id == util.picklistInfo.RANGED_WEAPON_CATEGORY;
+                    return weapon.proficiency.id == util.picklistInfo.WEAPON_PROFICIENCY_SIMPLE && weapon.category.id == util.picklistInfo.WEAPON_CATEGORY_RANGED;
                 }).map(weapon =>
                            <WeaponListItem
                                 key={weapon.id}
@@ -44,7 +44,7 @@ const WeaponList = ({weapons, openModal, selectedId, changeSelectedId, onEdit}) 
             </tr>
             {weapons.filter(
                 function(weapon) {
-                    return weapon.proficiency.id == util.picklistInfo.MARTIAL_WEAPON_PROFICIENCY && weapon.category.id == util.picklistInfo.MELEE_WEAPON_CATEGORY;
+                    return weapon.proficiency.id == util.picklistInfo.WEAPON_PROFICIENCY_MARTIAL && weapon.category.id == util.picklistInfo.WEAPON_CATEGORY_MELEE;
                 }).map(weapon =>
                            <WeaponListItem
                                 key={weapon.id}
@@ -60,7 +60,7 @@ const WeaponList = ({weapons, openModal, selectedId, changeSelectedId, onEdit}) 
             </tr>
             {weapons.filter(
                 function(weapon) {
-                    return weapon.proficiency.id == util.picklistInfo.MARTIAL_WEAPON_PROFICIENCY && weapon.category.id == util.picklistInfo.RANGED_WEAPON_CATEGORY;
+                    return weapon.proficiency.id == util.picklistInfo.WEAPON_PROFICIENCY_MARTIAL && weapon.category.id == util.picklistInfo.WEAPON_CATEGORY_RANGED;
                 }).map(weapon =>
                            <WeaponListItem
                                 key={weapon.id}

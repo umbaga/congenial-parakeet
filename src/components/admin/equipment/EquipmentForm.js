@@ -21,7 +21,7 @@ class EquipmentForm extends React.Component {
     
     renderAmmunitionTypePicklist() {
         let ammunitionTypePicklistField = null;
-        if (this.props.equipment.category.id == util.picklistInfo.AMMUNTION_EQUIPMENT_CATEGORY) {
+        if (this.props.equipment.category.id == util.picklistInfo.EQUIPMENT_CATEGORY_AMMUNTION) {
             let ammunitionTypePicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.AMMUNITION_TYPE);
             ammunitionTypePicklistField = (
                     <div className="col-md-6">

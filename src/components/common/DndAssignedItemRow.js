@@ -46,9 +46,10 @@ class DndAssignedItemRow extends React.Component {
     }
     /**/
     render() {
+        const displayText = (this.props.displayValue && this.props.displayValue.length != 0) ? this.props.displayValue : this.props.item.name;
         return (
             <tr>
-                <td>{this.props.item.name}</td>
+                <td>{displayText}</td>
                 {this.renderCount()}
                 {this.renderSupplementalText()}
                 <td>
@@ -64,10 +65,11 @@ class DndAssignedItemRow extends React.Component {
 
 DndAssignedItemRow.propTypes = {
     item: PropTypes.object.isRequired,
-    changeCount: PropTypes.func.isRequired,
+    changeCount: PropTypes.func,
     removeItem: PropTypes.func.isRequired,
     showCount: PropTypes.bool,
-    supplementalText: PropTypes.string
+    supplementalText: PropTypes.string,
+    displayValue: PropTypes.string
 };
 
 export default DndAssignedItemRow;
