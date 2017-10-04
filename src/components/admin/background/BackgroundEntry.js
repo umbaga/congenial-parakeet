@@ -17,6 +17,7 @@ class BackgroundEntry extends React.Component {
             canEdit: this.props.canEdit,
             proficiencyGroup: Object.assign({}, util.objectModel.PROFICIENCY_GROUP),
             chart: Object.assign({}, util.objectModel.CHART),
+            variant: Object.assign({}, util.objectModel.BACKGROUND_VARIANT),
             selectedChartId: 0,
             saving: false
         };
@@ -40,6 +41,11 @@ class BackgroundEntry extends React.Component {
         this.onResetChart = this.onResetChart.bind(this);
         this.onSelectChart = this.onSelectChart.bind(this);
         this.onRemoveChartEntry = this.onRemoveChartEntry.bind(this);
+        this.onAddVariant = this.onAddVariant.bind(this);
+        this.onChangeVariant = this.onChangeVariant.bind(this);
+        this.onRemoveVariant = this.onRemoveVariant.bind(this);
+        this.onResetVariant = this.onResetVariant.bind(this);
+        this.onSelectVariant = this.onSelectVariant.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -399,42 +405,110 @@ class BackgroundEntry extends React.Component {
         this.setState({chart: chart});
     }
 
+    onAddVariant() {
+        const background = this.state.background;
+        const newVariant = Object.assign({}, this.state.variant);
+        newVariant.id = -1 * background.variants.length;
+        const blankVariant = Object.assign({}, util.objectModel.BACKGROUND_VARIANT);
+        blankVariant.feature = Object.assign({}, util.objectModel.FEATURE);
+        if (this.state.variant.id > 0) {
+            background.variants[util.picklistInfo.getIndexById(background.variants, this.state.variant.id)] = this.state.variant;
+        } else {
+            background.variants.push(newVariant);
+        }
+        this.setState({background: background, variant: blankVariant});
+    }
+    
+    onChangeVariant(event) {
+        let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
+        const variant = this.state.variant;
+        const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
+        let newSelectedValue = {};
+        let field2 = null;
+        if (field.split('.').length > 1) {
+            field2 = field.split('.')[1];
+            field = field.split('.')[0];
+        }
+        switch (dataType) {
+            case util.dataTypes.string.STRING:
+            case util.dataTypes.string.DESCRIPTION:
+                if (field2) {
+                    variant[field][field2] = event.target.value;
+                } else {
+                    variant[field] = event.target.value;
+                }
+                break;
+            case util.dataTypes.picklist.RESOURCE:
+                newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                variant[field] = newSelectedValue;
+                break;
+            default:
+        }
+        return this.setState({variant: variant});
+    }
+    
+    onRemoveVariant(variantId) {
+        const background = this.state.background;
+        background.variants.splice(util.picklistInfo.getIndexById(background.variants, variantId), 1);
+        this.setState({background: background});
+    }
+    
+    onResetVariant() {
+        const blankVariant = Object.assign({}, util.objectModel.BACKGROUND_VARIANT);
+        blankVariant.feature = Object.assign({}, util.objectModel.FEATURE);
+        this.setState({variant: blankVariant});
+    }
+    
+    onSelectVariant(variantId) {
+        let variant = null;
+        for (let k = 0; k < this.state.background.variants.length; k++) {
+            if (this.state.background.variants[k].id == variantId) {
+                variant = Object.assign({}, this.state.background.variants[k]);
+            }
+        }
+        this.setState({variant: Object.assign({}, variant)});
+    }
+    
     render() {
-        let contents = (
+        const contents = this.props.canEdit ? (
+            <BackgroundForm
+                ref="form"
+                background={this.state.background}
+                isCreate={this.props.isCreate}
+                picklists={this.props.picklists}
+                saving={this.state.saving}
+                onChange={this.updateFormState}
+                addEquipment={this.addEquipment}
+                removeEquipment={this.removeEquipment}
+                changeEquipmentCount={this.changeEquipmentCount}
+                equipments={this.props.equipments}
+                proficiencies={this.props.proficiencies}
+                onChangeProficiencyGroup={this.updateProficiencyGroupState}
+                proficiencyGroup={this.state.proficiencyGroup}
+                onAddProficiencyGroup={this.onAddProficiencyGroup}
+                onRemoveProficiencyGroup={this.onRemoveProficiencyGroup}
+                onResetProficiencyGroup={this.onResetProficiencyGroup}
+                chart={this.state.chart}
+                onAddChart={this.onAddChart}
+                onChangeChart={this.onChangeChart}
+                onRemoveChart={this.onRemoveChart}
+                onResetChart={this.onResetChart}
+                onSelectChart={this.onSelectChart}
+                onRemoveEntry={this.onRemoveChartEntry}
+                onAddVariant={this.onAddVariant}
+                onChangeVariant={this.onChangeVariant}
+                onRemoveVariant={this.onRemoveVariant}
+                onResetVariant={this.onResetVariant}
+                onSelectVariant={this.onSelectVariant}
+                variant={this.state.variant}
+                />
+        ) : (
             <BackgroundDetails
                 background={this.state.background}
                 picklists={this.props.picklists}
                 />
         );
-        if (this.props.canEdit) {
-            contents = (
-                <BackgroundForm
-                    ref="form"
-                    background={this.state.background}
-                    isCreate={this.props.isCreate}
-                    picklists={this.props.picklists}
-                    saving={this.state.saving}
-                    onChange={this.updateFormState}
-                    addEquipment={this.addEquipment}
-                    removeEquipment={this.removeEquipment}
-                    changeEquipmentCount={this.changeEquipmentCount}
-                    equipments={this.props.equipments}
-                    proficiencies={this.props.proficiencies}
-                    onChangeProficiencyGroup={this.updateProficiencyGroupState}
-                    proficiencyGroup={this.state.proficiencyGroup}
-                    onAddProficiencyGroup={this.onAddProficiencyGroup}
-                    onRemoveProficiencyGroup={this.onRemoveProficiencyGroup}
-                    onResetProficiencyGroup={this.onResetProficiencyGroup}
-                    chart={this.state.chart}
-                    onAddChart={this.onAddChart}
-                    onChangeChart={this.onChangeChart}
-                    onRemoveChart={this.onRemoveChart}
-                    onResetChart={this.onResetChart}
-                    onSelectChart={this.onSelectChart}
-                    onRemoveEntry={this.onRemoveChartEntry}
-                    />
-            );
-        }
         return (
             <DndModal
                 headingCaption="Background"

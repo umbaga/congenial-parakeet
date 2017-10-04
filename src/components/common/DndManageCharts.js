@@ -97,66 +97,7 @@ class DndManageCharts extends React.Component {
             </tr>
         );
     }
-    /*
-                            <tr key={chart.id}>
-                                <td>
-                                    <DndButton
-                                        buttonType="expand"
-                                        onClick={this.setShowThisId(chart)}
-                                        />
-                                </td>
-                                <td>
-                                    {chart.title}
-                                    <Panel collapsible expanded={this.state.showThisId == chart.id}>TEST</Panel>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                    <DndListItemButtonBar
-                                        listItem={chart}
-                                        onEdit={this.props.onSelectChart}
-                                        onDelete={this.props.onRemoveChart}
-                                        />
-                                </td>
-                            </tr>*/
-    /*
-                            <Panel
-                                key={chart.id}
-                                header={this.renderChartHeader(chart)}
-                                eventKey={chart.id}
-                                >
-                                    TABLE HERE
-                                </Panel>*/
-    /*
-            <div>
-                <div className="d-inline">
-                    {chart.title}
-                </div>
-                <div className="d-inline">
-                    <DndListItemButtonBar
-                        listItem={chart}
-                        onEdit={this.props.onSelectChart}
-                        onDelete={this.props.onRemoveChart}
-                        />
-                </div>
-            </div>*/
-    /*
-                <table>
-                    <tbody>
-                        {charts.map(chart =>
-                            <tr key={chart.id}>
-                                <td>{chart.title}</td>
-                                <td>
-                                    <DndListItemButtonBar
-                                        listItem={chart}
-                                        onEdit={this.props.onSelectChart}
-                                        onDelete={this.props.onRemoveChart}
-                                        />
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>*/
+    
     renderManageChartEntries(chart) {
         return chart && chart.title && chart.title.length && chart.dieRoll && util.dataTypes.compareDataType(chart.dieRoll.rendered, util.dataTypes.special.DICE_ROLL) ? (
             <div>
@@ -180,8 +121,6 @@ class DndManageCharts extends React.Component {
     render() {
         const charts = this.props.charts;
         const chart = this.props.chart;
-        //console.log(charts);
-        //console.log(chart);
         return (
             <div>
                 <fieldset>

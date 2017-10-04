@@ -7,6 +7,8 @@ import { Tabs, Tab } from 'react-bootstrap';
 import DndManageAssignedItems from '../../common/DndManageAssignedItems';
 import DndManageProficiencyGroups from '../../common/DndManageProficiencyGroups';
 import DndManageCharts from '../../common/DndManageCharts';
+import DndListItemButtonBar from '../../common/DndListItemButtonBar';
+import DndDataEntryButtonBar from '../../common/DndDataEntryButtonBar';
 
 class BackgroundForm extends React.Component {
     constructor(props) {
@@ -56,18 +58,6 @@ class BackgroundForm extends React.Component {
                                 onChange={this.props.onChange}
                                 picklists={this.props.picklists}
                                 />
-                            <DndInput
-                                name="feature.name"
-                                label="Feature Name"
-                                dataType={util.dataTypes.string.STRING}
-                                value={this.props.background.feature.name}
-                                onChange={this.props.onChange} />
-                            <DndInput
-                                name="feature.description"
-                                label="Feature Description"
-                                dataType={util.dataTypes.string.DESCRIPTION}
-                                value={this.props.background.feature.description}
-                                onChange={this.props.onChange} />
                         </Tab>
                         <Tab eventKey={2} title="Proficiencies">
                             <div>&nbsp;</div>
@@ -122,9 +112,64 @@ class BackgroundForm extends React.Component {
                                 onRemoveEntry={this.props.onRemoveEntry}
                                 />
                         </Tab>
-                        <Tab eventKey={5} title="Varaint Features">
+                        <Tab eventKey={5} title="Varaints">
                             <div>&nbsp;</div>
-                            <div>MANAGE Variants goes here</div>
+                            <fieldset>
+                                <legend>Add/Edit Variant</legend>
+                                <DndUniversalInput
+                                    referenceObject={this.props.variant}
+                                    onChange={this.props.onChangeVariant}
+                                    picklists={this.props.picklists}
+                                    hideDescription
+                                    />
+                                <DndInput
+                                    name="feature.name"
+                                    label="Feature Name"
+                                    dataType={util.dataTypes.string.STRING}
+                                    value={this.props.variant.feature.name}
+                                    onChange={this.props.onChangeVariant}
+                                    />
+                                <DndInput
+                                    name="feature.description"
+                                    label="Feature Description"
+                                    dataType={util.dataTypes.string.DESCRIPTION}
+                                    value={this.props.variant.feature.description}
+                                    onChange={this.props.onChangeVariant}
+                                    />
+                                <DndDataEntryButtonBar
+                                    onReset={this.props.onResetVariant}
+                                    onSave={this.props.onAddVariant}
+                                    />
+                            </fieldset>
+                            <fieldset>
+                                <legend>Variants</legend>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Variant</th>
+                                            <th>Feature Name</th>
+                                            <th>Feture Description</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.props.background.variants.map(variant =>
+                                            <tr key={variant.id}>
+                                                <td>{variant.name}</td>
+                                                <td>{variant.feature.name}</td>
+                                                <td>{variant.feature.description}</td>
+                                                <td>
+                                                    <DndListItemButtonBar
+                                                        listItem={variant}
+                                                        onDelete={this.props.onRemoveVariant}
+                                                        onEdit={this.props.onSelectVariant}
+                                                        />
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </fieldset>
                         </Tab>
                     </Tabs>
                 </form>
@@ -132,7 +177,6 @@ class BackgroundForm extends React.Component {
         );
     }
 }
-/**/
 
 BackgroundForm.propTypes = {
     addEquipment: PropTypes.func.isRequired,
@@ -158,7 +202,13 @@ BackgroundForm.propTypes = {
     onRemoveChart: PropTypes.func.isRequired,
     onResetChart: PropTypes.func.isRequired,
     onSelectChart: PropTypes.func.isRequired,
-    onRemoveEntry: PropTypes.func.isRequired
+    onRemoveEntry: PropTypes.func.isRequired,
+    onAddVariant: PropTypes.func.isRequired,
+    onChangeVariant: PropTypes.func.isRequired,
+    onRemoveVariant: PropTypes.func.isRequired,
+    onResetVariant: PropTypes.func.isRequired,
+    onSelectVariant: PropTypes.func.isRequired,
+    variant: PropTypes.object.isRequired
 };
 
 export default BackgroundForm;
