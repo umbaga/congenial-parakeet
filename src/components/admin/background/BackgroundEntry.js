@@ -16,6 +16,8 @@ class BackgroundEntry extends React.Component {
             isCreate: this.props.isCreate,
             canEdit: this.props.canEdit,
             proficiencyGroup: Object.assign({}, util.objectModel.PROFICIENCY_GROUP),
+            chart: Object.assign({}, util.objectModel.CHART),
+            selectedChartId: 0,
             saving: false
         };
         this.cancelBackground = this.cancelBackground.bind(this);
@@ -29,11 +31,17 @@ class BackgroundEntry extends React.Component {
         this.addEquipment = this.addEquipment.bind(this);
         this.changeEquipmentCount = this.changeEquipmentCount.bind(this);
         this.updateProficiencyGroupState = this.updateProficiencyGroupState.bind(this);
-        this.addProficiencyGroup = this.addProficiencyGroup.bind(this);
-        this.removeProficiencyGroup = this.removeProficiencyGroup.bind(this);
-        this.resetProficiencyGroup = this.resetProficiencyGroup.bind(this);
+        this.onAddProficiencyGroup = this.onAddProficiencyGroup.bind(this);
+        this.onRemoveProficiencyGroup = this.onRemoveProficiencyGroup.bind(this);
+        this.onResetProficiencyGroup = this.onResetProficiencyGroup.bind(this);
+        this.onAddChart = this.onAddChart.bind(this);
+        this.onChangeChart = this.onChangeChart.bind(this);
+        this.onRemoveChart = this.onRemoveChart.bind(this);
+        this.onResetChart = this.onResetChart.bind(this);
+        this.onSelectChart = this.onSelectChart.bind(this);
+        this.onRemoveChartEntry = this.onRemoveChartEntry.bind(this);
     }
-
+    
     componentWillReceiveProps(nextProps) {
         if (this.props.background.id != nextProps.background.id) {
             this.setState({background: nextProps.background});
@@ -176,7 +184,7 @@ class BackgroundEntry extends React.Component {
         return this.setState({background: background});
     }
     
-    addProficiencyGroup() {
+    onAddProficiencyGroup() {
         const background = this.state.background;
         background.proficiencyGroups.push(this.state.proficiencyGroup);
         const newProficiencyGroup = Object.assign({}, util.objectModel.PROFICIENCY_GROUP);
@@ -184,7 +192,7 @@ class BackgroundEntry extends React.Component {
         return this.setState({background: background, proficiencyGroup: newProficiencyGroup});
     }
     
-    removeProficiencyGroup(group) {
+    onRemoveProficiencyGroup(group) {
         const background = this.state.background;
         let removeIndex = -1;
         for (let g = 0; g < background.proficiencyGroups.length; g++) {
@@ -198,12 +206,199 @@ class BackgroundEntry extends React.Component {
         return this.setState({background: background});
     }
     
-    resetProficiencyGroup() {
+    onResetProficiencyGroup() {
         const proficiencyGroup = Object.assign({}, util.objectModel.PROFICIENCY_GROUP);
         proficiencyGroup.proficiencies = Object.assign([], []);
         return this.setState({proficiencyGroup: proficiencyGroup});
     }
         
+    onAddChart() {
+        const background = this.state.background;
+        const blankChart = Object.assign({}, util.objectModel.CHART);
+        if (this.state.chart.id > 0) {
+            background.charts[util.picklistInfo.getIndexById(background.charts, this.state.chart.id)] = this.state.chart;
+        } else {
+            background.charts.push(this.state.chart);
+        }
+        this.setState({background: background, chart: blankChart});
+    }
+    
+    onChangeChart(event) {
+        const chart = this.state.chart;
+        let field = event.target.name;
+        let dataType = event.target.getAttribute('dataType');
+        let newRenderedValue = '';
+        let newDiceRollValue = {};
+        let newEntry = null;
+        let changedEntryId = null;
+        let changedEntryIndex = -1;
+        let higherIndexedEntryExists = false;
+        let removeEntryCount = 0;
+        let removeEntryIndex = -1;
+        let finalEntryIndex = -1;
+        let referenceEntry = {};
+        let chartMaximumValue = 0;
+        switch (dataType) {
+            case util.dataTypes.string.STRING:
+                chart[field] = event.target.value;
+                break;
+            case util.dataTypes.special.DICE_ROLL:
+                newRenderedValue = '';
+                if (event.target.value && event.target.value.length != 0) {
+                    for (let y = 0; y < event.target.value.length; y++) {
+                        if (event.target.value.charAt(y) == '1' || event.target.value.charAt(y) == '2' ||
+                           event.target.value.charAt(y) == '3' || event.target.value.charAt(y) == '4' ||
+                           event.target.value.charAt(y) == '5' || event.target.value.charAt(y) == '6' ||
+                           event.target.value.charAt(y) == '7' || event.target.value.charAt(y) == '8' ||
+                           event.target.value.charAt(y) == '9' || event.target.value.charAt(y) == '0' ||
+                           event.target.value.charAt(y) == 'd' || event.target.value.charAt(y) == 'D') {
+                            newRenderedValue += event.target.value.charAt(y);
+                        }
+                    }
+                }
+                if (util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL, [0, 1])) {
+                    newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
+                    newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
+                    chart[field] = newDiceRollValue;
+                    if (chart.entries.length == 0) {
+                        newEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
+                        newEntry.minimum = newDiceRollValue.dieCount;
+                        newEntry.maximum = newDiceRollValue.dieCount * newDiceRollValue.dieType;
+                        chart.entries.push(newEntry);
+                    } else if (chart.entries.length != 0 && chart.entries[0].maximum == 0) {
+                        chart.entries[0].minimum = newDiceRollValue.dieCount;
+                        chart.entries[0].maximum = newDiceRollValue.dieCount * newDiceRollValue.dieType;
+                    }
+                }
+                chart[field].rendered = newRenderedValue;
+                break;
+            case util.dataTypes.special.CHART_ENTRY_DIE_ROLL_RANGE:
+                changedEntryId = parseInt(field.split('_')[0]);
+                //get index of changed entry
+                chartMaximumValue = chart.dieRoll.dieCount * chart.dieRoll.dieType;
+                for (let x = 0; x < chart.entries.length; x++) {
+                    if (chart.entries[x].id == changedEntryId) {
+                        changedEntryIndex = x;
+                        break;
+                    }
+                }
+                //change maximum value of changedEntry
+                chart.entries[changedEntryIndex].maximum = parseInt(event.target.options[event.target.selectedIndex].value);
+                //check for existence of higher valued entry
+                if (changedEntryIndex < chart.entries.length - 1) {
+                    higherIndexedEntryExists = true;
+                }
+                if (higherIndexedEntryExists) {
+                    //if exists, change minimum value of next record
+                    chart.entries[changedEntryIndex + 1].minimum = parseInt(event.target.options[event.target.selectedIndex].value) + 1;
+                    if (chart.entries[changedEntryIndex + 1].maximum < chart.entries[changedEntryIndex + 1].minimum) {
+                        chart.entries[changedEntryIndex + 1].maximum = chart.entries[changedEntryIndex + 1].minimum;
+                    }
+                    //remove entries with a minimum and maximum < current maximum
+                    for (let p = changedEntryIndex + 1; p < chart.entries.length; p++) {
+                        if (chart.entries[p].minimum <= parseInt(event.target.options[event.target.selectedIndex].value) && chart.entries[p].maximum <= parseInt(event.target.options[event.target.selectedIndex].value)) {
+                            if (removeEntryIndex == -1) {
+                                removeEntryIndex = p;
+                            }
+                            removeEntryCount++;
+                        }
+                        if (finalEntryIndex == -1 && chart.entries[p].maximum == chartMaximumValue) {
+                            finalEntryIndex = p;
+                        }
+                    }
+                    chart.entries.splice(removeEntryIndex, removeEntryCount);
+                    chart.entries.splice(finalEntryIndex + 1, chart.entries.length - 1);
+                    //final check on chart entry
+                    for (let h = 0; h < chart.entries.length; h++) {
+                        if (referenceEntry.minimum) {
+                            if (chart.entries[h].maximum >= referenceEntry.maximum) {
+                                chart.entries[h].minimum = referenceEntry.maximum + 1;
+                                chart.entries[h].maximum = referenceEntry.maximum + 1;
+                                if (h == chart.entries.length - 1) {
+                                    chart.entries[h].maximum = chartMaximumValue;
+                                }
+                            }
+                        }
+                        referenceEntry.minimum = chart.entries[h].minimum;
+                        referenceEntry.maximum = chart.entries[h].maximum;
+                    }
+                    
+                } else {
+                    //if not exists, create new entry
+                    newEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
+                    newEntry.id = -1 * chart.entries.length;
+                    newEntry.minimum = parseInt(event.target.options[event.target.selectedIndex].value) + 1;
+                    newEntry.maximum = chartMaximumValue;//chart.dieRoll.dieCount * chart.dieRoll.dieType;
+                    chart.entries.push(newEntry);
+                }
+                break;
+            case util.dataTypes.special.CHART_ENTRY_DESCRIPTION:
+                changedEntryId = parseInt(field.split('_')[0]);
+                for (let x = 0; x < chart.entries.length; x++) {
+                    if (chart.entries[x].id == changedEntryId) {
+                        changedEntryIndex = x;
+                        break;
+                    }
+                }
+                chart.entries[changedEntryIndex].description = event.target.value;
+                break;
+            default:
+        }
+        this.setState({chart: chart});
+    }
+    
+    onRemoveChart(chartId) {
+        const background = this.state.background;
+        background.charts.splice(util.picklistInfo.getIndexById(background.charts, chartId), 1);
+        this.setState({background: background});
+    }
+    
+    onRemoveChartEntry(entry) {
+        const chart = this.state.chart;
+        let removeIndex = -1;
+        let refMin = entry.minimum;
+        let refId = entry.id;
+        for (let r = 0; r < chart.entries.length; r++) {
+            if (entry.id == chart.entries[r].id) {
+                removeIndex = r;
+                refMin = chart.entries[r].minimum;
+            }
+        }
+        let isFirst = removeIndex == 0;
+        let isLast = removeIndex == chart.entries.length - 1;
+        if (removeIndex != -1) {
+            chart.entries.splice(removeIndex, 1);
+            if (isFirst) {
+                chart.entries[0].minimum = chart.dieRoll.dieCount;
+                chart.entries[0].id = refId;
+            } else if (isLast) {
+                chart.entries[chart.entries.length - 1].maximum = chart.dieRoll.dieCount * chart.dieRoll.dieType;
+                chart.entries[chart.entries.length - 1].id = refId;
+            } else {
+                chart.entries[removeIndex].minimum = refMin;
+                chart.entries[removeIndex].id = refId;
+            }
+        }
+        this.setState({chart: chart});
+    }
+    
+    onResetChart() {
+        const chart = Object.assign({}, util.objectModel.CHART);
+        chart.entries = Object.assign([], []);
+        chart.dieRoll.rendered = '';
+        this.setState({chart: chart});
+    }
+    
+    onSelectChart(chartId) {
+        let chart = Object.assign({}, util.objectModel.CHART);
+        for (let t = 0; t < this.state.background.charts.length; t++) {
+            if (chartId == this.state.background.charts[t].id) {
+                chart = Object.assign({}, this.state.background.charts[t]);
+            }
+        }
+        this.setState({chart: chart});
+    }
+
     render() {
         let contents = (
             <BackgroundDetails
@@ -225,11 +420,18 @@ class BackgroundEntry extends React.Component {
                     changeEquipmentCount={this.changeEquipmentCount}
                     equipments={this.props.equipments}
                     proficiencies={this.props.proficiencies}
-                    onProficiencyGroupChange={this.updateProficiencyGroupState}
+                    onChangeProficiencyGroup={this.updateProficiencyGroupState}
                     proficiencyGroup={this.state.proficiencyGroup}
-                    addProficiencyGroup={this.addProficiencyGroup}
-                    removeProficiencyGroup={this.removeProficiencyGroup}
-                    resetProficiencyGroup={this.resetProficiencyGroup}
+                    onAddProficiencyGroup={this.onAddProficiencyGroup}
+                    onRemoveProficiencyGroup={this.onRemoveProficiencyGroup}
+                    onResetProficiencyGroup={this.onResetProficiencyGroup}
+                    chart={this.state.chart}
+                    onAddChart={this.onAddChart}
+                    onChangeChart={this.onChangeChart}
+                    onRemoveChart={this.onRemoveChart}
+                    onResetChart={this.onResetChart}
+                    onSelectChart={this.onSelectChart}
+                    onRemoveEntry={this.onRemoveChartEntry}
                     />
             );
         }

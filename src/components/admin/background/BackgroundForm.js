@@ -6,6 +6,7 @@ import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
 import DndManageAssignedItems from '../../common/DndManageAssignedItems';
 import DndManageProficiencyGroups from '../../common/DndManageProficiencyGroups';
+import DndManageCharts from '../../common/DndManageCharts';
 
 class BackgroundForm extends React.Component {
     constructor(props) {
@@ -72,14 +73,14 @@ class BackgroundForm extends React.Component {
                             <div>&nbsp;</div>
                             <DndManageProficiencyGroups
                                 proficiencyGroups={this.props.background.proficiencyGroups}
+                                onAddProficiencyGroup={this.props.onAddProficiencyGroup}
                                 onChange={this.props.onChange}
-                                onProficiencyGroupChange={this.props.onProficiencyGroupChange}
+                                onChangeProficiencyGroup={this.props.onChangeProficiencyGroup}
+                                onRemoveProficiencyGroup={this.props.onRemoveProficiencyGroup}
+                                onResetProficiencyGroup={this.props.onResetProficiencyGroup}
                                 picklists={this.props.picklists}
                                 proficiencies={this.props.proficiencies}
                                 proficiencyGroup={this.props.proficiencyGroup}
-                                addProficiencyGroup={this.props.addProficiencyGroup}
-                                removeProficiencyGroup={this.props.removeProficiencyGroup}
-                                resetProficiencyGroup={this.props.resetProficiencyGroup}
                                 />
                         </Tab>
                         <Tab eventKey={3} title="Equipment">
@@ -109,7 +110,17 @@ class BackgroundForm extends React.Component {
                         </Tab>
                         <Tab eventKey={4} title="Charts">
                             <div>&nbsp;</div>
-                            <div>MANAGE Charts goes here</div>
+                            <DndManageCharts
+                                charts={this.props.background.charts}
+                                chart={this.props.chart}
+                                onAddChart={this.props.onAddChart}
+                                onChange={this.props.onChange}
+                                onChangeChart={this.props.onChangeChart}
+                                onRemoveChart={this.props.onRemoveChart}
+                                onResetChart={this.props.onResetChart}
+                                onSelectChart={this.props.onSelectChart}
+                                onRemoveEntry={this.props.onRemoveEntry}
+                                />
                         </Tab>
                         <Tab eventKey={5} title="Varaint Features">
                             <div>&nbsp;</div>
@@ -137,10 +148,17 @@ BackgroundForm.propTypes = {
     equipments: PropTypes.array,
     proficiencies: PropTypes.array,
     proficiencyGroup: PropTypes.object.isRequired,
-    onProficiencyGroupChange: PropTypes.func.isRequired,
-    addProficiencyGroup: PropTypes.func.isRequired,
-    removeProficiencyGroup: PropTypes.func.isRequired,
-    resetProficiencyGroup: PropTypes.func.isRequired
+    onChangeProficiencyGroup: PropTypes.func.isRequired,
+    onAddProficiencyGroup: PropTypes.func.isRequired,
+    onRemoveProficiencyGroup: PropTypes.func.isRequired,
+    onResetProficiencyGroup: PropTypes.func.isRequired,
+    chart: PropTypes.object.isRequired,
+    onAddChart: PropTypes.func.isRequired,
+    onChangeChart: PropTypes.func.isRequired,
+    onRemoveChart: PropTypes.func.isRequired,
+    onResetChart: PropTypes.func.isRequired,
+    onSelectChart: PropTypes.func.isRequired,
+    onRemoveEntry: PropTypes.func.isRequired
 };
 
 export default BackgroundForm;

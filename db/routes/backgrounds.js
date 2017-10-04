@@ -259,7 +259,7 @@ module.exports = function(app, pg, async, pool) {
           	sql += '              , json_build_object(';
             sql += '                  	\'id\', varres."id",';
             sql += '                  	\'name\', varres."itemName"';
-            sql += '                  ) AS "resource"
+            sql += '                  ) AS "resource"';
             sql += '          FROM adm_core_item c';
             sql += '          INNER JOIN adm_def_background_variant bgcht ON bgcht."variantBackgroundId" = c.id';
             sql += '          INNER JOIN adm_core_item feature ON (feature."id" = bgcht."featureId") ';

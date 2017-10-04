@@ -108,3 +108,14 @@ export function getDefaultSelectedItem (picklist) {
     }
     return Object.assign({}, util.objectModel.PICKLISTITEM);
 }
+
+export function getIndexById(arr, id) {
+    let retVal = -1;
+    for (let d = 0; d < arr.length; d++) {
+        if (arr[d].id == id) {
+            retVal = d;
+            break;
+        }
+    }
+    return retVal;
+}

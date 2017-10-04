@@ -21,7 +21,7 @@ class DndManageProficiencyGroups extends React.Component {
                 label="Category"
                 dataType={util.dataTypes.picklist.PROFICIENCY_CATEGORY}
                 picklist={picklist}
-                onChange={this.props.onProficiencyGroupChange}
+                onChange={this.props.onChangeProficiencyGroup}
                 valueObj={this.props.proficiencyGroup.category}
                 />
         ) : null;
@@ -35,7 +35,7 @@ class DndManageProficiencyGroups extends React.Component {
                 name="selectCount"
                 label="Selection Count"
                 dataType={util.dataTypes.number.INT}
-                onChange={this.props.onProficiencyGroupChange}
+                onChange={this.props.onChangeProficiencyGroup}
                 value={this.props.proficiencyGroup.selectCount.toString()}
                 />
             );
@@ -53,7 +53,7 @@ class DndManageProficiencyGroups extends React.Component {
                         label="Proficiencies"
                         dataType={util.dataTypes.array.PROFICIENCIES}
                         valueArray={this.props.proficiencyGroup.proficiencies}
-                        onChange={this.props.onProficiencyGroupChange}
+                        onChange={this.props.onChangeProficiencyGroup}
                         picklist={picklist} />
                 );
             }
@@ -78,7 +78,7 @@ class DndManageProficiencyGroups extends React.Component {
                                     key={group.id}
                                     item={group}
                                     displayValue={util.format.forDisplay.obj.proficiencyGroup(group)}
-                                    removeItem={this.props.removeProficiencyGroup}
+                                    removeItem={this.props.onRemoveProficiencyGroup}
                                     />
                             )}
                         </tbody>
@@ -104,15 +104,15 @@ class DndManageProficiencyGroups extends React.Component {
                         label="Selection Type"
                         dataType={util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC}
                         picklist={selectionMechanics}
-                        onChange={this.props.onProficiencyGroupChange}
+                        onChange={this.props.onChangeProficiencyGroup}
                         valueObj={this.props.proficiencyGroup.mechanic}
                         />
                     {this.renderSelectCount()}
                     {this.renderCategory(categories)}
                     {this.renderProficiencyToggle(proficiencies)}
                     <DndDataEntryButtonBar
-                        onSave={this.props.addProficiencyGroup}
-                        onReset={this.props.resetProficiencyGroup}
+                        onSave={this.props.onAddProficiencyGroup}
+                        onReset={this.props.onResetProficiencyGroup}
                         />
                 </fieldset>
                 {this.renderList(groups)}
@@ -120,24 +120,17 @@ class DndManageProficiencyGroups extends React.Component {
         );
     }
 }
-/*
-                        <DndInput
-                            name="language.script"
-                            label="Script"
-                            dataType={util.dataTypes.picklist.LANGUAGE_SCRIPT}
-                            valueObj={this.props.proficiency.language.script}
-                            onChange={this.props.onChange}
-                            picklist={langaugeScriptPicklist} />*/
+
 DndManageProficiencyGroups.propTypes = {
     proficiencyGroups: PropTypes.array.isRequired,
     picklists: PropTypes.array.isRequired,
     proficiencies: PropTypes.array,
+    onAddProficiencyGroup: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    onProficiencyGroupChange: PropTypes.func.isRequired,
-    proficiencyGroup: PropTypes.object.isRequired,
-    addProficiencyGroup: PropTypes.func.isRequired,
-    removeProficiencyGroup: PropTypes.func.isRequired,
-    resetProficiencyGroup: PropTypes.func.isRequired
+    onChangeProficiencyGroup: PropTypes.func.isRequired,
+    onRemoveProficiencyGroup: PropTypes.func.isRequired,
+    onResetProficiencyGroup: PropTypes.func.isRequired,
+    proficiencyGroup: PropTypes.object.isRequired
 };
 
 export default DndManageProficiencyGroups;

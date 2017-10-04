@@ -19,6 +19,10 @@ const DndButton = ({onClick, buttonType}) => {
             fontawesomeStyle += 'ban';
             bootstrapStyle += 'primary';
             break;
+        case 'collapse':
+            fontawesomeStyle += 'caret-up';
+            bootstrapStyle += 'default';
+            break;
         case 'create':
             fontawesomeStyle += 'file-text-o';
             bootstrapStyle += 'primary';
@@ -30,6 +34,10 @@ const DndButton = ({onClick, buttonType}) => {
         case 'edit':
             fontawesomeStyle += 'edit';
             bootstrapStyle += 'primary';
+            break;
+        case 'expand':
+            fontawesomeStyle += 'caret-down';
+            bootstrapStyle += 'default';
             break;
         case 'hamburger':
             fontawesomeStyle += 'bars';

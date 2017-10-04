@@ -50,6 +50,7 @@ export const BACKGROUND_VARIANT = {
 export const CHART = {
     id: 0,
     title: '',
+    description: '',
     dieRoll: {dieCount: 0, dieType: 0, rendered: ''},
     entries: []
 };

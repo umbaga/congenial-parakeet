@@ -51,6 +51,10 @@ export const picklist = {
 };
 
 export const special = {
+    CHART: 'DATA_SPECIAL_CHART',
+    CHART_ENTRY: 'DATA_SPECIAL_CHART_ENTRY',
+    CHART_ENTRY_DIE_ROLL_RANGE: 'DATA_SPECIAL_CHART_ENTRY_DIE_ROLL_RANGE',
+    CHART_ENTRY_DESCRIPTION: 'DATA_SPECIAL_CHART_ENTRY_DESCRIPTION',
     DICE_ROLL: 'DATA_SPECIAL_DICE_ROLL',
     WEAPON_RANGE: 'DATA_SPECIAL_WEAPON_RANGE'
 };
@@ -61,7 +65,7 @@ export const string = {
     DESCRIPTION: 'DATA_STRING_DESCRIPTION'
 };
 
-export function compareDataType (val, dataType) {
+export function compareDataType (val, dataType, disallowValues) {
     let retVal = true;
     let tmpDieType = 0;
     let tmpArr = [];
@@ -76,7 +80,15 @@ export function compareDataType (val, dataType) {
                            tmpDieType == 3 || tmpDieType == 4 || tmpDieType == 6 ||
                            tmpDieType == 8 || tmpDieType == 10 || tmpDieType == 12 ||
                            tmpDieType == 20 || tmpDieType == 100) {
-                            retVal = true;
+                            if (disallowValues && disallowValues.length) {
+                                for (let z = 0; z < disallowValues.length; z++) {
+                                    if (disallowValues[z] == tmpDieType) {
+                                        retVal = false;
+                                    }
+                                }
+                            } else {
+                                retVal = true;
+                            }
                         } else {
                             retVal = false;
                         }
