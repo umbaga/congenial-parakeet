@@ -2,10 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
-const DndButton = ({onClick, buttonType}) => {
+const DndButton = ({onClick, buttonType, isBadge}) => {
     let bootstrapStyle = '';
     let fontawesomeStyle = 'fa fa-';
     let extraText = '';
+    let extraClasses = '';
+    if (isBadge) {
+        extraClasses += ' badge ';
+    }
     switch (buttonType.toLowerCase()) {
         case 'additem':
             fontawesomeStyle += 'plus-circle';
@@ -74,14 +78,15 @@ const DndButton = ({onClick, buttonType}) => {
     }
     return (
         <Button bsStyle={bootstrapStyle} onClick={onClick}>
-            <i className={fontawesomeStyle}></i>{extraText}
+            <i className={fontawesomeStyle + extraClasses}></i>{extraText}
         </Button>
     );
 };
 
 DndButton.propTypes = {
     buttonType: PropTypes.string.isRequired,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    isBadge: PropTypes.bool
 };
 
 export default DndButton;

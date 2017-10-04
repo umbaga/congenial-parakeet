@@ -1,22 +1,146 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import util from '../../util/util';
+import DndButton from './DndButton';
 import DndInput from './DndInput';
 import DndDataEntryButtonBar from './DndDataEntryButtonBar';
 import DndManageChartEntry from './subcomponents/DndManageChartEntry';
 import DndListItemButtonBar from './DndListItemButtonBar';
+import { Panel } from 'react-bootstrap';
 
 class DndManageCharts extends React.Component {
     constructor(props, context) {
         super(props, context);
+        this.state = {
+            showThisId: null
+        };
         this.renderCharts = this.renderCharts.bind(this);
         this.renderManageChartEntries = this.renderManageChartEntries.bind(this);
+        this.renderChartHeader = this.renderChartHeader.bind(this);
+        this.setShowThisId = this.setShowThisId.bind(this);
+    }
+    
+    setShowThisId(chart) {
+        let newId = null;
+        if (this.state.showThisId != chart.id) {
+            newId = chart.id;
+        }
+        this.setState({showThisId: newId});
     }
     
     renderCharts(charts) {
         return charts && charts.length != 0 ? (
             <fieldset>
                 <legend>Charts</legend>
+                <table className="table table-sm table-striped table-hover">
+                    <tbody>
+                        {charts.map(function (c) {
+                            let boundClick = this.setShowThisId.bind(this, c);
+                            return (
+                                <tr key={c.id}>
+                                    <td>
+                                        <DndButton
+                                            buttonType={c.id == this.state.showThisId ? 'collapse' : 'expand'}
+                                            onClick={boundClick}
+                                            />
+                                    </td>
+                                    <td>
+                                        {c.title}
+                                        <Panel collapsible expanded={this.state.showThisId == c.id}>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>{util.format.forDisplay.string.dieRoll(c.dieRoll, true)}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {c.entries.map(entry =>
+                                                        <tr key={entry.id}>
+                                                            <td>{util.format.forDisplay.string.dieRollValueRange(entry)}</td>
+                                                            <td>{entry.description}</td>
+                                                        </tr>
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </Panel>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <DndListItemButtonBar
+                                            listItem={c}
+                                            onEdit={this.props.onSelectChart}
+                                            onDelete={this.props.onRemoveChart}
+                                            />
+                                    </td>
+                                </tr>
+                            );
+                        }.bind(this))}
+                    </tbody>
+                </table>
+            </fieldset>
+        ) : null;
+    }
+    renderChartHeader(chart) {
+        return (
+            <tr key={chart.id}>
+                <td>
+                    {chart.title}
+                </td>
+                <td>
+                    <DndListItemButtonBar
+                        listItem={chart}
+                        onEdit={this.props.onSelectChart}
+                        onDelete={this.props.onRemoveChart}
+                        />
+                </td>
+            </tr>
+        );
+    }
+    /*
+                            <tr key={chart.id}>
+                                <td>
+                                    <DndButton
+                                        buttonType="expand"
+                                        onClick={this.setShowThisId(chart)}
+                                        />
+                                </td>
+                                <td>
+                                    {chart.title}
+                                    <Panel collapsible expanded={this.state.showThisId == chart.id}>TEST</Panel>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <DndListItemButtonBar
+                                        listItem={chart}
+                                        onEdit={this.props.onSelectChart}
+                                        onDelete={this.props.onRemoveChart}
+                                        />
+                                </td>
+                            </tr>*/
+    /*
+                            <Panel
+                                key={chart.id}
+                                header={this.renderChartHeader(chart)}
+                                eventKey={chart.id}
+                                >
+                                    TABLE HERE
+                                </Panel>*/
+    /*
+            <div>
+                <div className="d-inline">
+                    {chart.title}
+                </div>
+                <div className="d-inline">
+                    <DndListItemButtonBar
+                        listItem={chart}
+                        onEdit={this.props.onSelectChart}
+                        onDelete={this.props.onRemoveChart}
+                        />
+                </div>
+            </div>*/
+    /*
                 <table>
                     <tbody>
                         {charts.map(chart =>
@@ -32,11 +156,7 @@ class DndManageCharts extends React.Component {
                             </tr>
                         )}
                     </tbody>
-                </table>
-            </fieldset>
-        ) : null;
-    }
-    
+                </table>*/
     renderManageChartEntries(chart) {
         return chart && chart.title && chart.title.length && chart.dieRoll && util.dataTypes.compareDataType(chart.dieRoll.rendered, util.dataTypes.special.DICE_ROLL) ? (
             <div>
