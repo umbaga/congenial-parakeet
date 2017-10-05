@@ -52,7 +52,8 @@ export const CHART = {
     title: '',
     description: '',
     dieRoll: {dieCount: 0, dieType: 0, rendered: ''},
-    entries: []
+    entries: [],
+    orderIndex: -1
 };
 export const CHART_ENTRY = {
     id: 0,

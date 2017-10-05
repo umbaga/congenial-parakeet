@@ -46,6 +46,7 @@ class BackgroundEntry extends React.Component {
         this.onRemoveVariant = this.onRemoveVariant.bind(this);
         this.onResetVariant = this.onResetVariant.bind(this);
         this.onSelectVariant = this.onSelectVariant.bind(this);
+        this.onChangeChartOrder = this.onChangeChartOrder.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -89,7 +90,7 @@ class BackgroundEntry extends React.Component {
     deleteBackground(event) {
         event.preventDefault();
         if (confirm('are you sure?')) {
-            //this.props.actions.deleteBackground(this.state.background);
+            this.props.actions.deleteBackground(this.state.background);
             this.postAction();
         }
     }
@@ -113,7 +114,7 @@ class BackgroundEntry extends React.Component {
     saveBackground(event) {
         event.preventDefault();
         this.setState({saving: true});
-        //this.props.actions.upsertBackground(this.state.background);
+        this.props.actions.upsertBackground(this.state.background);
     }
 
     updateProficiencyGroupState(event) {
@@ -169,6 +170,7 @@ class BackgroundEntry extends React.Component {
         switch (dataType) {
             case util.dataTypes.string.STRING:
             case util.dataTypes.string.DESCRIPTION:
+            case util.dataTypes.number.COIN:
                 if (field2) {
                     background[field][field2] = event.target.value;
                 } else {
@@ -220,11 +222,15 @@ class BackgroundEntry extends React.Component {
         
     onAddChart() {
         const background = this.state.background;
+        const chart = this.state.chart;
         const blankChart = Object.assign({}, util.objectModel.CHART);
+        blankChart.entries = Object.assign([], []);
+        
         if (this.state.chart.id > 0) {
-            background.charts[util.picklistInfo.getIndexById(background.charts, this.state.chart.id)] = this.state.chart;
+            background.charts[util.picklistInfo.getIndexById(background.charts, this.state.chart.id)] = chart;
         } else {
-            background.charts.push(this.state.chart);
+            chart.orderIndex = background.charts.length;
+            background.charts.push(chart);
         }
         this.setState({background: background, chart: blankChart});
     }
@@ -351,6 +357,36 @@ class BackgroundEntry extends React.Component {
             default:
         }
         this.setState({chart: chart});
+    }
+    
+    onChangeChartOrder(chart, isUp) {
+        const background = this.state.background;
+        const charts = background.charts.sort(function(a, b) {
+            return a.orderIndex - b.orderIndex;
+        });
+        if ((isUp && chart.orderIndex != 0) || (!isUp && chart.orderIndex != charts.length - 1)) {
+            let changedIndex = -1;
+            let otherChangedIndex = -1;
+            let referenceOrderIndex = -1;
+            let referenceOtherOrderIndex = -1;
+            for (let r = 0; r < charts.length; r++) {
+                if (charts[r].id == chart.id) {
+                    changedIndex = r;
+                    otherChangedIndex = isUp ? r - 1 : r + 1;
+                    referenceOrderIndex = charts[r].orderIndex;
+                    referenceOtherOrderIndex = isUp ? referenceOrderIndex - 1 : referenceOrderIndex + 1;
+                    break;
+                }
+            }
+            if (changedIndex != -1 && otherChangedIndex != -1) {
+                charts[changedIndex].orderIndex = referenceOtherOrderIndex;
+                charts[otherChangedIndex].orderIndex = referenceOrderIndex;
+            }
+            background.charts = charts.sort(function(a, b) {
+                return a.orderIndex - b.orderIndex;
+            });
+            this.setState({background: background});
+        }
     }
     
     onRemoveChart(chartId) {
@@ -502,6 +538,7 @@ class BackgroundEntry extends React.Component {
                 onResetVariant={this.onResetVariant}
                 onSelectVariant={this.onSelectVariant}
                 variant={this.state.variant}
+                onChangeChartOrder={this.onChangeChartOrder}
                 />
         ) : (
             <BackgroundDetails

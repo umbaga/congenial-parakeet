@@ -6,6 +6,7 @@ import DndInput from './DndInput';
 import DndDataEntryButtonBar from './DndDataEntryButtonBar';
 import DndManageChartEntry from './subcomponents/DndManageChartEntry';
 import DndListItemButtonBar from './DndListItemButtonBar';
+import DndIncrementButtons from './DndIncrementButtons';
 import { Panel } from 'react-bootstrap';
 
 class DndManageCharts extends React.Component {
@@ -65,6 +66,11 @@ class DndManageCharts extends React.Component {
                                         </Panel>
                                     </td>
                                     <td>
+                                        <DndIncrementButtons
+                                            item={c}
+                                            items={charts}
+                                            onMoveItem={this.props.onChangeChartOrder}
+                                            />
                                     </td>
                                     <td>
                                         <DndListItemButtonBar
@@ -165,7 +171,8 @@ DndManageCharts.propTypes = {
     onRemoveChart: PropTypes.func.isRequired,
     onResetChart: PropTypes.func.isRequired,
     onSelectChart: PropTypes.func.isRequired,
-    onRemoveEntry: PropTypes.func.isRequired
+    onRemoveEntry: PropTypes.func.isRequired,
+    onChangeChartOrder: PropTypes.func.isRequired
 };
 
 export default DndManageCharts;

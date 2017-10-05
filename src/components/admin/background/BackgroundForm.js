@@ -18,6 +18,7 @@ class BackgroundForm extends React.Component {
         this._changeEquipmentCount = this._changeEquipmentCount.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
         this.setFocus = this.setFocus.bind(this);
+        this.renderVariants = this.renderVariants.bind(this);
     }
     
     componentDidMount() {
@@ -45,6 +46,39 @@ class BackgroundForm extends React.Component {
         this.props.changeEquipmentCount(event, equipmentItem);
     }
     
+    renderVariants(variants) {
+        return (variants && variants.length != 0) ? (
+            <fieldset>
+                <legend>Variants</legend>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Variant</th>
+                            <th>Feature Name</th>
+                            <th>Feture Description</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.props.background.variants.map(variant =>
+                            <tr key={variant.id}>
+                                <td>{variant.name}</td>
+                                <td>{variant.feature.name}</td>
+                                <td>{variant.feature.description}</td>
+                                <td>
+                                    <DndListItemButtonBar
+                                        listItem={variant}
+                                        onDelete={this.props.onRemoveVariant}
+                                        onEdit={this.props.onSelectVariant}
+                                        />
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </fieldset>
+        ) : null;
+    }
     render() {
         return (
             <div>
@@ -58,6 +92,20 @@ class BackgroundForm extends React.Component {
                                 onChange={this.props.onChange}
                                 picklists={this.props.picklists}
                                 />
+                                <DndInput
+                                    name="feature.name"
+                                    label="Feature Name"
+                                    dataType={util.dataTypes.string.STRING}
+                                    value={this.props.background.feature.name}
+                                    onChange={this.props.onChange}
+                                    />
+                                <DndInput
+                                    name="feature.description"
+                                    label="Feature Description"
+                                    dataType={util.dataTypes.string.DESCRIPTION}
+                                    value={this.props.background.feature.description}
+                                    onChange={this.props.onChange}
+                                    />
                         </Tab>
                         <Tab eventKey={2} title="Proficiencies">
                             <div>&nbsp;</div>
@@ -110,6 +158,7 @@ class BackgroundForm extends React.Component {
                                 onResetChart={this.props.onResetChart}
                                 onSelectChart={this.props.onSelectChart}
                                 onRemoveEntry={this.props.onRemoveEntry}
+                                onChangeChartOrder={this.props.onChangeChartOrder}
                                 />
                         </Tab>
                         <Tab eventKey={5} title="Varaints">
@@ -141,35 +190,7 @@ class BackgroundForm extends React.Component {
                                     onSave={this.props.onAddVariant}
                                     />
                             </fieldset>
-                            <fieldset>
-                                <legend>Variants</legend>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Variant</th>
-                                            <th>Feature Name</th>
-                                            <th>Feture Description</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {this.props.background.variants.map(variant =>
-                                            <tr key={variant.id}>
-                                                <td>{variant.name}</td>
-                                                <td>{variant.feature.name}</td>
-                                                <td>{variant.feature.description}</td>
-                                                <td>
-                                                    <DndListItemButtonBar
-                                                        listItem={variant}
-                                                        onDelete={this.props.onRemoveVariant}
-                                                        onEdit={this.props.onSelectVariant}
-                                                        />
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </fieldset>
+                                    {this.renderVariants(this.props.background.variants)}
                         </Tab>
                     </Tabs>
                 </form>
@@ -208,7 +229,8 @@ BackgroundForm.propTypes = {
     onRemoveVariant: PropTypes.func.isRequired,
     onResetVariant: PropTypes.func.isRequired,
     onSelectVariant: PropTypes.func.isRequired,
-    variant: PropTypes.object.isRequired
+    variant: PropTypes.object.isRequired,
+    onChangeChartOrder: PropTypes.func.isRequired
 };
 
 export default BackgroundForm;

@@ -32,3 +32,11 @@ tr.found{
     margin-bottom: 0px;
     border: none;
 }
+.button-increment {
+    display: block;
+    padding: 0px 12px;
+    height: 15px;
+}
+.btn-group-vertical {
+  flex-wrap: wrap;
+}

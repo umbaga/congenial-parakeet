@@ -25,6 +25,51 @@ module.exports = function(app, pg, async, pool) {
                         return callback(null, tmp);
                     });
                 },
+                function deleteAssociatedItemTableEntries(resObj, callback) {
+                    sql = 'DELETE FROM adm_core_item';
+                    sql += ' WHERE "id" = $1';
+                    sql += ' OR "id" IN (SELECT "featureId" FROM adm_def_background WHERE "backgroundId" = $1)';
+                    sql += ' OR "id" IN (SELECT "variantBackgroundId" FROM adm_def_background_variant WHERE "backgroundId" = $1)';
+                    sql += ' OR "id" IN (SELECT "featureId" FROM adm_def_background_variant WHERE "backgroundId" = $1)';
+                    sql += ' OR "id" IN (SELECT chart.id FROM adm_core_chart chart';
+                    sql += ' INNER JOIN adm_link_chart link ON link."chartId" = chart.id';
+                    sql += ' WHERE link."referenceId" = $1)';
+                    sql += '  OR "id" IN (SELECT "proficiencyGroupId" FROM adm_link_proficiency_group WHERE "referenceId" = $1)';
+                },
+                function deleteDescriptions(resObj, callback) {
+                    sql = 'DELETE FROM adm_core_description';
+                    sql += ' WHERE "itemId" = $1';
+                    sql += ' OR "itemId" IN (SELECT "featureId" FROM adm_def_background WHERE "backgroundId" = $1)';
+                    sql += ' OR "itemId" IN (SELECT "variantBackgroundId" FROM adm_def_background_variant WHERE "backgroundId" = $1)';
+                    sql += ' OR "itemId" IN (SELECT "featureId" FROM adm_def_background_variant WHERE "backgroundId" = $1)';
+                    sql += ' OR "itemId" IN (SELECT chart.id FROM adm_core_chart chart';
+                    sql += ' INNER JOIN adm_link_chart link ON link."chartId" = chart.id';
+                    sql += ' WHERE link."referenceId" = $1)';
+                },
+                function deleteChartEntries(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_chart_entry';
+                    sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
+                },
+                function deleteCharts(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_chart';
+                    sql += ' WHERE "id" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
+                },
+                function deleteChartLinks(resObj, callback) {
+                    sql = 'DELETE FROM adm_link_chart';
+                    sql += ' WHERE "referenceId" = $1';
+                },
+                function deleteEquipmentLinks(resObj, callback) {
+                    sql = 'DELETE FROM adm_link_equipment';
+                    sql += ' WHERE "referenceId" = $1';
+                },
+                function deleteProficiencyGroupLinks(resObj, callback) {
+                    sql = 'DELETE FROM adm_link_proficiency_group';
+                    sql += ' WHERE "referenceId" = $1';
+                },
+                function deleteProficiencyGroups(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_proficiency_group';
+                    sql += ' WHERE "proficiencyGroupId" IN (SELECT "proficiencyGroupId" FROM adm_link_proficiency_group WHERE "referenceId" = $1)';
+                },
                 function deleteBackgroundTable(resObj, callback) {
                     sql = 'DELETE FROM adm_def_background';
                     sql += ' WHERE "backgroundId" = $1';
@@ -111,10 +156,13 @@ module.exports = function(app, pg, async, pool) {
                     cb(null, req);
                 },
                 function insertItem(req, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('01');
                     sql = 'INSERT INTO adm_core_item';
-                    sql += ' ("itemName", "itemTypeId")';
-                    sql += ' VALUES ($1, 98) returning id AS "backgroundId";';
-                    vals = [req.body.background.name];
+                    sql += ' ("itemName", "resourceId", "itemTypeId")';
+                    sql += ' VALUES ($1, $2, 98) returning id AS "backgroundId";';
+                    vals = [req.body.background.name, req.body.background.resource.id];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -126,45 +174,233 @@ module.exports = function(app, pg, async, pool) {
                         return callback(null, tmp);
                     });
                 },
-                function insertBackgroundFeatureItem(resObj, callback) {
+                function insertFeatureItem(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('02');
                     sql = 'INSERT INTO adm_core_item';
-                    sql += ' ("itemName", "itemTypeId")';
-                    sql += ' VALUES ($1, 113) returning id AS "featureId";';
-                    vals = [resObj.background.id, resObj.background.feature.id, resObj.background.startingGold];
+                    sql += ' ("itemName", "resourceId", "itemTypeId")';
+                    sql += ' VALUES ($1, $2, 113) returning id AS "featureId";';
+                    console.log(sql);
+                    console.log(resObj.background.feature);
+                    vals = [resObj.background.feature.name, resObj.background.resource.id];
                     var query = client.query(new pg.Query(sql, vals));
-                    var results = [];
                     query.on('row', function(row) {
                         results.push(row);
                     });
                     query.on('end', function() {
                         done();
-                        resObj.background.feature.id = parseInt(results[0].featureId);
+                        resObj.background.feature.id = results[0].featureId;
                         return callback(null, resObj);
                     });
                 },
-                function insertBackgroundFeature(resObj, callback) {
-                    sql = 'INSERT INTO adm_def_feature';
-                    sql += ' ("backgroundId", "featureId", "startingGold")';
-                    sql += ' VALUES ($1, $2, $3) returning id AS "featureId";';
-                    vals = [resObj.background.id, resObj.background.feature.id, resObj.background.startingGold];
-                    var query = client.query(new pg.Query(sql, vals));
-                    var results = [];
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        resObj.background.feature.id = parseInt(results[0].featureId);
+                function insertBackgroundVariantItems(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('03');
+                    if (resObj.background.variants && resObj.background.variants.length != 0) {
+                        sql = 'INSERT INTO adm_core_item';
+                        sql += ' ("itemName", "resourceId", "itemTypeId")';
+                        sql += ' VALUES';
+                        let first = 1;
+                        let second = 2;
+                        console.log(resObj.background.variants);
+                        console.log(resObj.background.variants.length);
+                        for (var f = 0; f < resObj.background.variants.length; f++) {
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', 115)';
+                            if (f < resObj.background.variants.length - 1) {
+                                sql += ', ';
+                            }
+                            first = first + 2;
+                            second = second + 2;
+                            vals.push(resObj.background.variants[f].name);
+                            vals.push(resObj.background.variants[f].resource.id);
+                        }
+                        sql += ' returning id AS "variantId";';
+                        console.log(sql);
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            console.log(results);
+                            console.log(results.length);
+                            for (var t = 0; t < results.length; t++) {
+                                resObj.background.variants[t].id = results[t].variantId;
+                            }
+                            return callback(null, resObj);
+                        });
+                        
+                    } else {
                         return callback(null, resObj);
-                    });
+                    }
+                },
+                function insertBackgroundVariantFeatureItems(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('04');
+                    if (resObj.background.variants && resObj.background.variants.length != 0) {
+                        sql = 'INSERT INTO adm_core_item';
+                        sql += ' ("itemName", "resourceId", "itemTypeId")';
+                        sql += ' VALUES ';
+                        var first = 1;
+                        var second = 2;
+                        for (var e = 0; e < resObj.background.variants.length; e++) {
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', 113)';
+                            if (e < resObj.background.variants.length - 1) {
+                                sql += ', ';
+                            }
+                            first = first + 2;
+                            second = second + 2;
+                            vals.push(resObj.background.variants[e].feature.name);
+                            vals.push(resObj.background.variants[e].resource.id);
+                        }
+                        sql += ' returning id AS "featureId"';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var t = 0; t < results.length; t++) {
+                                resObj.background.variants[t].feature.id = results[t].featureId;
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertProficiencyGroupItems(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('05');
+                    if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
+                        sql = 'INSERT INTO adm_core_item';
+                        sql += ' ("itemName", "resourceId", "itemTypeId")';
+                        sql += ' VALUES ';
+                        var first = 1;
+                        var second = 2;
+                        var tmpItemName = '';
+                        for (var e = 0; e < resObj.background.proficiencyGroups.length; e++) {
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', 116)';
+                            if (e < resObj.background.proficiencyGroups.length - 1) {
+                                sql += ', ';
+                            }
+                            first = first + 2;
+                            second = second + 2;
+                            tmpItemName = resObj.background.name + ': ' + resObj.background.proficiencyGroups[e].mechanic.name + ' - ' + e.toString();
+                            vals.push(tmpItemName);
+                            vals.push(resObj.background.resource.id);
+                        }
+                        sql += ' returning id AS "proficiencyGroupId";';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var t = 0; t < results.length; t++) {
+                                resObj.background.proficiencyGroups[t].id = results[t].proficiencyGroupId;
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertBackgroundDescription(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('06');
+                    if (resObj.background.description && resObj.background.description.length != 0) {
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += '("itemId", "description")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.background.id, resObj.background.description];
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertFeatureDescription(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('07');
+                    if (resObj.background.feature.description && resObj.background.feature.description.length != 0) {
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += '("itemId", "description")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.background.feature.id, resObj.background.feature.description];
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertVariantFeatureDescriptions(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('08');
+                    if (resObj.background.variants && resObj.background.variants.length != 0) {
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description")';
+                        sql += ' VALUES';
+                        var hasAtLeastOneDescription = false;
+                        var first = 1;
+                        var second = 2;
+                        for (var e = 0; e < resObj.background.variants.length; e++) {
+                            if (resObj.background.variants[e].description && resObj.background.variants[e].description.length != 0) {
+                                hasAtLeastOneDescription = true;
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
+                                if (e < resObj.background.variants.length - 1) {
+                                    sql += ', ';
+                                }
+                                vals.push(resObj.background.variants[e].feature.id);
+                                vals.push(resObj.background.variants[e].feature.description);
+                                first = first + 2;
+                                second = second + 2;
+                            }
+                        }
+                        if (hasAtLeastOneDescription) {
+                            var query = client.query(new pg.Query(sql, vals));
+                            query.on('row', function(row) {
+                                results.push(row);
+                            });
+                            query.on('end', function() {
+                                done();
+                                return callback(null, resObj);
+                            });
+                        } else {
+                            return callback(null, resObj);
+                        }
+                    } else {
+                        return callback(null, resObj);
+                    }
                 },
                 function insertBackground(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('09');
                     sql = 'INSERT INTO adm_def_background';
-                    sql += ' ("backgroundId", "featureId", "startingGold")';
-                    sql += ' VALUES ($1, $2, $3);';
-                    vals = [resObj.background.id, resObj.background.feature.id, resObj.background.startingGold];
+                    sql += ' ("backgroundId", "startingGold", "featureId")';
+                    sql += ' VALUES ($1, $2, $3)';
+                    vals = [resObj.background.id, resObj.background.startingGold, resObj.background.feature.id];
                     var query = client.query(new pg.Query(sql, vals));
-                    var results = [];
                     query.on('row', function(row) {
                         results.push(row);
                     });
@@ -172,6 +408,313 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function insertEqupmentLink(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('10');
+                    if (resObj.background.assignedEquipment && resObj.background.assignedEquipment.length != 0) {
+                        sql = 'INSERT INTO adm_link_equipment';
+                        sql += ' ("referenceId", "equipmentId", "assignedCount")';
+                        sql += ' VALUES ';
+                        var first = 1;
+                        var second = 2;
+                        var third = 3;
+                        for (var e = 0; e < resObj.background.assignedEquipment.length; e++) {
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                            if (e < resObj.background.assignedEquipment.length - 1) {
+                                sql += ', ';
+                            }
+                            first = first + 3;
+                            second = second + 3;
+                            third = third + 3;
+                            vals.push(resObj.background.id);
+                            vals.push(resObj.background.assignedEquipment[e].id);
+                            vals.push(resObj.background.assignedEquipment[e].assignedCount);
+                        }
+                        sql += ';';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function assignExistentDiceId(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('11');
+                    if (resObj.background.charts && resObj.background.charts.length != 0) {
+                        sql = 'SELECT dice.*';
+                        sql += ' FROM adm_core_dice dice';
+                        var first = 1;
+                        var second = 2;
+                        for (var e = 0; e < resObj.background.charts.length; e++) {
+                            sql += (e == 0) ? ' WHERE' : ' OR';
+                            sql += ' (dice."dieCount" = $' + first.toString();
+                            sql += ' AND dice."dieType" = $' + second.toString() + ')';
+                            vals.push(resObj.background.charts[e].dieRoll.dieCount);
+                            vals.push(resObj.background.charts[e].dieRoll.dieType);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var i = 0; i < results.length; i++) {
+                                for (var j = 0; j < resObj.background.charts.length; j++) {
+                                    if (resObj.background.charts[j].dieRoll.dieCount == results[i].dieCount &&
+                                       resObj.background.charts[j].dieRoll.dieType == results[i].dieType) {
+                                        resObj.background.charts[j].dieRoll.id = results[i].id;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                    
+                },
+                function insertMissingDice(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('12');
+                    if (resObj.background.charts && resObj.background.charts.length != 0) {
+                        var runInsert = false;
+                        sql = 'INSERT INTO adm_core_dice';
+                        sql += ' ("dieCount", "dieType")';
+                        sql += ' VALUES';
+                        var first = 1;
+                        var second = 2;
+                        vars = [];
+                        for (var i = 0; i < resObj.background.charts.length; i++) {
+                            if (!resObj.background.charts[i].dieRoll.id || resObj.background.charts[i].dieRoll.id == 0) {
+                                if(!runInsert) {
+                                    sql += ', ';
+                                }
+                                runInsert = true;
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
+                                vals.push(resObj.background.charts[i].dieRoll.dieCount);
+                                vals.push(resObj.background.charts[i].dieRoll.dieType);
+                                first = first + 2;
+                                second = second + 2;
+                            }
+                        }
+                        sql += ' returning id, "dieCount", "dieType"';
+                        if (runInsert) {
+                            var query = client.query(new pg.Query(sql, vals));
+                            query.on('row', function(row) {
+                                results.push(row);
+                            });
+                            query.on('end', function() {
+                                done();
+                                for (var i = 0; i < results.length; i++) {
+                                    for (var j = 0; j < resObj.background.charts.length; j++) {
+                                        if (resObj.background.charts[j].dieRoll.dieCount == results[i].dieCount &&
+                                           resObj.background.charts[j].dieRoll.dieType == results[i].dieType) {
+                                            resObj.background.charts[j].dieRoll.id = results[i].id;
+                                        }
+                                    }
+                                }
+                                return callback(null, resObj);
+                            });
+                        } else {
+                            return callback(null, resObj);
+                        }
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertCharts(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('13');
+                    if (resObj.background.charts && resObj.background.charts.length != 0) {
+                        sql = 'INSERT INTO adm_core_chart';
+                        sql += ' ("diceId", "title")';
+                        sql += ' VALUES';
+                        var first = 1;
+                        var second = 2;
+                        for (var w = 0; w < resObj.background.charts.length; w ++) {
+                            sql += '($' + first.toString() + ', $' + second.toString() + ')';
+                            if (w < resObj.background.charts.length - 1) {
+                                sql += ', ';
+                            }
+                            vals.push(resObj.background.charts[w].dieRoll.id);
+                            vals.push(resObj.background.charts[w].title);
+                            first = first + 2;
+                            second = second + 2;
+                        }
+                        sql += ' returning id AS "chartId", "title"';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var i = 0; i < results.length; i++) {
+                                for (var j = 0; j < resObj.background.charts.length; j++) {
+                                    if (results[i].title == resObj.background.charts[j].title) {
+                                        resObj.background.charts[j].id = results[i].chartId;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartEntries(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('14');
+                    if (resObj.background.charts && resObj.background.charts.length != 0) {
+                        sql = 'INSERT INTO adm_def_chart_entry';
+                        sql += ' ("chartId", "minimum", "maximum", "description")';
+                        sql += ' VALUES';
+                        var first = 1;
+                        var second = 2;
+                        var third = 3;
+                        var fourth = 4;
+                        var addComma = false;
+                        for (var i = 0; i < resObj.background.charts.length; i++) {
+                            for (var j = 0; j < resObj.background.charts[i].entries.length; j++) {
+                                if (addComma) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
+                                vals.push(resObj.background.charts[i].id);
+                                vals.push(resObj.background.charts[i].entries[j].minimum);
+                                vals.push(resObj.background.charts[i].entries[j].minimum);
+                                vals.push(resObj.background.charts[i].entries[j].description);
+                                first = first + 4;
+                                second = second + 4;
+                                third = third + 4;
+                                fourth = fourth + 4;
+                                addComma = true;
+                            }
+                        }
+                        console.log(sql);
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    }
+                },
+                function insertProficiencyGroups(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('15');
+                    if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
+                        sql = 'INSERT INTO adm_def_proficiency_group';
+                        sql += ' ("proficiencyGroupId", "mechanicTypeId", "selectCount")';
+                        sql += ' VALUES';
+                        var first = 1;
+                        var second = 2;
+                        var third = 3;
+                        for (var i = 0; i < resObj.background.proficiencyGroups.length; i++) {
+                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                            if (i < resObj.background.proficiencyGroups.length - 1) {
+                                sql += ', ';
+                            }
+                            vals.push(resObj.background.proficiencyGroups[i].id);
+                            vals.push(resObj.background.proficiencyGroups[i].mechanic.id);
+                            vals.push(resObj.background.proficiencyGroups[i].selectCount);
+                            first = first + 3;
+                            second = second + 3;
+                            third = third + 3;
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertProficiencies(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('16');
+                    if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
+                        sql = 'INSERT INTO adm_link_proficiency_group_assignment';
+                        sql += ' ("proficiencyGroupId", "proficiencyId")';
+                        sql += ' VALUES';
+                        var first = 1;
+                        var second = 2;
+                        var addComma = false;
+                        for (var i = 0; i < resObj.background.proficiencyGroups.length; i++) {
+                            for (var j = 0; j < resObj.background.proficiencyGroups[i].proficiencies.length; j++) {
+                                if (addComma) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
+                                vals.push(resObj.background.proficiencyGroups[i].id);
+                                vals.push(resObj.background.proficiencyGroups[i].proficiencies[j].id);
+                                first = first + 2;
+                                second = second + 2;
+                                addComma = true;
+                            }
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertProficiencyGroupLinks(resObj, callback) {
+                    results = [];
+                    vals = [];
+                    console.log('17');
+                    if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
+                        sql = 'INSERT INTO adm_link_proficiency_group';
+                        sql += ' ("referenceId", "proficiencyGroupId")';
+                        sql += ' VALUES';
+                        var first = 1;
+                        var second = 2;
+                        for (var e = 0; e < resObj.background.proficiencyGroups.length; e++) {
+                            sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
+                            if (e < resObj.background.proficiencyGroups.length - 1) {
+                                sql += ', ';
+                            }
+                            vals.push(resObj.background.id);
+                            vals.push(resObj.background.proficiencyGroups[e].id);
+                            first = first + 2;
+                            second = second + 2;
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 }
             ], function(error, result) {
                 if (error) {

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
-const DndButton = ({onClick, buttonType, isBadge}) => {
+const DndButton = ({onClick, buttonType, isBadge, additionalButtonStyles}) => {
     let bootstrapStyle = '';
     let fontawesomeStyle = 'fa fa-';
     let extraText = '';
@@ -10,6 +10,7 @@ const DndButton = ({onClick, buttonType, isBadge}) => {
     if (isBadge) {
         extraClasses += ' badge ';
     }
+    extraClasses += ' ' + additionalButtonStyles;
     switch (buttonType.toLowerCase()) {
         case 'additem':
             fontawesomeStyle += 'plus-circle';
@@ -46,6 +47,14 @@ const DndButton = ({onClick, buttonType, isBadge}) => {
         case 'hamburger':
             fontawesomeStyle += 'bars';
             bootstrapStyle += 'primary';
+            break;
+        case 'movedown':
+            fontawesomeStyle += 'caret-down';
+            bootstrapStyle += 'default';
+            break;
+        case 'moveup':
+            fontawesomeStyle += 'caret-up';
+            bootstrapStyle += 'default';
             break;
         case 'removeitem':
             fontawesomeStyle += 'minus-circle';
@@ -86,7 +95,8 @@ const DndButton = ({onClick, buttonType, isBadge}) => {
 DndButton.propTypes = {
     buttonType: PropTypes.string.isRequired,
     onClick: PropTypes.func,
-    isBadge: PropTypes.bool
+    isBadge: PropTypes.bool,
+    additionalButtonStyles: PropTypes.string
 };
 
 export default DndButton;
