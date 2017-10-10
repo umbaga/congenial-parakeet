@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as backgroundActions from '../../../actions/admin/backgroundActions';
+import * as equipmentActions from '../../../actions/admin/equipmentActions';
 import BackgroundForm from './BackgroundForm';
 import BackgroundDetails from './BackgroundDetails';
 import util from '../../../util/util';
@@ -19,7 +20,8 @@ class BackgroundEntry extends React.Component {
             chart: Object.assign({}, util.objectModel.CHART),
             variant: Object.assign({}, util.objectModel.BACKGROUND_VARIANT),
             selectedChartId: 0,
-            saving: false
+            saving: false,
+            showEquipmentModal: false
         };
         this.cancelBackground = this.cancelBackground.bind(this);
         this.deleteBackground = this.deleteBackground.bind(this);
@@ -223,15 +225,15 @@ class BackgroundEntry extends React.Component {
     onAddChart() {
         const background = this.state.background;
         const chart = this.state.chart;
-        const blankChart = Object.assign({}, util.objectModel.CHART);
-        blankChart.entries = Object.assign([], []);
-        
         if (this.state.chart.id > 0) {
             background.charts[util.picklistInfo.getIndexById(background.charts, this.state.chart.id)] = chart;
         } else {
             chart.orderIndex = background.charts.length;
             background.charts.push(chart);
         }
+        const blankChart = Object.assign({}, util.objectModel.CHART);
+        blankChart.entries = Object.assign([], []);
+        blankChart.id = -1 * background.charts.length;
         this.setState({background: background, chart: blankChart});
     }
     
@@ -252,6 +254,7 @@ class BackgroundEntry extends React.Component {
         let chartMaximumValue = 0;
         switch (dataType) {
             case util.dataTypes.string.STRING:
+            case util.dataTypes.string.DESCRIPTION:
                 chart[field] = event.target.value;
                 break;
             case util.dataTypes.special.DICE_ROLL:
@@ -601,7 +604,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(backgroundActions, dispatch)
+        actions: bindActionCreators(backgroundActions, equipmentActions, dispatch)
     };
 }
 

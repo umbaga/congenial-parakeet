@@ -23,6 +23,7 @@ class EquipmentEntry extends React.Component {
         this.saveAndNewEquipment = this.saveAndNewEquipment.bind(this);
         this.saveAndBackEquipment = this.saveAndBackEquipment.bind(this);
         this.updateFormState = this.updateFormState.bind(this);
+        this.resetForm = this.resetForm.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -35,6 +36,11 @@ class EquipmentEntry extends React.Component {
     cancelEquipment(event) {
         event.preventDefault();
         this.postAction();
+    }
+
+    resetForm() {
+        let newEquipment = Object.assign({}, util.objectModel.EQUIPMENT);
+        return this.setState({equipment: newEquipment});
     }
 
     deleteEquipment(event) {
@@ -53,6 +59,7 @@ class EquipmentEntry extends React.Component {
         event.preventDefault();
         this.setState({saving: true});
         this.props.actions.upsertEquipment(this.state.equipment);
+        this.resetForm();
     }
 
     saveAndNewEquipment(event) {

@@ -12,6 +12,7 @@ class DndManageAssignedItems extends React.Component {
         this.renderItemList = this.renderItemList.bind(this);
         this.renderListHead = this.renderListHead.bind(this);
         this.renderListColumns = this.renderListColumns.bind(this);
+        this.renderSelectDisplayText = this.renderSelectDisplayText.bind(this);
     }
     
     _addItem() {
@@ -75,6 +76,15 @@ class DndManageAssignedItems extends React.Component {
         return itemList;
     }
     
+    renderSelectDisplayText(item, dataType) {
+        switch (dataType) {
+            case util.dataTypes.array.ASSIGNED_EQUIPMENT:
+                return util.format.forDisplay.obj.equipmentName(item);
+            default:
+                return item.name;
+        }
+    }
+    
     render() {
 
         return (
@@ -97,7 +107,7 @@ class DndManageAssignedItems extends React.Component {
                                                      <option
                                                          key={item.id}
                                                          value={item.id}>
-                                                         {item.name}
+                                                         {this.renderSelectDisplayText(item, this.props.dataType)}
                                                      </option>)}
                         </select>
                         <span className="input-group-btn">

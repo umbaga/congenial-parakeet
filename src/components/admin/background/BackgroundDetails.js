@@ -43,7 +43,7 @@ class BackgroundDetails extends React.Component {
     }
     
     renderVariantInfo(background) {
-        if (background.variants.length == 0) {
+        if (!background.variants || (background.variants && background.variants.length == 0)) {
             return null;
         } else {
             let variantDisplay = null;

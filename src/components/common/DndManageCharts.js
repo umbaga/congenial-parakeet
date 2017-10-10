@@ -56,7 +56,7 @@ class DndManageCharts extends React.Component {
                                                 </thead>
                                                 <tbody>
                                                     {c.entries.map(entry =>
-                                                        <tr key={entry.id}>
+                                                        <tr key={c.id + '-' + entry.id}>
                                                             <td>{util.format.forDisplay.string.dieRollValueRange(entry)}</td>
                                                             <td>{entry.description}</td>
                                                         </tr>
@@ -146,7 +146,17 @@ class DndManageCharts extends React.Component {
                             label="Die Roll"
                             dataType={util.dataTypes.special.DICE_ROLL}
                             valueObj={chart.dieRoll}
-                            onChange={this.props.onChangeChart} />
+                            onChange={this.props.onChangeChart}
+                            />
+                    </div>
+                    <div className="col-md-12">
+                        <DndInput
+                            name="description"
+                            label="Description"
+                            dataType={util.dataTypes.string.DESCRIPTION}
+                            value={chart.description}
+                            onChange={this.props.onChangeChart}
+                            />
                     </div>
                     {this.renderManageChartEntries(chart)}
                     <div>

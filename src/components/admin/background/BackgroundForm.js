@@ -8,7 +8,6 @@ import DndManageAssignedItems from '../../common/DndManageAssignedItems';
 import DndManageProficiencyGroups from '../../common/DndManageProficiencyGroups';
 import DndManageCharts from '../../common/DndManageCharts';
 import DndListItemButtonBar from '../../common/DndListItemButtonBar';
-import DndDataEntryButtonBar from '../../common/DndDataEntryButtonBar';
 
 class BackgroundForm extends React.Component {
     constructor(props) {
@@ -92,22 +91,32 @@ class BackgroundForm extends React.Component {
                                 onChange={this.props.onChange}
                                 picklists={this.props.picklists}
                                 />
-                                <DndInput
-                                    name="feature.name"
-                                    label="Feature Name"
-                                    dataType={util.dataTypes.string.STRING}
-                                    value={this.props.background.feature.name}
-                                    onChange={this.props.onChange}
-                                    />
-                                <DndInput
-                                    name="feature.description"
-                                    label="Feature Description"
-                                    dataType={util.dataTypes.string.DESCRIPTION}
-                                    value={this.props.background.feature.description}
-                                    onChange={this.props.onChange}
-                                    />
+                            <DndInput
+                                name="suggestedCharacteristics"
+                                label="Suggested Characteristics"
+                                dataType={util.dataTypes.string.DESCRIPTION}
+                                value={this.props.background.suggestedCharacteristics}
+                                onChange={this.props.onChange}
+                                />
                         </Tab>
-                        <Tab eventKey={2} title="Proficiencies">
+                        <Tab eventKey={2} title="Feature">
+                            <div>&nbsp;</div>
+                            <DndInput
+                                name="feature.name"
+                                label="Feature Name"
+                                dataType={util.dataTypes.string.STRING}
+                                value={this.props.background.feature.name}
+                                onChange={this.props.onChange}
+                                />
+                            <DndInput
+                                name="feature.description"
+                                label="Feature Description"
+                                dataType={util.dataTypes.string.DESCRIPTION}
+                                value={this.props.background.feature.description}
+                                onChange={this.props.onChange}
+                                />
+                        </Tab>
+                        <Tab eventKey={3} title="Proficiencies">
                             <div>&nbsp;</div>
                             <DndManageProficiencyGroups
                                 proficiencyGroups={this.props.background.proficiencyGroups}
@@ -121,7 +130,7 @@ class BackgroundForm extends React.Component {
                                 proficiencyGroup={this.props.proficiencyGroup}
                                 />
                         </Tab>
-                        <Tab eventKey={3} title="Equipment">
+                        <Tab eventKey={4} title="Equipment">
                             <div>&nbsp;</div>
                             <DndInput
                                 name="startingGold"
@@ -146,7 +155,7 @@ class BackgroundForm extends React.Component {
                                     />
                             </div>
                         </Tab>
-                        <Tab eventKey={4} title="Charts">
+                        <Tab eventKey={5} title="Charts">
                             <div>&nbsp;</div>
                             <DndManageCharts
                                 charts={this.props.background.charts}
@@ -161,7 +170,24 @@ class BackgroundForm extends React.Component {
                                 onChangeChartOrder={this.props.onChangeChartOrder}
                                 />
                         </Tab>
-                        <Tab eventKey={5} title="Varaints">
+                    </Tabs>
+                </form>
+            </div>
+        );
+    }
+}
+/*
+                            <div className="col-md-12 text-center">
+                                <p>
+                                    <DndButton
+                                        buttonType="label"
+                                        label="Create a new minor equipment item"
+                                        onClick={this.props.openCreateMinorItemModal}
+                                        />
+                                </p>
+                            </div>*/
+/*
+                        <Tab eventKey={6} title="Varaints">
                             <div>&nbsp;</div>
                             <fieldset>
                                 <legend>Add/Edit Variant</legend>
@@ -191,14 +217,7 @@ class BackgroundForm extends React.Component {
                                     />
                             </fieldset>
                                     {this.renderVariants(this.props.background.variants)}
-                        </Tab>
-                    </Tabs>
-                </form>
-            </div>
-        );
-    }
-}
-
+                        </Tab>*/
 BackgroundForm.propTypes = {
     addEquipment: PropTypes.func.isRequired,
     removeEquipment: PropTypes.func.isRequired,
