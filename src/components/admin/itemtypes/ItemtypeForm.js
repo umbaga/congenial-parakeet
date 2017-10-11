@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndInput from '../../common/DndInput';
+import DndInput from '../../common/inputs/DndInput';
 import util from '../../../util/util';
 
 class ItemtypeForm extends React.Component {

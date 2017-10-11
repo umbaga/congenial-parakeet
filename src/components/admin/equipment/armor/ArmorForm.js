@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndInput from '../../../common/DndInput';
-import DndUniversalInput from '../../../common/DndUniversalInput';
+import DndInput from '../../../common/inputs/DndInput';
+import DndUniversalInput from '../../../common/inputs/DndUniversalInput';
 import util from '../../../../util/util';
 
 class ArmorForm extends React.Component {

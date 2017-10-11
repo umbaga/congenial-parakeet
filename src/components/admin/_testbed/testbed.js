@@ -1,6 +1,6 @@
 import React from 'react';
 import util from '../../../util/util';
-import DndInput from '../../common/DndInput';
+import DndInput from '../../common/inputs/DndInput';
 
 class testbed extends React.Component {
     constructor(props, context) {

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndInput from '../../common/DndInput';
-import DndUniversalInput from '../../common/DndUniversalInput';
+import DndInput from '../../common/inputs/DndInput';
+import DndUniversalInput from '../../common/inputs/DndUniversalInput';
 import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
-import DndManageAssignedItems from '../../common/DndManageAssignedItems';
-import DndManageProficiencyGroups from '../../common/DndManageProficiencyGroups';
-import DndManageCharts from '../../common/DndManageCharts';
+import DndManageAssignedItems from '../../common/objectManagement/DndManageAssignedItems';
+import DndManageProficiencyGroups from '../../common/objectManagement/DndManageProficiencyGroups';
+import DndManageCharts from '../../common/objectManagement/DndManageCharts';
 import DndListItemButtonBar from '../../common/buttons/DndListItemButtonBar';
 
 class BackgroundForm extends React.Component {

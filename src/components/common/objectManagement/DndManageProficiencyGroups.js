@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import util from '../../util/util';
-import DndInput from './DndInput';
-import DndDataEntryButtonBar from './buttons/DndDataEntryButtonBar';
-import DndAssignedItemRow from './subcomponents/DndAssignedItemRow';
+import util from '../../../util/util';
+import DndInput from '../inputs/DndInput';
+import DndDataEntryButtonBar from '../buttons/DndDataEntryButtonBar';
+import DndAssignedItemRow from '../subcomponents/DndAssignedItemRow';
 
 class DndManageProficiencyGroups extends React.Component {
     constructor(props, context) {

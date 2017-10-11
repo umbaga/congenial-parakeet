@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndInput from '../../../common/DndInput';
-import DndUniversalInput from '../../../common/DndUniversalInput';
-import DndManageAssignedItems from '../../../common/DndManageAssignedItems';
+import DndInput from '../../../common/inputs/DndInput';
+import DndUniversalInput from '../../../common/inputs/DndUniversalInput';
+import DndManageAssignedItems from '../../../common/objectManagement/DndManageAssignedItems';
 import PackEquipmentItemRow from './PackEquipmentItemRow';
 import util from '../../../../util/util';
 

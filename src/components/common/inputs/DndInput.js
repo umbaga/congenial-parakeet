@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import util from '../../util/util';
+import util from '../../../util/util';
 import DndInputWrapper from './DndInputWrapper';
 import DndToggleBoxes from './DndToggleBoxes';
 

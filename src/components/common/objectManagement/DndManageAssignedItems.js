@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import util from '../../util/util';
-import DndInputWrapper from './DndInputWrapper';
-import DndButton from './buttons/DndButton';
-import DndAssignedItemRow from './subcomponents/DndAssignedItemRow';
+import util from '../../../util/util';
+import DndInputWrapper from '../inputs/DndInputWrapper';
+import DndButton from '../buttons/DndButton';
+import DndAssignedItemRow from '../subcomponents/DndAssignedItemRow';
 
 class DndManageAssignedItems extends React.Component {
     constructor(props, context) {
