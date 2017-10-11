@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndButton from './DndButton';
+import DndButton from '../buttons/DndButton';
 
 class DndAssignedItemRow extends React.Component {
     constructor(props, context) {

@@ -7,7 +7,7 @@ import WeaponList from './WeaponList';
 import WeaponEntry from './WeaponEntry';
 import * as actions from '../../../../actions/admin/weaponActions';
 import util from '../../../../util/util';
-import DndButton from '../../../common/DndButton';
+import DndButton from '../../../common/buttons/DndButton';
 
 class WeaponListPage extends React.Component {
     constructor(props, context) {

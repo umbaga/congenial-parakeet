@@ -7,7 +7,7 @@ import { Tabs, Tab } from 'react-bootstrap';
 import DndManageAssignedItems from '../../common/DndManageAssignedItems';
 import DndManageProficiencyGroups from '../../common/DndManageProficiencyGroups';
 import DndManageCharts from '../../common/DndManageCharts';
-import DndListItemButtonBar from '../../common/DndListItemButtonBar';
+import DndListItemButtonBar from '../../common/buttons/DndListItemButtonBar';
 
 class BackgroundForm extends React.Component {
     constructor(props) {

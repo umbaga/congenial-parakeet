@@ -7,7 +7,7 @@ import ProficiencyList from './ProficiencyList';
 import ProficiencyEntry from './ProficiencyEntry';
 import * as actions from '../../../actions/admin/proficiencyActions';
 import util from '../../../util/util';
-import DndButton from '../../common/DndButton';
+import DndButton from '../../common/buttons/DndButton';
 
 class ProficiencyListPage extends React.Component {
     constructor(props, context) {

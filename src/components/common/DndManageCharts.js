@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import util from '../../util/util';
-import DndButton from './DndButton';
+import DndButton from './buttons/DndButton';
 import DndInput from './DndInput';
-import DndDataEntryButtonBar from './DndDataEntryButtonBar';
+import DndDataEntryButtonBar from './buttons/DndDataEntryButtonBar';
 import DndManageChartEntry from './subcomponents/DndManageChartEntry';
-import DndListItemButtonBar from './DndListItemButtonBar';
-import DndIncrementButtons from './DndIncrementButtons';
+import DndListItemButtonBar from './buttons/DndListItemButtonBar';
+import DndIncrementButtons from './buttons/DndIncrementButtons';
 import { Panel } from 'react-bootstrap';
 
 class DndManageCharts extends React.Component {

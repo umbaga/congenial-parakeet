@@ -7,7 +7,7 @@ import BackgroundList from './BackgroundList';
 import BackgroundEntry from './BackgroundEntry';
 import * as actions from '../../../actions/admin/backgroundActions';
 import util from '../../../util/util';
-import DndButton from '../../common/DndButton';
+import DndButton from '../../common/buttons/DndButton';
 
 class BackgroundListPage extends React.Component {
     constructor(props, context) {

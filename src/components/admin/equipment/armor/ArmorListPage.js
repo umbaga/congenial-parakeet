@@ -7,7 +7,7 @@ import ArmorList from './ArmorList';
 import ArmorEntry from './ArmorEntry';
 import * as actions from '../../../../actions/admin/armorActions';
 import util from '../../../../util/util';
-import DndButton from '../../../common/DndButton';
+import DndButton from '../../../common/buttons/DndButton';
 
 class ArmorListPage extends React.Component {
     constructor(props, context) {

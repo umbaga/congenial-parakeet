@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndButton from '../../../common/DndButton';
+import DndButton from '../../../common/buttons/DndButton';
 
 class PackEquipmentItemRow extends React.Component {
     constructor(props, context) {

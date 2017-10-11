@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
-import DndDataEntryButtonBar from './DndDataEntryButtonBar';
+import DndDataEntryButtonBar from './buttons/DndDataEntryButtonBar';
 
 class DndModal extends React.Component {
     constructor(props, context) {

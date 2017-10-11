@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import DndListItemButtonBar from '../../common/DndListItemButtonBar';
+import DndListItemButtonBar from '../../common/buttons/DndListItemButtonBar';
 import * as proficiencyActions from '../../../actions/admin/proficiencyActions';
 
 class proficiencyListItem extends React.Component {

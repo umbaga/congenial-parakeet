@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import DndListItemButtonBar from '../../common/DndListItemButtonBar';
+import DndListItemButtonBar from '../../common/buttons/DndListItemButtonBar';
 import * as backgroundActions from '../../../actions/admin/backgroundActions';
 
 class BackgroundListItem extends React.Component {

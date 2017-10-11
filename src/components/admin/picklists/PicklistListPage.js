@@ -7,7 +7,7 @@ import PicklistList from './PicklistList';
 import PicklistEntry from './PicklistEntry';
 import * as actions from '../../../actions/admin/picklistActions';
 import util from '../../../util/util';
-import DndButton from '../../common/DndButton';
+import DndButton from '../../common/buttons/DndButton';
 
 class PicklistListPage extends React.Component {
     constructor(props, context) {

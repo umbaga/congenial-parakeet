@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import util from '../../../util/util';
-import DndListItemButtonBar from '../../common/DndListItemButtonBar';
+import DndListItemButtonBar from '../../common/buttons/DndListItemButtonBar';
 import * as equipmentActions from '../../../actions/admin/equipmentActions';
 
 class EquipmentListItem extends React.Component {

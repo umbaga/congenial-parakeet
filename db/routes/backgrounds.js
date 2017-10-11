@@ -83,6 +83,10 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function deleteEquipmentCategoryLinks(resObj, callback) {
+                    sql = 'DELETE FROM adm_link_equipment_category';
+                    sql += ' WHERE "referenceId" = $1';
                 }
             ], function(error, result) {
                 if (error) {
