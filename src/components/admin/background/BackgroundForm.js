@@ -5,7 +5,7 @@ import DndUniversalInput from '../../common/inputs/DndUniversalInput';
 import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
 import DndManageAssignedItems from '../../common/objectManagement/DndManageAssignedItems';
-import DndManageProficiencyGroups from '../../common/objectManagement/DndManageProficiencyGroups';
+import DndManageItemGroups from '../../common/objectManagement/DndManageItemGroups';
 import DndManageCharts from '../../common/objectManagement/DndManageCharts';
 import DndListItemButtonBar from '../../common/buttons/DndListItemButtonBar';
 
@@ -118,16 +118,17 @@ class BackgroundForm extends React.Component {
                         </Tab>
                         <Tab eventKey={3} title="Proficiencies">
                             <div>&nbsp;</div>
-                            <DndManageProficiencyGroups
-                                proficiencyGroups={this.props.background.proficiencyGroups}
-                                onAddProficiencyGroup={this.props.onAddProficiencyGroup}
+                            <DndManageItemGroups
+                                itemGroups={this.props.background.proficiencyGroups}
+                                onAddItemGroup={this.props.onAddProficiencyGroup}
                                 onChange={this.props.onChange}
-                                onChangeProficiencyGroup={this.props.onChangeProficiencyGroup}
-                                onRemoveProficiencyGroup={this.props.onRemoveProficiencyGroup}
-                                onResetProficiencyGroup={this.props.onResetProficiencyGroup}
+                                onChangeItemGroup={this.props.onChangeProficiencyGroup}
+                                onRemoveItemGroup={this.props.onRemoveProficiencyGroup}
+                                onResetItemGroup={this.props.onResetProficiencyGroup}
                                 picklists={this.props.picklists}
                                 proficiencies={this.props.proficiencies}
-                                proficiencyGroup={this.props.proficiencyGroup}
+                                itemGroup={this.props.proficiencyGroup}
+                                title="Proficiency"
                                 />
                         </Tab>
                         <Tab eventKey={4} title="Equipment">

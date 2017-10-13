@@ -34,7 +34,7 @@ module.exports = function(app, pg, async, pool) {
                     sql += ' OR "id" IN (SELECT chart.id FROM adm_core_chart chart';
                     sql += ' INNER JOIN adm_link_chart link ON link."chartId" = chart.id';
                     sql += ' WHERE link."referenceId" = $1)';
-                    sql += '  OR "id" IN (SELECT "proficiencyGroupId" FROM adm_link_proficiency_group WHERE "referenceId" = $1)';
+                    sql += '  OR "id" IN (SELECT "itemGroupId" FROM adm_link_item_group WHERE "referenceId" = $1)';
                 },
                 function deleteDescriptions(resObj, callback) {
                     sql = 'DELETE FROM adm_core_description';
@@ -63,12 +63,12 @@ module.exports = function(app, pg, async, pool) {
                     sql += ' WHERE "referenceId" = $1';
                 },
                 function deleteProficiencyGroupLinks(resObj, callback) {
-                    sql = 'DELETE FROM adm_link_proficiency_group';
+                    sql = 'DELETE FROM adm_link_item_group';
                     sql += ' WHERE "referenceId" = $1';
                 },
                 function deleteProficiencyGroups(resObj, callback) {
-                    sql = 'DELETE FROM adm_def_proficiency_group';
-                    sql += ' WHERE "proficiencyGroupId" IN (SELECT "proficiencyGroupId" FROM adm_link_proficiency_group WHERE "referenceId" = $1)';
+                    sql = 'DELETE FROM adm_def_item_group';
+                    sql += ' WHERE "itemGroupId" IN (SELECT "itemGroupId" FROM adm_link_item_group WHERE "referenceId" = $1)';
                 },
                 function deleteBackgroundTable(resObj, callback) {
                     sql = 'DELETE FROM adm_def_background';
@@ -364,7 +364,7 @@ module.exports = function(app, pg, async, pool) {
                             vals.push(tmpItemName);
                             vals.push(resObj.background.resource.id);
                         }
-                        sql += ' returning id AS "proficiencyGroupId";';
+                        sql += ' returning id AS "itemGroupId";';
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
@@ -372,7 +372,7 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var t = 0; t < results.length; t++) {
-                                resObj.background.proficiencyGroups[t].id = results[t].proficiencyGroupId;
+                                resObj.background.proficiencyGroups[t].id = results[t].itemGroupId;
                             }
                             return callback(null, resObj);
                         });
@@ -713,8 +713,8 @@ module.exports = function(app, pg, async, pool) {
                     results = [];
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
-                        sql = 'INSERT INTO adm_def_proficiency_group';
-                        sql += ' ("proficiencyGroupId", "mechanicTypeId", "selectCount")';
+                        sql = 'INSERT INTO adm_def_item_group';
+                        sql += ' ("itemGroupId", "mechanicTypeId", "selectCount")';
                         sql += ' VALUES';
                         var first = 1;
                         var second = 2;
@@ -747,8 +747,8 @@ module.exports = function(app, pg, async, pool) {
                     results = [];
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
-                        sql = 'INSERT INTO adm_link_proficiency_group_assignment';
-                        sql += ' ("proficiencyGroupId", "proficiencyId")';
+                        sql = 'INSERT INTO adm_link_item_group_assignment';
+                        sql += ' ("itemGroupId", "itemId")';
                         sql += ' VALUES';
                         var first = 1;
                         var second = 2;
@@ -782,8 +782,8 @@ module.exports = function(app, pg, async, pool) {
                     results = [];
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
-                        sql = 'INSERT INTO adm_link_proficiency_group';
-                        sql += ' ("referenceId", "proficiencyGroupId")';
+                        sql = 'INSERT INTO adm_link_item_group';
+                        sql += ' ("referenceId", "itemGroupId")';
                         sql += ' VALUES';
                         var first = 1;
                         var second = 2;
@@ -916,7 +916,7 @@ module.exports = function(app, pg, async, pool) {
             sql += '   			json_agg(proficiency_row) AS proficiencies,';
             sql += '   			d.id';
             sql += '   		FROM adm_core_item d';
-            sql += '   		INNER JOIN adm_link_proficiency_group dc ON (dc."referenceId" = d.id)';
+            sql += '   		INNER JOIN adm_link_item_group dc ON (dc."referenceId" = d.id)';
             sql += '   		INNER JOIN (';
             sql += '   			SELECT  ';
             sql += '   				c.id,       ';
@@ -941,18 +941,18 @@ module.exports = function(app, pg, async, pool) {
             sql += '   		                \'name\', mech."itemName"';
             sql += '   		            ) AS "mechanic"';
             sql += '   			FROM adm_core_item c';
-            sql += '   			INNER JOIN adm_link_proficiency_group bgcht ON bgcht."proficiencyGroupId" = c.id';
-            sql += '   			INNER JOIN adm_def_proficiency_group pgrp ON pgrp."proficiencyGroupId" = bgcht."proficiencyGroupId"';
+            sql += '   			INNER JOIN adm_link_item_group bgcht ON bgcht."itemGroupId" = c.id';
+            sql += '   			INNER JOIN adm_def_item_group pgrp ON pgrp."itemGroupId" = bgcht."itemGroupId"';
             sql += '   			INNER JOIN adm_core_item mech ON mech.id = pgrp."mechanicTypeId"';
-            sql += '   			INNER JOIN adm_link_proficiency_group_assignment cm ON (cm."proficiencyGroupId" = c.id)';
-            sql += '   			INNER JOIN adm_core_item prof ON (prof.id = cm."proficiencyId")';
+            sql += '   			INNER JOIN adm_link_item_group_assignment cm ON (cm."itemGroupId" = c.id)';
+            sql += '   			INNER JOIN adm_core_item prof ON (prof.id = cm."itemId")';
             sql += '   			LEFT OUTER JOIN adm_def_proficiency profdef ON profdef."proficiencyId" = prof.id AND mech.id IN (556, 554)';
             sql += '   			LEFT OUTER JOIN adm_core_item profcat ON profcat.id = profdef."categoryId"';
             sql += '              LEFT OUTER JOIN adm_def_proficiency_category profcatdef ON profcatdef."proficiencyCategoryId" = profcat.id';
-            sql += '              LEFT OUTER JOIN adm_core_item catcat ON catcat.id = cm."proficiencyId" AND mech."id" = 555';
+            sql += '              LEFT OUTER JOIN adm_core_item catcat ON catcat.id = cm."itemId" AND mech."id" = 555';
             sql += '              LEFT OUTER JOIN adm_def_proficiency_category catcatdef ON catcatdef."proficiencyCategoryId" = catcat.id';
             sql += '   			GROUP BY c.id, mech.id, pgrp."selectCount", profcat.id, profcat."itemName", catcat.id, catcat."itemName", profcatdef."parentId", catcatdef."parentId"';
-            sql += '   	) proficiency_row ON (proficiency_row.id = dc."proficiencyGroupId")';
+            sql += '   	) proficiency_row ON (proficiency_row.id = dc."itemGroupId")';
             sql += '   	GROUP BY d.id';
             sql += '   ) r(proficiencies, id) WHERE id = i.id) AS "proficiencyGroups"';
             sql += '   FROM adm_core_item i';
