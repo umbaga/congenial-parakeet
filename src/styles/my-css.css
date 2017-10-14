@@ -40,3 +40,7 @@ tr.found{
 .btn-group-vertical {
   flex-wrap: wrap;
 }
+.input-inline {
+    display: inline-flex !important;
+    color: red;
+}

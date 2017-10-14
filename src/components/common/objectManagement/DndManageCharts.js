@@ -107,6 +107,27 @@ class DndManageCharts extends React.Component {
     renderManageChartEntries(chart) {
         return chart && chart.title && chart.title.length && chart.dieRoll && util.dataTypes.compareDataType(chart.dieRoll.rendered, util.dataTypes.special.DICE_ROLL) ? (
             <div>
+                <div>
+                    <DndButton
+                        buttonType="fill"
+                        onClick={this.props.onClickExpand}
+                        />
+                </div>
+                <div>
+                    {chart.entries.map(entry =>
+                                       <DndManageChartEntry
+                                           key={entry.id}
+                                           chart={chart}
+                                           entry={entry}
+                                           onChangeChart={this.props.onChangeChart}
+                                           onRemoveEntry={this.props.onRemoveEntry}
+                                           />
+                                      )}
+                </div>
+            </div>
+        ) : null;
+    }
+    /*
                 <table>
                     <tbody>
                         {chart.entries.map(entry =>
@@ -119,11 +140,7 @@ class DndManageCharts extends React.Component {
                                 />
                         )}
                     </tbody>
-                </table>
-            </div>
-        ) : null;
-    }
-    
+                </table>*/
     render() {
         const charts = this.props.charts;
         const chart = this.props.chart;
@@ -182,7 +199,8 @@ DndManageCharts.propTypes = {
     onResetChart: PropTypes.func.isRequired,
     onSelectChart: PropTypes.func.isRequired,
     onRemoveEntry: PropTypes.func.isRequired,
-    onChangeChartOrder: PropTypes.func.isRequired
+    onChangeChartOrder: PropTypes.func.isRequired,
+    onClickExpand: PropTypes.func.isRequired
 };
 
 export default DndManageCharts;

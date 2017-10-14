@@ -49,6 +49,10 @@ class DndButton extends React.Component {
                 fontawesomeStyle += 'caret-down';
                 bootstrapStyle += 'default';
                 break;
+            case 'fill':
+                fontawesomeStyle += 'expand';
+                bootstrapStyle += 'primary';
+                break;
             case 'hamburger':
                 fontawesomeStyle += 'bars';
                 bootstrapStyle += 'primary';

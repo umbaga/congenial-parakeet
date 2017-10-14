@@ -4,6 +4,7 @@ import * as forDb from './formatForDb';
 import * as dataTypes from './dataTypes';
 import * as picklistInfo from './picklistInfo';
 import unicode from './unicode';
+import * as common from './commonFunctions';
 
 let util = {};
 util.objectModel = objectModel;
@@ -14,5 +15,6 @@ util.format = format;
 util.dataTypes = dataTypes;
 util.picklistInfo = picklistInfo;
 util.unicode = unicode;
+util.common = common;
 
 export default util;

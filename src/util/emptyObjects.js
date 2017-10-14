@@ -160,7 +160,7 @@ export const PROFICIENCY_GROUP = {
         name: ''
     },
     proficiencies: [],
-    selectCount: 0
+    selectCount: 1
 };
 export const WEAPON = {
     id: 0,

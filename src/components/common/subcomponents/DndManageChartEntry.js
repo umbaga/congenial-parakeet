@@ -27,6 +27,7 @@ class DndManageChartEntry extends React.Component {
                 value={entry.maximum}
                 onChange={this.props.onChangeChart}
                 datatype={util.dataTypes.special.CHART_ENTRY_DIE_ROLL_RANGE}
+                className="form-control"
                 >
                 {dieRollRangeArray.map(rollRange =>
                     <option
@@ -47,32 +48,48 @@ class DndManageChartEntry extends React.Component {
                 value={entry.description}
                 onChange={this.props.onChangeChart}
                 datatype={util.dataTypes.special.CHART_ENTRY_DESCRIPTION}
+                className="form-control"
                 />
         );
     }
     renderDeleteButton(chart) {
         return chart.entries.length > 1 ? (
-            <td>
+            <span className="input-group-btn">
                 <DndButton
                     buttonType="delete"
                     onClick={this._onRemoveEntry}
                     />
-            </td>
+            </span>
         ) : null;
     }
     render() {
         const chart = this.props.chart;
         const entry = this.props.entry;
         return (
-            <tr>
-                <td>{this.renderDieRangeSelect(chart, entry)}</td>
-                <td>{this.renderDescriptionInput(entry)}</td>
-                {this.renderDeleteButton(chart)}
-            </tr>
+            <div className="col-md-12">
+                <div className=" input-group input-inline">
+                    {this.renderDieRangeSelect(chart, entry)}
+                </div>
+                <div className=" input-group input-inline">
+                    {this.renderDescriptionInput(entry)}
+                    {this.renderDeleteButton(chart)}
+                </div>
+            </div>
         );
     }
 }
-
+/*
+            <tr>
+                <td>
+                    <div className=" input-group input-inline">
+                        {this.renderDieRangeSelect(chart, entry)}
+                    </div>
+                    <div className=" input-group input-inline">
+                        {this.renderDescriptionInput(entry)}
+                        {this.renderDeleteButton(chart)}
+                    </div>
+                </td>
+            </tr>*/
 DndManageChartEntry.propTypes = {
     chart: PropTypes.object.isRequired,
     entry: PropTypes.object.isRequired,

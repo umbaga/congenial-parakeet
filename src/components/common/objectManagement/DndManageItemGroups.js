@@ -12,6 +12,7 @@ class DndManageItemGroups extends React.Component {
         this.renderCategory = this.renderCategory.bind(this);
         this.renderItemToggle = this.renderItemToggle.bind(this);
         this.renderList = this.renderList.bind(this);
+        this._formatText = this._formatText.bind(this);
     }
 
     renderCategory(picklist) {
@@ -77,7 +78,7 @@ class DndManageItemGroups extends React.Component {
                                 <DndAssignedItemRow
                                     key={group.id}
                                     item={group}
-                                    displayValue={util.format.forDisplay.obj.itemGroup(group)}
+                                    displayValue={this._formatText(group)}
                                     removeItem={this.props.onRemoveItemGroup}
                                     />
                             )}
@@ -85,6 +86,14 @@ class DndManageItemGroups extends React.Component {
                     </table>
                 </fieldset>
         ) : null;
+    }
+    
+    _formatText(group) {
+        if (typeof this.props.groupListItemTextFormatFunction === 'function') {
+            return this.props.groupListItemTextFormatFunction(group);
+        } else {
+            return util.format.forDisplay.obj.itemGroup(group);
+        }
     }
     
     render() {
@@ -131,7 +140,8 @@ DndManageItemGroups.propTypes = {
     onRemoveItemGroup: PropTypes.func.isRequired,
     onResetItemGroup: PropTypes.func.isRequired,
     itemGroup: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    groupListItemTextFormatFunction: PropTypes.func
 };
 
 export default DndManageItemGroups;

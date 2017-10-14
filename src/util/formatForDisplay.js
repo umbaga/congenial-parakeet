@@ -252,6 +252,33 @@ obj.equipmentName = function(val) {
     }
     return retVal;
 };
+obj.itemGroup = function(val) {
+    let retVal = '';
+    switch (val.mechanic.id) {
+        case util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_ASSIGNMENT:
+            for (let x = 0; x < val.proficiencies.length; x++) {
+                retVal += val.proficiencies[x].name;
+                if (x < val.proficiencies.length - 1) {
+                    retVal += ', ';
+                }
+            }
+            break;
+        case util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_SELECT_FROM_CATEGORY:
+            retVal = util.format.forDisplay.number.renderAsWord(val.selectCount) + ' ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount);
+            break;
+        case util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_SELECT_FROM_LIST:
+            retVal = 'Select ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' from the following: ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount) + ': ';
+            for (let x = 0; x < val.proficiencies.length; x++) {
+                retVal += val.proficiencies[x].name;
+                if (x < val.proficiencies.length - 1) {
+                    retVal += ', ';
+                }
+            }
+            break;
+        default:
+    }
+    return retVal;
+};
 obj.proficiencyGroup = function(val) {
     let retVal = '';
     switch (val.mechanic.id) {
@@ -267,7 +294,7 @@ obj.proficiencyGroup = function(val) {
             retVal = 'You gain proficiency with ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount);
             break;
         case util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_SELECT_FROM_LIST:
-            retVal = 'Select ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' from the following ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount) + ': ';
+            retVal = 'Select ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' from the following: ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount) + ': ';
             for (let x = 0; x < val.proficiencies.length; x++) {
                 retVal += val.proficiencies[x].name;
                 if (x < val.proficiencies.length - 1) {
