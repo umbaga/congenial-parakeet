@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import util from '../../../util/util';
 import DndInputWrapper from './DndInputWrapper';
 import DndToggleBoxes from './DndToggleBoxes';
+import DndButton from '../buttons/DndButton';
 
 class DndInput extends React.Component {
     constructor(props, context) {
@@ -20,6 +21,7 @@ class DndInput extends React.Component {
         let isReadOnly = this.props.isReadOnly ? this.props.isReadOnly : false;
         let numberMinVal = this.props.numberMinVal ? this.props.numberMinVal : 0;
         let numberStepVal = this.props.numberStepVal ? this.props.numberStepVal : 1;
+        let hasButton = this.props.buttonOnClick ? true : false;
         switch (this.props.dataType) {
             case util.dataTypes.bool.BOOL:
             case util.dataTypes.bool.HAS_DISADVANTAGE:
@@ -175,7 +177,20 @@ class DndInput extends React.Component {
                 break;
             default:
         }
-
+        const buttonType = (this.props.buttonType && this.props.buttonType.length) != 0 ? this.props.buttonType : 'additem';
+        const finalInput = hasButton ? (
+            <div className="input-group">
+                {primaryInput}
+                <span className="input-group-btn">
+                    <DndButton
+                        buttonType={buttonType}
+                        onClick={this.props.buttonOnClick}
+                        bsButtonStyle={this.props.bsButtonStyle}
+                        />
+                </span>
+            </div>
+        ) : primaryInput;
+        
         return (
             <DndInputWrapper
                 label={this.props.label}
@@ -184,7 +199,7 @@ class DndInput extends React.Component {
                 labelCols={this.props.labelCols}
                 >
                 <div>
-                    {primaryInput}
+                    {finalInput}
                 </div>
             </DndInputWrapper>
         );
@@ -206,7 +221,10 @@ DndInput.propTypes = {
     isReadOnly: PropTypes.bool,
     value: PropTypes.string,
     valueArray: PropTypes.array,
-    valueObj: PropTypes.object
+    valueObj: PropTypes.object,
+    buttonType: PropTypes.string,
+    buttonOnClick: PropTypes.func,
+    bsButtonStyle: PropTypes.string
 };
 
 export default DndInput;
