@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as backgroundActions from '../../../actions/admin/backgroundActions';
 import * as equipmentActions from '../../../actions/admin/equipmentActions';
+
 import BackgroundForm from './BackgroundForm';
 import BackgroundDetails from './BackgroundDetails';
 import util from '../../../util/util';
@@ -49,6 +50,7 @@ class BackgroundEntry extends React.Component {
         this.onResetVariant = this.onResetVariant.bind(this);
         this.onSelectVariant = this.onSelectVariant.bind(this);
         this.onChangeChartOrder = this.onChangeChartOrder.bind(this);
+        this.onChartExpand = this.onChartExpand.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -509,6 +511,12 @@ class BackgroundEntry extends React.Component {
         this.setState({variant: Object.assign({}, variant)});
     }
     
+    onChartExpand() {
+        const chart = util.common.expandChart(this.state.chart);
+        console.log(chart);
+        this.setState({chart: chart});
+    }
+    
     render() {
         const contents = this.props.canEdit ? (
             <BackgroundForm
@@ -542,6 +550,7 @@ class BackgroundEntry extends React.Component {
                 onSelectVariant={this.onSelectVariant}
                 variant={this.state.variant}
                 onChangeChartOrder={this.onChangeChartOrder}
+                onChartExpand={this.onChartExpand}
                 />
         ) : (
             <BackgroundDetails
@@ -604,8 +613,9 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(backgroundActions, equipmentActions, dispatch)
+        actions: bindActionCreators(backgroundActions, dispatch)
     };
 }
+        //actions: bindActionCreators(Object.assign({}, backgroundActions, equipmentActions), dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(BackgroundEntry);

@@ -129,6 +129,7 @@ class BackgroundForm extends React.Component {
                                 proficiencies={this.props.proficiencies}
                                 itemGroup={this.props.proficiencyGroup}
                                 title="Proficiency"
+                                groupListItemTextFormatFunction={util.format.forDisplay.obj.proficiencyGroup}
                                 />
                         </Tab>
                         <Tab eventKey={4} title="Equipment">
@@ -169,6 +170,7 @@ class BackgroundForm extends React.Component {
                                 onSelectChart={this.props.onSelectChart}
                                 onRemoveEntry={this.props.onRemoveEntry}
                                 onChangeChartOrder={this.props.onChangeChartOrder}
+                                onClickExpand={this.props.onChartExpand}
                                 />
                         </Tab>
                     </Tabs>
@@ -177,16 +179,6 @@ class BackgroundForm extends React.Component {
         );
     }
 }
-/*
-                            <div className="col-md-12 text-center">
-                                <p>
-                                    <DndButton
-                                        buttonType="label"
-                                        label="Create a new minor equipment item"
-                                        onClick={this.props.openCreateMinorItemModal}
-                                        />
-                                </p>
-                            </div>*/
 /*
                         <Tab eventKey={6} title="Varaints">
                             <div>&nbsp;</div>
@@ -250,7 +242,8 @@ BackgroundForm.propTypes = {
     onResetVariant: PropTypes.func.isRequired,
     onSelectVariant: PropTypes.func.isRequired,
     variant: PropTypes.object.isRequired,
-    onChangeChartOrder: PropTypes.func.isRequired
+    onChangeChartOrder: PropTypes.func.isRequired,
+    onChartExpand: PropTypes.func.isRequired
 };
 
 export default BackgroundForm;
