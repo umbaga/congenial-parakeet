@@ -71,7 +71,7 @@ class testbed extends React.Component {
                         onChange={this.updateFormState}
                         picklist={damageTypes}
                         valueObj={selectedItem}
-                        saveButtonOnClick={this.saveNewItem}
+                        onSaveButtonClick={this.saveNewItem}
                         bsSaveButtonStyle="danger"
                         bsCancelButtonStyle="info"
                         bsButtonStyle="primary"

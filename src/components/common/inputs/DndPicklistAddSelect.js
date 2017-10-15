@@ -22,22 +22,22 @@ class DndPicklistAddSelect extends React.Component {
     }
     
     _onClick() {
-        if (typeof this.props.addItemOnClick === 'function') {
-            this.props.addItemOnClick();
+        if (typeof this.props.onAddItemClick === 'function') {
+            this.props.onAddItemClick();
         }
         this.toggleMode();
     }
     
     _onSave() {
-        if (typeof this.props.saveButtonOnClick === 'function') {
-            this.props.saveButtonOnClick();
+        if (typeof this.props.onSaveButtonClick === 'function') {
+            this.props.onSaveButtonClick();
         }
         this.toggleMode();
     }
     
     _onCancel() {
-        if (typeof this.props.cancelButtonOnClick === 'function') {
-            this.props.cancelButtonOnClick();
+        if (typeof this.props.onCancelButtonClick === 'function') {
+            this.props.onCancelButtonClick();
         }
         this.toggleMode();
     }
@@ -144,11 +144,11 @@ DndPicklistAddSelect.propTypes = {
     picklist: PropTypes.array.isRequired,
     valueObj: PropTypes.object,
     addItemButtonType: PropTypes.string,
-    addItemOnClick: PropTypes.func,
+    onAddItemClick: PropTypes.func,
+    onCancelButtonClick: PropTypes.string,
+    onSaveButtonClick: PropTypes.func.isRequired,
     saveButtonType: PropTypes.string,
-    saveButtonOnClick: PropTypes.func.isRequired,
     cancelButtonType: PropTypes.string,
-    cancelButtonOnClick: PropTypes.string,
     bsButtonStyle: PropTypes.string,
     bsAddItemButtonStyle: PropTypes.string,
     bsSaveButtonStyle: PropTypes.string,
