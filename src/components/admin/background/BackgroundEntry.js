@@ -22,7 +22,7 @@ class BackgroundEntry extends React.Component {
             variant: Object.assign({}, util.objectModel.BACKGROUND_VARIANT),
             selectedChartId: 0,
             saving: false,
-            showEquipmentModal: false
+            selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT)
         };
         this.cancelBackground = this.cancelBackground.bind(this);
         this.deleteBackground = this.deleteBackground.bind(this);
@@ -51,6 +51,11 @@ class BackgroundEntry extends React.Component {
         this.onSelectVariant = this.onSelectVariant.bind(this);
         this.onChangeChartOrder = this.onChangeChartOrder.bind(this);
         this.onChartExpand = this.onChartExpand.bind(this);
+        this.onSaveNewEquipmentButtonClick = this.onSaveNewEquipmentButtonClick.bind(this);
+        this.onCancelNewEquipmentButtonClick = this.onCancelNewEquipmentButtonClick.bind(this);
+        this.onCreateNewEquipmentButtonClick = this.onCreateNewEquipmentButtonClick.bind(this);
+        this.onChangeEquipment = this.onChangeEquipment.bind(this);
+        this.props.actions.upsertEquipment = this.props.actions.upsertEquipment.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -58,32 +63,6 @@ class BackgroundEntry extends React.Component {
             this.setState({background: nextProps.background});
         }
         this.setState({saving: false});
-    }
-    
-    addEquipment () {
-        const background = this.state.background;
-        const selectedEquipment = this.state.selectedEquipment;
-        selectedEquipment.assignedCount = 1;
-        background.assignedEquipment.push(selectedEquipment);
-        return this.setState({background: background});
-    }
-    
-    removeEquipment (equipmentItem) {
-        const background = this.state.background;
-        const indexOfItemToRemove = this.props.background.assignedEquipment.findIndex(item => {
-            return item.id == equipmentItem.id;
-        });
-        background.assignedEquipment.splice(indexOfItemToRemove, 1);
-        return this.setState({background: background});
-    }
-    
-    changeEquipmentCount (event, equipmentItem) {
-        const background = Object.assign({}, this.state.background);
-        const itemIndex = this.props.background.assignedEquipment.findIndex(item => {
-            return item.id == equipmentItem.id;
-        });
-        background.assignedEquipment[itemIndex].assignedCount = event.target.value / background.assignedEquipment[itemIndex].count;
-        return this.setState({background: background});
     }
 
     cancelBackground(event) {
@@ -513,10 +492,70 @@ class BackgroundEntry extends React.Component {
     
     onChartExpand() {
         const chart = util.common.expandChart(this.state.chart);
-        console.log(chart);
         this.setState({chart: chart});
     }
     
+    addEquipment () {
+        const background = this.state.background;
+        const selectedEquipment = this.state.selectedEquipment;
+        selectedEquipment.assignedCount = 1;
+        background.assignedEquipment.push(selectedEquipment);
+        return this.setState({background: background});
+    }
+    
+    removeEquipment (equipmentItem) {
+        const background = this.state.background;
+        const indexOfItemToRemove = this.props.background.assignedEquipment.findIndex(item => {
+            return item.id == equipmentItem.id;
+        });
+        background.assignedEquipment.splice(indexOfItemToRemove, 1);
+        return this.setState({background: background});
+    }
+    
+    changeEquipmentCount (event, equipmentItem) {
+        const background = Object.assign({}, this.state.background);
+        const itemIndex = this.props.background.assignedEquipment.findIndex(item => {
+            return item.id == equipmentItem.id;
+        });
+        background.assignedEquipment[itemIndex].assignedCount = event.target.value / background.assignedEquipment[itemIndex].count;
+        return this.setState({background: background});
+    }
+    
+    onSaveNewEquipmentButtonClick() {
+        const selectedEquipment = this.state.selectedEquipment;
+        const background = this.state.background;
+        selectedEquipment.resource = this.state.background.resource;
+        selectedEquipment.category.id = util.picklistInfo.EQUIPMENT_CATEGORY_MINOR_ITEM;
+        selectedEquipment.assignedCount = 1;
+        let self = this;
+        this.props.actions.upsertEquipment(selectedEquipment).then(function(newEquipmentItem) {
+            background.assignedEquipment.push(Object.assign({}, newEquipmentItem.equipment));
+            self.setState({selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT), background: background});
+        });
+    }
+    onCancelNewEquipmentButtonClick() {
+        this.setState({selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT)});
+    }
+    onCreateNewEquipmentButtonClick() {
+        this.setState({selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT)});
+    }
+    onChangeEquipment(event) {
+        let field = event.target.name.split('.')[1];
+        const selectedEquipment = this.state.selectedEquipment;
+        const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
+        switch (dataType) {
+            case util.dataTypes.string.STRING:
+                selectedEquipment[field] = event.target.value;
+                break;
+            case util.dataTypes.obj.EQUIPMENT:
+                if (event.target.value != 0) {
+                    return this.setState({selectedEquipment: this.props.equipments.filter((equipment) => equipment.id == event.target.value)[0]});
+                }
+                break;
+            default:
+        }
+        return this.setState({selectedEquipment: selectedEquipment});
+    }
     render() {
         const contents = this.props.canEdit ? (
             <BackgroundForm
@@ -551,6 +590,11 @@ class BackgroundEntry extends React.Component {
                 variant={this.state.variant}
                 onChangeChartOrder={this.onChangeChartOrder}
                 onChartExpand={this.onChartExpand}
+                onSaveNewEquipmentButtonClick={this.onSaveNewEquipmentButtonClick}
+                onCancelNewEquipmentButtonClick={this.onCancelNewEquipmentButtonClick}
+                onCreateNewEquipmentButtonClick={this.onCreateNewEquipmentButtonClick}
+                equipmentItem={this.state.selectedEquipment}
+                onChangeEquipment={this.onChangeEquipment}
                 />
         ) : (
             <BackgroundDetails
@@ -613,9 +657,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(backgroundActions, dispatch)
+        actions: bindActionCreators(Object.assign({}, backgroundActions, equipmentActions), dispatch)
     };
 }
-        //actions: bindActionCreators(Object.assign({}, backgroundActions, equipmentActions), dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(BackgroundEntry);

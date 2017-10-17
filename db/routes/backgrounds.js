@@ -204,6 +204,7 @@ module.exports = function(app, pg, async, pool) {
                     cb(null, req);
                 },
                 function insertItem(req, callback) {
+                    console.log("01");
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_core_item';
@@ -222,6 +223,7 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertFeatureItem(resObj, callback) {
+                    console.log("02");
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_core_item';
@@ -239,11 +241,12 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertSuggestCharacteristicsItem(resObj, callback) {
+                    console.log("03");
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_core_item';
-                    sql += ' ("itemName", "resourceId", itemTypeId")';
-                    sql += ' VALUES ("Suggested Characteristics", $1, 117) returning id as "suggestedCharacteristicsId"';
+                    sql += ' ("itemName", "resourceId", "itemTypeId")';
+                    sql += ' VALUES (\'Suggested Characteristics\', $1, 117) returning id as "suggestedCharacteristicsId"';
                     vals = [resObj.background.resource.id];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
@@ -256,11 +259,12 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertSuggestedCharacteristicsDescription(resObj, callback) {
+                    console.log("04");
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_core_description';
                     sql += ' ("itemId", "description")';
-                    sql += ' VALUES ($1, $2) returning id as "suggestedCharacteristicsId"';
+                    sql += ' VALUES ($1, $2) returning "itemId" as "suggestedCharacteristicsId"';
                     vals = [resObj.background.suggestedCharacteristics.id, resObj.background.suggestedCharacteristics.description];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
@@ -273,6 +277,7 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertBackgroundVariantItems(resObj, callback) {
+                    console.log("05");
                     results = [];
                     vals = [];
                     if (resObj.background.variants && resObj.background.variants.length != 0) {
@@ -309,6 +314,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertBackgroundVariantFeatureItems(resObj, callback) {
+                    console.log("06");
                     results = [];
                     vals = [];
                     if (resObj.background.variants && resObj.background.variants.length != 0) {
@@ -344,6 +350,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertProficiencyGroupItems(resObj, callback) {
+                    console.log("07");
                     results = [];
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
@@ -381,6 +388,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertBackgroundDescription(resObj, callback) {
+                    console.log("08");
                     results = [];
                     vals = [];
                     if (resObj.background.description && resObj.background.description.length != 0) {
@@ -401,6 +409,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertFeatureDescription(resObj, callback) {
+                    console.log("09");
                     results = [];
                     vals = [];
                     if (resObj.background.feature.description && resObj.background.feature.description.length != 0) {
@@ -421,6 +430,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertVariantFeatureDescriptions(resObj, callback) {
+                    console.log("10");
                     results = [];
                     vals = [];
                     if (resObj.background.variants && resObj.background.variants.length != 0) {
@@ -460,6 +470,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertBackground(resObj, callback) {
+                    console.log("11");
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_def_background';
@@ -476,6 +487,7 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertEqupmentLink(resObj, callback) {
+                    console.log("12");
                     results = [];
                     vals = [];
                     if (resObj.background.assignedEquipment && resObj.background.assignedEquipment.length != 0) {
@@ -511,6 +523,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function assignExistentDiceId(resObj, callback) {
+                    console.log("13");
                     results = [];
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
@@ -549,6 +562,7 @@ module.exports = function(app, pg, async, pool) {
                     
                 },
                 function insertMissingDice(resObj, callback) {
+                    console.log("14");
                     results = [];
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
@@ -598,6 +612,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertCharts(resObj, callback) {
+                    console.log("15");
                     results = [];
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
@@ -637,6 +652,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertChartEntries(resObj, callback) {
+                    console.log("16");
                     results = [];
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
@@ -676,6 +692,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertChartLink(resObj, callback) {
+                    console.log("17");
                     results = [];
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
@@ -710,6 +727,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertProficiencyGroups(resObj, callback) {
+                    console.log("18");
                     results = [];
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
@@ -744,6 +762,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertProficiencies(resObj, callback) {
+                    console.log("19");
                     results = [];
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
@@ -779,6 +798,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertProficiencyGroupLinks(resObj, callback) {
+                    console.log("20");
                     results = [];
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {

@@ -57,6 +57,7 @@ export const EQUIPMENT_CATEGORY_TOOL = 176;
 export const EQUIPMENT_CATEGORY_ARTISANS_TOOL = 290;
 export const EQUIPMENT_CATEGORY_MUSICAL_INSTRUMENT = 291;
 export const EQUIPMENT_CATEGORY_GAMING_SET = 292;
+export const EQUIPMENT_CATEGORY_MINOR_ITEM = 635;
 
 export function getPicklistItems (picklistArray, picklistId) {
     let retVal = [];

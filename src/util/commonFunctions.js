@@ -1,5 +1,4 @@
 export function expandChart(chart) {
-    console.log(chart);
     let retVal = chart;
     chart.entries = [];
     for (let e = chart.dieRoll.dieCount; e <= chart.dieRoll.dieCount * chart.dieRoll.dieType; e++) {

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import util from '../../../util/util';
 import DndInputWrapper from './DndInputWrapper';
 import DndButton from '../buttons/DndButton';
 
@@ -12,9 +13,11 @@ class DndPicklistAddSelect extends React.Component {
         this._onClick = this._onClick.bind(this);
         this._onSave = this._onSave.bind(this);
         this._onCancel = this._onCancel.bind(this);
+        this._onExtraClick = this._onExtraClick.bind(this);
         this.toggleMode = this.toggleMode.bind(this);
         this.renderInput = this.renderInput.bind(this);
-        this.renderButtons = this.renderButtons.bind(this);
+        this.renderPostInputButtons = this.renderPostInputButtons.bind(this);
+        this.renderPreInputButtons = this.renderPreInputButtons.bind(this);
     }
 
     toggleMode() {
@@ -42,6 +45,12 @@ class DndPicklistAddSelect extends React.Component {
         this.toggleMode();
     }
     
+    _onExtraClick() {
+        if (typeof this.props.onExtraButtonClick === 'function') {
+            this.props.onExtraButtonClick();
+        }
+    }
+    
     renderInput() {
         return this.state.isSelectMode ? (
             <select
@@ -50,35 +59,35 @@ class DndPicklistAddSelect extends React.Component {
                 ref={this.props.name}
                 className="form-control"
                 onChange={this.props.onChange}
-                datatype={this.props.dataType}>
+                datatype={this.props.dataType}
+                >
                 <option value="0">SELECT ONE</option>
-                {this.props.picklist.map(picklistItem =>
-                                         <option
-                                             key={picklistItem.id}
-                                             value={picklistItem.id}>
-                                             {picklistItem.name}
-                                         </option>)}
+                {this.props.picklist
+                    .map(picklistItem =>
+                         <option
+                             key={picklistItem.id}
+                             value={picklistItem.id}>
+                             {picklistItem.name}
+                         </option>)}
             </select>
         ) : (
-            <input type="text"
-                className="form-control"/>
+            <input
+                type="text"
+                className="form-control"
+                onChange={this.props.onChange}
+                value={this.props.valueObj.name}
+                name={this.props.name}
+                ref={this.props.name}
+                datatype={util.dataTypes.string.STRING}
+                />
         );
     }
     
-    renderButtons() {
-        const addItemButtonType = this.props.addItemButtonType && this.props.addItemButtonType.length != 0 ? this.props.addItemButtonType : 'create';
+    renderPostInputButtons() {
         const saveButtonType = this.props.saveButtonType && this.props.saveButtonType.length != 0 ? this.props.saveButtonType : 'save';
-        const cancelButtonType = this.props.cancelButtonType && this.props.cancelButtonType.length != 0 ? this.props.cancelButtonType : 'cancel';
-        let finalAddItemButtonStyle = '';
+        const extraButtonType = this.props.extraButtonType && this.props.extraButtonType.length != 0 ? this.props.extraButtonType : '';
         let finalSaveButtonStyle = '';
-        let finalCancelButtonItemStyle = '';
-        if (this.props.bsAddItemButtonStyle && this.props.bsAddItemButtonStyle.length != 0) {
-            finalAddItemButtonStyle = this.props.bsAddItemButtonStyle;
-        } else if (this.props.bsButtonStyle && this.props.bsButtonStyle.length != 0) {
-            finalAddItemButtonStyle = this.props.bsButtonStyle;
-        } else {
-            finalAddItemButtonStyle = 'default';
-        }
+        let finalExtraButtonStyle = '';
         if (this.props.bsSaveButtonStyle && this.props.bsSaveButtonStyle.length != 0) {
             finalSaveButtonStyle = this.props.bsSaveButtonStyle;
         } else if (this.props.bsButtonStyle && this.props.bsButtonStyle.length != 0) {
@@ -86,12 +95,57 @@ class DndPicklistAddSelect extends React.Component {
         } else {
             finalSaveButtonStyle = 'primary';
         }
-        if (this.props.bsCancelButtonStyle && this.props.bsCancelButtonStyle.length != 0) {
-            finalCancelButtonItemStyle = this.props.bsCancelButtonStyle;
+        if (this.props.bsExtraButtonStyle && this.props.bsExtraButtonStyle.length != 0) {
+            finalExtraButtonStyle = this.props.bsExtraButtonStyle;
         } else if (this.props.bsButtonStyle && this.props.bsButtonStyle.length != 0) {
-            finalCancelButtonItemStyle = this.props.bsButtonStyle;
+            finalExtraButtonStyle = this.props.bsButtonStyle;
         } else {
-            finalCancelButtonItemStyle = 'default';
+            finalExtraButtonStyle = 'default';
+        }
+        if (this.state.isSelectMode) {
+            if (typeof this.props.onExtraButtonClick === 'function') {
+                return (
+                    <span className="input-group-btn">
+                        <DndButton
+                            buttonType={extraButtonType}
+                            onClick={this._onExtraClick}
+                            bsButtonStyle={finalExtraButtonStyle}
+                            />
+                    </span>
+                );
+            }
+        } else {
+            return (
+                <span className="input-group-btn">
+                    <DndButton
+                        buttonType={saveButtonType}
+                        onClick={this._onSave}
+                        bsButtonStyle={finalSaveButtonStyle}
+                        />
+                </span>
+            );
+        }
+        return null;
+    }
+    
+    renderPreInputButtons() {
+        const addItemButtonType = this.props.addItemButtonType && this.props.addItemButtonType.length != 0 ? this.props.addItemButtonType : 'create';
+        const cancelButtonType = this.props.cancelButtonType && this.props.cancelButtonType.length != 0 ? this.props.cancelButtonType : 'cancel';
+        let finalAddItemButtonStyle = '';
+        let finalCancelButtonStyle = '';
+        if (this.props.bsAddItemButtonStyle && this.props.bsAddItemButtonStyle.length != 0) {
+            finalAddItemButtonStyle = this.props.bsAddItemButtonStyle;
+        } else if (this.props.bsButtonStyle && this.props.bsButtonStyle.length != 0) {
+            finalAddItemButtonStyle = this.props.bsButtonStyle;
+        } else {
+            finalAddItemButtonStyle = 'default';
+        }
+        if (this.props.bsCancelButtonStyle && this.props.bsCancelButtonStyle.length != 0) {
+            finalCancelButtonStyle = this.props.bsCancelButtonStyle;
+        } else if (this.props.bsButtonStyle && this.props.bsButtonStyle.length != 0) {
+            finalCancelButtonStyle = this.props.bsButtonStyle;
+        } else {
+            finalCancelButtonStyle = 'default';
         }
         return this.state.isSelectMode ? (
             <span className="input-group-btn">
@@ -106,12 +160,7 @@ class DndPicklistAddSelect extends React.Component {
                 <DndButton
                     buttonType={cancelButtonType}
                     onClick={this._onCancel}
-                    bsButtonStyle={finalCancelButtonItemStyle}
-                    />
-                <DndButton
-                    buttonType={saveButtonType}
-                    onClick={this._onSave}
-                    bsButtonStyle={finalSaveButtonStyle}
+                    bsButtonStyle={finalCancelButtonStyle}
                     />
             </span>
         );
@@ -126,8 +175,9 @@ class DndPicklistAddSelect extends React.Component {
                 labelCols={this.props.labelCols}
                 >
                 <div className="input-group">
+                    {this.renderPreInputButtons()}
                     {this.renderInput()}
-                    {this.renderButtons()}
+                    {this.renderPostInputButtons()}
                 </div>
             </DndInputWrapper>
         );
@@ -143,16 +193,19 @@ DndPicklistAddSelect.propTypes = {
     onChange: PropTypes.func.isRequired,
     picklist: PropTypes.array.isRequired,
     valueObj: PropTypes.object,
-    addItemButtonType: PropTypes.string,
     onAddItemClick: PropTypes.func,
-    onCancelButtonClick: PropTypes.string,
+    onCancelButtonClick: PropTypes.func,
+    onExtraButtonClick: PropTypes.func,
     onSaveButtonClick: PropTypes.func.isRequired,
-    saveButtonType: PropTypes.string,
+    addItemButtonType: PropTypes.string,
     cancelButtonType: PropTypes.string,
+    extraButtonType: PropTypes.string,
+    saveButtonType: PropTypes.string,
     bsButtonStyle: PropTypes.string,
     bsAddItemButtonStyle: PropTypes.string,
-    bsSaveButtonStyle: PropTypes.string,
-    bsCancelButtonStyle: PropTypes.string
+    bsCancelButtonStyle: PropTypes.string,
+    bsExtraButtonStyle: PropTypes.string,
+    bsSaveButtonStyle: PropTypes.string
 };
 
 export default DndPicklistAddSelect;

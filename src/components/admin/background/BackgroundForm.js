@@ -142,18 +142,23 @@ class BackgroundForm extends React.Component {
                                 onChange={this.props.onChange} />
                             <div className="col-md-12">
                                 <DndManageAssignedItems
-                                    name="selectedEquipment"
-                                    dataType={util.dataTypes.array.ASSIGNED_EQUIPMENT}
+                                    name="selectedEquipment.name"
+                                    dataTypeArray={util.dataTypes.array.ASSIGNED_EQUIPMENT}
+                                    dataType={util.dataTypes.obj.EQUIPMENT}
                                     label="Assigned Equipment"
                                     picklist={this.props.equipments}
                                     valueArray={this.props.background.assignedEquipment}
-                                    addItem={this._addEquipmentItem}
-                                    onChange={this.props.onChange}
-                                    removeItem={this._removeEquipmentItem}
-                                    changeCount={this._changeEquipmentCount}
+                                    valueObj={this.props.equipmentItem}
+                                    onAddItem={this._addEquipmentItem}
+                                    onChange={this.props.onChangeEquipment}
+                                    onRemoveItem={this._removeEquipmentItem}
+                                    onChangeCount={this._changeEquipmentCount}
                                     itemListTitle="Equipment"
                                     showCount
                                     supplementalText="unit"
+                                    onSaveNewItem={this.props.onSaveNewEquipmentButtonClick}
+                                    onCreateNewItem={this.props.onCreateNewEquipmentButtonClick}
+                                    onCancelNewItem={this.props.onCancelNewEquipmentButtonClick}
                                     />
                             </div>
                         </Tab>
@@ -179,38 +184,7 @@ class BackgroundForm extends React.Component {
         );
     }
 }
-/*
-                        <Tab eventKey={6} title="Varaints">
-                            <div>&nbsp;</div>
-                            <fieldset>
-                                <legend>Add/Edit Variant</legend>
-                                <DndUniversalInput
-                                    referenceObject={this.props.variant}
-                                    onChange={this.props.onChangeVariant}
-                                    picklists={this.props.picklists}
-                                    hideDescription
-                                    />
-                                <DndInput
-                                    name="feature.name"
-                                    label="Feature Name"
-                                    dataType={util.dataTypes.string.STRING}
-                                    value={this.props.variant.feature.name}
-                                    onChange={this.props.onChangeVariant}
-                                    />
-                                <DndInput
-                                    name="feature.description"
-                                    label="Feature Description"
-                                    dataType={util.dataTypes.string.DESCRIPTION}
-                                    value={this.props.variant.feature.description}
-                                    onChange={this.props.onChangeVariant}
-                                    />
-                                <DndDataEntryButtonBar
-                                    onReset={this.props.onResetVariant}
-                                    onSave={this.props.onAddVariant}
-                                    />
-                            </fieldset>
-                                    {this.renderVariants(this.props.background.variants)}
-                        </Tab>*/
+
 BackgroundForm.propTypes = {
     addEquipment: PropTypes.func.isRequired,
     removeEquipment: PropTypes.func.isRequired,
@@ -243,7 +217,12 @@ BackgroundForm.propTypes = {
     onSelectVariant: PropTypes.func.isRequired,
     variant: PropTypes.object.isRequired,
     onChangeChartOrder: PropTypes.func.isRequired,
-    onChartExpand: PropTypes.func.isRequired
+    onChartExpand: PropTypes.func.isRequired,
+    equipmentItem: PropTypes.object.isRequired,
+    onSaveNewEquipmentButtonClick: PropTypes.func.isRequired,
+    onCancelNewEquipmentButtonClick: PropTypes.func.isRequired,
+    onCreateNewEquipmentButtonClick: PropTypes.func.isRequired,
+    onChangeEquipment: PropTypes.func.isRequired
 };
 
 export default BackgroundForm;

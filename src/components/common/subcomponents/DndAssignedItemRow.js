@@ -13,11 +13,11 @@ class DndAssignedItemRow extends React.Component {
     
     _onRemove(event) {
         event.preventDefault();
-        this.props.removeItem(this.props.item);
+        this.props.onRemoveItem(this.props.item);
     }
     
     _onChange(event) {
-        this.props.changeCount(event, this.props.item);
+        this.props.onChangeCount(event, this.props.item);
     }
     
     renderCount() {
@@ -65,8 +65,8 @@ class DndAssignedItemRow extends React.Component {
 
 DndAssignedItemRow.propTypes = {
     item: PropTypes.object.isRequired,
-    changeCount: PropTypes.func,
-    removeItem: PropTypes.func.isRequired,
+    onChangeCount: PropTypes.func,
+    onRemoveItem: PropTypes.func.isRequired,
     showCount: PropTypes.bool,
     supplementalText: PropTypes.string,
     displayValue: PropTypes.string
