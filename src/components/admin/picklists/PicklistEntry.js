@@ -21,6 +21,10 @@ class PicklistEntry extends React.Component {
         this.addPicklistItem = this.addPicklistItem.bind(this);
         this.removePicklistItem = this.removePicklistItem.bind(this);
         this.updateFormState = this.updateFormState.bind(this);
+        this.cancelPicklist = this.cancelPicklist.bind(this);
+        this.deletePicklist = this.deletePicklist.bind(this);
+        this.saveAndBackPicklist = this.saveAndBackPicklist.bind(this);
+        this.saveAndNewPicklist = this.saveAndNewPicklist.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -50,6 +54,22 @@ class PicklistEntry extends React.Component {
         return this.setState({picklistItem: picklistItem});
     }
 
+    cancelPicklist() {
+        
+    }
+
+    deletePicklist() {
+        
+    }
+
+    saveAndBackPicklist() {
+        
+    }
+
+    saveAndNewPicklist() {
+        
+    }
+    
     render() {
         return (
             <DndModal

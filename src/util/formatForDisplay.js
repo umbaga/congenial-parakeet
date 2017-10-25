@@ -111,50 +111,6 @@ number.addCommas = function(val) {
     }
     return retVal;
 };
-number.renderAsWord = function(val) {
-    let retVal = '';
-    switch (val) {
-        case 1:
-            retVal = 'one';
-            break;
-        case 2:
-            retVal = 'two';
-            break;
-        case 3:
-            retVal = 'three';
-            break;
-        case 4:
-            retVal = 'four';
-            break;
-        case 5:
-            retVal = 'five';
-            break;
-        case 6:
-            retVal = 'six';
-            break;
-        case 7:
-            retVal = 'seven';
-            break;
-        case 8:
-            retVal = 'eight';
-            break;
-        case 9:
-            retVal = 'nine';
-            break;
-        case 10:
-            retVal = 'ten';
-            break;
-        case 11:
-            retVal = 'eleven';
-            break;
-        case 12:
-            retVal = 'twelve';
-            break;
-        default:
-            retVal = val.toString();
-    }
-    return retVal;
-};
 number.coin = function(val, fullNames) {
     let retVal = util.unicode.punctuation.longDash;
     let coinTypes = ['gp', 'sp', 'cp'];
@@ -202,6 +158,76 @@ number.coin = function(val, fullNames) {
                 retVal += coinTypes[2];
             }
         }
+    }
+    return retVal;
+};
+number.ordinal = function(val) {
+    let retVal = '';
+    let lastDigit = val.toString().slice(-1);
+    switch (lastDigit) {
+        case '1':
+            if (val == 11) {
+                retVal = val.toString() + 'th';
+            } else {
+                retVal = val.toString() + 'st';
+            }
+            break;
+        case '2':
+            if (val == 12) {
+                retVal = val.toString() + 'th';
+            } else {
+                retVal = val.toString() + 'nd';
+            }
+            break;
+        case '3':
+            retVal = val.toString() + 'rd';
+            break;
+        default:
+            retVal = val.toString() + 'th';
+    }
+    return retVal;
+};
+number.renderAsWord = function(val) {
+    let retVal = '';
+    switch (val) {
+        case 1:
+            retVal = 'one';
+            break;
+        case 2:
+            retVal = 'two';
+            break;
+        case 3:
+            retVal = 'three';
+            break;
+        case 4:
+            retVal = 'four';
+            break;
+        case 5:
+            retVal = 'five';
+            break;
+        case 6:
+            retVal = 'six';
+            break;
+        case 7:
+            retVal = 'seven';
+            break;
+        case 8:
+            retVal = 'eight';
+            break;
+        case 9:
+            retVal = 'nine';
+            break;
+        case 10:
+            retVal = 'ten';
+            break;
+        case 11:
+            retVal = 'eleven';
+            break;
+        case 12:
+            retVal = 'twelve';
+            break;
+        default:
+            retVal = val.toString();
     }
     return retVal;
 };
@@ -305,6 +331,13 @@ obj.proficiencyGroup = function(val) {
         default:
     }
     return retVal;
+};
+obj.spellLevelAndSchool = function(val) {
+    if(val.level == 0) {
+        return val.school.name + ' Cantrip';
+    } else {
+        return util.format.forDisplay.number.ordinal(val.level) + '-level ' + val.school.name;
+    }
 };
 
 let string = {};

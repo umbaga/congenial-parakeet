@@ -13,7 +13,7 @@ const PicklistList = ({picklists, openModal, selectedId, changeSelectedId, onEdi
                                 openModal={openModal}
                                 selectedId={selectedId}
                                 changeSelectedId={changeSelectedId}
-                            onEdit={onEdit}
+                                onEdit={onEdit}
                                />
                           )}
         </tbody>

@@ -162,6 +162,22 @@ export const PROFICIENCY_GROUP = {
     proficiencies: [],
     selectCount: 1
 };
+export const SCHOOL_OF_MAGIC = {id: 0, name: ''};
+export const SPELL = {
+    id: 0,
+    name: '',
+    description: '',
+    castingTime: {id: 0, name: ''},
+    components: [],
+    duration: {id: 0, name: ''},
+    level: 0,
+    range: {id: 0, name: ''},
+    school: {id: 0, name: ''}
+};
+export const SPELL_CASTING_TIME = {id: 0, name: ''};
+export const SPELL_COMPONENT = {id: 0, name: ''};
+export const SPELL_DURATION = {id: 0, name: ''};
+export const SPELL_RANGE = {id: 0, name: ''};
 export const WEAPON = {
     id: 0,
     name: '',

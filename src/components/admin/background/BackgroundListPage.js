@@ -140,7 +140,7 @@ function mapStateToProps(state) {
     } else {
         return {
             equipments: equipments,
-            backgrounds: [util.objectModel.EQUIPMENT_PACK],
+            backgrounds: [util.objectModel.BACKGROUND],
             picklists: picklists,
             proficiencies: [util.objectModel.PROFICIENCY]
         };

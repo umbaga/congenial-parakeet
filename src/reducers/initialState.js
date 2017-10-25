@@ -7,6 +7,7 @@ export default {
     packs: [],
     picklists: [],
     proficiencies: [],
+    spells: [],
     weapons: [],
     session: !!sessionStorage.jwt
 };
