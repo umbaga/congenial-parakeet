@@ -19,12 +19,15 @@ class SpellForm extends React.Component {
     }
     
     render() {
+        const spell = this.props.spell;
+        console.log(spell);
+        console.log(this.props.picklists);
         return (
             <div>
                 <form>
                     <DndUniversalInput
                         ref="name"
-                        referenceObject={this.props.spell}
+                        referenceObject={spell}
                         onChange={this.props.onChange}
                         picklists={this.props.picklists}
                         />

@@ -33,6 +33,7 @@ class ItemtypeListItem extends React.Component {
             <tr key={this.props.itemtype.id}>
                 <td>{this.props.itemtype.name}</td>
                 <td className="text-center">{util.format.forDisplay.bool.asCheckX(this.props.itemtype.isPicklist)}</td>
+                <td className="text-center">{util.format.forDisplay.bool.asCheckX(this.props.itemtype.isDescription)}</td>
                 <td>
                     <DndListItemButtonBar
                         listItem={this.props.itemtype}

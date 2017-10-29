@@ -73,6 +73,7 @@ class ArmorEntry extends React.Component {
         const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         let newSelectedValue = {};
         switch (dataType) {
+            case util.dataTypes.string.DESCRIPTION:
             case util.dataTypes.string.STRING:
             case util.dataTypes.number.COIN:
             case util.dataTypes.number.WEIGHT:

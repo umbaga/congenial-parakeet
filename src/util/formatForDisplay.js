@@ -3,8 +3,9 @@ import util from './util';
 let array = {};
 array.commaDelimitedList = function(arr) {
     let retVal = '';
-    if (arr) {
+    if (arr && arr.length != 0) {
         for (let q = 0; q < arr.length; q++) {
+            if (arr[q] && arr[q].name && arr[q].name.length != 0)
             retVal += arr[q].name;
             if (q < arr.length - 1) {
                 retVal += ', ';
@@ -329,6 +330,19 @@ obj.proficiencyGroup = function(val) {
             }
             break;
         default:
+    }
+    return retVal;
+};
+obj.spellComponents = function(val) {
+    let retVal = '';
+    for (let e = 0; e < val.components.length; e++) {
+        if (retVal.length != 0) {
+            retVal += ', ';
+        }
+        retVal += val.components[e].name.substring(0, 1).toUpperCase();
+        if (val.components[e].id == util.picklistInfo.SPELL_COMPONENT_MATERIAL) {
+            retVal += ' (' + val.components[e].description + ')';
+        }
     }
     return retVal;
 };

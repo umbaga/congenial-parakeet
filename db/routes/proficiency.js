@@ -217,12 +217,12 @@ module.exports = function(app, pg, async, pool) {
                         //UPDATE
                         sql = 'UPDATE adm_def_proficiency_language';
                         sql += ' SET "scriptId" = $1';
-                        sql += ', "languageTypeId" = $2'
+                        sql += ', "rarityId" = $2'
                         sql += ' WHERE "proficiencyId" = $3';
                         vals = [resObj.proficiency.language.script.id, resObj.proficiency.language.rarity.id, resObj.proficiency.id];
                     } else if (resObj.proficiency.needsLanguage && !hasLanguage) {
                         sql = 'INSERT INTO adm_def_proficiency_language';
-                        sql += ' ("scriptId", "languageTypeId", "proficiencyId")';
+                        sql += ' ("scriptId", "rarityId", "proficiencyId")';
                         sql += ' VALUES ($1, $2, $3)';
                         vals = [resObj.proficiency.language.script.id, resObj.proficiency.language.rarity.id, resObj.proficiency.id];
                         //INSERT
@@ -394,7 +394,7 @@ module.exports = function(app, pg, async, pool) {
                 function insertProficiencyLanguageTable(resObj, callback) {
                     if(resObj.needsLanguage) {
                         sql = 'INSERT INTO adm_def_proficiency_language';
-                        sql += ' ("proficiencyId", "scriptId", "languageTypeId")';
+                        sql += ' ("proficiencyId", "scriptId", "rarityId")';
                         sql += ' VALUES ($1, $2, $3);';
                         vals = [resObj.proficiency.id, resObj.proficiency.language.script.id, resObj.proficiency.language.rarity.id];
                         var query = client.query(new pg.Query(sql, vals));
@@ -461,7 +461,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' LEFT OUTER JOIN adm_core_item ability ON ability.id = profability."abilityScoreId"';
             sql += ' LEFT OUTER JOIN adm_def_proficiency_language proflang ON proflang."proficiencyId" = i.id';
             sql += ' LEFT OUTER JOIN adm_core_item script ON script.id = proflang."scriptId"';
-            sql += ' LEFT OUTER JOIN adm_core_item langtype ON langtype.id = proflang."languageTypeId"';
+            sql += ' LEFT OUTER JOIN adm_core_item langtype ON langtype.id = proflang."rarityId"';
             sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id';
             sql += ' INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
             sql += ' ORDER BY cat."itemName", i."itemName"';

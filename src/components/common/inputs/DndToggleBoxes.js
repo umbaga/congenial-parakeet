@@ -17,6 +17,7 @@ class DndToggleBoxes extends React.Component {
                 <div className="col-sm-5">
                     <select
                         name={this.props.name + 'Unassigned'}
+                        className="form-control"
                         multiple
                         size={selectBoxSize}
                         datatype={this.props.dataType}
@@ -35,6 +36,7 @@ class DndToggleBoxes extends React.Component {
                 <div className="col-sm-5">
                     <select
                         name={this.props.name}
+                        className="form-control"
                         multiple
                         size={selectBoxSize}
                         datatype={this.props.dataType}

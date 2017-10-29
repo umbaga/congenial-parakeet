@@ -30,10 +30,11 @@ module.exports = function(app, pg, async, pool) {
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'UPDATE adm_core_type';
-            sql += ' SET "typeName" = $1';
-            sql += ', "isPicklist" = $2'
-            sql += ' WHERE id = $3';
-            vals = [req.body.itemtype.name, req.body.itemtype.isPicklist, req.params.id];
+            sql += ' SET "typeName" = $2';
+            sql += ', "isPicklist" = $3';
+            sql += ', "isDescription" = $4';
+            sql += ' WHERE id = $1';
+            vals = [req.params.id, req.body.itemtype.name, req.body.itemtype.isPicklist, req.body.itemtype.isDescription];
             var query = client.query(new pg.Query(sql, vals));
             query.on('row', function(row) {
                 results.push(row);
@@ -54,9 +55,9 @@ module.exports = function(app, pg, async, pool) {
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'INSERT INTO adm_core_type';
-            sql += '("typeName", "isPicklist")';
-            sql += 'VALUES ($1, $2) RETURNING id;';
-            vals = [req.body.itemtype.name, req.body.itemtype.isPicklist];
+            sql += '("typeName", "isPicklist", "isDescription")';
+            sql += 'VALUES ($1, $2, $3) RETURNING id;';
+            vals = [req.body.itemtype.name, req.body.itemtype.isPicklist, req.body.itemtype.isDescription];
             var query = client.query(new pg.Query(sql, vals));
             query.on('row', function(row) {
                 results.push(row);
@@ -77,7 +78,7 @@ module.exports = function(app, pg, async, pool) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            sql = 'SELECT adm_core_type."id", adm_core_type."typeName" AS "name", adm_core_type."isPicklist"';
+            sql = 'SELECT adm_core_type."id", adm_core_type."typeName" AS "name", adm_core_type."isPicklist", adm_core_type."isDescription"';
             sql += ' FROM adm_core_type';
             sql += ' ORDER BY "typeName"';
             var query = client.query(new pg.Query(sql));

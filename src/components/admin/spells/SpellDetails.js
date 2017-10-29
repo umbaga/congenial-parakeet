@@ -13,20 +13,20 @@ class SpellDetails extends React.Component {
     }
     renderAtHighestLevel() {
         return this.props.spell.atHigherLevels && this.props.spell.atHigherLevels.length != 0 ? (
-            <div>At Higher LevelsL {this.props.spell.atHigherLevels}</div>
+            <div><strong>At Higher Levels: </strong>{this.props.spell.atHigherLevels}</div>
         ) : null;
     }
     render() {
         const spell = this.props.spell;
         return (
             <div>
-                <div>{spell.name}</div>
+                <div><em>{spell.name}</em></div>
                 <div>{util.format.forDisplay.obj.spellLevelAndSchool(spell)}</div>
                 <div>&nbsp;</div>
-                <div>Casting Time: {spell.castingTime.name}</div>
-                <div>Range: {spell.range.name}</div>
-                <div>Components: </div>
-                <div>Duration: {spell.duration.name}</div>
+                <div><strong>Casting Time: </strong>{spell.castingTime.name}</div>
+                <div><strong>Range: </strong>{spell.range.name}</div>
+                <div><strong>Components: </strong>{util.format.forDisplay.obj.spellComponents(spell)}</div>
+                <div><strong>Duration: </strong>{spell.duration.name}</div>
                 <div>&nbsp;</div>
                 <div>{spell.description}</div>
                 {this.renderAtHighestLevel()}

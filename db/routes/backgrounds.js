@@ -25,7 +25,7 @@ module.exports = function(app, pg, async, pool) {
                         return callback(null, tmp);
                     });
                 },
-                function deleteAssociatedItemTableEntries(resObj, callback) {
+                /*function deleteAssociatedItemTableEntries(resObj, callback) {
                     sql = 'DELETE FROM adm_core_item';
                     sql += ' WHERE "id" = $1';
                     sql += ' OR "id" IN (SELECT "featureId" FROM adm_def_background WHERE "backgroundId" = $1)';
@@ -45,7 +45,7 @@ module.exports = function(app, pg, async, pool) {
                     sql += ' OR "itemId" IN (SELECT chart.id FROM adm_core_chart chart';
                     sql += ' INNER JOIN adm_link_chart link ON link."chartId" = chart.id';
                     sql += ' WHERE link."referenceId" = $1)';
-                },
+                },*/
                 function deleteChartEntries(resObj, callback) {
                     sql = 'DELETE FROM adm_def_chart_entry';
                     sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
@@ -263,7 +263,7 @@ module.exports = function(app, pg, async, pool) {
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_core_description';
-                    sql += ' ("itemId", "description", "typeId")';
+                    sql += ' ("itemId", "description", "descriptionTypeId")';
                     sql += ' VALUES ($1, $2, 124)';
                     vals = [resObj.background.suggestedCharacteristics.id, resObj.background.suggestedCharacteristics.description];
                     var query = client.query(new pg.Query(sql, vals));
@@ -899,7 +899,7 @@ sql += '            ORDER BY bgcht."orderIndex"';
 sql += '        ) chart_row ON (chart_row.id = dc."chartId")';
 sql += '        GROUP BY d.id';
 sql += '    ) r(charts, id) WHERE id = i.id) AS charts';
-sql += '   , (SELECT r.variants';
+/*sql += '   , (SELECT r.variants';
 sql += '    FROM (';
 sql += '        SELECT ';
 sql += '            json_agg(variant_row) AS variants,';
@@ -927,7 +927,7 @@ sql += '            INNER JOIN adm_core_item varres ON varres.id = c."resourceId
 sql += '            GROUP BY c.id, feature."id", feature."itemName", featuredesc.description, varres."id"';
 sql += '        ) variant_row ON (variant_row.id = dc."variantBackgroundId")';
 sql += '        GROUP BY dc."backgroundId"';
-sql += '    ) r(variants, id) WHERE id = i.id) AS variants';
+sql += '    ) r(variants, id) WHERE id = i.id) AS variants';*/
 sql += '    , (SELECT r.proficiencies';
 sql += '    	FROM (';
 sql += '    		SELECT ';
@@ -981,8 +981,8 @@ sql += '     LEFT OUTER JOIN adm_link_equipment bglnkeq ON bglnkeq."referenceId"
 sql += '     LEFT OUTER JOIN adm_core_item eqi ON eqi.id = bglnkeq."equipmentId"';
 sql += '     LEFT OUTER JOIN adm_def_equipment eq ON eq."equipmentId" = eqi.id';
 sql += '     LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = eqi.id';
-sql += '     LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."typeId" = 123)';
-sql += '     LEFT OUTER JOIN adm_core_description suggchardesc ON (suggchardesc."itemId" = i.id AND suggchardesc."typeId" = 124)';
+sql += '     LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = 123)';
+sql += '     LEFT OUTER JOIN adm_core_description suggchardesc ON (suggchardesc."itemId" = i.id AND suggchardesc."descriptionTypeId" = 124)';
 sql += '    INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
 sql += '     GROUP BY i."itemName", i.id';
 sql += '   , rsrc.id, rsrc."itemName"';

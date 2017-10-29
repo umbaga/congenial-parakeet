@@ -52,14 +52,13 @@ class ItemtypeEntry extends React.Component {
 
     saveItemtype(event) {
         event.preventDefault();
-        this.setState({saving: true});
+        let newItemtype = Object.assign({}, util.objectModel.ITEMTYPE);
+        this.setState({saving: true, itemtype: newItemtype});
         this.props.actions.upsertItemtype(this.state.itemtype);
     }
 
     saveAndNewItemtype(event) {
         this.saveItemtype(event);
-        let newItemtype = Object.assign({}, util.objectModel.ITEMTYPE);
-        this.setState({itemtype: newItemtype});
         this.refs.form.refs.name.setFocus();
         
     }

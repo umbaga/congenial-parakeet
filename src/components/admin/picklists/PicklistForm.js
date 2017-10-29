@@ -8,6 +8,7 @@ class PicklistForm extends React.Component {
         super(props, context);
         this._onAdd = this._onAdd.bind(this);
         this.setFocus = this.setFocus.bind(this);
+        this.renderItems = this.renderItems.bind(this);
     }
     
     componentDidMount() {
@@ -23,6 +24,27 @@ class PicklistForm extends React.Component {
         this.props.addPicklistItem(this.props.picklistItem);
     }
 
+    renderItems() {
+        return (
+            <tbody>
+                {this.props.picklist.items.map(item =>
+                                               <PicklistItemRow key={item.id}
+                                                   picklistItem={item}
+                                                   removePicklistItem={this.props.removePicklistItem} />
+                  )}
+            </tbody>
+        );
+        /*return this.props.picklist && this.props.picklist.items && this.props.picklist.items.length != 0 && this.props.picklist.items[0].name ? 
+            (
+            <tbody>
+                {this.props.picklist.items.map(item =>
+                                               <PicklistItemRow key={item.id}
+                                                   picklistItem={item}
+                                                   removePicklistItem={this.props.removePicklistItem} />
+                  )}
+            </tbody>
+        ) : null;*/
+    }
     render() {
         return (
             <div>
@@ -46,13 +68,7 @@ class PicklistForm extends React.Component {
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {this.props.picklist.items.map(item =>
-                                                               <PicklistItemRow key={item.id}
-                                                                   picklistItem={item}
-                                                                   removePicklistItem={this.props.removePicklistItem} />
-                                  )}
-                            </tbody>
+                            {this.renderItems()}
                         </table>
                     </div>
                 </form>

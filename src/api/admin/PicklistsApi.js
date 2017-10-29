@@ -19,10 +19,12 @@ class PicklistsApi {
 
     static addPicklistItem(picklist, picklistItem) {
         const headers = Object.assign({'Content-Type': 'application/json'}, this.requestHeaders());
+        const newItem = Object.assign({}, picklistItem);
+        newItem.picklistId = picklist.id;
         const request = new Request('http://localhost:5000/api/adm/picklist/item', {
             method: 'POST',
             headers: headers,
-            body: JSON.stringify({picklistItem: picklistItem})
+            body: JSON.stringify({picklistItem: newItem})
         });
         return fetch(request).then(response => {
             return response.json();

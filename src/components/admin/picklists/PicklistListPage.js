@@ -59,7 +59,6 @@ class PicklistListPage extends React.Component {
 
     render() {
         const picklists = this.props.picklists;
-        console.log(picklists);
         return (
             <div className="col-md-12">
                 <div>

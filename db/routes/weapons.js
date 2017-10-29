@@ -69,7 +69,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function deleteRangeTable(resObj, callback) {
                     sql = 'DELETE FROM adm_def_equipment_weapon_range';
-                    sql += ' WHERE "weaponId" = $1';
+                    sql += ' WHERE "equipmentId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -83,7 +83,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function deleteDescriptionTable(resObj, callback) {
                     sql = 'DELETE FROM adm_def_equipment_weapon_special';
-                    sql += ' WHERE "weaponId" = $1';
+                    sql += ' WHERE "equipmentId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -96,8 +96,8 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function deleteAltDamageTypeTable(resObj, callback) {
-                    sql = 'DELETE FROM adm_def_equipment_weapon_alt_table';
-                    sql += ' WHERE "weaponId" = $1';
+                    sql = 'DELETE FROM adm_def_equipment_weapon_alt_damage';
+                    sql += ' WHERE "equipmentId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -111,7 +111,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function deleteAmmunitionTypeTable(resObj, callback) {
                     sql = 'DELETE FROM adm_def_equipment_weapon_ammunition';
-                    sql += ' WHERE "weaponId" = $1';
+                    sql += ' WHERE "equipmentId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -366,7 +366,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function checkForSpecial(resObj, callback) {
-                    sql = 'SELECT * FROM adm_def_equipment_weapon_special WHERE "weaponId" = $1';
+                    sql = 'SELECT * FROM adm_def_equipment_weapon_special WHERE "equipmentId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -388,18 +388,18 @@ module.exports = function(app, pg, async, pool) {
                         //update
                         sql = 'UPDATE adm_def_equipment_weapon_special';
                         sql += ' SET "specialDescription" = $1';
-                        sql += ' WHERE "weaponId" = $2';
+                        sql += ' WHERE "equipmentId" = $2';
                         vals = [resObj.weapon.specialDescription, resObj.weapon.id];
                     } else if (resObj.weapon.needsSpecial && !specialExists) {
                         //insert
                         sql = 'INSERT INTO adm_def_equipment_weapon_special';
-                        sql += ' ("specialDescription", "weaponId")';
+                        sql += ' ("specialDescription", "equipmentId")';
                         sql += ' VALUES ($1, $2)';
                         vals = [resObj.weapon.specialDescription, resObj.weapon.id];
                     } else {
                         //delete
                         sql = 'DELETE FROM adm_def_equipment_weapon_special';
-                        sql += ' WHERE "weaponId" = $1';
+                        sql += ' WHERE "equipmentId" = $1';
                         vals = [resObj.weapon.id];
                     }
                     var query = client.query(new pg.Query(sql, vals));
@@ -413,7 +413,7 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function checkForRange(resObj, callback) {
-                    sql = 'SELECT * FROM adm_def_equipment_weapon_range WHERE "weaponId" = $1';
+                    sql = 'SELECT * FROM adm_def_equipment_weapon_range WHERE "equipmentId" = $1';
                     vals = [resObj.weapon.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -437,18 +437,18 @@ module.exports = function(app, pg, async, pool) {
                         sql = 'UPDATE adm_def_equipment_weapon_range';
                         sql += ' SET "normalRange" = $1';
                         sql += ', "maximumRange" = $2';
-                        sql += ' WHERE "weaponId" = $3';
+                        sql += ' WHERE "equipmentId" = $3';
                         vals = [resObj.weapon.range.normal, resObj.weapon.range.maximum, req.params.id];
                     } else if (resObj.weapon.needsRange && !rangeExists) {
                         //insert
                         sql = 'INSERT INTO adm_def_equipment_weapon_range';
-                        sql += ' ("normalRange", "maximumRange", "weaponId")';
+                        sql += ' ("normalRange", "maximumRange", "equipmentId")';
                         sql += ' VALUES ($1, $2, $3)';
                         vals = [resObj.weapon.range.normal, resObj.weapon.range.maximum, req.params.id];
                     } else {
                         //delete
                         sql = 'DELETE FROM adm_def_equipment_weapon_range';
-                        sql += ' WHERE "weaponId" = $1';
+                        sql += ' WHERE "equipmentId" = $1';
                         vals = [req.params.id];
                     }
                     var query = client.query(new pg.Query(sql, vals));
@@ -507,7 +507,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function checkForVersatileDamage(resObj, callback) {
                     sql = 'SELECT * FROM adm_def_equipment_weapon_alt_damage';
-                    sql += ' WHERE "weaponId" = $1';
+                    sql += ' WHERE "equipmentId" = $1';
                     vals = [resObj.weapon.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -529,16 +529,16 @@ module.exports = function(app, pg, async, pool) {
                     if (resObj.weapon.needsAltDamage && altDamageExists) {
                         sql = 'UPDATE adm_def_equipment_weapon_alt_damage'
                         sql += ' SET "damageDiceId" = $1';
-                        sql += ' WHERE "weaponId" = $2';
+                        sql += ' WHERE "equipmentId" = $2';
                         vals = [resObj.weapon.versatileDamage.id, resObj.weapon.id];
                     } else if (resObj.weapon.needsAltDamage && !altDamageExists) {
                         sql = 'INSERT INTO adm_def_equipment_weapon_alt_damage';
-                        sql += ' ("damageDiceId", "weaponId")';
+                        sql += ' ("damageDiceId", "equipmentId")';
                         sql += ' VALUES ($1, $2)';
                         vals = [resObj.weapon.versatileDamage.id, resObj.weapon.id];
                     } else {
                         sql = 'DELETE FROM adm_def_equipment_weapon_alt_damage';
-                        sql += ' WHERE "weaponId" = $1';
+                        sql += ' WHERE "equipmentId" = $1';
                         vals = [resObj.weapon.id];
                     }
                     var query = client.query(new pg.Query(sql, vals));
@@ -552,7 +552,7 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function checkForAmmunition(resObj, callback) {
-                    sql = 'SELECT * FROM adm_def_equipment_weapon_ammunition WHERE "weaponId" = $1';
+                    sql = 'SELECT * FROM adm_def_equipment_weapon_ammunition WHERE "equipmentId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -574,18 +574,18 @@ module.exports = function(app, pg, async, pool) {
                         //update
                         sql = 'UPDATE adm_def_equipment_weapon_ammunition';
                         sql += ' SET "ammunitionTypeId" = $1';
-                        sql += ' WHERE "weaponId" = $2';
+                        sql += ' WHERE "equipmentId" = $2';
                         vals = [resObj.weapon.ammunition.id, resObj.weapon.id];
                     } else if (resObj.weapon.needsAmmunitionType && !ammunitionExists) {
                         //insert
                         sql = 'INSERT INTO adm_def_equipment_weapon_ammunition';
-                        sql += ' ("weaponId", "ammunitionTypeId")';
+                        sql += ' ("equipmentId", "ammunitionTypeId")';
                         sql += ' VALUES ($1, $2)';
                         vals = [resObj.weapon.id, resObj.weapon.ammunition.id];
                     } else {
                         //delete
                         sql = 'DELETE FROM adm_def_equipment_weapon_ammunition';
-                        sql += ' WHERE "weaponId" = $1';
+                        sql += ' WHERE "equipmentId" = $1';
                         vals = [resObj.weapon.id];
                     }
                     var query = client.query(new pg.Query(sql, vals));
@@ -804,7 +804,7 @@ module.exports = function(app, pg, async, pool) {
                 function insertRange(resObj, callback) {
                     if (resObj.weapon.needsRange) {
                         sql = 'INSERT INTO adm_def_equipment_weapon_range';
-                        sql += ' ("weaponId", "normalRange", "maximumRange")';
+                        sql += ' ("equipmentId", "normalRange", "maximumRange")';
                         sql += ' VALUES ($1, $2, $3)';
                         vals = [resObj.weapon.id, resObj.weapon.range.normal, resObj.weapon.range.maximum];
                         var query = client.query(new pg.Query(sql, vals));
@@ -823,7 +823,7 @@ module.exports = function(app, pg, async, pool) {
                 function insertDescription(resObj, callback) {
                     if (resObj.weapon.needsSpecial) {
                         sql = 'INSERT INTO adm_def_equipment_weapon_special';
-                        sql += ' ("weaponId", "specialDescription")';
+                        sql += ' ("equipmentId", "specialDescription")';
                         sql += ' VALUES ($1, $2);';
                         vals = [resObj.weapon.id, resObj.weapon.specialDescription];
                         var query = client.query(new pg.Query(sql, vals));
@@ -895,7 +895,7 @@ module.exports = function(app, pg, async, pool) {
                 },
                 function insertVersatileDiceWeapon(resObj, callback) {
                     if (resObj.weapon.needsAltDamage) {
-                        sql = 'INSERT INTO adm_def_equipment_weapon_alt_damage ("weaponId", "damageDiceId")';
+                        sql = 'INSERT INTO adm_def_equipment_weapon_alt_damage ("equipmentId", "damageDiceId")';
                         sql += ' VALUES ($1, $2);';
                         vals = [resObj.weapon.id, resObj.weapon.versatileDamage.id];
                         var query = client.query(new pg.Query(sql, vals));
@@ -912,8 +912,8 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertAmmunition(resObj, callback) {
-                    if (resObj.weapon.needsAltDamage) {
-                        sql = 'INSERT INTO adm_def_equipment_weapon_ammunition ("weaponId", "ammunitionTypeId")';
+                    if (resObj.weapon.needsAmmunition) {
+                        sql = 'INSERT INTO adm_def_equipment_weapon_ammunition ("equipmentId", "ammunitionTypeId")';
                         sql += ' VALUES ($1, $2);';
                         vals = [resObj.weapon.id, resObj.weapon.ammunition.id];
                         var query = client.query(new pg.Query(sql, vals));
@@ -1045,14 +1045,14 @@ module.exports = function(app, pg, async, pool) {
             sql += ' 	LEFT OUTER JOIN adm_core_item propitem ';
             sql += ' 		ON propitem.id = wpnprop."weaponPropertyId"';
             sql += ' 	LEFT OUTER JOIN adm_def_equipment_weapon_alt_damage altdmg ';
-            sql += ' 		ON altdmg."weaponId" = i."id"';
+            sql += ' 		ON altdmg."equipmentId" = i."id"';
             sql += ' 	LEFT OUTER JOIN adm_core_dice altdice ';
             sql += ' 		ON altdice.id = altdmg."damageDiceId"';
             sql += ' 	LEFT OUTER JOIN adm_def_equipment_weapon_range wpnrng ';
-            sql += ' 		ON wpnrng."weaponId" = i.id';
+            sql += ' 		ON wpnrng."equipmentId" = i.id';
             sql += ' 	LEFT OUTER JOIN adm_def_equipment_weapon_special special ';
-            sql += ' 		ON special."weaponId" = i.id';
-            sql += '    LEFT OUTER JOIN adm_def_equipment_weapon_ammunition ammolink ON ammolink."weaponId" = i."id"';
+            sql += ' 		ON special."equipmentId" = i.id';
+            sql += '    LEFT OUTER JOIN adm_def_equipment_weapon_ammunition ammolink ON ammolink."equipmentId" = i."id"';
             sql += '    LEFT OUTER JOIN adm_core_item ammo ON ammo.id = ammolink."ammunitionTypeId"';
             sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id';
             sql += ' GROUP BY i.id, eq.cost, eq.weight';

@@ -6,7 +6,6 @@ import {bindActionCreators} from 'redux';
 import ItemtypeList from './ItemtypeList';
 import ItemtypeEntry from './ItemtypeEntry';
 import * as actions from '../../../actions/admin/itemtypeActions';
-import util from '../../../util/util';
 import DndButton from '../../common/buttons/DndButton';
 
 class ItemtypeListPage extends React.Component {
@@ -23,10 +22,11 @@ class ItemtypeListPage extends React.Component {
         this.changeSelectedId = this.changeSelectedId.bind(this);
         this.onCreate = this.onCreate.bind(this);
         this.onEdit = this.onEdit.bind(this);
+        this.renderList = this.renderList.bind(this);
     }
 
     componentWillMount() {
-        if (this.props.itemtypes[0].id == '') {
+        if (this.props.itemtypes && this.props.itemtypes.length != 0 && this.props.itemtypes[0].id == '') {
             this.props.actions.loadItemtypes();
         }
     }
@@ -57,6 +57,18 @@ class ItemtypeListPage extends React.Component {
         this.setState({selectedId: parseInt(newId)});
     }
 
+    renderList() {
+        return this.props.itemtypes && this.props.itemtypes.length != 0 ? (
+            <ItemtypeList
+                itemtypes={this.props.itemtypes}
+                openModal={this.open}
+                selectedId={this.state.selectedId}
+                changeSelectedId={this.changeSelectedId}
+                onEdit={this.onEdit}
+                />
+        ) : null;
+    }
+    
     render() {
         const itemtypes = this.props.itemtypes;
         return (
@@ -72,6 +84,7 @@ class ItemtypeListPage extends React.Component {
                             <tr>
                                 <th></th>
                                 <th className="text-center">isPicklist</th>
+                                <th className="text-center">isDescription</th>
                                 <th>
                                     <div className="pull-right">
                                         <DndButton onClick={this.onCreate} buttonType="create" />
@@ -79,13 +92,7 @@ class ItemtypeListPage extends React.Component {
                                 </th>
                             </tr>
                         </thead>
-                        <ItemtypeList
-                            itemtypes={itemtypes}
-                            openModal={this.open}
-                            selectedId={this.state.selectedId}
-                            changeSelectedId={this.changeSelectedId}
-                            onEdit={this.onEdit}
-                            />
+                        {this.renderList()}
                     </table>
                 </div>
                 <ItemtypeEntry
@@ -116,7 +123,7 @@ function mapStateToProps(state) {
         };
     } else {
         return {
-            itemtypes: [util.objectModel.ITEMTYPE]
+            itemtypes: []
         };
     }
 }

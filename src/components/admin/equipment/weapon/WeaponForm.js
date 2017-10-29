@@ -24,11 +24,12 @@ class WeaponForm extends React.Component {
         let proficiencyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROFICIENCY);
         let weaponPropertyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROPERTY);
         let ammunitionTypePicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.AMMUNITION_TYPE);
+        console.log(ammunitionTypePicklist);
         let versatileDamageInput = null;
         let rangeInput = null;
         let specialDescriptionInput = null;
         let ammunitionTypeInput = null;
-        for (let v = 0; v < this.props.weapon.weaponProperties.length; v++){
+        for (let v = 0; v < this.props.weapon.weaponProperties.length; v++) {
             if (this.props.weapon.weaponProperties[v]){
                 if (this.props.weapon.weaponProperties[v].requireDamage) {
                     versatileDamageInput = (<div className="col-md-12">
@@ -81,6 +82,7 @@ class WeaponForm extends React.Component {
                         referenceObject={this.props.weapon}
                         onChange={this.props.onChange}
                         picklists={this.props.picklists}
+                        hideDescription
                         />
                     <div className="col-md-6">
                         <DndInput

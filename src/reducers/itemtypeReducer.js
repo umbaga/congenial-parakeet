@@ -10,12 +10,26 @@ export default function itemtypeReducer(state = initialState.itemtypes, action) 
             return [
                 ...state.filter(itemtype => itemtype.id !== action.itemtype.id),
                 Object.assign({}, action.itemtype)
-            ];
+            ].sort(function(a, b){
+                if (a.name < b.name) {
+                    return -1;
+                } else if (a.name > b.name) {
+                    return 1;
+                }
+                return 0;
+            });
         case types.UPDATE_ITEMTYPE_SUCCESS:
             return [
                 Object.assign({}, action.itemtype),
                 ...state.filter(itemtype => itemtype.id !== action.itemtype.id)
-            ];
+            ].sort(function(a, b){
+                if (a.name < b.name) {
+                    return -1;
+                } else if (a.name > b.name) {
+                    return 1;
+                }
+                return 0;
+            });
         case types.DELETE_ITEMTYPE_SUCCESS: {
             const newState = Object.assign([], state);
             const indexOfItemtypeToDelete = state.findIndex(itemtype => {

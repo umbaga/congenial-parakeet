@@ -118,7 +118,12 @@ export const FEATURE = {
     name: '',
     description: ''
 };
-export const ITEMTYPE = {id: 0, name: '', isPicklist: false};
+export const ITEMTYPE = {
+    id: 0,
+    name: '',
+    isDescription: false,
+    isPicklist: false
+};
 export const PICKLIST = {id: 0, name: '', items: []};
 export const PICKLISTITEM = {id: 0, name: '', picklistId: 0, defaultSelected: false};
 export const PROFICIENCY = {
@@ -181,6 +186,7 @@ export const SPELL_RANGE = {id: 0, name: ''};
 export const WEAPON = {
     id: 0,
     name: '',
+    ammunition: {id: 0, name: ''},
     cost: '0',
     damage: {dieCount: 0, dieType: 0, rendered: ''},
     damageType: {id: 0, name: ''},

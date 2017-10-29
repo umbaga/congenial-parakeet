@@ -194,16 +194,18 @@ module.exports = function(app, pg, async, pool) {
             sql += ', json_build_object(\'id\', range.id, \'name\', range."itemName") AS range';
             sql += ', json_build_object(\'id\', casting.id, \'name\', casting."itemName") AS "castingTime"';
             sql += ', json_agg((SELECT x FROM (SELECT comp.id, comp."itemName" AS name, lnkcomp.description) x)) AS "components"';
+            sql += ', json_build_object(\'id\', resource.id, \'name\', resource."itemName") AS "resource"';
             sql += ' FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_spell spell ON spell."spellId" = i.id';
             sql += ' INNER JOIN adm_core_item school ON school.id = spell."schoolId"';
             sql += ' INNER JOIN adm_core_item duration ON duration.id = spell."durationId"';
             sql += ' INNER JOIN adm_core_item range ON range.id = spell."rangeId"';
             sql += ' INNER JOIN adm_core_item casting ON casting.id = spell."castingTimeId"';
-            sql += ' INNER JOIN adm_core_description description ON (description."itemId" = i.id AND description."typeId" = 123)'
-            sql += ' LEFT OUTER JOIN adm_link_spell_component lnkcomp ON lnkcomp."spellId" = i.id';
+            sql += ' INNER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = 123)'
+            sql += ' LEFT OUTER JOIN adm_link_spell_component lnkcomp ON lnkcomp."referenceId" = i.id';
             sql += ' LEFT OUTER JOIN adm_core_item comp ON comp.id = lnkcomp."componentId"';
-            sql += ' LEFT OUTER JOIN adm_core_description higherleveldesc ON (higherleveldesc."itemId" = i.id AND higherleveldesc."typeId" = 125)'
+            sql += ' LEFT OUTER JOIN adm_core_description higherleveldesc ON (higherleveldesc."itemId" = i.id AND higherleveldesc."descriptionTypeId" = 125)';
+            sql += ' INNER JOIN adm_core_item resource ON resource.id = i."resourceId"';
             sql += ' GROUP BY i.id, i."itemName", spell.level';
             sql += ', school.id, school."itemName"';
             sql += ', duration.id, duration."itemName"';
@@ -211,6 +213,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ', casting.id, casting."itemName"';
             sql += ', description.description';
             sql += ', higherleveldesc.description';
+            sql += ', resource.id, resource."itemName"';
             sql += ' ORDER BY i."itemName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
