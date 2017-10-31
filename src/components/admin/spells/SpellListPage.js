@@ -64,7 +64,6 @@ class SpellListPage extends React.Component {
 
     render() {
         const spells = this.props.spells;
-        console.log(spells);
         return (
             <div className="col-md-12">
                 <div>
@@ -119,7 +118,9 @@ SpellListPage.propTypes = {
     spells: PropTypes.array.isRequired,
     actions: PropTypes.object,
     children: PropTypes.object,
-    picklists: PropTypes.array
+    picklists: PropTypes.array,
+    equipments: PropTypes.array,
+    proficiencies: PropTypes.array
 };
 
 function mapStateToProps(state) {

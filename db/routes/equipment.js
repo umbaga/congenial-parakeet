@@ -94,6 +94,20 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function deleteImprovisedWeapon(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_equipment_improvised_weapon';
+                    sql += ' WHERE "itemId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                        query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -139,6 +153,10 @@ module.exports = function(app, pg, async, pool) {
                         tmp.equipment.needsDescription = false;
                         if(tmp.equipment.description) {
                             tmp.equipment.needsDescription = true;
+                        }
+                        tmp.equipment.needsImprovisedWeapon = false;
+                        if (tmp.equipment.improvisedWeapon) {
+                            tmp.equipment.needsImprovisedWeapon = true;
                         }
                         return callback(null, tmp);
                     });
@@ -300,6 +318,85 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function getDamageDiceId(resObj, callback) {
+                    if (resObj.equipment.needsImprovisedWeapon) {
+                        sql = 'SELECT id';
+                        sql += ' FROM adm_core_dice';
+                        sql += ' WHERE "dieCount" = $1';
+                        sql += ' AND "dieType" = $2';
+                        vals = [resObj.equipment.improvisedWeapon.damage.dieCount, resObj.equipment.improvisedWeapon.damage.dieType];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            resObj.equipment.improvisedWeapon.damage.id = parseInt(results[0].id);
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function checkForImprovisedWeapon(resObj, callback) {
+                    if (resObj.equipment.needsImprovisedWeapon) {
+                        sql = 'SELECT * FROM adm_def_equipment_improvised_weapon';
+                        sql += ' WHERE "equipmentId" = $1';
+                        vals = [resObj.equipment.id];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            //resObj.equipment.improvisedWeapon.damage.id = parseInt(results[0].id);
+                            var hasImprovisedWeapon = results.length != 0;
+                            return callback(null, resObj, hasImprovisedWeapon);
+                        });
+                    } else {
+                        return callback(null, resObj, false);
+                    }
+                },
+                function writeImprovisedWeapon(resObj, hasImprovisedWeapon, callback) {
+                    if (resObj.equipment.needsImprovisedWeapon && hasImprovisedWeapon) {
+                        sql = 'UPDATE adm_def_equipment_improvised_weapon';
+                        sql += ' SET "damageDiceId" = $2';
+                        sql += ', "damageTypeId" = $4';
+                        sql += ', "range" = $3';
+                        sql += ' WHERE "equipmentId" = $1';
+                        vals = [
+                            resObj.equipment.id, 
+                            resObj.equipment.improvisedWeapon.damage.id, 
+                            resObj.equipment.improvisedWeapon.damageType.id, 
+                            resObj.equipment.improvisedWeapon.range
+                        ];
+                    } else if (resObj.equipment.needsImprovisedWeapon && !hasImprovisedWeapon) {
+                        sql = 'INSERT INTO adm_def_equipment_improvised_weapon';
+                        sql += ' ("equipmentId", "damageDiceId", "damageTypeId", "range")'
+                        vals = [
+                            resObj.equipment.id, 
+                            resObj.equipment.improvisedWeapon.damage.id, 
+                            resObj.equipment.improvisedWeapon.damageType.id, 
+                            resObj.equipment.improvisedWeapon.range
+                        ];
+                    } else {
+                        sql = 'DELETE FROM adm_def_equipment_improvised_weapon';
+                        sql += ' WHERE "equipmentId" = $1';
+                        vals = [resObj.equipment.id];
+                        //return callback(null, resObj);
+                    }
+                    var query = client.query(new pg.Query(sql, vals));
+                    var results = [];
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -340,6 +437,14 @@ module.exports = function(app, pg, async, pool) {
                         tmp.equipment.needsAmmunitionType = false;
                         if (tmp.equipment.category.id == 171) {
                             tmp.equipment.needsAmmunitionType = true;
+                        }
+                        tmp.equipment.needsImprovisedWeapon = false;
+                        if (tmp.equipment.improvisedWeapon) {
+                            tmp.equipment.needsImprovisedWeapon = true;
+                        }
+                        tmp.equipment.needsImprovisedWeapon = false;
+                        if (tmp.equipment.improvisedWeapon) {
+                            tmp.equipment.needsImprovisedWeapon = true;
                         }
                         tmp.equipment.id = results[0].equipmentId;
                         return callback(null, tmp);
@@ -452,6 +557,72 @@ module.exports = function(app, pg, async, pool) {
                     } else {
                         return callback(null, resObj);
                     }
+                },
+                function insertDice(resObj, callback) {
+                    if (resObj.equipment.needsImprovisedWeapon) {
+                        sql = 'with vals as (';
+                        sql += 'select $1 :: bigint as "dieCount", $2 :: bigint as "dieType"';
+                        sql += ')';
+                        sql += ' insert into adm_core_dice ("dieCount", "dieType")';
+                        sql += ' select v."dieCount", v."dieType"';
+                        sql += ' from vals as v';
+                        sql += ' where not exists (select * from adm_core_dice as t where t."dieCount" = v."dieCount" and t."dieType" = v."dieType")';
+                        sql += ' returning id AS "diceId";';
+                        vals = [resObj.equipment.improvisedWeapon.damage.dieCount, resObj.equipment.improvisedWeapon.damage.dieType];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            var skipNext = false;
+                            if (results.length != 0){
+                                resObj.equipment.improvisedWeapon.damage.id = parseInt(results[0].diceId);
+                                skipNext = true;
+                            }
+                            return callback(null, resObj, skipNext);
+                        });
+                    } else {
+                        return callback(null, resObj, true);
+                    }
+                },
+                function selectDice(resObj, skipThis, callback) {
+                    if (skipThis) {
+                        return callback(null, resObj);
+                    } else {
+                        sql = 'SELECT id AS "diceId" FROM adm_core_dice  WHERE "dieCount" = $1 AND "dieType" = $2';
+                        vals = [resObj.equipment.improvisedWeapon.damage.dieCount, resObj.equipment.improvisedWeapon.damage.dieType];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            resObj.equipment.improvisedWeapon.damage.id = parseInt(results[0].diceId);
+                            return callback(null, resObj);
+                        });
+                    }
+                },
+                function insertImprovisedWeaponTable(resObj, callback) {
+                    if (resObj.equipment.needsImprovisedWeapon) {
+                        sql = 'INSERT INTO adm_def_equipment_improvised_weapon';
+                        sql += ' ("equipmentId", "damageDiceId", "damageTypeId", "range")';
+                        sql += ' VALUES ($1, $2, $3, $4);';
+                        vals = [resObj.equipment.id, resObj.equipment.improvisedWeapon.damage.id, resObj.equipment.improvisedWeapon.damageType.id, resObj.equipment.improvisedWeapon.range];
+                        var query = client.query(new pg.Query(sql, vals));
+                        var results = [];
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 }
             ], function(error, result) {
                 if (error) {
@@ -471,33 +642,48 @@ module.exports = function(app, pg, async, pool) {
             }
             
             sql = 'SELECT i."itemName" AS name, i.id';
-            sql += ', equip.cost, equip.weight';
-            sql += ', description.description';
-            sql += ', json_build_object(\'name\', cat."itemName", \'id\', cat."id") AS "category"';
-            sql += ', json_build_object(\'name\', rsrc."itemName", \'id\', rsrc."id") AS "resource"';
-            sql += ', case when cntunit."itemCount" IS NULL then 1 else cntunit."itemCount" end AS "count"';
-            sql += ', case when cntunit."unitName" IS NULL then \'\' else cntunit."unitName" end AS "unit"';
-            sql += '                	, case ';
-            sql += '                		when count(ammo) = 0 ';
-            sql += '                			then \'{}\' ';
-            sql += '                		else json_build_object(\'id\', ammo."id", \'name\', ammo."itemName") ';
-            sql += '                		end AS "ammunition"';
-            sql += ' FROM adm_core_item i';
-            sql += ' INNER JOIN adm_def_equipment equip ON equip."equipmentId" = i.id';
-            sql += ' INNER JOIN adm_core_item cat ON cat.id = equip."categoryId"';
-            sql += ' INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
-            sql += ' LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = i.id';
-            sql += ' LEFT OUTER JOIN adm_def_equipment_ammunition ammolink ON ammolink."equipmentId" = i."id"';
-            sql += ' LEFT OUTER JOIN adm_core_item ammo ON ammo.id = ammolink."ammunitionTypeId"';
-            sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id';
-            sql += ' WHERE equip."categoryId" NOT IN (97, 178, 175)';
-            sql += ' GROUP BY i.id, equip.cost, equip.weight';
-            sql += ', cat.id, cat."itemName"';
-            sql += ', rsrc.id, rsrc."itemName"';
-            sql += ' , ammo.id, ammo."itemName"';
-            sql += ' , cntunit."itemCount", cntunit."unitName"';
-            sql += ', description.description';
-            sql += ' ORDER BY i."itemName"';
+            sql += ' , equip.cost, equip.weight';
+            sql += ' , description.description';
+            sql += ' , json_build_object(\'name\', cat."itemName", \'id\', cat."id") AS "category"';
+            sql += ' , json_build_object(\'name\', rsrc."itemName", \'id\', rsrc."id") AS "resource"';
+            sql += ' , case when cntunit."itemCount" IS NULL then 1 else cntunit."itemCount" end AS "count"';
+            sql += ' , case when cntunit."unitName" IS NULL then \'\' else cntunit."unitName" end AS "unit"';
+            sql += '                 	, case ';
+            sql += '                 		when count(ammo) = 0 ';
+            sql += '                 			then \'{}\' ';
+            sql += '                 		else json_build_object(\'id\', ammo."id", \'name\', ammo."itemName") ';
+            sql += '                 		end AS "ammunition"';
+            sql += ' , case when impweap."range" IS NULL then \'{}\'';
+            sql += ' 	else';
+            sql += '     json_build_object(';
+            sql += '         \'damage\', json_build_object(\'dieCount\', dmgdice."dieCount", ';
+            sql += '                                     \'dieType\', dmgdice."dieType",';
+            sql += '                                    \'rendered\', concat_ws(\'d\', dmgdice."dieCount"::text, dmgdice."dieType"::text)),';
+            sql += '         \'damageType\', json_build_object(\'id\', impweap."damageTypeId", \'name\', dmgtype."itemName"),';
+            sql += '         \'range\', impweap.range';
+            sql += '     )';
+            sql += '     end AS "improvisedWeapon"';
+            sql += '  FROM adm_core_item i';
+            sql += '  INNER JOIN adm_def_equipment equip ON equip."equipmentId" = i.id';
+            sql += '  INNER JOIN adm_core_item cat ON cat.id = equip."categoryId"';
+            sql += '  INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
+            sql += '  LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = i.id';
+            sql += '  LEFT OUTER JOIN adm_def_equipment_ammunition ammolink ON ammolink."equipmentId" = i."id"';
+            sql += '  LEFT OUTER JOIN adm_core_item ammo ON ammo.id = ammolink."ammunitionTypeId"';
+            sql += '  LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id';
+            sql += '  LEFT OUTER JOIN adm_def_equipment_improvised_weapon impweap ON impweap."equipmentId" = i.id';
+            sql += '  LEFT OUTER JOIN adm_core_item dmgtype ON dmgtype.id = impweap."damageTypeId"';
+            sql += '  LEFT OUTER JOIN adm_core_dice dmgdice ON dmgdice.id = impweap."damageDiceId"';
+            sql += '  WHERE equip."categoryId" NOT IN (97, 178, 175)';
+            sql += '  GROUP BY i.id, equip.cost, equip.weight';
+            sql += ' , cat.id, cat."itemName"';
+            sql += ' , rsrc.id, rsrc."itemName"';
+            sql += '  , ammo.id, ammo."itemName"';
+            sql += '  , cntunit."itemCount", cntunit."unitName"';
+            sql += ' , description.description';
+            sql += ' , impweap."range", dmgdice."dieCount", dmgdice."dieType"';
+            sql += ' , impweap."damageTypeId", dmgtype."itemName", impweap.range';
+            sql += '  ORDER BY i."itemName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
                 results.push(row);

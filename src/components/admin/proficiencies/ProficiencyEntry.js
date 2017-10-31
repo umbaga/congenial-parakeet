@@ -53,12 +53,22 @@ class ProficiencyEntry extends React.Component {
         event.preventDefault();
         this.setState({saving: true});
         this.props.actions.upsertProficiency(this.state.proficiency);
+        let newProficiency = Object.assign({}, util.objectModel.PROFICIENCY);
+        newProficiency.language = Object.assign({}, {
+            rarity: {
+                id: 0,
+                name: ''
+            },
+            script: {
+                id: 0,
+                name: ''
+            }
+        });
+        this.setState({proficiency: newProficiency});
     }
 
     saveAndNewProficiency(event) {
         this.saveProficiency(event);
-        let newProficiency = Object.assign({}, util.objectModel.PROFICIENCY);
-        this.setState({proficiency: newProficiency});
     }
 
     saveAndBackProficiency(event) {

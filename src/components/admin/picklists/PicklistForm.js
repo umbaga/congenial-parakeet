@@ -34,16 +34,6 @@ class PicklistForm extends React.Component {
                   )}
             </tbody>
         );
-        /*return this.props.picklist && this.props.picklist.items && this.props.picklist.items.length != 0 && this.props.picklist.items[0].name ? 
-            (
-            <tbody>
-                {this.props.picklist.items.map(item =>
-                                               <PicklistItemRow key={item.id}
-                                                   picklistItem={item}
-                                                   removePicklistItem={this.props.removePicklistItem} />
-                  )}
-            </tbody>
-        ) : null;*/
     }
     render() {
         return (

@@ -24,7 +24,6 @@ class WeaponForm extends React.Component {
         let proficiencyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROFICIENCY);
         let weaponPropertyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.WEAPON_PROPERTY);
         let ammunitionTypePicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.AMMUNITION_TYPE);
-        console.log(ammunitionTypePicklist);
         let versatileDamageInput = null;
         let rangeInput = null;
         let specialDescriptionInput = null;

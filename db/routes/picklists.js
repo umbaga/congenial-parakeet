@@ -131,12 +131,15 @@ module.exports = function(app, pg, async, pool) {
             sql += ', profcat."parentId"';
             sql += ', profcat."requireAbilityScore"';
             sql += ', dmgtype."isWeapon"';
-            sql += ', profcat."requireLanguageInfo") x ORDER BY i."itemName")) AS items';
+            sql += ', profcat."requireLanguageInfo"';
+            sql += ', description.description';
+            sql += ') x ORDER BY i."itemName")) AS items';
             sql += ' FROM adm_core_type t';
             sql += ' LEFT OUTER JOIN adm_core_item i ON i."itemTypeId" = t.id';
             sql += ' LEFT OUTER JOIN adm_def_weapon_property wpnprop ON wpnprop."weaponPropertyId" = i.id';
             sql += ' LEFT OUTER JOIN adm_def_proficiency_category profcat ON profcat."proficiencyCategoryId" = i.id';
             sql += ' LEFT OUTER JOIN adm_def_damage_type dmgtype ON dmgtype."damageTypeId" = i.id';
+            sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id AND description."descriptionTypeId" = 171';
             sql += ' WHERE t."isPicklist" = true';
             sql += ' GROUP BY t.id';
             sql += ' ORDER BY t."typeName"';
@@ -152,12 +155,12 @@ module.exports = function(app, pg, async, pool) {
                             }
                         }
                     }
-                    row.items = row.items.sort(function(a, b) {
-                        if(a.name < b.name) return -1;
-                        if(a.name > b.name) return 1;
-                        return 0;
-                    });
                 }
+                row.items = row.items.sort(function(a, b) {
+                    if(a.name < b.name) return -1;
+                    if(a.name > b.name) return 1;
+                    return 0;
+                });
                 results.push(row);
             });
             query.on('end', function() {
@@ -179,11 +182,9 @@ module.exports = function(app, pg, async, pool) {
                     callback(null, req);
                 },
                 function insertItem (req, callback) {
-                    console.log(req.body.picklistItem);
                     sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "itemTypeId")';
                     sql += ' VALUES ($1, $2) RETURNING id;';
-                    console.log(req.body);
                     vals = [req.body.picklistItem.name, req.body.picklistItem.picklistId];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {

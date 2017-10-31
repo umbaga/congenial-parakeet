@@ -74,6 +74,11 @@ export const EQUIPMENT = {
     },
     cost: '0',
     count: 1,
+    improvisedWeapon: {
+        damage: {id: 0, dieCount: 0, dieType: 0, rendered: ''},
+        damageType: {id: 0, name: ''},
+        range: 0
+    },
     resource: {
         id: 0,
         name: ''

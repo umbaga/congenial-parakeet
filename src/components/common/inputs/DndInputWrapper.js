@@ -49,8 +49,8 @@ class DndInputWrapper extends React.Component {
 DndInputWrapper.propTypes = {
     children: PropTypes.object,
     dataType: PropTypes.string,
-    inputCols: PropTypes.string,
-    labelCols: PropTypes.string,
+    inputCols: PropTypes.number,
+    labelCols: PropTypes.number,
     label: PropTypes.string,
     name: PropTypes.string
 };

@@ -5,8 +5,9 @@ array.commaDelimitedList = function(arr) {
     let retVal = '';
     if (arr && arr.length != 0) {
         for (let q = 0; q < arr.length; q++) {
-            if (arr[q] && arr[q].name && arr[q].name.length != 0)
-            retVal += arr[q].name;
+            if (arr[q] && arr[q].name && arr[q].name.length != 0) {
+                retVal += arr[q].name;
+            }
             if (q < arr.length - 1) {
                 retVal += ', ';
             }
@@ -347,7 +348,7 @@ obj.spellComponents = function(val) {
     return retVal;
 };
 obj.spellLevelAndSchool = function(val) {
-    if(val.level == 0) {
+    if (val.level == 0) {
         return val.school.name + ' Cantrip';
     } else {
         return util.format.forDisplay.number.ordinal(val.level) + '-level ' + val.school.name;

@@ -60,7 +60,6 @@ class ProficiencyListPage extends React.Component {
     render() {
         const proficiencies = this.props.proficiencies;
         const proficiencyCategories = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.PROFICIENCY_CATEGORY);
-        
         return (
             <div className="col-md-12">
                 <div>
@@ -125,7 +124,7 @@ function mapStateToProps(state) {
     if (state.picklists.length > 0) {
         picklists = Object.assign([{}], state.picklists);
         proficiencyCategories = state.picklists.filter(function(picklist) {
-            return picklist.id == 87;
+            return picklist.id == util.picklistInfo.PROFICIENCY_CATEGORY;
         })[0];
     }
     if (state.proficiencies.length > 0) {

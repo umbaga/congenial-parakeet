@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndInput from '../../common/inputs/DndInput';
+//import DndInput from '../../common/inputs/DndInput';
 import DndUniversalInput from '../../common/inputs/DndUniversalInput';
-import util from '../../../util/util';
+//import util from '../../../util/util';
 
 class SpellForm extends React.Component {
     constructor(props) {
@@ -20,8 +20,6 @@ class SpellForm extends React.Component {
     
     render() {
         const spell = this.props.spell;
-        console.log(spell);
-        console.log(this.props.picklists);
         return (
             <div>
                 <form>

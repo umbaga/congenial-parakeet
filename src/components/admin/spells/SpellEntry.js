@@ -146,6 +146,7 @@ class SpellEntry extends React.Component {
 
 SpellEntry.propTypes = {
     spell: PropTypes.object,
+    equipments: PropTypes.array,
     actions: PropTypes.object,
     canEdit: PropTypes.bool,
     closeModal: PropTypes.func.isRequired,

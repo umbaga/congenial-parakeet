@@ -315,23 +315,20 @@ module.exports = function(app, pg, async, pool) {
                 function insertItemTable(req, callback) {
                     var itemTypeId = 0;
                     switch (req.body.proficiency.category.id) {
-                        case 236://proficiency
-                            itemTypeId = 82;
+                        case 92://armor
+                            itemTypeId = 20;
                             break;
-                        case 235://armmor
-                            itemTypeId = 84;
+                        case 101://weapon
+                            itemTypeId = 21;
                             break;
-                        case 237://skill
-                            itemTypeId = 92;
+                        case 98://skill
+                            itemTypeId = 396;
                             break;
-                        case 239://language
-                            itemTypeId = 93;
+                        case 95://language
+                            itemTypeId = 394;
                             break;
-                        case 240://saving throw
-                            itemTypeId = 94;
-                            break;
-                        case 541://vehicle
-                            itemTypeId = 110;
+                        case 100://vehicle
+                            itemTypeId = 395;
                             break;
                     }
                     sql = 'INSERT INTO adm_core_item';
@@ -373,11 +370,15 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertProficiencyAbilityScoreTable(resObj, callback) {
-                    if(resObj.needsAbilityScore) {
+                    console.log(resObj.needsAbilityScore);
+                    if(resObj.proficiency.needsAbilityScore) {
+                        console.log(resObj);
                         sql = 'INSERT INTO adm_def_proficiency_ability_score';
                         sql += ' ("proficiencyId", "abilityScoreId")';
                         sql += ' VALUES ($1, $2);';
+                        console.log(sql);
                         vals = [resObj.proficiency.id, resObj.proficiency.abilityScore.id];
+                        console.log(vals);
                         var query = client.query(new pg.Query(sql, vals));
                         var results = [];
                         query.on('row', function(row) {
@@ -392,7 +393,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertProficiencyLanguageTable(resObj, callback) {
-                    if(resObj.needsLanguage) {
+                    if(resObj.proficiency.needsLanguage) {
                         sql = 'INSERT INTO adm_def_proficiency_language';
                         sql += ' ("proficiencyId", "scriptId", "rarityId")';
                         sql += ' VALUES ($1, $2, $3);';

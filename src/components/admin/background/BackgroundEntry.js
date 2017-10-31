@@ -557,7 +557,6 @@ class BackgroundEntry extends React.Component {
         return this.setState({selectedEquipment: selectedEquipment});
     }
     render() {
-        console.log(this.props.background);
         const contents = this.props.canEdit ? (
             <BackgroundForm
                 ref="form"

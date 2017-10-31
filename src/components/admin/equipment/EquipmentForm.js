@@ -9,6 +9,7 @@ class EquipmentForm extends React.Component {
         super(props);
         this.setFocus = this.setFocus.bind(this);
         this.renderAmmunitionTypePicklist = this.renderAmmunitionTypePicklist.bind(this);
+        this.renderImprovisedWeaponFields = this.renderImprovisedWeaponFields.bind(this);
     }
     
     componentDidMount() {
@@ -37,6 +38,39 @@ class EquipmentForm extends React.Component {
             );
         }
         return ammunitionTypePicklistField;
+    }
+    
+    renderImprovisedWeaponFields() {
+        let damageTypePicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.DAMAGE_TYPE);
+        return this.props.hasImprovisedWeapon ? (
+            <div>
+                <div className="col-md-4">
+                    <DndInput
+                        name="improvisedWeapon.damage"
+                        label="Damage"
+                        dataType={util.dataTypes.special.DICE_ROLL}
+                        valueObj={this.props.equipment.improvisedWeapon.damage}
+                        onChange={this.props.onChange} />
+                </div>
+                <div className="col-md-4">
+                    <DndInput
+                        name="improvisedWeapon.damageType"
+                        label="Damage Type"
+                        dataType={util.dataTypes.picklist.DAMAGE_TYPE}
+                        valueObj={this.props.equipment.improvisedWeapon.damageType}
+                        onChange={this.props.onChange}
+                        picklist={damageTypePicklist} />
+                </div>
+                <div className="col-md-4">
+                    <DndInput
+                        name="improvisedWeapon.range"
+                        label="Range"
+                        dataType={util.dataTypes.number.INT}
+                        value={this.props.equipment.improvisedWeapon.range.toString()}
+                        onChange={this.props.onChange} />
+                </div>
+            </div>
+        ) : null;
     }
     
     render() {
@@ -94,6 +128,16 @@ class EquipmentForm extends React.Component {
                             value={this.props.equipment.unit}
                             onChange={this.props.onChange} />
                     </div>
+                    <div className="col-md-12">
+                        <DndInput
+                            name="showImprovisedWeapon"
+                            label="Is Improvised Weapon"
+                            dataType={util.dataTypes.bool.BOOL}
+                            onChange={this.props.onChangeImprovisedWeapon}
+                            labelCols={4}
+                            />
+                        {this.renderImprovisedWeaponFields()}
+                    </div>
                     {this.renderAmmunitionTypePicklist()}
                 </form>
             </div>
@@ -110,7 +154,9 @@ EquipmentForm.propTypes = {
     onDelete: PropTypes.func.isRequired,
     isCreate: PropTypes.bool.isRequired,
     saving: PropTypes.bool,
-    picklists: PropTypes.array
+    picklists: PropTypes.array,
+    onChangeImprovisedWeapon: PropTypes.func.isRequired,
+    hasImprovisedWeapon: PropTypes.bool.isRequired
 };
 
 export default EquipmentForm;
