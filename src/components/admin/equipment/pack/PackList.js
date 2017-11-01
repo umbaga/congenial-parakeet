@@ -6,9 +6,6 @@ import PackListItem from './PackListItem';
 const PackList = ({packs, openModal, selectedId, changeSelectedId, onEdit}) => {
     return (
         <tbody>
-            <tr>
-                <th colSpan="6">Simple Melee Packs</th>
-            </tr>
             {packs.map(pack =>
                            <PackListItem
                                 key={pack.id}
@@ -16,7 +13,7 @@ const PackList = ({packs, openModal, selectedId, changeSelectedId, onEdit}) => {
                                 openModal={openModal}
                                 selectedId={selectedId}
                                 changeSelectedId={changeSelectedId}
-                            onEdit={onEdit}
+                                onEdit={onEdit}
                                />
                           )}
         </tbody>

@@ -107,10 +107,10 @@ class PackForm extends React.Component {
                             label="Assigned Equipment"
                             picklist={this.props.equipments}
                             valueArray={this.props.pack.assignedEquipment}
-                            addItem={this._addEquipmentItem}
+                            onAddItem={this._addEquipmentItem}
                             onChange={this.props.onChange}
-                            removeItem={this._removeEquipmentItem}
-                            changeCount={this._changeEquipmentCount}
+                            onRemoveItem={this._removeEquipmentItem}
+                            onChangeCount={this._changeEquipmentCount}
                             itemListTitle="Equipment"
                             showCount
                             supplementalText="unit"

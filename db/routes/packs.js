@@ -293,7 +293,7 @@ module.exports = function(app, pg, async, pool) {
                 function insertEquipmentTable(resObj, callback) {
                     sql = 'INSERT INTO adm_def_equipment';
                     sql += ' ("equipmentId", "weight", "cost", "categoryId")';
-                    sql += ' VALUES ($1, $2, $3, 175);';
+                    sql += ' VALUES ($1, $2, $3, 501);';
                     vals = [resObj.pack.id, resObj.pack.weight, resObj.pack.cost];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
@@ -374,7 +374,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' LEFT OUTER JOIN adm_core_item asseq ON asseq.id = pack."equipmentId"';
             sql += ' LEFT OUTER JOIN adm_def_equipment asseqtbl ON asseqtbl."equipmentId" = asseq.id';
             sql += ' LEFT OUTER JOIN adm_def_equipment_count_unit asscntunit ON asscntunit."equipmentId" = asseq.id';
-            sql += ' WHERE equip."categoryId" = 175';
+            sql += ' WHERE equip."categoryId" = 501';
             sql += ' GROUP BY i."itemName", i.id, equip.cost, equip.weight, cat."itemName", cat."id"';
             sql += ' , rsrc."itemName", rsrc."id", cntunit."itemCount", cntunit."unitName"';
             sql += ' ORDER BY i."itemName"';

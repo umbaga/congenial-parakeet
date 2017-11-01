@@ -60,6 +60,7 @@ class PackEntry extends React.Component {
         this.setState({saving: true});
         this.props.actions.upsertPack(this.state.pack);
         let newPack = Object.assign({}, util.objectModel.EQUIPMENT_PACK);
+        newPack.assignedEquipment = [];
         this.setState({pack: newPack});
     }
     
@@ -96,7 +97,7 @@ class PackEntry extends React.Component {
     
     changeEquipmentCount (event, equipmentItem) {
         const pack = Object.assign({}, this.state.pack);
-        const itemIndex = this.props.pack.assignedEquipment.findIndex(item => {
+        const itemIndex = pack.assignedEquipment.findIndex(item => {
             return item.id == equipmentItem.id;
         });
         pack.assignedEquipment[itemIndex].assignedCount = event.target.value / pack.assignedEquipment[itemIndex].count;
@@ -133,8 +134,6 @@ class PackEntry extends React.Component {
                 pack[field] = event.target.value;
                 break;
             case util.dataTypes.array.ASSIGNED_EQUIPMENT:
-                break;
-            case util.dataTypes.obj.EQUIPMENT:
                 if (event.target.value != 0) {
                     return this.setState({selectedEquipment: this.props.equipments.filter((equipment) => equipment.id == event.target.value)[0]});
                 }
