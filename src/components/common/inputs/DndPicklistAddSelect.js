@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import util from '../../../util/util';
 import DndInputWrapper from './DndInputWrapper';
 import DndButton from '../buttons/DndButton';
 
@@ -78,7 +77,7 @@ class DndPicklistAddSelect extends React.Component {
                 value={this.props.valueObj.name}
                 name={this.props.name}
                 ref={this.props.name}
-                datatype={util.dataTypes.string.STRING}
+                datatype={this.props.dataType}
                 />
         );
     }
@@ -188,11 +187,11 @@ DndPicklistAddSelect.propTypes = {
     dataType: PropTypes.string.isRequired,
     inputCols: PropTypes.string,
     labelCols: PropTypes.string,
-    label: PropTypes.string,
-    name: PropTypes.string,
+    label: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     picklist: PropTypes.array.isRequired,
-    valueObj: PropTypes.object,
+    valueObj: PropTypes.object.isRequired,
     onAddItemClick: PropTypes.func,
     onCancelButtonClick: PropTypes.func,
     onExtraButtonClick: PropTypes.func,

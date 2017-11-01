@@ -336,7 +336,6 @@ obj.proficiencyGroup = function(val) {
 };
 obj.spellComponents = function(val) {
     let retVal = '';
-    console.log(val.components.length);
     if (val.components.length != 0) {
         if (val.components[0].id) {
             for (let e = 0; e < val.components.length; e++) {

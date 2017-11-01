@@ -49,19 +49,36 @@ class DndInput extends React.Component {
                 break;
             case util.dataTypes.number.COIN:
             case util.dataTypes.number.INT:
+            case util.dataTypes.number.SPELL_LEVEL:
             case util.dataTypes.number.WEIGHT:
-                primaryInput = (<input
-                                    type="number"
-                                    name={this.props.name}
-                                    ref={this.props.name}
-                                    placeholder={this.props.placeholder}
-                                    value={this.props.value}
-                                    datatype={this.props.dataType}
-                                    onChange={this.props.onChange}
-                                    className="form-control"
-                                    step={numberStepVal}
-                                    min={numberMinVal}
-                                    readOnly={isReadOnly} />);
+                if (this.props.dataType == util.dataTypes.number.SPELL_LEVEL) {
+                    primaryInput = (<input
+                                        type="number"
+                                        name={this.props.name}
+                                        ref={this.props.name}
+                                        placeholder={this.props.placeholder}
+                                        value={this.props.value}
+                                        datatype={this.props.dataType}
+                                        onChange={this.props.onChange}
+                                        className="form-control"
+                                        step={numberStepVal}
+                                        min="0"
+                                        max="9"
+                                        readOnly={isReadOnly} />);
+                } else {
+                    primaryInput = (<input
+                                        type="number"
+                                        name={this.props.name}
+                                        ref={this.props.name}
+                                        placeholder={this.props.placeholder}
+                                        value={this.props.value}
+                                        datatype={this.props.dataType}
+                                        onChange={this.props.onChange}
+                                        className="form-control"
+                                        step={numberStepVal}
+                                        min={numberMinVal}
+                                        readOnly={isReadOnly} />);
+                }
                 break;
             case util.dataTypes.special.DICE_ROLL:
                 primaryInput = (<input
@@ -85,6 +102,7 @@ class DndInput extends React.Component {
             case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
             case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
             case util.dataTypes.picklist.RESOURCE:
+            case util.dataTypes.picklist.SCHOOL_OF_MAGIC:
             case util.dataTypes.picklist.WEAPON_CATEGORY:
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
                 primaryInput = (<select
@@ -208,6 +226,7 @@ class DndInput extends React.Component {
 
 DndInput.propTypes = {
     numberMinVal: PropTypes.number,
+    numberMaxVal: PropTypes.number,
     numberStepVal: PropTypes.number,
     checked: PropTypes.bool,
     dataType: PropTypes.string.isRequired,

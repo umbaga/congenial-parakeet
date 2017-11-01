@@ -27,6 +27,9 @@ class SpellEntry extends React.Component {
         this.saveAndNewSpell = this.saveAndNewSpell.bind(this);
         this.saveSpell = this.saveSpell.bind(this);
         this.updateFormState = this.updateFormState.bind(this);
+        this.saveNewCastingTime = this.saveNewCastingTime.bind(this);
+        this.saveNewDuration = this.saveNewDuration.bind(this);
+        this.saveNewRange = this.saveNewRange.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -71,35 +74,86 @@ class SpellEntry extends React.Component {
         this.props.actions.upsertSpell(this.state.spell);
     }
     
+    saveNewCastingTime() {
+        const self = this;
+        const picklistItem = {
+            name: this.state.spell.castingTime.name
+        };
+        const picklist = {
+            id: util.itemTypes.TYPES.SPELL_CASTING_TIME
+        };
+        this.props.actions.addPicklistItem(picklist, picklistItem).then(function(response) {
+            const spell = self.state.spell;
+            spell.castingTime = response.picklistItem;
+            self.props.actions.loadPicklists().then(function() {
+                self.setState({spell: spell});
+            });
+        });
+    }
+    
+    saveNewDuration() {
+        const self = this;
+        const picklistItem = {
+            name: this.state.spell.duration.name
+        };
+        const picklist = {
+            id: util.itemTypes.TYPES.SPELL_DURATION
+        };
+        this.props.actions.addPicklistItem(picklist, picklistItem).then(function(response) {
+            const spell = self.state.spell;
+            spell.duration = response.picklistItem;
+            self.props.actions.loadPicklists().then(function() {
+                self.setState({spell: spell});
+            });
+        });
+    }
+    
+    saveNewRange() {
+        const self = this;
+        const picklistItem = {
+            name: this.state.spell.range.name
+        };
+        const picklist = {
+            id: util.itemTypes.TYPES.SPELL_RANGE
+        };
+        this.props.actions.addPicklistItem(picklist, picklistItem).then(function(response) {
+            const spell = self.state.spell;
+            spell.range = response.picklistItem;
+            self.props.actions.loadPicklists().then(function() {
+                self.setState({spell: spell});
+            });
+        });
+    }
+    
     updateFormState(event) {
         let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
         const spell = this.state.spell;
+        let inputType = event.target.type;
         const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         let newSelectedValue = {};
-        let field2 = null;
-        if (field.split('.').length > 1) {
-            field2 = field.split('.')[1];
-            field = field.split('.')[0];
-        }
         switch (dataType) {
             case util.dataTypes.string.STRING:
             case util.dataTypes.string.DESCRIPTION:
-            case util.dataTypes.number.COIN:
-                if (field2) {
-                    spell[field][field2] = event.target.value;
-                } else {
-                    spell[field] = event.target.value;
-                }
+            case util.dataTypes.number.SPELL_LEVEL:
+                spell[field] = event.target.value;
                 break;
             case util.dataTypes.picklist.RESOURCE:
+            case util.dataTypes.picklist.SCHOOL_OF_MAGIC:
                 newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                 newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                 spell[field] = newSelectedValue;
                 break;
-            case util.dataTypes.obj.EQUIPMENT:
-                if (event.target.value != 0) {
-                    return this.setState({selectedEquipment: this.props.equipments.filter((equipment) => equipment.id == event.target.value)[0]});
+            case util.dataTypes.picklist.SPELL_CASTING_TIME:
+            case util.dataTypes.picklist.SPELL_DURATION:
+            case util.dataTypes.picklist.SPELL_RANGE:
+                if (inputType == 'text') {
+                    newSelectedValue.id = 0;
+                    newSelectedValue.name = event.target.value;
+                } else {
+                    newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                    newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                 }
+                spell[field] = newSelectedValue;
                 break;
             default:
         }
@@ -108,7 +162,6 @@ class SpellEntry extends React.Component {
     
     render() {
         const spell = this.state.spell;
-        console.log(spell);
         const contents = this.props.canEdit ? (
             <SpellForm
                 ref="form"
@@ -117,6 +170,9 @@ class SpellEntry extends React.Component {
                 picklists={this.props.picklists}
                 saving={this.state.saving}
                 onChange={this.updateFormState}
+                saveNewCastingTime={this.saveNewCastingTime}
+                saveNewDuration={this.saveNewDuration}
+                saveNewRange={this.saveNewRange}
                 />
         ) : (
             <SpellDetails
