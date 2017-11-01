@@ -201,7 +201,7 @@ module.exports = function(app, pg, async, pool) {
                 function insertItem(req, callback) {
                     sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "resourceId", "itemTypeId")';
-                    sql += ' VALUES ($1, $2, 88) returning id AS "equipmentId";';
+                    sql += ' VALUES ($1, $2, 456) returning id AS "equipmentId";';
                     vals = [req.body.armor.name, req.body.armor.resource.id];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
@@ -217,7 +217,7 @@ module.exports = function(app, pg, async, pool) {
                 function insertEquipment(resObj, callback) {
                     sql = 'INSERT INTO adm_def_equipment';
                     sql += ' ("equipmentId", "weight", "cost", "categoryId")';
-                    sql += ' VALUES ($1, $2, $3, 178);';
+                    sql += ' VALUES ($1, $2, $3, 457);';
                     vals = [resObj.armor.id, resObj.armor.weight, resObj.armor.cost];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];

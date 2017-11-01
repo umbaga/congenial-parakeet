@@ -421,7 +421,7 @@ module.exports = function(app, pg, async, pool) {
                 function insertItemTable(req, callback) {
                     sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "resourceId", "itemTypeId")';
-                    sql += ' VALUES ($1, $2, 90) returning id AS "equipmentId";';
+                    sql += ' VALUES ($1, $2, 49) returning id AS "equipmentId";';
                     vals = [req.body.equipment.name, req.body.equipment.resource.id];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {

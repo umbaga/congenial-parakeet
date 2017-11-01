@@ -32,6 +32,7 @@ export const ARMOR_PROFICIENCY = {
 export const EQUIPMENT_CATEGORY = {
     AMMUNITION: 57,
     ARCANE_FOCUS: 58,
+    ARMOR: 457,
     ARTISANS_TOOL: 62,
     GENERAL: 56,
     DRUIDIC_FOCUS: 59,
@@ -39,7 +40,8 @@ export const EQUIPMENT_CATEGORY = {
     HOLY_SYMBOL: 60,
     MINOR_ITEM: 114,
     MUSICAL_INSTRUMENT: 64,
-    TOOL: 61
+    TOOL: 61,
+    WEAPON: 458
 };
 
 export const PROFICIENCY_CATEGORY = {
