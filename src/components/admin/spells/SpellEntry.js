@@ -127,10 +127,12 @@ class SpellEntry extends React.Component {
     
     updateFormState(event) {
         let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
+        let subfield = null;
         const spell = this.state.spell;
         let inputType = event.target.type;
         const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         let newSelectedValue = {};
+        let newComponentsArray = [];
         switch (dataType) {
             case util.dataTypes.string.STRING:
             case util.dataTypes.string.DESCRIPTION:
@@ -154,6 +156,35 @@ class SpellEntry extends React.Component {
                     newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                 }
                 spell[field] = newSelectedValue;
+                break;
+            case util.dataTypes.picklist.SPELL_COMPONENT:
+                newComponentsArray = spell[field.split('_')[0]];
+                if (inputType == 'text') {
+                    let tmp = field.split('_');
+                    field = tmp[0];
+                    subfield = tmp[1];
+                    let changedId = tmp[2];
+                    for (let e = 0; e < newComponentsArray.length; e++) {
+                        if (changedId == newComponentsArray[e].id) {
+                            spell[field][e][subfield] = event.target.value;
+                        }
+                    }
+                } else {
+                    if (event.target.checked) {
+                        newComponentsArray.push({
+                            id: event.target.value
+                        });
+                    } else {
+                        let removeIndex = -1;
+                        for (let e = 0; e < newComponentsArray.length; e++) {
+                            if (newComponentsArray[e].id == event.target.value) {
+                                removeIndex = e;
+                            }
+                        }
+                        newComponentsArray.splice(removeIndex, 1);
+                    }
+                }
+                spell[field] = newComponentsArray;
                 break;
             default:
         }

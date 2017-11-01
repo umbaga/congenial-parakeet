@@ -64,7 +64,6 @@ class SpellListPage extends React.Component {
 
     render() {
         const spells = this.props.spells;
-        console.log(spells);
         return (
             <div className="col-md-12">
                 <div>

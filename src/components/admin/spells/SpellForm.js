@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import DndInput from '../../common/inputs/DndInput';
 import DndUniversalInput from '../../common/inputs/DndUniversalInput';
 import DndPicklistAddSelect from '../../common/inputs/DndPicklistAddSelect';
+import DndCheckboxList from '../../common/inputs/DndCheckboxList';
 import util from '../../../util/util';
 
 class SpellForm extends React.Component {
@@ -68,6 +69,15 @@ class SpellForm extends React.Component {
                         picklist={ranges}
                         valueObj={spell.range}
                         onSaveButtonClick={this.props.saveNewRange}
+                        />
+                    <DndCheckboxList
+                        dataType={util.dataTypes.picklist.SPELL_COMPONENT}
+                        label="Components"
+                        name="components"
+                        valueArray={spell.components}
+                        onChange={this.props.onChange}
+                        picklist={components}
+                        textBoxKey="description"
                         />
                     <DndPicklistAddSelect
                         dataType={util.dataTypes.picklist.SPELL_DURATION}

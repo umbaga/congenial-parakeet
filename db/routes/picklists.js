@@ -133,6 +133,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ', dmgtype."isWeapon"';
             sql += ', profcat."requireLanguageInfo"';
             sql += ', description.description';
+            sql += ', spcomp."requireDescription"';
             sql += ') x ORDER BY i."itemName")) AS items';
             sql += ' FROM adm_core_type t';
             sql += ' LEFT OUTER JOIN adm_core_item i ON i."itemTypeId" = t.id';
@@ -140,6 +141,7 @@ module.exports = function(app, pg, async, pool) {
             sql += ' LEFT OUTER JOIN adm_def_proficiency_category profcat ON profcat."proficiencyCategoryId" = i.id';
             sql += ' LEFT OUTER JOIN adm_def_damage_type dmgtype ON dmgtype."damageTypeId" = i.id';
             sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id AND description."descriptionTypeId" = 171';
+            sql += ' LEFT OUTER JOIN adm_def_spell_component spcomp ON spcomp."spellComponentId" = i.id';
             sql += ' WHERE t."isPicklist" = true';
             sql += ' GROUP BY t.id';
             sql += ' ORDER BY t."typeName"';
