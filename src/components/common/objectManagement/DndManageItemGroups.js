@@ -98,12 +98,12 @@ class DndManageItemGroups extends React.Component {
     
     render() {
         const groups = this.props.itemGroups;
-        const categories = util.picklistInfo.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.PROFICIENCY_CATEGORY);
+        const categories = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.PROFICIENCY_CATEGORY);
         let proficiencies = this.props.proficiencies;
         if (this.props.itemGroup && this.props.itemGroup.category && this.props.itemGroup.category.id != 0) {
             proficiencies = proficiencies.filter(item => item.category.id == this.props.itemGroup.category.id);
         }
-        const selectionMechanics = util.picklistInfo.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SELECTION_MECHANIC);
+        const selectionMechanics = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SELECTION_MECHANIC);
         return (
             <div>
                 <fieldset>

@@ -95,7 +95,7 @@ class DndManageAssignedItems extends React.Component {
                         name={this.props.name}
                         onChange={this.props.onChange}
                         dataType={this.props.dataType}
-                        picklist={util.picklistInfo.filterPicklistByAssigned(this.props.picklist, this.props.valueArray)}
+                        picklist={util.picklists.filterPicklistByAssigned(this.props.picklist, this.props.valueArray)}
                         valueObj={this.props.valueObj}
                         onAddItemClick={this.props.onCreateNewItem}
                         onCancelButtonClick={this.props.onCancelNewItem}
@@ -120,7 +120,7 @@ class DndManageAssignedItems extends React.Component {
                             datatype={this.props.dataType}
                             >
                             <option value="0">SELECT ONE</option>
-                            {util.picklistInfo.filterPicklistByAssigned(this.props.picklist, this.props.valueArray)
+                            {util.picklists.filterPicklistByAssigned(this.props.picklist, this.props.valueArray)
                                 .map(item =>
                                      <option
                                          key={item.id}

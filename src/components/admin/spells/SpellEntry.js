@@ -17,12 +17,8 @@ class SpellEntry extends React.Component {
             spell: this.props.spell,
             isCreate: this.props.isCreate,
             canEdit: this.props.canEdit,
-            proficiencyGroup: Object.assign({}, util.objectModel.PROFICIENCY_GROUP),
-            chart: Object.assign({}, util.objectModel.CHART),
-            variant: Object.assign({}, util.objectModel.SPELL_VARIANT),
             selectedChartId: 0,
-            saving: false,
-            selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT)
+            saving: false
         };
         this.cancelSpell = this.cancelSpell.bind(this);
         this.deleteSpell = this.deleteSpell.bind(this);
@@ -111,10 +107,12 @@ class SpellEntry extends React.Component {
     }
     
     render() {
+        const spell = this.state.spell;
+        console.log(spell);
         const contents = this.props.canEdit ? (
             <SpellForm
                 ref="form"
-                spell={this.state.spell}
+                spell={spell}
                 isCreate={this.props.isCreate}
                 picklists={this.props.picklists}
                 saving={this.state.saving}
@@ -122,7 +120,7 @@ class SpellEntry extends React.Component {
                 />
         ) : (
             <SpellDetails
-                spell={this.state.spell}
+                spell={spell}
                 picklists={this.props.picklists}
                 />
         );

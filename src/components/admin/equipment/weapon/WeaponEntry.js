@@ -87,7 +87,7 @@ class WeaponEntry extends React.Component {
         let isAssign = field.split('Unassigned').length == 2 ? true : false;
         let removeThisId = event.target.value;
         let removeThisIndex = -1;
-        let referencePicklistItem = util.picklistInfo.getPicklistItem(this.props.picklists, removeThisId);
+        let referencePicklistItem = util.picklists.getPicklistItem(this.props.picklists, removeThisId);
         let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
 
         switch (dataType) {

@@ -19,11 +19,11 @@ class WeaponForm extends React.Component {
     }
     
     render() {
-        let damageTypePicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE);
-        let categoryPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.WEAPON_CATEGORY);
-        let proficiencyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.WEAPON_PROFICIENCY);
-        let weaponPropertyPicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.WEAPON_PROPERTY);
-        let ammunitionTypePicklist = util.picklistInfo.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.AMMUNITION_TYPE);
+        let damageTypePicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE);
+        let categoryPicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.WEAPON_CATEGORY);
+        let proficiencyPicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.WEAPON_PROFICIENCY);
+        let weaponPropertyPicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.WEAPON_PROPERTY);
+        let ammunitionTypePicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.AMMUNITION_TYPE);
         let versatileDamageInput = null;
         let rangeInput = null;
         let specialDescriptionInput = null;

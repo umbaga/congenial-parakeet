@@ -28,6 +28,7 @@ class SpellForm extends React.Component {
                         referenceObject={spell}
                         onChange={this.props.onChange}
                         picklists={this.props.picklists}
+                        hideDescription
                         />
                 </form>
             </div>

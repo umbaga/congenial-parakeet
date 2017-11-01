@@ -336,13 +336,18 @@ obj.proficiencyGroup = function(val) {
 };
 obj.spellComponents = function(val) {
     let retVal = '';
-    for (let e = 0; e < val.components.length; e++) {
-        if (retVal.length != 0) {
-            retVal += ', ';
-        }
-        retVal += val.components[e].name.substring(0, 1).toUpperCase();
-        if (val.components[e].id == util.itemTypes.SPELL_COMPONENT.MATERIAL) {
-            retVal += ' (' + val.components[e].description + ')';
+    console.log(val.components.length);
+    if (val.components.length != 0) {
+        if (val.components[0].id) {
+            for (let e = 0; e < val.components.length; e++) {
+                if (retVal.length != 0) {
+                    retVal += ', ';
+                }
+                retVal += val.components[e].name.substring(0, 1).toUpperCase();
+                if (val.components[e].id == util.itemTypes.SPELL_COMPONENT.MATERIAL) {
+                    retVal += ' (' + val.components[e].description + ')';
+                }
+            }
         }
     }
     return retVal;
