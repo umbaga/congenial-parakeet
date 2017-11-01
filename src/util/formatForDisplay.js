@@ -283,7 +283,7 @@ obj.equipmentName = function(val) {
 obj.itemGroup = function(val) {
     let retVal = '';
     switch (val.mechanic.id) {
-        case util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_ASSIGNMENT:
+        case util.itemTypes.SELECTION_MECHANIC.ASSIGNMENT:
             for (let x = 0; x < val.proficiencies.length; x++) {
                 retVal += val.proficiencies[x].name;
                 if (x < val.proficiencies.length - 1) {
@@ -291,10 +291,10 @@ obj.itemGroup = function(val) {
                 }
             }
             break;
-        case util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_SELECT_FROM_CATEGORY:
+        case util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY:
             retVal = util.format.forDisplay.number.renderAsWord(val.selectCount) + ' ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount);
             break;
-        case util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_SELECT_FROM_LIST:
+        case util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST:
             retVal = 'Select ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' from the following: ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount) + ': ';
             for (let x = 0; x < val.proficiencies.length; x++) {
                 retVal += val.proficiencies[x].name;
@@ -310,7 +310,7 @@ obj.itemGroup = function(val) {
 obj.proficiencyGroup = function(val) {
     let retVal = '';
     switch (val.mechanic.id) {
-        case util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_ASSIGNMENT:
+        case util.itemTypes.SELECTION_MECHANIC.ASSIGNMENT:
             for (let x = 0; x < val.proficiencies.length; x++) {
                 retVal += val.proficiencies[x].name;
                 if (x < val.proficiencies.length - 1) {
@@ -318,10 +318,10 @@ obj.proficiencyGroup = function(val) {
                 }
             }
             break;
-        case util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_SELECT_FROM_CATEGORY:
+        case util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY:
             retVal = 'You gain proficiency with ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount);
             break;
-        case util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_SELECT_FROM_LIST:
+        case util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST:
             retVal = 'Select ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' from the following: ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount) + ': ';
             for (let x = 0; x < val.proficiencies.length; x++) {
                 retVal += val.proficiencies[x].name;
@@ -341,7 +341,7 @@ obj.spellComponents = function(val) {
             retVal += ', ';
         }
         retVal += val.components[e].name.substring(0, 1).toUpperCase();
-        if (val.components[e].id == util.picklistInfo.SPELL_COMPONENT_MATERIAL) {
+        if (val.components[e].id == util.itemTypes.SPELL_COMPONENT.MATERIAL) {
             retVal += ' (' + val.components[e].description + ')';
         }
     }

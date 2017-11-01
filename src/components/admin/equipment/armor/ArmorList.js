@@ -12,7 +12,7 @@ const ArmorList = ({armors, openModal, selectedId, changeSelectedId, onEdit}) =>
             </tr>
             {armors.filter(
                 function(armor) {
-                    return armor.proficiency.id == util.picklistInfo.ARMOR_PROFICIENCY_LIGHT;
+                    return armor.proficiency.id == util.itemTypes.ARMOR_PROFICIENCY.LIGHT;
                 }).map(armor =>
                        <ArmorListItem
                            key={armor.id}
@@ -28,7 +28,7 @@ const ArmorList = ({armors, openModal, selectedId, changeSelectedId, onEdit}) =>
             </tr>
             {armors.filter(
                 function(armor) {
-                    return armor.proficiency.id == util.picklistInfo.ARMOR_PROFICIENCY_MEDIUM;
+                    return armor.proficiency.id == util.itemTypes.ARMOR_PROFICIENCY.MEDIUM;
                 }).map(armor =>
                        <ArmorListItem
                            key={armor.id}
@@ -44,7 +44,7 @@ const ArmorList = ({armors, openModal, selectedId, changeSelectedId, onEdit}) =>
             </tr>
             {armors.filter(
                 function(armor) {
-                    return armor.proficiency.id == util.picklistInfo.ARMOR_PROFICIENCY_HEAVY;
+                    return armor.proficiency.id == util.itemTypes.ARMOR_PROFICIENCY.HEAVY;
                 }).map(armor =>
                        <ArmorListItem
                            key={armor.id}
@@ -60,7 +60,7 @@ const ArmorList = ({armors, openModal, selectedId, changeSelectedId, onEdit}) =>
             </tr>
             {armors.filter(
                 function(armor) {
-                    return armor.proficiency.id == util.picklistInfo.ARMOR_PROFICIENCY_SHIELD;
+                    return armor.proficiency.id == util.itemTypes.ARMOR_PROFICIENCY.SHIELD;
                 }).map(armor =>
                        <ArmorListItem
                            key={armor.id}

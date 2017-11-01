@@ -1,5 +1,5 @@
 
-module.exports = function(app, pg, async, pool) {
+module.exports = function(app, pg, async, pools) {
     app.delete('/api/adm/equipment/template/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {

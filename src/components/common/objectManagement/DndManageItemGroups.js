@@ -29,8 +29,8 @@ class DndManageItemGroups extends React.Component {
     }
     
     renderSelectCount() {
-        if (this.props.itemGroup.mechanic.id == util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_SELECT_FROM_CATEGORY ||
-           this.props.itemGroup.mechanic.id == util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_SELECT_FROM_LIST) {
+        if (this.props.itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY ||
+           this.props.itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST) {
             return (
             <DndInput
                 name="selectCount"
@@ -45,8 +45,8 @@ class DndManageItemGroups extends React.Component {
     }
     
     renderItemToggle(picklist) {
-        if (this.props.itemGroup.mechanic.id == util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_ASSIGNMENT ||
-           this.props.itemGroup.mechanic.id == util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC_SELECT_FROM_LIST) {
+        if (this.props.itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.ASSIGNMENT ||
+           this.props.itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST) {
             if (this.props.itemGroup.category && this.props.itemGroup.category.id) {
                 return (
                     <DndInput
@@ -98,12 +98,12 @@ class DndManageItemGroups extends React.Component {
     
     render() {
         const groups = this.props.itemGroups;
-        const categories = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.PROFICIENCY_CATEGORY);
+        const categories = util.picklistInfo.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.PROFICIENCY_CATEGORY);
         let proficiencies = this.props.proficiencies;
         if (this.props.itemGroup && this.props.itemGroup.category && this.props.itemGroup.category.id != 0) {
             proficiencies = proficiencies.filter(item => item.category.id == this.props.itemGroup.category.id);
         }
-        const selectionMechanics = util.picklistInfo.getPicklistItems(this.props.picklists, util.picklistInfo.PROFICIENCY_SELECTION_MECHANIC);
+        const selectionMechanics = util.picklistInfo.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SELECTION_MECHANIC);
         return (
             <div>
                 <fieldset>

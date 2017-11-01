@@ -525,7 +525,7 @@ class BackgroundEntry extends React.Component {
         const selectedEquipment = this.state.selectedEquipment;
         const background = this.state.background;
         selectedEquipment.resource = this.state.background.resource;
-        selectedEquipment.category.id = util.picklistInfo.EQUIPMENT_CATEGORY_MINOR_ITEM;
+        selectedEquipment.category.id = util.itemTypes.EQUIPMENT_CATEGORY.MINOR_ITEM;
         selectedEquipment.assignedCount = 1;
         let self = this;
         this.props.actions.upsertEquipment(selectedEquipment).then(function(newEquipmentItem) {

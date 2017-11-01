@@ -201,10 +201,10 @@ module.exports = function(app, pg, async, pool) {
             sql += ' INNER JOIN adm_core_item duration ON duration.id = spell."durationId"';
             sql += ' INNER JOIN adm_core_item range ON range.id = spell."rangeId"';
             sql += ' INNER JOIN adm_core_item casting ON casting.id = spell."castingTimeId"';
-            sql += ' INNER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = 123)'
+            sql += ' INNER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = 171)'
             sql += ' LEFT OUTER JOIN adm_link_spell_component lnkcomp ON lnkcomp."referenceId" = i.id';
             sql += ' LEFT OUTER JOIN adm_core_item comp ON comp.id = lnkcomp."componentId"';
-            sql += ' LEFT OUTER JOIN adm_core_description higherleveldesc ON (higherleveldesc."itemId" = i.id AND higherleveldesc."descriptionTypeId" = 125)';
+            sql += ' LEFT OUTER JOIN adm_core_description higherleveldesc ON (higherleveldesc."itemId" = i.id AND higherleveldesc."descriptionTypeId" = 122)';
             sql += ' INNER JOIN adm_core_item resource ON resource.id = i."resourceId"';
             sql += ' GROUP BY i.id, i."itemName", spell.level';
             sql += ', school.id, school."itemName"';
