@@ -43,7 +43,7 @@ class DndProficiencyGroupDisplay extends React.Component {
         let tool = null;
         let weapon = null;
         if (showArmor) {
-            skill = (
+            armor = (
                 <div>
                     <span>Armor:</span>
                     <span>
@@ -60,7 +60,7 @@ class DndProficiencyGroupDisplay extends React.Component {
             );
         }
         if (showLanguage) {
-            skill = (
+            language = (
                 <div>
                     <span>Languages:</span>
                     <span>
@@ -77,7 +77,7 @@ class DndProficiencyGroupDisplay extends React.Component {
             );
         }
         if (showSavingThrow) {
-            skill = (
+            savingThrow = (
                 <div>
                     <span>Saving Throws:</span>
                     <span>
@@ -128,7 +128,7 @@ class DndProficiencyGroupDisplay extends React.Component {
             );
         }
         if (showWeapon) {
-            skill = (
+            weapon = (
                 <div>
                     <span>Weapons:</span>
                     <span>

@@ -46,29 +46,103 @@ module.exports = function(app, pg, async, pool) {
                     sql += ' INNER JOIN adm_link_chart link ON link."chartId" = chart.id';
                     sql += ' WHERE link."referenceId" = $1)';
                 },*/
+                function deleteDescriptions(resObj, callback) {
+                    sql = 'DELETE FROM adm_core_description';
+                    sql += ' WHERE "itemId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
                 function deleteChartEntries(resObj, callback) {
                     sql = 'DELETE FROM adm_def_chart_entry';
                     sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
                 },
                 function deleteCharts(resObj, callback) {
-                    sql = 'DELETE FROM adm_def_chart';
+                    sql = 'DELETE FROM adm_core_chart';
                     sql += ' WHERE "id" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
                 },
                 function deleteChartLinks(resObj, callback) {
                     sql = 'DELETE FROM adm_link_chart';
                     sql += ' WHERE "referenceId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
                 },
                 function deleteEquipmentLinks(resObj, callback) {
                     sql = 'DELETE FROM adm_link_equipment';
                     sql += ' WHERE "referenceId" = $1';
-                },
-                function deleteProficiencyGroupLinks(resObj, callback) {
-                    sql = 'DELETE FROM adm_link_item_group';
-                    sql += ' WHERE "referenceId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
                 },
                 function deleteProficiencyGroups(resObj, callback) {
                     sql = 'DELETE FROM adm_def_item_group';
                     sql += ' WHERE "itemGroupId" IN (SELECT "itemGroupId" FROM adm_link_item_group WHERE "referenceId" = $1)';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteProficiencyGroupLinks(resObj, callback) {
+                    sql = 'DELETE FROM adm_link_item_group';
+                    sql += ' WHERE "referenceId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
                 },
                 function deleteBackgroundTable(resObj, callback) {
                     sql = 'DELETE FROM adm_def_background';
@@ -83,10 +157,6 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
-                },
-                function deleteEquipmentCategoryLinks(resObj, callback) {
-                    sql = 'DELETE FROM adm_link_equipment_category';
-                    sql += ' WHERE "referenceId" = $1';
                 }
             ], function(error, result) {
                 if (error) {
@@ -260,23 +330,26 @@ module.exports = function(app, pg, async, pool) {
                 },*/
                 function insertSuggestedCharacteristicsDescription(resObj, callback) {
                     console.log("04");
-                    results = [];
-                    vals = [];
-                    sql = 'INSERT INTO adm_core_description';
-                    sql += ' ("itemId", "description", "descriptionTypeId")';
-                    sql += ' VALUES ($1, $2, 121)';
-                    vals = [resObj.background.suggestedCharacteristics.id, resObj.background.suggestedCharacteristics.description];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        //resObj.background.suggestedCharacteristics.id = results[0].suggestedCharacteristicsId;
+                    if (resObj.background.suggestedCharacteristics && resObj.background.suggestedCharacteristics.length != 0) {
+                        results = [];
+                        vals = [];
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description", "descriptionTypeId")';
+                        sql += ' VALUES ($1, $2, 121)';
+                        vals = [resObj.background.id, resObj.background.suggestedCharacteristics];
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
                         return callback(null, resObj);
-                    });
+                    }
                 },
-                function insertBackgroundVariantItems(resObj, callback) {
+                /*function insertBackgroundVariantItems(resObj, callback) {
                     console.log("05");
                     results = [];
                     vals = [];
@@ -348,7 +421,7 @@ module.exports = function(app, pg, async, pool) {
                     } else {
                         return callback(null, resObj);
                     }
-                },
+                },*/
                 function insertProficiencyGroupItems(resObj, callback) {
                     console.log("07");
                     results = [];
@@ -364,7 +437,7 @@ module.exports = function(app, pg, async, pool) {
                             if (e != 0) {
                                 sql += ', ';
                             }
-                            sql += '($' + first.toString() + ', $' + second.toString() + ', 116)';
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', 605)';
                             first = first + 2;
                             second = second + 2;
                             tmpItemName = resObj.background.name + ': ' + resObj.background.proficiencyGroups[e].mechanic.name + ' - ' + e.toString();
@@ -429,7 +502,7 @@ module.exports = function(app, pg, async, pool) {
                         return callback(null, resObj);
                     }
                 },
-                function insertVariantFeatureDescriptions(resObj, callback) {
+                /*function insertVariantFeatureDescriptions(resObj, callback) {
                     console.log("10");
                     results = [];
                     vals = [];
@@ -468,15 +541,15 @@ module.exports = function(app, pg, async, pool) {
                     } else {
                         return callback(null, resObj);
                     }
-                },
+                },*/
                 function insertBackground(resObj, callback) {
                     console.log("11");
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_def_background';
-                    sql += ' ("backgroundId", "startingGold", "featureId", "suggestedCharacteristicsId")';
-                    sql += ' VALUES ($1, $2, $3, $4)';
-                    vals = [resObj.background.id, resObj.background.startingGold, resObj.background.feature.id, resObj.background.suggestedCharacteristics.id];
+                    sql += ' ("backgroundId", "startingGold", "featureId")';
+                    sql += ' VALUES ($1, $2, $3)';
+                    vals = [resObj.background.id, resObj.background.startingGold, resObj.background.feature.id];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -561,7 +634,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                     
                 },
-                function insertMissingDice(resObj, callback) {
+                /*function insertMissingDice(resObj, callback) {
                     console.log("14");
                     results = [];
                     vals = [];
@@ -610,7 +683,7 @@ module.exports = function(app, pg, async, pool) {
                     } else {
                         return callback(null, resObj);
                     }
-                },
+                },*/
                 function insertCharts(resObj, callback) {
                     console.log("15");
                     results = [];
@@ -773,13 +846,25 @@ module.exports = function(app, pg, async, pool) {
                         var second = 2;
                         var addComma = false;
                         for (var i = 0; i < resObj.background.proficiencyGroups.length; i++) {
-                            for (var j = 0; j < resObj.background.proficiencyGroups[i].proficiencies.length; j++) {
+                            if (resObj.background.proficiencyGroups[i].proficiencies.length != 0) {
+                                for (var j = 0; j < resObj.background.proficiencyGroups[i].proficiencies.length; j++) {
+                                    if (addComma) {
+                                        sql += ', ';
+                                    }
+                                    sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
+                                    vals.push(resObj.background.proficiencyGroups[i].id);
+                                    vals.push(resObj.background.proficiencyGroups[i].proficiencies[j].id);
+                                    first = first + 2;
+                                    second = second + 2;
+                                    addComma = true;
+                                }
+                            } else {
                                 if (addComma) {
                                     sql += ', ';
                                 }
                                 sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
                                 vals.push(resObj.background.proficiencyGroups[i].id);
-                                vals.push(resObj.background.proficiencyGroups[i].proficiencies[j].id);
+                                vals.push(resObj.background.proficiencyGroups[i].category.id);
                                 first = first + 2;
                                 second = second + 2;
                                 addComma = true;
@@ -964,10 +1049,10 @@ module.exports = function(app, pg, async, pool) {
             sql += '    			INNER JOIN adm_core_item mech ON mech.id = pgrp."mechanicTypeId"';
             sql += '    			INNER JOIN adm_link_item_group_assignment cm ON (cm."itemGroupId" = c.id)';
             sql += '    			INNER JOIN adm_core_item prof ON (prof.id = cm."itemId")';
-            sql += '    			LEFT OUTER JOIN adm_def_proficiency profdef ON profdef."proficiencyId" = prof.id AND mech.id IN (556, 554)';
+            sql += '    			LEFT OUTER JOIN adm_def_proficiency profdef ON profdef."proficiencyId" = prof.id AND mech.id IN (79, 81)';
             sql += '    			LEFT OUTER JOIN adm_core_item profcat ON profcat.id = profdef."categoryId"';
             sql += '               LEFT OUTER JOIN adm_def_proficiency_category profcatdef ON profcatdef."proficiencyCategoryId" = profcat.id';
-            sql += '               LEFT OUTER JOIN adm_core_item catcat ON catcat.id = cm."itemId" AND mech."id" = 555';
+            sql += '               LEFT OUTER JOIN adm_core_item catcat ON catcat.id = cm."itemId" AND mech."id" = 80';
             sql += '               LEFT OUTER JOIN adm_def_proficiency_category catcatdef ON catcatdef."proficiencyCategoryId" = catcat.id';
             sql += '    			GROUP BY c.id, mech.id, pgrp."selectCount", profcat.id, profcat."itemName", catcat.id, catcat."itemName", profcatdef."parentId", catcatdef."parentId"';
             sql += '    	) proficiency_row ON (proficiency_row.id = dc."itemGroupId")';

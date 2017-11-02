@@ -125,7 +125,7 @@ class DndManageAssignedItems extends React.Component {
                                      <option
                                          key={item.id}
                                          value={item.id}>
-                                         {this.renderSelectDisplayText(item, this.props.dataType)}
+                                         {this.renderSelectDisplayText(item, this.props.dataTypeArray)}
                                      </option>)}
                         </select>
                         <span className="input-group-btn">
@@ -155,6 +155,7 @@ DndManageAssignedItems.propTypes = {
     inputCols: PropTypes.number,
     labelCols: PropTypes.number,
     dataType: PropTypes.string.isRequired,
+    dataTypeArray: PropTypes.string,
     label: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,

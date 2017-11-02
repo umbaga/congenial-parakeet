@@ -21,15 +21,16 @@ class DndAssignedItemRow extends React.Component {
     }
     
     renderCount() {
+        let itemCount = this.props.item.count ? this.props.item.count : 1;
         return this.props.showCount ? (
             <td>
                 <input
                     className="form-control"
                     width="50"
                     type="number"
-                    value={this.props.item.assignedCount * this.props.item.count}
-                    min={this.props.item.count}
-                    step={this.props.item.count}
+                    value={this.props.item.assignedCount * itemCount}
+                    min={itemCount}
+                    step={itemCount}
                     onChange={this._onChange}
                     />
             </td>

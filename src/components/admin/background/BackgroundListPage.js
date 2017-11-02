@@ -127,22 +127,34 @@ function mapStateToProps(state) {
         picklists = Object.assign([{}], state.picklists);
     }
     let equipments = Object.assign([{}], [util.objectModel.EQUIPMENT]);
+    const equipmentCategories = util.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.EQUIPMENT_CATEGORY);
     if (state.equipments.length > 0) {
-        equipments = Object.assign([{}], state.equipments);
+        equipments = Object.assign([{}], state.equipments).concat(equipmentCategories).sort(function(a, b) {
+            if (a.name < b.name) {
+                return -1;
+            } else if (a.name > b.name) {
+                return 1;
+            }
+            return 0;
+        });
+    }
+    let proficiencies = Object.assign([{}], [util.objectModel.PROFICIENCY]);
+    if (state.proficiencies.length > 0) {
+        proficiencies = Object.assign([{}], state.proficiencies);
     }
     if (state.backgrounds.length > 0) {
         return {
             equipments: equipments,
             backgrounds: state.backgrounds,
             picklists: picklists,
-            proficiencies: state.proficiencies
+            proficiencies: proficiencies
         };
     } else {
         return {
             equipments: equipments,
             backgrounds: [util.objectModel.BACKGROUND],
             picklists: picklists,
-            proficiencies: [util.objectModel.PROFICIENCY]
+            proficiencies: proficiencies
         };
     }
 }

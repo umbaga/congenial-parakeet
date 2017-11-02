@@ -156,9 +156,6 @@ class BackgroundForm extends React.Component {
                                     itemListTitle="Equipment"
                                     showCount
                                     supplementalText="unit"
-                                    onSaveNewItem={this.props.onSaveNewEquipmentButtonClick}
-                                    onCreateNewItem={this.props.onCreateNewEquipmentButtonClick}
-                                    onCancelNewItem={this.props.onCancelNewEquipmentButtonClick}
                                     />
                             </div>
                         </Tab>

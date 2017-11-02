@@ -79,7 +79,7 @@ class DndManageItemGroups extends React.Component {
                                     key={group.id}
                                     item={group}
                                     displayValue={this._formatText(group)}
-                                    removeItem={this.props.onRemoveItemGroup}
+                                    onRemoveItem={this.props.onRemoveItemGroup}
                                     />
                             )}
                         </tbody>

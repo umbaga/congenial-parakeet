@@ -84,8 +84,6 @@ class BackgroundEntry extends React.Component {
 
     saveAndNewBackground(event) {
         this.saveBackground(event);
-        let newBackground = Object.assign({}, util.objectModel.BACKGROUND);
-        this.setState({background: newBackground});
         this.refs.form.refs.name.setFocus();
     }
 
@@ -96,7 +94,16 @@ class BackgroundEntry extends React.Component {
 
     saveBackground(event) {
         event.preventDefault();
-        this.setState({saving: true});
+        let newBackground = Object.assign({}, util.objectModel.BACKGROUND);
+        newBackground.assignedEquipment = [];
+        newBackground.charts = [];
+        newBackground.feature = {
+            id: 0,
+            name: '',
+            description: ''
+        };
+        newBackground.proficiencyGroups = [];
+        this.setState({saving: true, background: newBackground});
         this.props.actions.upsertBackground(this.state.background);
     }
 
@@ -517,7 +524,8 @@ class BackgroundEntry extends React.Component {
         const itemIndex = this.props.background.assignedEquipment.findIndex(item => {
             return item.id == equipmentItem.id;
         });
-        background.assignedEquipment[itemIndex].assignedCount = event.target.value / background.assignedEquipment[itemIndex].count;
+        let itemCount = background.assignedEquipment[itemIndex].count ? background.assignedEquipment[itemIndex].count : 1;
+        background.assignedEquipment[itemIndex].assignedCount = event.target.value / itemCount;
         return this.setState({background: background});
     }
     
