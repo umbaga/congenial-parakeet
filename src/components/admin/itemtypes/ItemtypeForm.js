@@ -40,6 +40,12 @@ class ItemtypeForm extends React.Component {
                         dataType={util.dataTypes.bool.YES_NO}
                         checked={this.props.itemtype.isDescription}
                         onChange={this.props.onChange} />
+                    <DndInput
+                        name="isChart"
+                        label="Is Chart"
+                        dataType={util.dataTypes.bool.YES_NO}
+                        checked={this.props.itemtype.isChart}
+                        onChange={this.props.onChange} />
                 </form>
             </div>
         );

@@ -22,6 +22,16 @@ export const TYPES = {
     WEAPON_PROPERTY: 23
 };
 
+export const DESCRIPTIONS = {
+    GENERAL: 171,
+    SUGGESTED_CHARACTERISTICS: 121,
+    AT_HIGHER_LEVELS: 122
+};
+
+export const CHARTS = {
+    DIE_ROLL: 800
+};
+
 export const ARMOR_PROFICIENCY = {
     HEAVY: 33,
     LIGHT: 31,

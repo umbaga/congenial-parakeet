@@ -33,8 +33,9 @@ module.exports = function(app, pg, async, pool) {
             sql += ' SET "typeName" = $2';
             sql += ', "isPicklist" = $3';
             sql += ', "isDescription" = $4';
+            sql += ', "isChart" = $5';
             sql += ' WHERE id = $1';
-            vals = [req.params.id, req.body.itemtype.name, req.body.itemtype.isPicklist, req.body.itemtype.isDescription];
+            vals = [req.params.id, req.body.itemtype.name, req.body.itemtype.isPicklist, req.body.itemtype.isDescription, req.body.itemtype.isChart];
             var query = client.query(new pg.Query(sql, vals));
             query.on('row', function(row) {
                 results.push(row);
@@ -55,9 +56,9 @@ module.exports = function(app, pg, async, pool) {
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'INSERT INTO adm_core_type';
-            sql += '("typeName", "isPicklist", "isDescription")';
-            sql += 'VALUES ($1, $2, $3) RETURNING id;';
-            vals = [req.body.itemtype.name, req.body.itemtype.isPicklist, req.body.itemtype.isDescription];
+            sql += '("typeName", "isPicklist", "isDescription", "isChart")';
+            sql += 'VALUES ($1, $2, $3, $4) RETURNING id;';
+            vals = [req.body.itemtype.name, req.body.itemtype.isPicklist, req.body.itemtype.isDescription, req.body.itemtype.isChart];
             var query = client.query(new pg.Query(sql, vals));
             query.on('row', function(row) {
                 results.push(row);
@@ -78,7 +79,11 @@ module.exports = function(app, pg, async, pool) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            sql = 'SELECT adm_core_type."id", adm_core_type."typeName" AS "name", adm_core_type."isPicklist", adm_core_type."isDescription"';
+            sql = 'SELECT adm_core_type."id"';
+            sql += ', adm_core_type."typeName" AS "name"';
+            sql += ', adm_core_type."isPicklist"';
+            sql += ', adm_core_type."isDescription"';
+            sql += ', adm_core_type."isChart"';
             sql += ' FROM adm_core_type';
             sql += ' ORDER BY "typeName"';
             var query = client.query(new pg.Query(sql));

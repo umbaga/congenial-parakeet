@@ -85,6 +85,7 @@ class ItemtypeListPage extends React.Component {
                                 <th></th>
                                 <th className="text-center">isPicklist</th>
                                 <th className="text-center">isDescription</th>
+                                <th className="text-center">isChart</th>
                                 <th>
                                     <div className="pull-right">
                                         <DndButton onClick={this.onCreate} buttonType="create" />

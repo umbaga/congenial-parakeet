@@ -127,7 +127,8 @@ export const ITEMTYPE = {
     id: 0,
     name: '',
     isDescription: false,
-    isPicklist: false
+    isPicklist: false,
+    isChart: false
 };
 export const PICKLIST = {id: 0, name: '', items: []};
 export const PICKLISTITEM = {id: 0, name: '', picklistId: 0, defaultSelected: false};
