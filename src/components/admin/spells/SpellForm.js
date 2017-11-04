@@ -5,6 +5,7 @@ import DndUniversalInput from '../../common/inputs/DndUniversalInput';
 import DndPicklistAddSelect from '../../common/inputs/DndPicklistAddSelect';
 import DndCheckboxList from '../../common/inputs/DndCheckboxList';
 import util from '../../../util/util';
+import { Tabs, Tab } from 'react-bootstrap';
 
 class SpellForm extends React.Component {
     constructor(props) {
@@ -27,81 +28,120 @@ class SpellForm extends React.Component {
         const durations = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_DURATION);
         const ranges = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_RANGE);
         const schools = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC);
+        const damageTypes = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE);
         return (
             <div>
                 <form>
-                    <DndUniversalInput
-                        ref="name"
-                        referenceObject={spell}
-                        onChange={this.props.onChange}
-                        picklists={this.props.picklists}
-                        hideDescription
-                        />
-                    <DndInput
-                        label="Spell Level"
-                        name="level"
-                        value={spell.level.toString()}
-                        onChange={this.props.onChange}
-                        dataType={util.dataTypes.number.SPELL_LEVEL}
-                        />
-                    <DndInput
-                        label="School of Magic"
-                        name="school"
-                        valueObj={spell.school}
-                        onChange={this.props.onChange}
-                        dataType={util.dataTypes.picklist.SCHOOL_OF_MAGIC}
-                        picklist={schools}
-                        />
-                    <DndPicklistAddSelect
-                        dataType={util.dataTypes.picklist.SPELL_CASTING_TIME}
-                        label="Casting Time"
-                        name="castingTime"
-                        onChange={this.props.onChange}
-                        picklist={castingTimes}
-                        valueObj={spell.castingTime}
-                        onSaveButtonClick={this.props.saveNewCastingTime}
-                        />
-                    <DndPicklistAddSelect
-                        dataType={util.dataTypes.picklist.SPELL_RANGE}
-                        label="Range"
-                        name="range"
-                        onChange={this.props.onChange}
-                        picklist={ranges}
-                        valueObj={spell.range}
-                        onSaveButtonClick={this.props.saveNewRange}
-                        />
-                    <DndCheckboxList
-                        dataType={util.dataTypes.picklist.SPELL_COMPONENT}
-                        label="Components"
-                        name="components"
-                        valueArray={spell.components}
-                        onChange={this.props.onChange}
-                        picklist={components}
-                        textBoxKey="description"
-                        />
-                    <DndPicklistAddSelect
-                        dataType={util.dataTypes.picklist.SPELL_DURATION}
-                        label="Duration"
-                        name="duration"
-                        onChange={this.props.onChange}
-                        picklist={durations}
-                        valueObj={spell.duration}
-                        onSaveButtonClick={this.props.saveNewDuration}
-                        />
-                    <DndInput
-                        label="Description"
-                        name="description"
-                        value={spell.description}
-                        onChange={this.props.onChange}
-                        dataType={util.dataTypes.string.DESCRIPTION}
-                        />
-                    <DndInput
-                        label="At Higher Levels"
-                        name="atHigherLevels"
-                        value={spell.atHigherLevels}
-                        onChange={this.props.onChange}
-                        dataType={util.dataTypes.string.DESCRIPTION}
-                        />
+                    <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+                        <Tab eventKey={1} title="General">
+                            <div>&nbsp;</div>
+                            <DndUniversalInput
+                                ref="name"
+                                referenceObject={spell}
+                                onChange={this.props.onChange}
+                                picklists={this.props.picklists}
+                                hideDescription
+                                />
+                            <DndInput
+                                label="Spell Level"
+                                name="level"
+                                value={spell.level.toString()}
+                                onChange={this.props.onChange}
+                                dataType={util.dataTypes.number.SPELL_LEVEL}
+                                />
+                            <DndInput
+                                label="School of Magic"
+                                name="school"
+                                valueObj={spell.school}
+                                onChange={this.props.onChange}
+                                dataType={util.dataTypes.picklist.SCHOOL_OF_MAGIC}
+                                picklist={schools}
+                                />
+                            <DndInput
+                                label="Is Ritual"
+                                name="isRitual"
+                                labelCols={4}
+                                checked={spell.isRitual}
+                                onChange={this.props.onChange}
+                                dataType={util.dataTypes.bool.BOOL}
+                                />
+                            <DndPicklistAddSelect
+                                dataType={util.dataTypes.picklist.SPELL_CASTING_TIME}
+                                label="Casting Time"
+                                name="castingTime"
+                                onChange={this.props.onChange}
+                                picklist={castingTimes}
+                                valueObj={spell.castingTime}
+                                onSaveButtonClick={this.props.saveNewCastingTime}
+                                />
+                            <DndPicklistAddSelect
+                                dataType={util.dataTypes.picklist.SPELL_RANGE}
+                                label="Range"
+                                name="range"
+                                onChange={this.props.onChange}
+                                picklist={ranges}
+                                valueObj={spell.range}
+                                onSaveButtonClick={this.props.saveNewRange}
+                                />
+                            <DndCheckboxList
+                                dataType={util.dataTypes.picklist.SPELL_COMPONENT}
+                                label="Components"
+                                name="components"
+                                valueArray={spell.components}
+                                onChange={this.props.onChange}
+                                picklist={components}
+                                textBoxKey="description"
+                                />
+                            <DndPicklistAddSelect
+                                dataType={util.dataTypes.picklist.SPELL_DURATION}
+                                label="Duration"
+                                name="duration"
+                                onChange={this.props.onChange}
+                                picklist={durations}
+                                valueObj={spell.duration}
+                                onSaveButtonClick={this.props.saveNewDuration}
+                                />
+                            <DndInput
+                                label="Description"
+                                name="description"
+                                value={spell.description}
+                                onChange={this.props.onChange}
+                                dataType={util.dataTypes.string.DESCRIPTION}
+                                />
+                            <DndInput
+                                label="At Higher Levels"
+                                name="atHigherLevels"
+                                value={spell.atHigherLevels}
+                                onChange={this.props.onChange}
+                                dataType={util.dataTypes.string.DESCRIPTION}
+                                />
+                        </Tab>
+                        <Tab eventKey={2} title="Damage">
+                            <div>&nbsp;</div>
+                                <DndInput
+                                    name="damage"
+                                    label="Damage"
+                                    dataType={util.dataTypes.special.DICE_ROLL}
+                                    valueObj={this.props.spell.damage}
+                                    onChange={this.props.onChange}
+                                    />
+                                <DndInput
+                                    name="damageImprovement"
+                                    label="Damage Gained"
+                                    dataType={util.dataTypes.special.DICE_ROLL}
+                                    valueObj={this.props.spell.damageImprovement}
+                                    onChange={this.props.onChange}
+                                    />
+                                <DndInput
+                                    name="damageType"
+                                    label="Damage Type"
+                                    dataType={util.dataTypes.picklist.DAMAGE_TYPE}
+                                    valueObj={this.props.spell.damageType}
+                                    onChange={this.props.onChange}
+                                    picklist={damageTypes}
+                                    />
+                        </Tab>
+                    </Tabs>
                 </form>
             </div>
         );

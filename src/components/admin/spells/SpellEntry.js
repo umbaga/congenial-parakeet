@@ -133,7 +133,12 @@ class SpellEntry extends React.Component {
         const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         let newSelectedValue = {};
         let newComponentsArray = [];
+        let newRenderedValue = '';
+        let newDiceRollValue = {};
         switch (dataType) {
+            case util.dataTypes.bool.BOOL:
+                spell[field] = !spell[field];
+                break;
             case util.dataTypes.string.STRING:
             case util.dataTypes.string.DESCRIPTION:
             case util.dataTypes.number.SPELL_LEVEL:
@@ -148,6 +153,7 @@ class SpellEntry extends React.Component {
             case util.dataTypes.picklist.SPELL_CASTING_TIME:
             case util.dataTypes.picklist.SPELL_DURATION:
             case util.dataTypes.picklist.SPELL_RANGE:
+            case util.dataTypes.picklist.DAMAGE_TYPE:
                 if (inputType == 'text') {
                     newSelectedValue.id = 0;
                     newSelectedValue.name = event.target.value;
@@ -185,6 +191,27 @@ class SpellEntry extends React.Component {
                     }
                 }
                 spell[field] = newComponentsArray;
+                break;
+            case util.dataTypes.special.DICE_ROLL:
+                newRenderedValue = '';
+                if (event.target.value && event.target.value.length != 0) {
+                    for (let y = 0; y < event.target.value.length; y++) {
+                        if (event.target.value.charAt(y) == '1' || event.target.value.charAt(y) == '2' ||
+                           event.target.value.charAt(y) == '3' || event.target.value.charAt(y) == '4' ||
+                           event.target.value.charAt(y) == '5' || event.target.value.charAt(y) == '6' ||
+                           event.target.value.charAt(y) == '7' || event.target.value.charAt(y) == '8' ||
+                           event.target.value.charAt(y) == '9' || event.target.value.charAt(y) == '0' ||
+                           event.target.value.charAt(y) == 'd' || event.target.value.charAt(y) == 'D') {
+                            newRenderedValue += event.target.value.charAt(y);
+                        }
+                    }
+                }
+                if (util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL)) {
+                    newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
+                    newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
+                    spell[field] = newDiceRollValue;
+                }
+                spell[field].rendered = newRenderedValue;
                 break;
             default:
         }

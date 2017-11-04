@@ -47,7 +47,7 @@ array.weaponProperties = function(arr) {
             for (let x = 0; x < arr.weaponProperties.length; x++) {
                 retVal += arr.weaponProperties[x].name;
                 if (arr.weaponProperties[x].requireDamage) {
-                    retVal += ' (' + util.format.forDisplay.string.dieRoll(arr.versatileDamage) + ')';
+                    retVal += ' (' + util.format.forDisplay.string.dieRoll(arr.damage.versatile.dice) + ')';
                 }
                 if (arr.weaponProperties[x].requireRange) {
                     retVal += ' (range ' + arr.range.normal + '/' + arr.range.maximum + ')';
@@ -261,6 +261,15 @@ obj.armorClass = function(val) {
     }
     return retVal;
 };
+obj.damage = function(val) {
+    let retVal = '';
+    //<td>{util.format.forDisplay.string.dieRoll(this.props.weapon.damage.dice) + ' ' + (this.props.weapon.damage.dice.dieCount == 0 ? '' : this.props.weapon.damage.type.name)}</td>
+    retVal = util.format.forDisplay.string.dieRoll(val.dice);
+    if (val.type && val.type.name && val.type.name != 'None') {
+        retVal += ' ' + val.type.name;
+    }
+    return retVal;
+};
 obj.equipmentList = function(val) {
     let retVal = '';
     for (let y = 0; y < val.assignedEquipment.length; y++) {
@@ -354,10 +363,11 @@ obj.spellComponents = function(val) {
     return retVal;
 };
 obj.spellLevelAndSchool = function(val) {
+    let isRitualText = val.isRitual ? ' (ritual)' : '';
     if (val.level == 0) {
-        return val.school.name + ' Cantrip';
+        return val.school.name + ' Cantrip' + isRitualText;
     } else {
-        return util.format.forDisplay.number.ordinal(val.level) + '-level ' + val.school.name;
+        return util.format.forDisplay.number.ordinal(val.level) + '-level ' + val.school.name + isRitualText;
     }
 };
 
@@ -366,7 +376,7 @@ string.dieRoll = function(val, omitOnes) {
     let retVal = '';
     if (val) {
         if (val.dieCount == 0 || val.dieType == 0) {
-            retVal = '-';
+            retVal = util.unicode.punctuation.longDash;
         } else if (val.dieType == 1) {
             retVal = val.dieCount.toString();
         } else {

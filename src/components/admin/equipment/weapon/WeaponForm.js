@@ -33,10 +33,10 @@ class WeaponForm extends React.Component {
                 if (this.props.weapon.weaponProperties[v].requireDamage) {
                     versatileDamageInput = (<div className="col-md-12">
                         <DndInput
-                            name="versatileDamage"
+                            name="damage.versatile.dice"
                             label="Versatile Damage"
                             dataType={util.dataTypes.special.DICE_ROLL}
-                            valueObj={this.props.weapon.versatileDamage}
+                            valueObj={this.props.weapon.damage.versatile.dice}
                             onChange={this.props.onChange} />
                     </div>);
                 }
@@ -119,19 +119,19 @@ class WeaponForm extends React.Component {
                     </div>
                     <div className="col-md-6">
                         <DndInput
-                            name="damageType"
+                            name="damage.type"
                             label="Damage Type"
                             dataType={util.dataTypes.picklist.DAMAGE_TYPE}
-                            valueObj={this.props.weapon.damageType}
+                            valueObj={this.props.weapon.damage.type}
                             onChange={this.props.onChange}
                             picklist={damageTypePicklist} />
                     </div>
                     <div className="col-md-6">
                         <DndInput
-                            name="damage"
+                            name="damage.dice"
                             label="Damage"
                             dataType={util.dataTypes.special.DICE_ROLL}
-                            valueObj={this.props.weapon.damage}
+                            valueObj={this.props.weapon.damage.dice}
                             onChange={this.props.onChange} />
                     </div>
                     <div className="col-md-12">

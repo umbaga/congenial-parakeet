@@ -80,7 +80,6 @@ class ItemtypeEntry extends React.Component {
                 break;
             default:
         }
-        console.log(itemtype);
         return this.setState({itemtype: itemtype});
     }
 

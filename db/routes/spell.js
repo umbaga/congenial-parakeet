@@ -66,6 +66,20 @@ module.exports = function(app, pg, async, pool) {
                         var tmp = [req.params.id];
                         return callback(null, tmp);
                     });
+                },
+                function deleteDamage(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_spell_damage';
+                    sql += ' WHERE "spellId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -282,6 +296,10 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         var tmp = req.body;
                         tmp.spell.id = results[0].spellId;
+                        tmp.spell.needDamage = false;
+                        if (tmp.spell.damageType && tmp.spell.damageType.id != 0) {
+                            tmp.spell.needDamage = true;
+                        }
                         return callback(null, tmp);
                     });
                 },
@@ -321,9 +339,17 @@ module.exports = function(app, pg, async, pool) {
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_def_spell';
-                    sql += ' ("spellId", "level", "schoolId", "durationId", "rangeId", "castingTimeId")';
+                    sql += ' ("spellId", "level", "schoolId", "durationId", "rangeId", "castingTimeId", "isRitual")';
                     sql += ' VALUES ($1, $2, $3, $4, $5, $6)';
-                    vals = [resObj.spell.id, resObj.spell.level, resObj.spell.school.id, resObj.spell.duration.id, resObj.spell.range.id, resObj.spell.castingTime.id];
+                    vals = [
+                        resObj.spell.id, 
+                        resObj.spell.level, 
+                        resObj.spell.school.id, 
+                        resObj.spell.duration.id, 
+                        resObj.spell.range.id, 
+                        resObj.spell.castingTime.id, 
+                        resObj.spell.isRitual
+                    ];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -343,6 +369,9 @@ module.exports = function(app, pg, async, pool) {
                     var second = 2;
                     var third = 3;
                     for (var e = 0; e < resObj.spell.components.length; e++) {
+                        if (e != 0) {
+                            sql += ', ';
+                        }
                         sql += '($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
                         vals.push(resObj.spell.id);
                         vals.push(resObj.spell.components[e].id);
@@ -359,6 +388,105 @@ module.exports = function(app, pg, async, pool) {
                         done();
                         return callback(null, resObj);
                     });
+                },
+                function insertMissingDamageDice(resObj, callback) {
+                    if (resObj.spell.damage && resObj.spell.damage.dieCount && resObj.spell.damage.dieCount != 0) {
+                        sql = 'with vals as ';
+                        sql += ' (';
+                        sql += 'select $1 :: bigint as "dieCount", $2 :: bigint as "dieType"';
+                        sql += ' UNION ';
+                        sql += 'select $3 :: bigint as "dieCount", $4 :: bigint as "dieType"';
+                        sql += ')';
+                        sql += ' insert into adm_core_dice ("dieCount", "dieType") ';
+                        sql += ' select v."dieCount", v."dieType" from vals as v ';
+                        sql += ' where not exists (select * from adm_core_dice as t where t."dieCount" = v."dieCount" and t."dieType" = v."dieType")';
+                        vals = [
+                            resObj.spell.damage.dieCount, 
+                            resObj.spell.damage.dieType,
+                            resObj.spell.damageImprovement.dieCount,
+                            resObj.spell.damageImprovement.dieType
+                        ];
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function assignDamageIds(resObj, callback) {
+                    if (resObj.spell.damage && resObj.spell.damage.dieCount && resObj.spell.damage.dieCount != 0) {
+                        sql = 'SELECT * FROM adm_core_dice';
+                        sql += ' WHERE ("dieCount" = $1 AND "dieType" = $2)';
+                        sql += ' OR ("dieCount" = $3 AND "dieType" = $4)';
+                        vals = [
+                            resObj.spell.damage.dieCount, 
+                            resObj.spell.damage.dieType,
+                            resObj.spell.damageImprovement.dieCount,
+                            resObj.spell.damageImprovement.dieType
+                        ];
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                if (resObj.spell.damage.dieType == results[e].dieType && resObj.spell.damage.dieCount == results[e].dieCount) {
+                                    resObj.spell.damage.id = results[e].id;
+                                } else if (resObj.spell.damageImprovement.dieType == results[e].dieType && resObj.spell.damageImprovement.dieCount == results[e].dieCount) {
+                                    resObj.spell.damageImprovement.id = results[e].id;
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertDamage(resObj, callback) {
+                    if (resObj.spell.damage && resObj.spell.damage.dice && resObj.spell.damage.dice.dieCount && resObj.spell.damage.dice.dieCount != 0) {
+                        results = [];
+                        vals = [];
+                        sql = 'INSERT INTO adm_def_damage';
+                        sql += ' ("referenceId", "diceId", "damageTypeId")';
+                        sql += ' VALUES ($1, $2, $3)';
+                        vals = [resObj.spell.id, resObj.spell.damage.dice.id, resObj.spell.damage.type.id];
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertImprovementDamage(resObj, callback) {
+                    if (resObj.spell.damage && resObj.spell.damage.improvement && resObj.spell.damage.improvement.dice && resObj.spell.damage.dieCount != 0) {
+                        results = [];
+                        vals = [];
+                        sql = 'INSERT INTO adm_def_spell_damage';
+                        sql += ' ("spellId", "improvementDiceId")';
+                        sql += ' VALUES ($1, $2, $3)';
+                        vals = [resObj.spell.id, resObj.spell.damage.improvement.dice.id];
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 }
             ], function(error, result) {
                 if (error) {
@@ -377,34 +505,53 @@ module.exports = function(app, pg, async, pool) {
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'SELECT i.id, i."itemName" AS name, spell.level';
-            sql += ', description.description';
-            sql += ', higherleveldesc.description AS "atHigherLevels"';
-            sql += ', json_build_object(\'id\', school.id, \'name\', school."itemName") AS school';
-            sql += ', json_build_object(\'id\', duration.id, \'name\', duration."itemName") AS duration';
-            sql += ', json_build_object(\'id\', range.id, \'name\', range."itemName") AS range';
-            sql += ', json_build_object(\'id\', casting.id, \'name\', casting."itemName") AS "castingTime"';
-            sql += ', json_agg((SELECT x FROM (SELECT comp.id, comp."itemName" AS name, lnkcomp.description) x)) AS "components"';
-            sql += ', json_build_object(\'id\', resource.id, \'name\', resource."itemName") AS "resource"';
-            sql += ' FROM adm_core_item i';
-            sql += ' INNER JOIN adm_def_spell spell ON spell."spellId" = i.id';
-            sql += ' INNER JOIN adm_core_item school ON school.id = spell."schoolId"';
-            sql += ' INNER JOIN adm_core_item duration ON duration.id = spell."durationId"';
-            sql += ' INNER JOIN adm_core_item range ON range.id = spell."rangeId"';
-            sql += ' INNER JOIN adm_core_item casting ON casting.id = spell."castingTimeId"';
-            sql += ' INNER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = 171)'
-            sql += ' LEFT OUTER JOIN adm_link_spell_component lnkcomp ON lnkcomp."referenceId" = i.id';
-            sql += ' LEFT OUTER JOIN adm_core_item comp ON comp.id = lnkcomp."componentId"';
-            sql += ' LEFT OUTER JOIN adm_core_description higherleveldesc ON (higherleveldesc."itemId" = i.id AND higherleveldesc."descriptionTypeId" = 122)';
-            sql += ' INNER JOIN adm_core_item resource ON resource.id = i."resourceId"';
-            sql += ' GROUP BY i.id, i."itemName", spell.level';
-            sql += ', school.id, school."itemName"';
-            sql += ', duration.id, duration."itemName"';
-            sql += ', range.id, range."itemName"';
-            sql += ', casting.id, casting."itemName"';
-            sql += ', description.description';
-            sql += ', higherleveldesc.description';
-            sql += ', resource.id, resource."itemName"';
-            sql += ' ORDER BY i."itemName"';
+            sql += ' , description.description';
+            sql += ' , spell."isRitual"';
+            sql += ' , higherleveldesc.description AS "atHigherLevels"';
+            sql += ' ,  CASE WHEN basedmgdice.id IS NULL THEN \'{}\' ELSE json_build_object(';
+            sql += '     \'dice\', json_build_object(\'id\', basedmgdice.id, \'dieCount\', basedmgdice."dieCount", \'dieType\', basedmgdice."dieType", \'rendered\', concat_ws(\'d\', basedmgdice."dieCount"::text, basedmgdice."dieType"::text))';
+            sql += '     , \'type\', json_build_object(\'name\', dmgtype."itemName", \'id\', dmgtype."id")';
+            sql += '     , \'improvement\', json_build_object(\'dice\', json_build_object(\'id\', improvedmgdice.id,\'dieCount\', improvedmgdice."dieCount",\'dieType\', improvedmgdice."dieType",\'rendered\', concat_ws(\'d\', improvedmgdice."dieCount"::text, improvedmgdice."dieType"::text)))';
+            sql += ' ) END AS "damage"';
+            sql += ' , json_build_object(\'abilityScore\', json_build_object(\'id\', saveability.id, \'name\', saveability."itemName")) AS "savingThrow"';
+            sql += ' , json_build_object(\'id\', school.id, \'name\', school."itemName") AS school';
+            sql += ' , json_build_object(\'id\', duration.id, \'name\', duration."itemName") AS duration';
+            sql += ' , json_build_object(\'id\', range.id, \'name\', range."itemName") AS range';
+            sql += ' , json_build_object(\'id\', casting.id, \'name\', casting."itemName") AS "castingTime"';
+            sql += ' , json_agg((SELECT x FROM (SELECT comp.id, comp."itemName" AS name, lnkcomp.description) x)) AS "components"';
+            sql += ' , json_build_object(\'id\', resource.id, \'name\', resource."itemName") AS "resource"';
+            sql += '  FROM adm_core_item i';
+            sql += '  INNER JOIN adm_def_spell spell ON spell."spellId" = i.id';
+            sql += '  INNER JOIN adm_core_item school ON school.id = spell."schoolId"';
+            sql += '  INNER JOIN adm_core_item duration ON duration.id = spell."durationId"';
+            sql += '  INNER JOIN adm_core_item range ON range.id = spell."rangeId"';
+            sql += '  INNER JOIN adm_core_item casting ON casting.id = spell."castingTimeId"';
+            sql += '  LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = 171)';
+            sql += '  LEFT OUTER JOIN adm_link_spell_component lnkcomp ON lnkcomp."referenceId" = i.id';
+            sql += '  LEFT OUTER JOIN adm_core_item comp ON comp.id = lnkcomp."componentId"';
+            sql += '  LEFT OUTER JOIN adm_core_description higherleveldesc ON (higherleveldesc."itemId" = i.id AND higherleveldesc."descriptionTypeId" = 122)';
+            sql += '  INNER JOIN adm_core_item resource ON resource.id = i."resourceId"';
+            sql += '  LEFT OUTER JOIN adm_def_spell_saving_throw save ON save."spellId" = i.id';
+            sql += '  LEFT OUTER JOIN adm_core_item saveability ON saveability.id = save."abilityScoreId"';
+            sql += '  LEFT OUTER JOIN adm_def_damage dmg ON dmg."referenceId" = i.id';
+            sql += '  LEFT OUTER JOIN adm_def_spell_damage dmgbase ON dmgbase."spellId" = i.id';
+            sql += '  LEFT OUTER JOIN adm_core_dice basedmgdice ON basedmgdice.id = dmg."diceId"';
+            sql += '  LEFT OUTER JOIN adm_core_item dmgtype ON dmgtype.id = dmg."damageTypeId"';
+            sql += '  LEFT OUTER JOIN adm_core_dice improvedmgdice ON improvedmgdice.id = dmgbase."improvementDiceId"';
+            sql += '  GROUP BY i.id, i."itemName", spell.level';
+            sql += ' , school.id, school."itemName"';
+            sql += ' , duration.id, duration."itemName"';
+            sql += ' , range.id, range."itemName"';
+            sql += ' , casting.id, casting."itemName"';
+            sql += ' , description.description';
+            sql += ' , higherleveldesc.description';
+            sql += ' , resource.id, resource."itemName"';
+            sql += ' , saveability.id, saveability."itemName"';
+            sql += ' , dmgtype.id, dmgtype."itemName"';
+            sql += ' , basedmgdice."id", basedmgdice."dieCount", basedmgdice."dieType"';
+            sql += ' , improvedmgdice.id';
+            sql += ' , spell."isRitual"';
+            sql += '  ORDER BY i."itemName"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
                 results.push(row);

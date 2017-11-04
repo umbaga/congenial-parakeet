@@ -181,10 +181,22 @@ export const SPELL = {
     description: '',
     castingTime: {id: 0, name: ''},
     components: [],
+    damage: {dieCount: 0, dieType: 0, rendered: ''},
+    damageImprovements: [
+        {
+            damage: {dieCount: 0, dieType: 0, rendered: ''},
+            characterLevel: 0
+        }
+    ],
+    damageType: {id: 0, name: ''},
     duration: {id: 0, name: ''},
+    isRitual: false,
     level: 0,
     range: {id: 0, name: ''},
     resource: {id: 0, name: ''},
+    savingThrow: {
+        abilityScore: {id: 0, name: ''}
+    },
     school: {id: 0, name: ''}
 };
 export const SPELL_CASTING_TIME = {id: 0, name: ''};
@@ -196,8 +208,20 @@ export const WEAPON = {
     name: '',
     ammunition: {id: 0, name: ''},
     cost: '0',
-    damage: {dieCount: 0, dieType: 0, rendered: ''},
-    damageType: {id: 0, name: ''},
+    damage: {
+        dice: {
+            dieCount: 0,
+            dieType: 0,
+            rendered: ''
+        },
+        type: {
+            id: 0,
+            name: ''
+        },
+        versatile: {
+            dice: {}
+        }
+    },
     range: {},
     requireRange: false,
     requireSpecialDescription: false,
@@ -207,7 +231,6 @@ export const WEAPON = {
         name: ''
     },
     specialDescription: '',
-    versatileDamage: {},
     category: {id: 0, name: ''},
     proficiency: {id: 0, name: ''},
     weaponProperties: [],

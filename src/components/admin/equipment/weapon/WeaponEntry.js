@@ -41,10 +41,10 @@ class WeaponEntry extends React.Component {
 
     resetForm() {
         let newWeapon = Object.assign({}, util.objectModel.WEAPON);
-        newWeapon.damage.rendered = '';
+        newWeapon.damage.dice.rendered = '';
         newWeapon.weaponProperties = Object.assign([], []);
         newWeapon.range = Object.assign({}, {});
-        newWeapon.versatileDamage = Object.assign({}, {rendered: ''});
+        newWeapon.damage.versatile.dice = Object.assign({}, {rendered: ''});
         return this.setState({weapon: newWeapon});
     }
     
@@ -80,6 +80,14 @@ class WeaponEntry extends React.Component {
     updateFormState(event) {
         let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
         let subfield = null;
+        let tertfield = null;
+        if (field.split('.').length > 1) {
+            subfield = field.split('.')[1];
+            if (field.split('.').length > 2) {
+                tertfield = field.split('.')[2];
+            }
+            field = field.split('.')[0];
+        }
         const weapon = this.state.weapon;
         let newSelectedValue = {};
         let newRenderedValue = '';
@@ -107,7 +115,11 @@ class WeaponEntry extends React.Component {
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
                 newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                 newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
-                weapon[field] = newSelectedValue;
+                if (subfield && subfield.length != 0) {
+                    weapon[field][subfield] = newSelectedValue;
+                } else {
+                    weapon[field] = newSelectedValue;
+                }
                 break;
             case util.dataTypes.special.DICE_ROLL:
                 newRenderedValue = '';
@@ -126,9 +138,21 @@ class WeaponEntry extends React.Component {
                 if (util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL)) {
                     newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
                     newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
-                    weapon[field] = newDiceRollValue;
+                    if (tertfield && tertfield.length != 0) {
+                        weapon[field][subfield][tertfield] = newDiceRollValue;
+                    } else if (subfield && subfield.length != 0) {
+                        weapon[field][subfield] = newDiceRollValue;
+                    } else {
+                        weapon[field] = newDiceRollValue;
+                    }
                 }
-                weapon[field].rendered = newRenderedValue;
+                if (tertfield && tertfield.length != 0) {
+                    weapon[field][subfield][tertfield].rendered = newRenderedValue;
+                } else if (subfield && subfield.length != 0) {
+                    weapon[field][subfield].rendered = newRenderedValue;
+                } else {
+                    weapon[field].rendered = newRenderedValue;
+                }
                 break;
             case util.dataTypes.array.WEAPON_PROPERTIES:
                 if (isAssign) {
@@ -138,7 +162,7 @@ class WeaponEntry extends React.Component {
                     for (let b = 0; b < weapon.weaponProperties.length; b++) {
                         if (weapon.weaponProperties[b].id == referencePicklistItem.id) {
                             if (weapon.weaponProperties[b].requireDamage) {
-                                weapon.versatileDamage = {};
+                                weapon.damage.versatile.dice = {};
                             }
                             if (weapon.weaponProperties[b].requireDescription) {
                                 weapon.specialDescription = null;
@@ -215,20 +239,20 @@ function getWeaponById(weapons, id) {
         return Object.assign({}, weapon);
     } else {
         let emptyWeapon = Object.assign({}, util.objectModel.WEAPON);
-        emptyWeapon.damage.rendered = '';
+        emptyWeapon.damage.dice.rendered = '';
         emptyWeapon.weaponProperties = Object.assign([], []);
         emptyWeapon.range = Object.assign({}, {});
-        emptyWeapon.versatileDamage = Object.assign({}, {rendered: ''});
+        emptyWeapon.damage.versatile.dice = Object.assign({}, {rendered: ''});
         return emptyWeapon;
     }
 }
 
 function mapStateToProps(state, ownProps) {
     let weapon = Object.assign({}, util.objectModel.WEAPON);
-    weapon.damage.rendered = '';
+    weapon.damage.dice.rendered = '';
     weapon.weaponProperties = Object.assign([], []);
     weapon.range = Object.assign({}, {});
-    weapon.versatileDamage = Object.assign({}, {rendered: ''});
+    weapon.damage.versatile.dice = Object.assign({}, {rendered: ''});
     const weaponId = ownProps.selectedId;
     let isCreate = true;
     if (ownProps.selecetdId != 0) {
