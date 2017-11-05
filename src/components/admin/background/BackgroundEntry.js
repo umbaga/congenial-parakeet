@@ -148,38 +148,7 @@ class BackgroundEntry extends React.Component {
     }
     
     updateFormState(event) {
-        let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
-        const background = this.state.background;
-        const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
-        let newSelectedValue = {};
-        let field2 = null;
-        if (field.split('.').length > 1) {
-            field2 = field.split('.')[1];
-            field = field.split('.')[0];
-        }
-        switch (dataType) {
-            case util.dataTypes.string.STRING:
-            case util.dataTypes.string.DESCRIPTION:
-            case util.dataTypes.number.COIN:
-                if (field2) {
-                    background[field][field2] = event.target.value;
-                } else {
-                    background[field] = event.target.value;
-                }
-                break;
-            case util.dataTypes.picklist.RESOURCE:
-                newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
-                newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
-                background[field] = newSelectedValue;
-                break;
-            case util.dataTypes.obj.EQUIPMENT:
-                if (event.target.value != 0) {
-                    return this.setState({selectedEquipment: this.props.equipments.filter((equipment) => equipment.id == event.target.value)[0]});
-                }
-                break;
-            default:
-        }
-        return this.setState({background: background});
+        return this.setState({background: util.common.updateFormState(event, this.state.background, this.props.picklists)});
     }
     
     onAddProficiencyGroup() {

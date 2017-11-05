@@ -68,31 +68,7 @@ class ArmorEntry extends React.Component {
     }
 
     updateFormState(event) {
-        let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
-        const armor = this.state.armor;
-        const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
-        let newSelectedValue = {};
-        switch (dataType) {
-            case util.dataTypes.string.DESCRIPTION:
-            case util.dataTypes.string.STRING:
-            case util.dataTypes.number.COIN:
-            case util.dataTypes.number.WEIGHT:
-            case util.dataTypes.number.INT:
-                armor[field] = event.target.value;
-                break;
-            case util.dataTypes.picklist.ARMOR_PROFICIENCY:
-            case util.dataTypes.picklist.RESOURCE:
-                newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
-                newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
-                armor[field] = newSelectedValue;
-                break;
-            case util.dataTypes.bool.BOOL:
-            case util.dataTypes.bool.HAS_DISADVANTAGE:
-                armor[field] = !armor[field];
-                break;
-            default:
-        }
-        return this.setState({armor: armor});
+        return this.setState({armor: util.common.updateFormState(event, this.state.armor, this.props.picklists)});
     }
     render() {
         return (

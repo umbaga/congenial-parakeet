@@ -69,18 +69,7 @@ class ItemtypeEntry extends React.Component {
     }
 
     updateFormState(event) {
-        const field = event.target.name;
-        const itemtype = this.state.itemtype;
-        switch (event.target.type) {
-            case 'text':
-                itemtype[field] = event.target.value;
-                break;
-            case 'checkbox':
-                itemtype[field] = !itemtype[field];
-                break;
-            default:
-        }
-        return this.setState({itemtype: itemtype});
+        return this.setState({itemtype: util.common.updateFormState(event, this.state.itemtype, this.props.picklists)});
     }
 
     render() {
@@ -119,7 +108,8 @@ ItemtypeEntry.propTypes = {
     closeModal: PropTypes.func.isRequired,
     openModal: PropTypes.func.isRequired,
     showModal: PropTypes.bool.isRequired,
-    isCreate: PropTypes.bool
+    isCreate: PropTypes.bool,
+    picklists: PropTypes.array
 };
 
 function getItemtypeById(itemtypes, id) {

@@ -77,36 +77,7 @@ class ProficiencyEntry extends React.Component {
     }
 
     updateFormState(event) {
-        let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
-        let field2 = null;
-        if (field.split('.').length > 1) {
-            field2 = field.split('.')[1];
-            field = field.split('.')[0];
-        }
-        const proficiency = this.state.proficiency;
-        const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
-        let newSelectedValue = {};
-        switch (dataType) {
-            case util.dataTypes.string.DESCRIPTION:
-            case util.dataTypes.string.STRING:
-                proficiency[field] = event.target.value;
-                break;
-            case util.dataTypes.picklist.ABILITY_SCORE:
-            case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
-            case util.dataTypes.picklist.RESOURCE:
-                newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
-                newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
-                proficiency[field] = newSelectedValue;
-                break;
-            case util.dataTypes.picklist.LANGUAGE_RARITY:
-            case util.dataTypes.picklist.LANGUAGE_SCRIPT:
-                newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
-                newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
-                proficiency[field][field2] = newSelectedValue;
-                break;
-            default:
-        }
-        return this.setState({proficiency: proficiency});
+        return this.setState({proficiency: util.common.updateFormState(event, this.state.proficiency, this.props.picklists)});
     }
     render() {
         return (

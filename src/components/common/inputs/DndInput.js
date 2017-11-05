@@ -138,10 +138,10 @@ class DndInput extends React.Component {
                 primaryInput = (
                     <div name={this.props.name}>
                         <div className="col-sm-6">
-                            <label htmlFor={this.props.name + '_normal'}>Normal</label>
+                            <label htmlFor={this.props.name + '.normal'}>Normal</label>
                             <input type="number"
-                                name={this.props.name + '_normal'}
-                                ref={this.props.name + '_normal'}
+                                name={this.props.name + '.normal'}
+                                ref={this.props.name + '.normal'}
                                 placeholder={this.props.placeholder}
                                 value={this.props.valueObj.normal}
                                 datatype={this.props.dataType}
@@ -149,10 +149,10 @@ class DndInput extends React.Component {
                                 className="form-control"/>
                         </div>
                         <div className="col-sm-6">
-                            <label htmlFor={this.props.name + '_maximum'}>Maximum</label>
+                            <label htmlFor={this.props.name + '.maximum'}>Maximum</label>
                             <input type="number"
-                                name={this.props.name + '_maximum'}
-                                ref={this.props.name + '_maximum'}
+                                name={this.props.name + '.maximum'}
+                                ref={this.props.name + '.maximum'}
                                 placeholder={this.props.placeholder}
                                 value={this.props.valueObj.maximum}
                                 datatype={this.props.dataType}

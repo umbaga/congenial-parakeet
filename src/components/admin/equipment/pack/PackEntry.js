@@ -123,29 +123,7 @@ class PackEntry extends React.Component {
     }
     
     updateFormState(event) {
-        let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
-        const pack = this.state.pack;
-        let newSelectedValue = {};
-        let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
-        switch (dataType) {
-            case util.dataTypes.string.STRING:
-            case util.dataTypes.number.COIN:
-            case util.dataTypes.number.WEIGHT:
-                pack[field] = event.target.value;
-                break;
-            case util.dataTypes.array.ASSIGNED_EQUIPMENT:
-                if (event.target.value != 0) {
-                    return this.setState({selectedEquipment: this.props.equipments.filter((equipment) => equipment.id == event.target.value)[0]});
-                }
-                break;
-            case util.dataTypes.picklist.RESOURCE:
-                newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
-                newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
-                pack[field] = newSelectedValue;
-                break;
-            default:
-        }
-        return this.setState({pack: pack});
+        return this.setState({pack: util.common.updateFormState(event, this.state.pack, this.props.picklists)});
     }
 
     render() {
