@@ -301,7 +301,7 @@ module.exports = function(app, pg, async, pool) {
                             tmp.spell.needDamage = true;
                         }
                         tmp.spell.needSavingThrow = false;
-                        if (tmp.spell.savingThrow && tmp.spell.savingThrow.abilityScore && tmp.spell.savingThrow.abilityScore.name &&  && tmp.spell.savingThrow.abilityScore.name.length != 0) {
+                        if (tmp.spell.savingThrow && tmp.spell.savingThrow.abilityScore && tmp.spell.savingThrow.abilityScore.name && tmp.spell.savingThrow.abilityScore.name.length != 0) {
                             tmp.spell.needSavingThrow = true;
                         }
                         return callback(null, tmp);
