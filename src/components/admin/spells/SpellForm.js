@@ -29,6 +29,7 @@ class SpellForm extends React.Component {
         const ranges = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_RANGE);
         const schools = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC);
         const damageTypes = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE);
+        const abilityScores = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE);
         return (
             <div>
                 <form>
@@ -116,30 +117,38 @@ class SpellForm extends React.Component {
                                 dataType={util.dataTypes.string.DESCRIPTION}
                                 />
                         </Tab>
-                        <Tab eventKey={2} title="Damage">
+                        <Tab eventKey={2} title="Misc">
                             <div>&nbsp;</div>
-                                <DndInput
-                                    name="damage"
-                                    label="Damage"
-                                    dataType={util.dataTypes.special.DICE_ROLL}
-                                    valueObj={this.props.spell.damage}
-                                    onChange={this.props.onChange}
-                                    />
-                                <DndInput
-                                    name="damageImprovement"
-                                    label="Damage Gained"
-                                    dataType={util.dataTypes.special.DICE_ROLL}
-                                    valueObj={this.props.spell.damageImprovement}
-                                    onChange={this.props.onChange}
-                                    />
-                                <DndInput
-                                    name="damageType"
-                                    label="Damage Type"
-                                    dataType={util.dataTypes.picklist.DAMAGE_TYPE}
-                                    valueObj={this.props.spell.damageType}
-                                    onChange={this.props.onChange}
-                                    picklist={damageTypes}
-                                    />
+                            <DndInput
+                                name="damage.dice"
+                                label="Damage"
+                                dataType={util.dataTypes.special.DICE_ROLL}
+                                valueObj={this.props.spell.damage}
+                                onChange={this.props.onChange}
+                                />
+                            <DndInput
+                                name="damage.improvement.dice"
+                                label="Damage Gained"
+                                dataType={util.dataTypes.special.DICE_ROLL}
+                                valueObj={this.props.spell.damageImprovement}
+                                onChange={this.props.onChange}
+                                />
+                            <DndInput
+                                name="damage.type"
+                                label="Damage Type"
+                                dataType={util.dataTypes.picklist.DAMAGE_TYPE}
+                                valueObj={this.props.spell.damageType}
+                                onChange={this.props.onChange}
+                                picklist={damageTypes}
+                                />
+                            <DndInput
+                                name="savingThrow.abilityScore"
+                                label="Saving Throw"
+                                dataType={util.dataTypes.picklist.ABILITY_SCORE}
+                                valueObj={this.props.spell.savingThrow.abilityScore}
+                                onChange={this.props.onChange}
+                                picklist={abilityScores}
+                                />
                         </Tab>
                     </Tabs>
                 </form>

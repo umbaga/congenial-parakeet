@@ -300,6 +300,10 @@ module.exports = function(app, pg, async, pool) {
                         if (tmp.spell.damageType && tmp.spell.damageType.id != 0) {
                             tmp.spell.needDamage = true;
                         }
+                        tmp.spell.needSavingThrow = false;
+                        if (tmp.spell.savingThrow && tmp.spell.savingThrow.abilityScore && tmp.spell.savingThrow.abilityScore.name &&  && tmp.spell.savingThrow.abilityScore.name.length != 0) {
+                            tmp.spell.needSavingThrow = true;
+                        }
                         return callback(null, tmp);
                     });
                 },
@@ -476,6 +480,24 @@ module.exports = function(app, pg, async, pool) {
                         sql += ' ("spellId", "improvementDiceId")';
                         sql += ' VALUES ($1, $2, $3)';
                         vals = [resObj.spell.id, resObj.spell.damage.improvement.dice.id];
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertSavingThrow(resObj, callback) {
+                    if (resObj.spell.needSavingThrow) {
+                        sql = 'INSERT INTO adm_def_spell_saving_throw';
+                        sql += ' ("spellId", "abilityScoreId")';
+                        sql += ' VALUES ($1, $2)';
+                        vals = [resObj.spell.id, resObj.spell.savingThrow.abilityScore.id];
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
