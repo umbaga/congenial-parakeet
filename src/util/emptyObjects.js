@@ -181,14 +181,13 @@ export const SPELL = {
     description: '',
     castingTime: {id: 0, name: ''},
     components: [],
-    damage: {dieCount: 0, dieType: 0, rendered: ''},
-    damageImprovements: [
-        {
-            damage: {dieCount: 0, dieType: 0, rendered: ''},
-            characterLevel: 0
+    damage: {
+        dice: {id: 0, dieCount: 0, dieType: 0, rendered: ''},
+        type: {id: 0, name: ''},
+        improvement: {
+            dice: {id: 0, dieCount: 0, dieType: 0, rendered: ''}
         }
-    ],
-    damageType: {id: 0, name: ''},
+    },
     duration: {id: 0, name: ''},
     isRitual: false,
     level: 0,

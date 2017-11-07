@@ -16,7 +16,9 @@ class SpellListPage extends React.Component {
             canEdit: true,
             isCreate: false,
             selectedId: 0,
-            showModal: false
+            showModal: false,
+            selectedLevel: -1,
+            selectedSchoolId: 0
         };
         this.changeSelectedId = this.changeSelectedId.bind(this);
         this.close = this.close.bind(this);
@@ -24,6 +26,8 @@ class SpellListPage extends React.Component {
         this.onCreate = this.onCreate.bind(this);
         this.onEdit = this.onEdit.bind(this);
         this.onViewDetails = this.onViewDetails.bind(this);
+        this.onChangeSchool = this.onChangeSchool.bind(this);
+        this.onChangeLevel = this.onChangeLevel.bind(this);
     }
 
     componentWillMount() {
@@ -62,8 +66,28 @@ class SpellListPage extends React.Component {
         this.setState({isCreate: false, canEdit: false});
     }
 
+    onChangeSchool(event) {
+        this.setState({selectedSchoolId: event.target.value});
+    }
+    onChangeLevel(event) {
+        this.setState({selectedLevel: event.target.value});
+    }
     render() {
         const spells = this.props.spells;
+        const spellLevels = [
+            {id: -1, name: 'All'},
+            {id: 0, name: 'Cantrip'},
+            {id: 1, name: '1st'},
+            {id: 2, name: '2nd'},
+            {id: 3, name: '3rd'},
+            {id: 4, name: '4th'},
+            {id: 5, name: '5th'},
+            {id: 6, name: '6th'},
+            {id: 7, name: '7th'},
+            {id: 8, name: '8th'},
+            {id: 9, name: '9th'}
+        ];
+        const schools = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC);
         return (
             <div className="col-md-12">
                 <div>
@@ -84,6 +108,42 @@ class SpellListPage extends React.Component {
                                     </div>
                                 </th>
                             </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div className="col-sm-5">
+                                        <select
+                                            name="selectLevel"
+                                            className="form-control"
+                                            onChange={this.onChangeLevel}
+                                            value={this.state.selectedLevel}>
+                                            {spellLevels.map(spellLevel =>
+                                                            <option key={spellLevel.id} value={spellLevel.id}>
+                                                                {spellLevel.name}
+                                                             </option>
+                                                            )}
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                
+                                    <div className="col-sm-5">
+                                        <select
+                                            name="selectSchool"
+                                            className="form-control"
+                                            onChange={this.onChangeSchool}
+                                            value={this.state.selectedSchoolId}>
+                                            <option value="0">All</option>
+                                            {schools.map(school =>
+                                                            <option key={school.id} value={school.id}>
+                                                                {school.name}
+                                                             </option>
+                                                            )}
+                                        </select>
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
                         </thead>
                         <SpellList
                             spells={spells}
@@ -92,6 +152,8 @@ class SpellListPage extends React.Component {
                             changeSelectedId={this.changeSelectedId}
                             onEdit={this.onEdit}
                             onViewDetails={this.onViewDetails}
+                            selectedLevel={this.state.selectedLevel}
+                            selectedSchoolId={this.state.selectedSchoolId}
                             />
                     </table>
                 </div>

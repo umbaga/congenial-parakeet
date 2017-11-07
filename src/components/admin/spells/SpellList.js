@@ -4,10 +4,20 @@ import SpellListItem from './SpellListItem';
 //import util from '../../../util/util';
 
 
-const SpellList = ({spells, openModal, selectedId, changeSelectedId, onEdit, onViewDetails}) => {
+const SpellList = ({spells, openModal, selectedId, changeSelectedId, onEdit, onViewDetails, selectedLevel, selectedSchoolId}) => {
     return (
         <tbody>
-            {spells.map(spell =>
+            {spells.filter(function(spell) {
+                if (selectedLevel != -1 && selectedSchoolId != 0) {
+                    return selectedLevel == spell.level && selectedSchoolId == spell.school.id;
+                } else if (selectedLevel == -1 && selectedSchoolId != 0) {
+                    return selectedSchoolId == spell.school.id;
+                } else if (selectedLevel != -1 && selectedSchoolId == 0) {
+                    return selectedLevel == spell.level;
+                } else {
+                    return true;
+                }
+            }).map(spell =>
                              <SpellListItem
                                  key={spell.id}
                                  spell={spell}
@@ -28,7 +38,9 @@ SpellList.propTypes = {
     onEdit: PropTypes.func,
     onViewDetails: PropTypes.func,
     openModal: PropTypes.func.isRequired,
-    selectedId: PropTypes.number.isRequired
+    selectedId: PropTypes.number.isRequired,
+    selectedLevel: PropTypes.number.isRequired,
+    selectedSchoolId: PropTypes.number.isRequired
 };
 
 export default SpellList;

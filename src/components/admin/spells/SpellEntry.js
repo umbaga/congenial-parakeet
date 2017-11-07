@@ -126,11 +126,14 @@ class SpellEntry extends React.Component {
     }
     
     updateFormState(event) {
-        return this.setState({spell: util.common.updateFormState(event, this.state.spell, this.props.picklists)});
+        const spell = util.common.updateFormState(event, this.state.spell, this.props.picklists);
+        console.log(spell);
+        return this.setState({spell: spell});
     }
     
     render() {
         const spell = this.state.spell;
+        console.log(spell);
         const contents = this.props.canEdit ? (
             <SpellForm
                 ref="form"

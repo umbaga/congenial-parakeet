@@ -1,0 +1,19 @@
+CREATE SEQUENCE public.adm_link_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE public.adm_link_seq
+    OWNER TO postgres;
+    
+CREATE SEQUENCE public.adm_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE public.adm_seq
+    OWNER TO postgres;

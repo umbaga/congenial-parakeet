@@ -123,21 +123,21 @@ class SpellForm extends React.Component {
                                 name="damage.dice"
                                 label="Damage"
                                 dataType={util.dataTypes.special.DICE_ROLL}
-                                valueObj={this.props.spell.damage}
+                                valueObj={this.props.spell.damage.dice}
                                 onChange={this.props.onChange}
                                 />
                             <DndInput
                                 name="damage.improvement.dice"
                                 label="Damage Gained"
                                 dataType={util.dataTypes.special.DICE_ROLL}
-                                valueObj={this.props.spell.damageImprovement}
+                                valueObj={this.props.spell.damage.improvement.dice}
                                 onChange={this.props.onChange}
                                 />
                             <DndInput
                                 name="damage.type"
                                 label="Damage Type"
                                 dataType={util.dataTypes.picklist.DAMAGE_TYPE}
-                                valueObj={this.props.spell.damageType}
+                                valueObj={this.props.spell.damage.type}
                                 onChange={this.props.onChange}
                                 picklist={damageTypes}
                                 />

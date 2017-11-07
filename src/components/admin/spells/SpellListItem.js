@@ -41,7 +41,7 @@ class SpellListItem extends React.Component {
             <tr key={this.props.spell.id}>
                 <td>{this.props.spell.name}</td>
                 <td>{util.format.forDisplay.number.ordinal(this.props.spell.level)}</td>
-                <td>{util.format.forDisplay.obj.spellLevelAndSchool(this.props.spell)}</td>
+                <td>{this.props.spell.school.name}</td>
                 <td>
                     <DndListItemButtonBar
                         listItem={this.props.spell}

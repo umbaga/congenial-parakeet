@@ -966,8 +966,8 @@ module.exports = function(app, pg, async, pool) {
             sql += ', description.description';
             sql += ', special."specialDescription"';
             sql += ', json_build_object(';
-            sql += '    \'versatile\', case when count(altDice) = 0 then \'{}\' else json_build_object(\'dice\', json_build_object(\'id\', altdice.id, \'dieCount\', altdice."dieCount", \'dieType\', altdice."dieType", \'rendered\', concat_ws(\'d\', altdice."dieCount"::text, altdice."dieType"::text))) end ';
-            sql += ',  \'dice\', json_build_object(\'id\', dice.id , \'dieCount\', dice."dieCount", \'dieType\', dice."dieType", \'rendered\', concat_ws(\'d\', dice."dieCount"::text, dice."dieType"::text))';
+            sql += '    \'versatile\', case when count(altDice) = 0 then \'{}\' else json_build_object(\'dice\', get_dice(altdice.id)) end ';
+            sql += ',  \'dice\', get_dice(dice.id)';
             sql += ', \'type\', json_build_object(\'name\', dmgtype."itemName", \'id\', dmgtype."id")) AS "damage"';
             sql += ', json_build_object(\'name\', wpnprof."itemName", \'id\', wpnprof."id") AS "proficiency"';
             sql += ', json_build_object(\'name\', wpncat."itemName", \'id\', wpncat."id") AS "category"';
