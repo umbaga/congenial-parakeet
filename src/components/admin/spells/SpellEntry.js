@@ -18,7 +18,8 @@ class SpellEntry extends React.Component {
             isCreate: this.props.isCreate,
             canEdit: this.props.canEdit,
             selectedChartId: 0,
-            saving: false
+            saving: false,
+            newMechanic: Object.assign({}, util.objectModel.MECHANIC)
         };
         this.cancelSpell = this.cancelSpell.bind(this);
         this.deleteSpell = this.deleteSpell.bind(this);
@@ -30,6 +31,10 @@ class SpellEntry extends React.Component {
         this.saveNewCastingTime = this.saveNewCastingTime.bind(this);
         this.saveNewDuration = this.saveNewDuration.bind(this);
         this.saveNewRange = this.saveNewRange.bind(this);
+        this.onChangeMechanic = this.onChangeMechanic.bind(this);
+        this.onRemoveMechanic = this.onRemoveMechanic.bind(this);
+        this.onResetMechanic = this.onResetMechanic.bind(this);
+        this.onAddMechanic = this.onAddMechanic.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -127,13 +132,63 @@ class SpellEntry extends React.Component {
     
     updateFormState(event) {
         const spell = util.common.updateFormState(event, this.state.spell, this.props.picklists);
-        console.log(spell);
         return this.setState({spell: spell});
+    }
+    
+    onChangeMechanic(event) {
+        const mechanic = util.common.updateFormState(event, this.state.newMechanic, this.props.picklists);
+        return this.setState({newMechanic: mechanic});
+    }
+    
+    onAddMechanic() {
+        const spell = this.state.spell;
+        const mechanic = this.state.newMechanic;
+        const newMechanic = Object.assign({}, util.objectModel.MECHANIC);
+        mechanic.id = (spell.mechanics.base.length + spell.mechanics.advancement.length) * -1;
+        if (this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BASE || this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
+            spell.mechanics.base.push(mechanic);
+        } 
+        if (this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.ADVANCEMENT || this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
+            spell.mechanics.advancement.push(mechanic);
+        }
+        return this.setState({spell: spell, newMechanic: newMechanic});
+    }
+    
+    onRemoveMechanic(mechanic) {
+        const spell = this.state.spell;
+        let removeIndex = -1;
+        let removeFromBase = false;
+        let removeFromAdvancement = false;
+        for (let e = 0; e < spell.mechanics.advancement.length; e++) {
+            if (mechanic.id == spell.mechanics.advancement[e].id) {
+                removeIndex = e;
+                removeFromAdvancement = true;
+            }
+        }
+        for (let e = 0; e < spell.mechanics.base.length; e++) {
+            if (mechanic.id == spell.mechanics.base[e].id) {
+                removeIndex = e;
+                removeFromBase = true;
+            }
+        }
+        if (removeIndex != -1) {
+            if (removeFromAdvancement) {
+                spell.mechanics.advancement.splice(removeIndex, 1);
+            }
+            if (removeFromBase) {
+                spell.mechanics.base.splice(removeIndex, 1);
+            }
+            return this.setState({spell: spell});
+        }
+    }
+    
+    onResetMechanic() {
+        const newMechanic = Object.assign({}, util.objectModel.MECHANIC);
+        this.setState({newMechanic: newMechanic});
     }
     
     render() {
         const spell = this.state.spell;
-        console.log(spell);
         const contents = this.props.canEdit ? (
             <SpellForm
                 ref="form"
@@ -145,6 +200,11 @@ class SpellEntry extends React.Component {
                 saveNewCastingTime={this.saveNewCastingTime}
                 saveNewDuration={this.saveNewDuration}
                 saveNewRange={this.saveNewRange}
+                onChangeMechanic={this.onChangeMechanic}
+                onAddMechanic={this.onAddMechanic}
+                onRemoveMechanic={this.onRemoveMechanic}
+                onResetMechanic={this.onResetMechanic}
+                newMechanic={this.state.newMechanic}
                 />
         ) : (
             <SpellDetails

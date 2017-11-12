@@ -6,6 +6,7 @@ import DndPicklistAddSelect from '../../common/inputs/DndPicklistAddSelect';
 import DndCheckboxList from '../../common/inputs/DndCheckboxList';
 import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
+import DndManageMechanics from '../../common/objectManagement/DndManageMechanics';
 
 class SpellForm extends React.Component {
     constructor(props) {
@@ -33,7 +34,7 @@ class SpellForm extends React.Component {
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+                    <Tabs defaultActiveKey={3} id="uncontrolled-tab-example">
                         <Tab eventKey={1} title="General">
                             <div>&nbsp;</div>
                             <DndUniversalInput
@@ -117,7 +118,7 @@ class SpellForm extends React.Component {
                                 dataType={util.dataTypes.string.DESCRIPTION}
                                 />
                         </Tab>
-                        <Tab eventKey={2} title="Misc">
+                        <Tab eventKey={2} title="Damage/Save">
                             <div>&nbsp;</div>
                             <DndInput
                                 name="damage.dice"
@@ -150,6 +151,19 @@ class SpellForm extends React.Component {
                                 picklist={abilityScores}
                                 />
                         </Tab>
+                        <Tab eventKey={3} title="Mechanics">
+                            <div>&nbsp;</div>
+                            <DndManageMechanics
+                                onChange={this.props.onChangeMechanic}
+                                picklists={this.props.picklists}
+                                mechanics={this.props.spell.mechanics}
+                                onRemoveMechanic={this.props.onRemoveMechanic}
+                                onAddMechanic={this.props.onAddMechanic}
+                                onResetMechanic={this.props.onResetMechanic}
+                                newMechanic={this.props.newMechanic}
+                                showAdvancement
+                                />
+                        </Tab>
                     </Tabs>
                 </form>
             </div>
@@ -167,7 +181,11 @@ SpellForm.propTypes = {
     picklists: PropTypes.array,
     saveNewCastingTime: PropTypes.func.isRequired,
     saveNewDuration: PropTypes.func.isRequired,
-    saveNewRange: PropTypes.func.isRequired
+    saveNewRange: PropTypes.func.isRequired,
+    onChangeMechanic: PropTypes.func.isRequired,
+    onRemoveMechanic: PropTypes.func.isRequired,
+    onAddMechanic: PropTypes.func.isRequired,
+    newMechanic: PropTypes.object.isRequired
 };
 
 export default SpellForm;

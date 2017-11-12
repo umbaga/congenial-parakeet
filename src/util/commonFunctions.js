@@ -69,8 +69,11 @@ export function updateFormState(event, obj, picklists) {
         case util.dataTypes.picklist.ARMOR_PROFICIENCY:
         case util.dataTypes.picklist.DAMAGE_TYPE:
         case util.dataTypes.picklist.EQUIPMENT_CATEGORY:
+        case util.dataTypes.picklist.GENERAL:
         case util.dataTypes.picklist.LANGUAGE_RARITY:
         case util.dataTypes.picklist.LANGUAGE_SCRIPT:
+        case util.dataTypes.picklist.MECHANIC_TARGET:
+        case util.dataTypes.picklist.MECHANIC_TYPE:
         case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
         case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
         case util.dataTypes.picklist.RESOURCE:

@@ -318,6 +318,39 @@ obj.itemGroup = function(val) {
     }
     return retVal;
 };
+obj.mechanic = function(val) {
+    let retVal = '';
+    console.log(val.type.id);
+    switch (val.type.id) {
+        case util.itemTypes.MECHANIC_TYPE.ADVANTAGE:
+            retVal = 'Advantage to ' + val.target.name;
+            break;
+        case util.itemTypes.MECHANIC_TYPE.ADVANTAGE_SAVING_THROW:
+            retVal = 'Advantage to Saving Throws vs ' + val.target.name;
+            break;
+        case util.itemTypes.MECHANIC_TYPE.BONUS:
+            if (val.value >= 0) {
+                retVal = '+' + val.value.toString() + ' to ' + val.target.name;
+            } else {
+                retVal = val.value.toString() + ' to ' + val.target.name;
+            }
+            break;
+        case util.itemTypes.MECHANIC_TYPE.DISADVANTAGE:
+            retVal = 'Disadvantage to ' + val.target.name;
+            break;
+        case util.itemTypes.MECHANIC_TYPE.DISADVANTAGE_SAVING_THROW:
+            retVal = 'Disadvantage to Saving Throws vs ' + val.target.name;
+            break;
+        case util.itemTypes.MECHANIC_TYPE.RESISTANCE:
+            retVal = 'Resistance to ' + val.target.name;
+            break;
+        case util.itemTypes.MECHANIC_TYPE.VULNERABILITY:
+            retVal = 'Vulnerability to ' + val.target.name;
+            break;
+        default:
+    }
+    return retVal;
+};
 obj.proficiencyGroup = function(val) {
     let retVal = '';
     switch (val.mechanic.id) {

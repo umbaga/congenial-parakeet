@@ -130,6 +130,13 @@ export const ITEMTYPE = {
     isPicklist: false,
     isChart: false
 };
+export const MECHANIC = {
+    id: 0,
+    assignmentType: {id: 1},
+    target: {id: 0, name: ''},
+    type: {id: 0, name: ''},
+    value: 0
+};
 export const PICKLIST = {id: 0, name: '', items: []};
 export const PICKLISTITEM = {id: 0, name: '', picklistId: 0, defaultSelected: false};
 export const PROFICIENCY = {
@@ -191,6 +198,10 @@ export const SPELL = {
     duration: {id: 0, name: ''},
     isRitual: false,
     level: 0,
+    mechanics: {
+        advancement: [],
+        base: []
+    },
     range: {id: 0, name: ''},
     resource: {id: 0, name: ''},
     savingThrow: {

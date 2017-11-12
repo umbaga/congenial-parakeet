@@ -69,18 +69,18 @@ class ItemtypeEntry extends React.Component {
     }
 
     updateFormState(event) {
-        const field = event.target.name; 
-        const itemtype = this.state.itemtype; 
-        switch (event.target.type) { 
-            case 'text': 
-                itemtype[field] = event.target.value; 
-                break; 
-            case 'checkbox': 
-                itemtype[field] = !itemtype[field]; 
-                break; 
-            default: 
-        } 
-        return this.setState({itemtype: itemtype}); 
+        const field = event.target.name;
+        const itemtype = this.state.itemtype;
+        switch (event.target.type) {
+            case 'text':
+                itemtype[field] = event.target.value;
+                break;
+            case 'checkbox':
+                itemtype[field] = !itemtype[field];
+                break;
+            default:
+        }
+        return this.setState({itemtype: itemtype});
     }
 
     render() {
