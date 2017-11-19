@@ -39,20 +39,6 @@ module.exports = function(app, pg, async, pool) {
                         return callback(null, tmp);
                     });
                 },
-                function deleteSpellComponentLinkDef(resObj, callback) {
-                    sql = 'DELETE FROM adm_link_spell_component';
-                    sql += ' WHERE "referenceId" = $1';
-                    vals = [req.params.id];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
-                    });
-                },
                 function deleteDescription(resObj, callback) {
                     sql = 'DELETE FROM adm_core_description';
                     sql += ' WHERE "itemId" = $1';
@@ -67,9 +53,65 @@ module.exports = function(app, pg, async, pool) {
                         return callback(null, tmp);
                     });
                 },
-                function deleteDamage(resObj, callback) {
+                function deleteSpellComponentLinkDef(resObj, callback) {
+                    sql = 'DELETE FROM adm_link_spell_component';
+                    sql += ' WHERE "referenceId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteDamageTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_damage';
+                    sql += ' WHERE "referenceId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteSpellDamageTable(resObj, callback) {
                     sql = 'DELETE FROM adm_def_spell_damage';
                     sql += ' WHERE "spellId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteSavingThrowTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_spell_saving_throw';
+                    sql += ' WHERE "spellId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteMechanicsTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_link_mechanic';
+                    sql += ' WHERE "referenceId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
@@ -116,6 +158,52 @@ module.exports = function(app, pg, async, pool) {
                         return callback(null, tmp);
                     });
                 },
+                function updateSpellTable(resObj, callback) {
+                    sql = 'UPDATE adm_def_spell';
+                    sql += ' SET "level" = $2';
+                    sql += ', "schoolId" = $3';
+                    sql += ', "castingTimeId" = $4';
+                    sql += ', "durationId" = $5';
+                    sql += ', "rangeId" = $6';
+                    sql += ' WHERE "spellId" = $1';
+                    vals = [resObj.spell.id, resObj.spell.level, resObj.spell.school.id, resObj.spell.castingTime.id, resObj.spell.duration.id, resObj.spell.range.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = req.body;
+                        return callback(null, resObj);
+                    });
+                },
+                function determineDescriptionTask(resObj, callback) {
+                    resObj.spell.deleteDescription = false;
+                    resObj.spell.descriptionExists = false;
+                    if (resObj.description && resObj.description.length != 0) {
+                        results = [];
+                        sql = 'SELECT *';
+                        sql += ' FROM adm_core_description';
+                        sql += ' WHERE "itemId" = $1';
+                        sql += ' AND "descriptionTypeId" = 171';
+                        vals = [resObj.spell.id];
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            if (results && results.length != 0) {
+                                resObj.spell.descriptionExists = true;
+                            }
+                            return callback(null, resObj);
+                        });
+                        
+                    } else {
+                        resObj.spell.deleteDescription = true;
+                        return callback(null, resObj);
+                    }
+                },
                 function updateDescription(resObj, callback) {
                     sql = 'UPDATE adm_core_description';
                     sql += ' SET "description" = $2';
@@ -138,25 +226,6 @@ module.exports = function(app, pg, async, pool) {
                     sql += ' WHERE "itemId" = $1';
                     sql += ' AND "descriptionTypeId" = 122';
                     vals = [resObj.spell.id, resObj.spell.description];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var tmp = req.body;
-                        return callback(null, resObj);
-                    });
-                },
-                function updateSpellTable(resObj, callback) {
-                    sql = 'UPDATE adm_def_spell';
-                    sql += ' SET "level" = $2';
-                    sql += ', "schoolId" = $3';
-                    sql += ', "castingTimeId" = $4';
-                    sql += ', "durationId" = $5';
-                    sql += ', "rangeId" = $6';
-                    sql += ' WHERE "spellId" = $1';
-                    vals = [resObj.spell.id, resObj.spell.level, resObj.spell.school.id, resObj.spell.castingTime.id, resObj.spell.duration.id, resObj.spell.range.id];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -260,6 +329,24 @@ module.exports = function(app, pg, async, pool) {
                         var tmp = req.body;
                         return callback(null, resObj);
                     });
+                },
+                function determineDamageUpdateType(resObj, callback) {
+                    
+                },
+                function updateDamage(resObj, callback) {
+                    
+                },
+                function determineDamageExecuteType(resObj) {
+                    
+                },
+                function deleteUnneededMechanics(resObj, callback) {
+                    
+                },
+                function insertMissingMechanics(resObj, callback) {
+                    
+                },
+                function updateMechanics(resObj, callback) {
+                    
                 }
             ], function(error, result) {
                 if (error) {
@@ -282,6 +369,7 @@ module.exports = function(app, pg, async, pool) {
                     cb(null, req);
                 },
                 function insertItem(req, callback) {
+                    console.log('01');
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_core_item';
@@ -307,44 +395,13 @@ module.exports = function(app, pg, async, pool) {
                         return callback(null, tmp);
                     });
                 },
-                function insertDescription(resObj, callback) {
-                    results = [];
-                    vals = [];
-                    sql = 'INSERT INTO adm_core_description';
-                    sql += ' ("itemId", "description")';
-                    sql += ' VALUES ($1, $2)';
-                    vals = [resObj.spell.id, resObj.spell.description];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        return callback(null, resObj);
-                    });
-                },
-                function insertAtHigherLevelsDescription(resObj, callback) {
-                    results = [];
-                    vals = [];
-                    sql = 'INSERT INTO adm_core_description';
-                    sql += ' ("itemId", "description", "descriptionTypeId")';
-                    sql += ' VALUES ($1, $2, 122)';
-                    vals = [resObj.spell.id, resObj.spell.atHigherLevels];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        return callback(null, resObj);
-                    });
-                },
                 function insertSpellTable(resObj, callback) {
+                    console.log('02');
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_def_spell';
                     sql += ' ("spellId", "level", "schoolId", "durationId", "rangeId", "castingTimeId", "isRitual")';
-                    sql += ' VALUES ($1, $2, $3, $4, $5, $6)';
+                    sql += ' VALUES ($1, $2, $3, $4, $5, $6, $7)';
                     vals = [
                         resObj.spell.id, 
                         resObj.spell.level, 
@@ -363,7 +420,47 @@ module.exports = function(app, pg, async, pool) {
                         return callback(null, resObj);
                     });
                 },
+                function insertDescription(resObj, callback) {
+                    console.log('03');
+                    results = [];
+                    vals = [];
+                    sql = 'INSERT INTO adm_core_description';
+                    sql += ' ("itemId", "description")';
+                    sql += ' VALUES ($1, $2)';
+                    vals = [resObj.spell.id, resObj.spell.description];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        return callback(null, resObj);
+                    });
+                },
+                function insertAtHigherLevelsDescription(resObj, callback) {
+                    console.log('04');
+                    if (resObj.spell.atHigherLevels && resObj.spell.atHigherLevels.length != 0) {
+                        results = [];
+                        vals = [];
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description", "descriptionTypeId")';
+                        sql += ' VALUES ($1, $2, 122) returning id AS "atHigherLevelsId";';
+                        vals = [resObj.spell.id, resObj.spell.atHigherLevels];
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            resObj.spell.atHigherLevelsId = results[0].atHigherLevelsId;
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
                 function insertSpellComponentsTable(resObj, callback) {
+                    console.log('05');
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_link_spell_component';
@@ -394,6 +491,7 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertMissingDamageDice(resObj, callback) {
+                    console.log('06');
                     if (resObj.spell.damage && resObj.spell.damage.dieCount && resObj.spell.damage.dieCount != 0) {
                         sql = 'with vals as ';
                         sql += ' (';
@@ -423,6 +521,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function assignDamageIds(resObj, callback) {
+                    console.log('07');
                     if (resObj.spell.damage && resObj.spell.damage.dieCount && resObj.spell.damage.dieCount != 0) {
                         sql = 'SELECT * FROM adm_core_dice';
                         sql += ' WHERE ("dieCount" = $1 AND "dieType" = $2)';
@@ -453,6 +552,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertDamage(resObj, callback) {
+                    console.log('08');
                     if (resObj.spell.damage && resObj.spell.damage.dice && resObj.spell.damage.dice.dieCount && resObj.spell.damage.dice.dieCount != 0) {
                         results = [];
                         vals = [];
@@ -473,7 +573,9 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertImprovementDamage(resObj, callback) {
-                    if (resObj.spell.damage && resObj.spell.damage.improvement && resObj.spell.damage.improvement.dice && resObj.spell.damage.dieCount != 0) {
+                    console.log('09');
+                    console.log(resObj.spell.damage);
+                    if (resObj.spell.damage && resObj.spell.damage.improvement && resObj.spell.damage.improvement.dice && resObj.spell.damage.improvement.dice.dieCount != 0) {
                         results = [];
                         vals = [];
                         sql = 'INSERT INTO adm_def_spell_damage';
@@ -493,11 +595,64 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertSavingThrow(resObj, callback) {
+                    console.log('10');
                     if (resObj.spell.needSavingThrow) {
                         sql = 'INSERT INTO adm_def_spell_saving_throw';
                         sql += ' ("spellId", "abilityScoreId")';
                         sql += ' VALUES ($1, $2)';
                         vals = [resObj.spell.id, resObj.spell.savingThrow.abilityScore.id];
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertMechanics(resObj, callback) {
+                    console.log('11');
+                    if (resObj.mechanics && resObj.mechanics.base && resObj.mechanics.base.length != 0) {
+                        sql = 'INSERT INTO adm_link_mechanic';
+                        sql += ' ("referenceId", "targetId", "typeId", "value")';
+                        sql += ' VALUES ';
+                        var first = 1;
+                        var second = 2;
+                        var third = 3;
+                        var fourth = 4;
+                        vals = [];
+                        for (var e = 0; e < resObj.mechanics.base.length; e++) {
+                            if (e != 0) {
+                                sql += ', ';
+                            }
+                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
+                            first = first + 4;
+                            second = second + 4;
+                            third = third + 4;
+                            fourth = fourth + 4;
+                            vals.push(resObj.spell.id);
+                            vals.push(resObj.spell.mechanics.base[e].target.id);
+                            vals.push(resObj.spell.mechanics.base[e].type.id);
+                            vals.push(resObj.spell.mechanics.base[e].value);
+                        }
+                        if (resObj.spell.atHigherLevelsId && resObj.spell.atHigherLevelsId != 0) {
+                            if (resObj.mechanics.advancement && resObj.mechanics.advancement.length != 0) {
+                                for (var e = 0; e < resObj.spell.mechanics.advancement.length; e++) {
+                                    sql += ', ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
+                                    first = first + 4;
+                                    second = second + 4;
+                                    third = third + 4;
+                                    fourth = fourth + 4;
+                                    vals.push(resObj.spell.atHigherLevelsId);
+                                    vals.push(resObj.spell.advancement.base[e].target.id);
+                                    vals.push(resObj.spell.advancement.base[e].type.id);
+                                    vals.push(resObj.spell.advancement.base[e].value);
+                                }
+                            }
+                        }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);

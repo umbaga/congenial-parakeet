@@ -320,7 +320,6 @@ obj.itemGroup = function(val) {
 };
 obj.mechanic = function(val) {
     let retVal = '';
-    console.log(val.type.id);
     switch (val.type.id) {
         case util.itemTypes.MECHANIC_TYPE.ADVANTAGE:
             retVal = 'Advantage to ' + val.target.name;
@@ -346,6 +345,9 @@ obj.mechanic = function(val) {
             break;
         case util.itemTypes.MECHANIC_TYPE.VULNERABILITY:
             retVal = 'Vulnerability to ' + val.target.name;
+            break;
+        case util.itemTypes.MECHANIC_TYPE.IMMUNITY:
+            retVal = 'Immune to ' + val.target.name;
             break;
         default:
     }

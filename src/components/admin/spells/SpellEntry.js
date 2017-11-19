@@ -63,8 +63,6 @@ class SpellEntry extends React.Component {
 
     saveAndNewSpell(event) {
         this.saveSpell(event);
-        let newSpell = Object.assign({}, util.objectModel.SPELL);
-        this.setState({spell: newSpell});
         this.refs.form.refs.name.setFocus();
     }
 
@@ -75,7 +73,10 @@ class SpellEntry extends React.Component {
 
     saveSpell(event) {
         event.preventDefault();
-        this.setState({saving: true});
+        let newSpell = {};
+        newSpell = Object.assign({}, util.objectModel.SPELL);
+        newSpell.components = [];
+        this.setState({saving: true, spell: newSpell});
         this.props.actions.upsertSpell(this.state.spell);
     }
     
@@ -147,7 +148,7 @@ class SpellEntry extends React.Component {
         mechanic.id = (spell.mechanics.base.length + spell.mechanics.advancement.length) * -1;
         if (this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BASE || this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
             spell.mechanics.base.push(mechanic);
-        } 
+        }
         if (this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.ADVANCEMENT || this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
             spell.mechanics.advancement.push(mechanic);
         }

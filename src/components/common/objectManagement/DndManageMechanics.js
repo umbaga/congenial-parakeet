@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import util from '../../../util/util';
-import DndInputWrapper from '../inputs/DndInputWrapper';
 import DndInput from '../inputs/DndInput';
-import DndButton from '../buttons/DndButton';
 import DndDataEntryButtonBar from '../buttons/DndDataEntryButtonBar';
 import DndMechanicRow from '../subcomponents/DndMechanicRow';
-import DndPicklistAddSelect from '../inputs/DndPicklistAddSelect';
 
 class DndManageMechanics extends React.Component {
     constructor(props, context) {
@@ -133,32 +130,30 @@ class DndManageMechanics extends React.Component {
     render() {
         const mechanicTypes = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.MECHANIC_TYPE);
         let mechanicTargets = [];
-        console.log(this.props.newMechanic.type.id);
         switch (this.props.newMechanic.type.id) {
             case util.itemTypes.MECHANIC_TYPE.BONUS:
                 mechanicTargets = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE)
-                    .concat(util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.STAT))
+                    .concat(util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.STAT));
                 break;
             case util.itemTypes.MECHANIC_TYPE.ADVANTAGE:
             case util.itemTypes.MECHANIC_TYPE.DISADVANTAGE:
-                mechanicTargets = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.STAT)
+                mechanicTargets = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.STAT);
                 break;
             case util.itemTypes.MECHANIC_TYPE.ADVANTAGE_SAVING_THROW:
             case util.itemTypes.MECHANIC_TYPE.DISADVANTAGE_SAVING_THROW:
                 mechanicTargets = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE)
                     .concat(util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.CONDITION))
                     .concat(util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE))
-                    .concat(util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC))
+                    .concat(util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC));
                 break;
             case util.itemTypes.MECHANIC_TYPE.RESISTANCE:
             case util.itemTypes.MECHANIC_TYPE.VULNERABILITY:
-                mechanicTargets = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE)
+                mechanicTargets = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE);
                 break;
             case util.itemTypes.MECHANIC_TYPE.IMMUNITY:
-                console.log('immunity');
                 mechanicTargets = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE)
                     .concat(util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.CONDITION))
-                    .concat(util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC))
+                    .concat(util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC));
                 break;
             default:
         }

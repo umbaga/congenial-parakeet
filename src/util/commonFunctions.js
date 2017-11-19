@@ -47,7 +47,9 @@ export function updateFormState(event, obj, picklists) {
     let removeThisId = event.target.value;
     let removeThisIndex = -1;
     let referencePicklistItem = util.picklists.getPicklistItem(picklists, removeThisId);
-    
+    let newComponentsArray = [];
+    let inputType = event.target.type;
+    let subfield = '';
     switch (dataType) {
         case util.dataTypes.string.DESCRIPTION:
         case util.dataTypes.string.STRING:
@@ -79,13 +81,17 @@ export function updateFormState(event, obj, picklists) {
         case util.dataTypes.picklist.RESOURCE:
         case util.dataTypes.picklist.SCHOOL_OF_MAGIC:
         case util.dataTypes.picklist.SPELL_CASTING_TIME:
-        case util.dataTypes.picklist.SPELL_COMPONENT:
         case util.dataTypes.picklist.SPELL_DURATION:
         case util.dataTypes.picklist.SPELL_RANGE:
         case util.dataTypes.picklist.WEAPON_CATEGORY:
         case util.dataTypes.picklist.WEAPON_PROFICIENCY:
-            newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
-            newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+            if (inputType == 'text') {
+                newSelectedValue.id = 0;
+                newSelectedValue.name = event.target.value;
+            } else {
+                newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+            }
             util.common.setObjectValue(retVal, field, newSelectedValue);
             break;
         case util.dataTypes.special.DICE_ROLL:
@@ -143,6 +149,35 @@ export function updateFormState(event, obj, picklists) {
             break;
         case util.dataTypes.special.WEAPON_RANGE:
             util.common.setObjectValue(retVal, field, parseInt(event.target.value));
+            break;
+        case util.dataTypes.picklist.SPELL_COMPONENT:
+            newComponentsArray = retVal[field.split('_')[0]];
+            if (inputType == 'text') {
+                let tmp = field.split('_');
+                field = tmp[0];
+                subfield = tmp[1];
+                let changedId = tmp[2];
+                for (let e = 0; e < newComponentsArray.length; e++) {
+                    if (changedId == newComponentsArray[e].id) {
+                        retVal[field][e][subfield] = event.target.value;
+                    }
+                }
+            } else {
+                if (event.target.checked) {
+                    newComponentsArray.push({
+                        id: event.target.value
+                    });
+                } else {
+                    let removeIndex = -1;
+                    for (let e = 0; e < newComponentsArray.length; e++) {
+                        if (newComponentsArray[e].id == event.target.value) {
+                            removeIndex = e;
+                        }
+                    }
+                    newComponentsArray.splice(removeIndex, 1);
+                }
+            }
+            retVal[field] = newComponentsArray;
             break;
         default:
     }
