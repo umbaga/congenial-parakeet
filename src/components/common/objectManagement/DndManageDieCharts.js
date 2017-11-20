@@ -4,7 +4,7 @@ import util from '../../../util/util';
 import DndButton from '../buttons/DndButton';
 import DndInput from '../inputs/DndInput';
 import DndDataEntryButtonBar from '../buttons/DndDataEntryButtonBar';
-import DndManageChartEntry from '../subcomponents/DndManageChartEntry';
+import DndManageDieChartEntry from '../subcomponents/DndManageDieChartEntry';
 import DndListItemButtonBar from '../buttons/DndListItemButtonBar';
 import DndIncrementButtons from '../buttons/DndIncrementButtons';
 import { Panel } from 'react-bootstrap';
@@ -115,7 +115,7 @@ class DndManageCharts extends React.Component {
                 </div>
                 <div>
                     {chart.entries.map(entry =>
-                                       <DndManageChartEntry
+                                       <DndManageDieChartEntry
                                            key={entry.id}
                                            chart={chart}
                                            entry={entry}
@@ -131,7 +131,7 @@ class DndManageCharts extends React.Component {
                 <table>
                     <tbody>
                         {chart.entries.map(entry =>
-                            <DndManageChartEntry
+                            <DndManageDieChartEntry
                                 key={entry.id}
                                 chart={chart}
                                 entry={entry}

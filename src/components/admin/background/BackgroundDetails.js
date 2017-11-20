@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import util from '../../../util/util';
 import DndProficiencyGroupDisplay from '../../common/display/DndProficiencyGroupDisplay';
-import DndChartDisplay from '../../common/display/DndChartDisplay';
+import DndDieChartDisplay from '../../common/display/DndDieChartDisplay';
 
 class BackgroundDetails extends React.Component {
     constructor(props) {
@@ -71,7 +71,7 @@ class BackgroundDetails extends React.Component {
                 {this.renderVariantInfo(background)}
                 {
                     background.charts.map(chart =>
-                                          <DndChartDisplay
+                                          <DndDieChartDisplay
                                               key={chart.id}
                                               chart={chart}
                                               />
