@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import util from '../../../util/util';
 import DndButton from '../buttons/DndButton';
 
-class DndManageDieChartEntry extends React.Component {
+class DndManageChartEntry extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.renderDieRangeSelect = this.renderDieRangeSelect.bind(this);
@@ -78,23 +78,12 @@ class DndManageDieChartEntry extends React.Component {
         );
     }
 }
-/*
-            <tr>
-                <td>
-                    <div className=" input-group input-inline">
-                        {this.renderDieRangeSelect(chart, entry)}
-                    </div>
-                    <div className=" input-group input-inline">
-                        {this.renderDescriptionInput(entry)}
-                        {this.renderDeleteButton(chart)}
-                    </div>
-                </td>
-            </tr>*/
-DndManageDieChartEntry.propTypes = {
+
+DndManageChartEntry.propTypes = {
     chart: PropTypes.object.isRequired,
     entry: PropTypes.object.isRequired,
     onChangeChart: PropTypes.func.isRequired,
     onRemoveEntry: PropTypes.func.isRequired
 };
 
-export default DndManageDieChartEntry;
+export default DndManageChartEntry;

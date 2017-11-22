@@ -7,6 +7,7 @@ import DndCheckboxList from '../../common/inputs/DndCheckboxList';
 import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
 import DndManageMechanics from '../../common/objectManagement/DndManageMechanics';
+import DndManageCharts from '../../common/objectManagement/DndManageCharts';
 
 class SpellForm extends React.Component {
     constructor(props) {
@@ -34,7 +35,7 @@ class SpellForm extends React.Component {
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+                    <Tabs defaultActiveKey={4} id="uncontrolled-tab-example">
                         <Tab eventKey={1} title="General">
                             <div>&nbsp;</div>
                             <DndUniversalInput
@@ -164,6 +165,24 @@ class SpellForm extends React.Component {
                                 showAdvancement
                                 />
                         </Tab>
+                        <Tab eventKey={4} title="Charts">
+                            <div>&nbsp;</div>
+                            <DndManageCharts
+                                charts={spell.charts}
+                                chart={this.props.chart}
+                                onChange={this.props.onChangeChart}
+                                onChangeChartOrder={this.props.onChangeChartOrder}
+                                onAddChart={this.props.onAddChart}
+                                onAddColumn={this.props.onAddChartColumn}
+                                onAddRow={this.props.onAddChartRow}
+                                onCreateChart={this.props.onCreateChart}
+                                onRemoveChart={this.props.onRemoveChart}
+                                onRemoveColumn={this.props.onRemoveChartColumn}
+                                onRemoveRow={this.props.onRemoveChartRow}
+                                onSelectChart={this.props.onSelectChart}
+                                onResetChart={this.props.onResetChart}
+                                />
+                        </Tab>
                     </Tabs>
                 </form>
             </div>
@@ -186,7 +205,19 @@ SpellForm.propTypes = {
     onRemoveMechanic: PropTypes.func.isRequired,
     onResetMechanic: PropTypes.func,
     onAddMechanic: PropTypes.func.isRequired,
-    newMechanic: PropTypes.object.isRequired
+    newMechanic: PropTypes.object.isRequired,
+    chart: PropTypes.object.isRequired,
+    onChangeChart: PropTypes.func.isRequired,
+    onChangeChartOrder: PropTypes.func.isRequired,
+    onAddChart: PropTypes.func.isRequired,
+    onAddChartColumn: PropTypes.func.isRequired,
+    onAddChartRow: PropTypes.func.isRequired,
+    onCreateChart: PropTypes.func.isRequired,
+    onRemoveChart: PropTypes.func.isRequired,
+    onRemoveChartColumn: PropTypes.func.isRequired,
+    onRemoveChartRow: PropTypes.func.isRequired,
+    onSelectChart: PropTypes.func.isRequired,
+    onResetChart: PropTypes.func.isRequired
 };
 
 export default SpellForm;

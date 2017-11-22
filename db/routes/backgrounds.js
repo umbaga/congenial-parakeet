@@ -61,7 +61,7 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function deleteChartEntries(resObj, callback) {
-                    sql = 'DELETE FROM adm_def_chart_entry';
+                    sql = 'DELETE FROM adm_def_chart_dice_entry';
                     sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
@@ -690,21 +690,58 @@ module.exports = function(app, pg, async, pool) {
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
                         sql = 'INSERT INTO adm_core_chart';
-                        sql += ' ("diceId", "title")';
+                        sql += ' ("title")';
                         sql += ' VALUES';
                         var first = 1;
-                        var second = 2;
                         for (var w = 0; w < resObj.background.charts.length; w ++) {
-                            sql += '($' + first.toString() + ', $' + second.toString() + ')';
+                            sql += '($' + first.toString() + ')';
                             if (w < resObj.background.charts.length - 1) {
                                 sql += ', ';
                             }
-                            vals.push(resObj.background.charts[w].dieRoll.id);
+                            //vals.push(resObj.background.charts[w].dieRoll.id);
                             vals.push(resObj.background.charts[w].title);
-                            first = first + 2;
-                            second = second + 2;
+                            first = first + 1;
                         }
                         sql += ' returning id AS "chartId", "title"';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var i = 0; i < results.length; i++) {
+                                for (var j = 0; j < resObj.background.charts.length; j++) {
+                                    if (results[i].title == resObj.background.charts[j].title) {
+                                        resObj.background.charts[j].id = results[i].chartId;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartDice(resObj, callback) {
+                    console.log("15a");
+                    results = [];
+                    vals = [];
+                    if (resObj.background.charts && resObj.background.charts.length != 0) {
+                        sql = 'INSERT INTO adm_def_chart_dice';
+                        sql += ' ("chartId", "diceId")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        for (var e = 0; e < resObj.background.charts.length; e++) {
+                            if (e != 0) {
+                                sql += ', ';
+                            }
+                            sql += '($' + first.toString() + ', $' + second.toString() + ')';
+                            first = first + 2;
+                            second = second + 2;
+                            vals.push(resObj.background.charts[e].id);
+                            vals.push(resObj.background.charts[e].dieRoll.id);
+                        }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
@@ -729,7 +766,7 @@ module.exports = function(app, pg, async, pool) {
                     results = [];
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
-                        sql = 'INSERT INTO adm_def_chart_entry';
+                        sql = 'INSERT INTO adm_def_chart_dice_entry';
                         sql += ' ("chartId", "minimum", "maximum", "description")';
                         sql += ' VALUES';
                         var first = 1;
@@ -762,6 +799,8 @@ module.exports = function(app, pg, async, pool) {
                             done();
                             return callback(null, resObj);
                         });
+                    } else {
+                        return callback(null, resObj);
                     }
                 },
                 function insertChartLink(resObj, callback) {
@@ -976,8 +1015,9 @@ module.exports = function(app, pg, async, pool) {
             sql += '                ) AS "dieRoll"';
             sql += '            FROM adm_core_chart c';
             sql += '            INNER JOIN adm_link_chart bgcht ON bgcht."chartId" = c.id';
-            sql += '            INNER JOIN adm_def_chart_entry cm ON (cm."chartId" = c.id) ';
-            sql += '            INNER JOIN adm_core_dice dice ON dice.id = c."diceId"';
+            sql += '            INNER JOIN adm_def_chart_dice_entry cm ON (cm."chartId" = c.id) ';
+            sql += '            INNER JOIN adm_def_chart_dice chdice ON chdice."chartId" = c.id';
+            sql += '            INNER JOIN adm_core_dice dice ON dice.id = chdice."diceId"';
             sql += '            LEFT OUTER JOIN adm_core_description cd ON cd."itemId" = c.id';
             sql += '            GROUP BY c.id, dice."dieType", dice."dieCount", bgcht."orderIndex", cd.description';
             sql += '            ORDER BY bgcht."orderIndex"';

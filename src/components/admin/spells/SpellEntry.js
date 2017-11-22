@@ -19,7 +19,8 @@ class SpellEntry extends React.Component {
             canEdit: this.props.canEdit,
             selectedChartId: 0,
             saving: false,
-            newMechanic: Object.assign({}, util.objectModel.MECHANIC)
+            newMechanic: Object.assign({}, util.objectModel.MECHANIC),
+            editChart: Object.assign({}, util.objectModel.CHART)
         };
         this.cancelSpell = this.cancelSpell.bind(this);
         this.deleteSpell = this.deleteSpell.bind(this);
@@ -35,6 +36,17 @@ class SpellEntry extends React.Component {
         this.onRemoveMechanic = this.onRemoveMechanic.bind(this);
         this.onResetMechanic = this.onResetMechanic.bind(this);
         this.onAddMechanic = this.onAddMechanic.bind(this);
+        this.onChangeChart = this.onChangeChart.bind(this);
+        this.onChangeChartOrder = this.onChangeChartOrder.bind(this);
+        this.onCreateChart = this.onCreateChart.bind(this);
+        this.onAddChart = this.onAddChart.bind(this);
+        this.onRemoveChart = this.onRemoveChart.bind(this);
+        this.onSelectChart = this.onSelectChart.bind(this);
+        this.onAddChartColumn = this.onAddChartColumn.bind(this);
+        this.onRemoveChartColumn = this.onRemoveChartColumn.bind(this);
+        this.onAddChartRow = this.onAddChartRow.bind(this);
+        this.onRemoveChartRow = this.onRemoveChartRow.bind(this);
+        this.onResetChart = this.onResetChart.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -188,6 +200,153 @@ class SpellEntry extends React.Component {
         this.setState({newMechanic: newMechanic});
     }
     
+    onChangeChart(event) {
+        let chart = null;
+        if (event.target.type !== undefined) {
+            chart = util.common.updateFormState(event, this.state.editChart, this.props.picklists);
+            let newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
+            let newRow = Object.assign({}, util.objectModel.CHART_ROW);
+            switch (event.target.name) {
+                case 'columnCount':
+                    for (let c = 0; c < event.target.value; c++) {
+                        if (c > chart.columns.length - 1) {
+                            newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
+                            newColumn.id = (c + 1) * -1;
+                            newColumn.orderIndex = c + 1;
+                            chart.columns.push(newColumn);
+                        }
+                    }
+                    if (chart.columns.length > event.target.value) {
+                        chart.columns.splice(event.target.value);
+                    }
+                    break;
+                case 'rowCount':
+                    for (let r = 0; r < event.target.value; r++) {
+                        if (r > chart.rows.length - 1) {
+                            newRow = Object.assign({}, util.objectModel.CHART_ROW);
+                            newRow.id = (r + 1) * -1;
+                            newRow.orderIndex = r + 1;
+                            chart.rows.push(newRow);
+                        }
+                    }
+                    if (chart.rows.length > event.target.value) {
+                        chart.rows.splice(event.target.value);
+                    }
+                    break;
+                default:
+            }
+            //add new chart.entries
+            let newEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
+            let newEntryId = 0;
+            for (let c = 0; c < chart.columnCount; c++) {
+                for (let r = 0; r < chart.rowCount; r++) {
+                    //newEntryId = -1 * ((c * (chart.rowCount)) + r + 1);
+                    newEntryId = -1 * (chart.entries.length + 1);
+                    let entryExists = false;
+                    for (let e = 0; e < chart.entries.length; e++) {
+                        if (chart.entries[e].columnIndex == c && chart.entries[e].rowIndex == r) {
+                            entryExists = true;
+                        }
+                    }
+                    if (!entryExists) {
+                        newEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
+                        newEntry.id = newEntryId;
+                        newEntry.columnIndex = c;
+                        newEntry.rowIndex = r;
+                        chart.entries.push(newEntry);
+                    }
+                }
+            }
+            //remove unneeded entries
+            for (let e = 0; e < chart.entries.length; e++) {
+                if (chart.columnCount <= chart.entries[e].columnIndex || chart.rowCount <= chart.entries[e].rowIndex) {
+                    chart.entries.splice(e, 1);
+                    e--;
+                }
+            }
+        } else {
+            chart = this.state.editChart;
+            let recordType = event.target.id.split('_')[1];
+            let recordId = parseInt(event.target.id.split('_')[0]);
+            let recordField = event.target.id.split('_')[2];
+            let recordValue = event.target.innerHTML;
+            for (let q = 0; q < chart[recordType].length; q++) {
+                if (recordId == chart[recordType][q].id) {
+                    chart[recordType][q][recordField] = recordValue;
+                }
+            }
+        }
+        this.setState({editChart: chart});
+    }
+    
+    onChangeChartOrder(event) {
+        
+    }
+    
+    onCreateChart() {
+        
+    }
+    
+    onAddChart() {
+        const spell = this.state.spell;
+        spell.charts.push(this.state.editChart);
+        this.setState({spell: spell});
+        this.onResetChart();
+    }
+    
+    onRemoveChart(chart) {
+        const spell = Object.assign({}, this.state.spell);
+        let removeIndex = util.picklists.getIndexById(spell.charts, chart.id);
+        if (removeIndex != -1) {
+            spell.charts.splice(removeIndex, 1);
+        }
+        this.setState({spell: spell});
+    }
+    
+    onSelectChart(chart) {
+        this.setState({selectedChartId: chart.id});
+    }
+    
+    onAddChartColumn() {
+        const newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
+        const editChart = Object.assign({}, this.state.editChart);
+        editChart.columns.push(newColumn);
+        this.setState({editChart: editChart});
+    }
+    
+    onRemoveChartColumn(column) {
+        const editChart = this.state.editChart;
+        let removeIndex = util.picklists.getIndexById(editChart.columns, column.id);
+        if (removeIndex != -1) {
+            editChart.columns.splice(removeIndex, 1);
+        }
+        this.setState({editChart: editChart});
+    }
+    
+    onAddChartRow() {
+        const newRow = Object.assign({}, util.objectModel.CHART_ROW);
+        const editChart = Object.assign({}, this.state.editChart);
+        editChart.rows.push(newRow);
+        this.setState({editChart: editChart});
+    }
+    
+    onRemoveChartRow(row) {
+        const editChart = this.state.editChart;
+        let removeIndex = util.picklists.getIndexById(editChart.rows, row.id);
+        if (removeIndex != -1) {
+            editChart.rows.splice(removeIndex, 1);
+        }
+        this.setState({editChart: editChart});
+    }
+    
+    onResetChart() {
+        const newChart = Object.assign({}, util.objectModel.CHART);
+        newChart.columns = [];
+        newChart.rows = [];
+        newChart.entries = [];
+        this.setState({editChart: newChart});
+    }
+    
     render() {
         const spell = this.state.spell;
         const contents = this.props.canEdit ? (
@@ -206,6 +365,18 @@ class SpellEntry extends React.Component {
                 onRemoveMechanic={this.onRemoveMechanic}
                 onResetMechanic={this.onResetMechanic}
                 newMechanic={this.state.newMechanic}
+                chart={this.state.editChart}
+                onChangeChart={this.onChangeChart}
+                onChangeChartOrder={this.onChangeChartOrder}
+                onAddChart={this.onAddChart}
+                onAddChartColumn={this.onAddChartColumn}
+                onAddChartRow={this.onAddChartRow}
+                onCreateChart={this.onCreateChart}
+                onRemoveChart={this.onRemoveChart}
+                onRemoveChartColumn={this.onRemoveChartColumn}
+                onRemoveChartRow={this.onRemoveChartRow}
+                onSelectChart={this.onSelectChart}
+                onResetChart={this.onResetChart}
                 />
         ) : (
             <SpellDetails

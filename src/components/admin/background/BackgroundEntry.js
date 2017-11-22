@@ -233,7 +233,7 @@ class BackgroundEntry extends React.Component {
                     newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
                     chart[field] = newDiceRollValue;
                     if (chart.entries.length == 0) {
-                        newEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
+                        newEntry = Object.assign({}, util.objectModel.DIE_CHART_ENTRY);
                         newEntry.minimum = newDiceRollValue.dieCount;
                         newEntry.maximum = newDiceRollValue.dieCount * newDiceRollValue.dieType;
                         chart.entries.push(newEntry);
@@ -244,7 +244,7 @@ class BackgroundEntry extends React.Component {
                 }
                 chart[field].rendered = newRenderedValue;
                 break;
-            case util.dataTypes.special.CHART_ENTRY_DIE_ROLL_RANGE:
+            case util.dataTypes.special.DIE_CHART_ENTRY_DIE_ROLL_RANGE:
                 changedEntryId = parseInt(field.split('_')[0]);
                 //get index of changed entry
                 chartMaximumValue = chart.dieRoll.dieCount * chart.dieRoll.dieType;
@@ -297,14 +297,14 @@ class BackgroundEntry extends React.Component {
                     
                 } else {
                     //if not exists, create new entry
-                    newEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
+                    newEntry = Object.assign({}, util.objectModel.DIE_CHART_ENTRY);
                     newEntry.id = -1 * chart.entries.length;
                     newEntry.minimum = parseInt(event.target.options[event.target.selectedIndex].value) + 1;
                     newEntry.maximum = chartMaximumValue;//chart.dieRoll.dieCount * chart.dieRoll.dieType;
                     chart.entries.push(newEntry);
                 }
                 break;
-            case util.dataTypes.special.CHART_ENTRY_DESCRIPTION:
+            case util.dataTypes.special.DIE_CHART_ENTRY_DESCRIPTION:
                 changedEntryId = parseInt(field.split('_')[0]);
                 for (let x = 0; x < chart.entries.length; x++) {
                     if (chart.entries[x].id == changedEntryId) {

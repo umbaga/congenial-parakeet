@@ -51,11 +51,38 @@ export const CHART = {
     id: 0,
     title: '',
     description: '',
+    columnCount: 0,
+    rowCount: 0,
+    columns: [],
+    rows: [],
+    entries: [],
+    orderIndex: -1
+};
+export const CHART_COLUMN = {
+    id: 0,
+    title: '',
+    orderIndex: -1
+};
+export const CHART_ROW = {
+    id: 0,
+    title: '',
+    orderIndex: -1
+};
+export const CHART_ENTRY = {
+    id: 0,
+    columnIndex: -1,
+    rowIndex: -1,
+    description: ''
+};
+export const DIE_CHART = {
+    id: 0,
+    title: '',
+    description: '',
     dieRoll: {dieCount: 0, dieType: 0, rendered: ''},
     entries: [],
     orderIndex: -1
 };
-export const CHART_ENTRY = {
+export const DIE_CHART_ENTRY = {
     id: 0,
     description: '',
     minimum: 0,
@@ -187,6 +214,7 @@ export const SPELL = {
     atHigherLevels: '',
     description: '',
     castingTime: {id: 0, name: ''},
+    charts: [],
     components: [],
     damage: {
         dice: {id: 0, dieCount: 0, dieType: 0, rendered: ''},

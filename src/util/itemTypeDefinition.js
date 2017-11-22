@@ -34,7 +34,8 @@ export const DESCRIPTIONS = {
 };
 
 export const CHARTS = {
-    DIE_ROLL: 800
+    DIE_ROLL: 806,
+    STANDARD: 904
 };
 
 export const ARMOR_PROFICIENCY = {
