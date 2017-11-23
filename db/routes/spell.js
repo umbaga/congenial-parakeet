@@ -122,6 +122,90 @@ module.exports = function(app, pg, async, pool) {
                         var tmp = [req.params.id];
                         return callback(null, tmp);
                     });
+                },
+                function deleteChartEntriesTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_chart_entry';
+                    sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteChartColumnsTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_chart_column';
+                    sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteChartRowsTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_chart_row';
+                    sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteChartDefTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_chart';
+                    sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteChartCoreTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_core_chart';
+                    sql += ' WHERE "id" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteChartLinkTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_link_chart';
+                    sql += ' WHERE "referenceId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -369,7 +453,6 @@ module.exports = function(app, pg, async, pool) {
                     cb(null, req);
                 },
                 function insertItem(req, callback) {
-                    console.log('01');
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_core_item';
@@ -396,7 +479,6 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertSpellTable(resObj, callback) {
-                    console.log('02');
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_def_spell';
@@ -421,7 +503,6 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertDescription(resObj, callback) {
-                    console.log('03');
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_core_description';
@@ -438,7 +519,6 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertAtHigherLevelsDescription(resObj, callback) {
-                    console.log('04');
                     if (resObj.spell.atHigherLevels && resObj.spell.atHigherLevels.length != 0) {
                         results = [];
                         vals = [];
@@ -460,7 +540,6 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertSpellComponentsTable(resObj, callback) {
-                    console.log('05');
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_link_spell_component';
@@ -491,7 +570,6 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertMissingDamageDice(resObj, callback) {
-                    console.log('06');
                     if (resObj.spell.damage && resObj.spell.damage.dieCount && resObj.spell.damage.dieCount != 0) {
                         sql = 'with vals as ';
                         sql += ' (';
@@ -521,7 +599,6 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function assignDamageIds(resObj, callback) {
-                    console.log('07');
                     if (resObj.spell.damage && resObj.spell.damage.dieCount && resObj.spell.damage.dieCount != 0) {
                         sql = 'SELECT * FROM adm_core_dice';
                         sql += ' WHERE ("dieCount" = $1 AND "dieType" = $2)';
@@ -552,7 +629,6 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertDamage(resObj, callback) {
-                    console.log('08');
                     if (resObj.spell.damage && resObj.spell.damage.dice && resObj.spell.damage.dice.dieCount && resObj.spell.damage.dice.dieCount != 0) {
                         results = [];
                         vals = [];
@@ -573,8 +649,6 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertImprovementDamage(resObj, callback) {
-                    console.log('09');
-                    console.log(resObj.spell.damage);
                     if (resObj.spell.damage && resObj.spell.damage.improvement && resObj.spell.damage.improvement.dice && resObj.spell.damage.improvement.dice.dieCount != 0) {
                         results = [];
                         vals = [];
@@ -595,7 +669,6 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertSavingThrow(resObj, callback) {
-                    console.log('10');
                     if (resObj.spell.needSavingThrow) {
                         sql = 'INSERT INTO adm_def_spell_saving_throw';
                         sql += ' ("spellId", "abilityScoreId")';
@@ -614,7 +687,6 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertMechanics(resObj, callback) {
-                    console.log('11');
                     if (resObj.mechanics && resObj.mechanics.base && resObj.mechanics.base.length != 0) {
                         sql = 'INSERT INTO adm_link_mechanic';
                         sql += ' ("referenceId", "targetId", "typeId", "value")';
@@ -652,6 +724,319 @@ module.exports = function(app, pg, async, pool) {
                                     vals.push(resObj.spell.advancement.base[e].value);
                                 }
                             }
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertCharts(resObj, callback) {
+                    if (resObj.spell.charts && resObj.spell.charts.length != 0) {
+                        sql = 'INSERT INTO adm_core_chart';
+                        sql += ' ("title", "typeId")';
+                        sql += ' VALUES ';
+                        vals = [];
+                        results = [];
+                        for (var e = 0; e < resObj.spell.charts.length; e++) {
+                            if (e != 0) {
+                                sql += ', ';
+                            }
+                            first = e + 1;
+                            sql += ' ($' + first.toString() + ', 904)';
+                            vals.push(resObj.spell.charts[e].title);
+                        }
+                        sql += ' returning id AS "chartId", title;';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var d = 0; d < resObj.spell.charts.length; d++) {
+                                    if (results[e].title == resObj.spell.charts[d].title) {
+                                        resObj.spell.charts[d].id = results[e].chartId;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartDefinitions(resObj, callback) {
+                    if (resObj.spell.charts && resObj.spell.charts.length != 0) {
+                        sql = 'INSERT INTO adm_def_chart';
+                        sql += ' ("chartId", "columnCount", "rowCount")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        vals = [];
+                        results = [];
+                        for (var e = 0; e < resObj.spell.charts.length; e++) {
+                            if (e != 0) {
+                                sql += ', ';
+                            }
+                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                            first = first + 3;
+                            second = second + 3;
+                            third = third + 3;
+                            vals.push(resObj.spell.charts[e].id);
+                            vals.push(resObj.spell.charts[e].columnCount);
+                            vals.push(resObj.spell.charts[e].rowCount);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartDescriptions(resObj, callback) {
+                    if (resObj.spell.charts && resObj.spell.charts.length != 0) {
+                        var hasDescriptions = false;
+                        for (var e = 0; e < resObj.spell.charts.length; e++) {
+                            if (resObj.spell.charts[e].description && resObj.spell.charts[e].description.length != 0) {
+                                hasDescriptions = true;
+                                break;
+                            }
+                        }
+                        var includeComma = false;
+                        if (hasDescriptions) {
+                            sql = 'INSERT INTO adm_core_description';
+                            sql += ' ("itemId", "description", "descriptionTypeId")';
+                            sql += ' VALUES ';
+                            first = 1;
+                            second = 2;
+                            vals = [];
+                            results = [];
+                            for (var e = 0; e < resObj.spell.charts.length; e++) {
+                                if (resObj.spell.charts[e].description && resObj.spell.charts[e].description.length != 0) {
+                                    if (includeComma) {
+                                        sql += ', ';
+                                    }
+                                    sql += ' ($' + first.toString() + ', $' + second.toString() + ', 907)';
+                                    vals.push(resObj.spell.charts[e].id);
+                                    vals.push(resObj.spell.charts[e].description);
+                                    first = first + 2;
+                                    second = second + 2;
+                                    includeComma = true;
+                                }
+                            }
+                            var query = client.query(new pg.Query(sql, vals));
+                            query.on('row', function(row) {
+                                results.push(row);
+                            });
+                            query.on('end', function() {
+                                done();
+                                return callback(null, resObj);
+                            });
+                        } else {
+                            return callback(null, resObj);
+                        }
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartColumns(resObj, callback) {
+                    if (resObj.spell.charts && resObj.spell.charts.length != 0) {
+                        vals = [];
+                        results = [];
+                        sql = 'INSERT INTO adm_def_chart_column';
+                        sql += ' ("chartId", "columnIndex", "title")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        for (var c = 0; c < resObj.spell.charts.length; c++) {
+                            for (var e = 0; e < resObj.spell.charts[c].columns.length; e ++) {
+                                if (!(c == 0 && e == 0)) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                                first = first + 3;
+                                second = second + 3;
+                                third = third + 3;
+                                vals.push(resObj.spell.charts[c].id);
+                                vals.push(resObj.spell.charts[c].columns[e].columnIndex);
+                                vals.push(resObj.spell.charts[c].columns[e].title);
+                            }
+                        }
+                        sql += ' returning "chartId", "columnIndex", id AS "columnId";';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var r = 0; r < results.length; r++) {
+                                for (var c = 0; c < resObj.spell.charts.length; c++) {
+                                    for (var e = 0; e < resObj.spell.charts[c].columns.length; e++) {
+                                        if (results[r].chartId == resObj.spell.charts[c].id) {
+                                            if (results[r].columnIndex == resObj.spell.charts[c].columns[e].columnIndex) {
+                                                resObj.spell.charts[c].columns[e].id = results[r].columnId;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartRows(resObj, callback) {
+                    if (resObj.spell.charts && resObj.spell.charts.length != 0) {
+                        vals = [];
+                        results = [];
+                        var hasRowTitles = false;
+                        for (var c = 0; c < resObj.spell.charts.length; c++) {
+                            for (var r = 0; r < resObj.spell.charts[c].rows.length; r++) {
+                                if (resObj.spell.charts[c].rows[r].title && resObj.spell.charts[c].rows[r].title.length != 0) {
+                                    hasRowTitles = true;
+                                }
+                            }
+                        }
+                        if (hasRowTitles) {
+                            sql = 'INSERT INTO adm_def_chart_row';
+                            sql += ' ("chartId", "rowIndex", "title")';
+                            sql += ' VALUES ';
+                            first = 1;
+                            second = 2;
+                            third = 3;
+                            var addComma = false;
+                            for (var c = 0; c < resObj.spell.charts.length; c++) {
+                                for (var r = 0; r < resObj.spell.charts[c].rows.length; r++) {
+                                    if (resObj.spell.charts[c].rows[r].title && resObj.spell.charts[c].rows[r].title.length != 0) {
+                                        if (addComma) {
+                                            sql += ', ';
+                                        }
+                                        sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                                        first = first + 3;
+                                        second = second + 3;
+                                        third = third + 3;
+                                        vals.push(resObj.spell.charts[c].id);
+                                        vals.push(resObj.spell.charts[c].rows[r].rowIndex);
+                                        vals.push(resObj.spell.charts[c].rows[r].title);
+                                        
+                                        addComma = true;
+                                    }
+                                }
+                            }
+                            sql += ' returning "chartId", "rowIndex", id AS "rowId";';
+                            var query = client.query(new pg.Query(sql, vals));
+                            query.on('row', function(row) {
+                                results.push(row);
+                            });
+                            query.on('end', function() {
+                                done();
+                                for (var r = 0; r < results.length; r++) {
+                                    for (var c = 0; c < resObj.spell.charts.length; c++) {
+                                        for (var e = 0; e < resObj.spell.charts[c].rows.length; e++) {
+                                            if (results[r].chartId == resObj.spell.charts[c].id) {
+                                                if (results[r].rowIndex == resObj.spell.charts[c].rows[e].rowIndex) {
+                                                    resObj.spell.charts[c].rows[e].id = results[r].rowId;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                return callback(null, resObj);
+                            });
+                        } else {
+                            return callback(null, resObj);
+                        }
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartEntries(resObj, callback) {
+                    if (resObj.spell.charts && resObj.spell.charts.length != 0) {
+                        vals = [];
+                        results = [];
+                        sql = 'INSERT INTO adm_def_chart_entry';
+                        sql += ' ("chartId", "columnIndex", "rowIndex", "description")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        fourth = 4;
+                        for (var c = 0; c < resObj.spell.charts.length; c++) {
+                            for (var e = 0; e < resObj.spell.charts[c].entries.length; e++) {
+                                if(!(c == 0 && e == 0)) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
+                                first = first + 4;
+                                second = second + 4;
+                                third = third + 4;
+                                fourth = fourth + 4;
+                                vals.push(resObj.spell.charts[c].id);
+                                vals.push(resObj.spell.charts[c].entries[e].columnIndex);
+                                vals.push(resObj.spell.charts[c].entries[e].rowIndex);
+                                vals.push(resObj.spell.charts[c].entries[e].description);
+                            }
+                        }
+                        sql += 'returning "chartId", "rowIndex", "columnIndex", id AS "entryId";';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var r = 0; r < results.length; r++) {
+                                for (var c = 0; c < resObj.spell.charts.length; c++) {
+                                    for (var e = 0; e < resObj.spell.charts[c].entries.length; e++) {
+                                        if (results[r].chartId == resObj.spell.charts[c].id) {
+                                            if (results[r].rowIndex == resObj.spell.charts[c].entries[e].rowIndex && results[r].columnIndex == resObj.spell.charts[c].entries[e].columnIndex) {
+                                                resObj.spell.charts[c].entries[e].id = results[r].entryId;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartLinks(resObj, callback) {
+                    if (resObj.spell.charts && resObj.spell.charts.length != 0) {
+                        vals = [];
+                        results = [];
+                        sql = 'INSERT INTO adm_link_chart';
+                        sql += ' ("referenceId", "chartId", "orderIndex")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        for (var c = 0; c < resObj.spell.charts.length; c++) {
+                            if (c != 0) {
+                                sql += ', ';
+                            }
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                            first = first + 3;
+                            second = second + 3;
+                            third = third + 3;
+                            vals.push(resObj.spell.id);
+                            vals.push(resObj.spell.charts[c].id);
+                            vals.push(resObj.spell.charts[c].orderIndex);
                         }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -733,6 +1118,35 @@ module.exports = function(app, pg, async, pool) {
             sql += '                                 ) mechanic_row ON (mechanic_row."referenceId" = d.id)';
             sql += '                                 GROUP BY d.id';
             sql += '                             ) r(mechanics, id) WHERE id = i.id)) AS mechanics';
+            sql += '	, (SELECT r.charts';
+            sql += '    FROM (';
+            sql += '        SELECT ';
+            sql += '            json_agg(chart_row) AS charts,';
+            sql += '        	d.id';
+            sql += '        FROM adm_core_item d';
+            sql += '        INNER JOIN adm_link_chart dc ON (dc."referenceId" = d.id)';
+            sql += '        INNER JOIN (';
+            sql += '            SELECT  ';
+            sql += '                c.id,       ';
+            sql += '                c.title,';
+            sql += '            	cd.description,';
+            sql += '            	spellchart."orderIndex",';
+            sql += '                json_agg(cm) AS entries,';
+            sql += '            	(SELECT json_agg(cc) ';
+            sql += '                 FROM adm_def_chart_column cc ';
+            sql += '                 WHERE cc."chartId" = c.id) AS "columns",';
+            sql += '            	(SELECT json_agg(cr) ';
+            sql += '                 FROM adm_def_chart_row cr ';
+            sql += '                 WHERE cr."chartId" = c.id) AS "rows"';
+            sql += '            FROM adm_core_chart c';
+            sql += '            INNER JOIN adm_link_chart spellchart ON spellchart."chartId" = c.id';
+            sql += '             INNER JOIN adm_def_chart_entry cm ON (cm."chartId" = c.id) ';
+            sql += '            LEFT OUTER JOIN adm_core_description cd ON cd."itemId" = c.id';
+            sql += '            GROUP BY c.id, spellchart."orderIndex", cd.description';
+            sql += '            ORDER BY spellchart."orderIndex"';
+            sql += '        ) chart_row ON (chart_row.id = dc."chartId")';
+            sql += '        GROUP BY d.id';
+            sql += '    ) r(charts, id) WHERE id = i.id) AS charts';
             sql += '   FROM adm_core_item i';
             sql += '   INNER JOIN adm_def_spell spell ON spell."spellId" = i.id';
             sql += '   INNER JOIN adm_core_item school ON school.id = spell."schoolId"';
@@ -775,19 +1189,53 @@ module.exports = function(app, pg, async, pool) {
                     if (results[t].charts && results[t].charts.length != 0) {
                         results[t].charts = results[t].charts.sort(function (a, b) {
                             return a.orderIndex - b.orderIndex;
-                        })
+                        });
                         for (var x = 0; x < results[t].charts.length; x++) {
-                            results[t].charts[x].entries = results[t].charts[x].entries.sort(function (a, b) {
-                                return a.minimum - b.minimum;
+                            results[t].charts[x].columns = results[t].charts[x].columns.sort(function (a, b) {
+                                return a.columnIndex - b.columnIndex;
                             });
+                            results[t].charts[x].entries = results[t].charts[x].entries.sort(function(a, b) {
+                                return a.rowIndex - b.rowIndex || a.columnIndex - b.columnIndex;
+                            });
+                            if(results[t].charts[x].rows && results[t].charts[x].rows.length != 0) {
+                                results[t].charts[x].rows = results[t].charts[x].rows.sort(function(a,b) {
+                                    return a.rowIndex - b.rowIndex;
+                                });
+                            } else {
+                                var compareVal = -1;
+                                var newIndex = 0;
+                                results[t].charts[x].rows = [];
+                                for (var q = 0; q < results[t].charts[x].entries.length; q++) {
+                                    if (compareVal != results[t].charts[x].entries[q].rowIndex) {
+                                        compareVal = results[t].charts[x].entries[q].rowIndex;
+                                        results[t].charts[x].rows.push({
+                                            id: -1 * newIndex,
+                                            title: '',
+                                            rowIndex: newIndex
+                                        })
+                                        newIndex++;
+                                    }
+                                }
+                            }
                         }
+                    } else {
+                        delete results[t].charts;
                     }
                     if (results[t].damage.dice === undefined) {
-                        console.log(results[t].damage);
                         results[t].damage = {};
                         results[t].damage.dice = {rendered: ''};
                         results[t].damage.improvement = {dice: {rendered: ''}};
                         results[t].damage.type = {};
+                    }
+                    if (results[t].mechanics.base[0] == null && results[t].mechanics.advancement[0] == null) {
+                        delete results[t].mechanics;
+                    } else {
+                        if (results[t].mechanics.base[0] == null) {
+                            delete results[t].mechanics.base;
+                        }
+                        if (results[t].mechanics.advancement[0] == null) {
+                            delete results[t].mechanics.advancement;
+                        }
                     }
                 }
                 return res.json(results);

@@ -212,7 +212,7 @@ class SpellEntry extends React.Component {
                         if (c > chart.columns.length - 1) {
                             newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
                             newColumn.id = (c + 1) * -1;
-                            newColumn.orderIndex = c + 1;
+                            newColumn.columnIndex = c + 1;
                             chart.columns.push(newColumn);
                         }
                     }
@@ -225,7 +225,7 @@ class SpellEntry extends React.Component {
                         if (r > chart.rows.length - 1) {
                             newRow = Object.assign({}, util.objectModel.CHART_ROW);
                             newRow.id = (r + 1) * -1;
-                            newRow.orderIndex = r + 1;
+                            newRow.rowIndex = r + 1;
                             chart.rows.push(newRow);
                         }
                     }
@@ -279,7 +279,7 @@ class SpellEntry extends React.Component {
         this.setState({editChart: chart});
     }
     
-    onChangeChartOrder(event) {
+    onChangeChartOrder() {
         
     }
     
@@ -289,7 +289,9 @@ class SpellEntry extends React.Component {
     
     onAddChart() {
         const spell = this.state.spell;
-        spell.charts.push(this.state.editChart);
+        const chart = this.state.editChart;
+        chart.orderIndex = spell.charts.length;
+        spell.charts.push(chart);
         this.setState({spell: spell});
         this.onResetChart();
     }

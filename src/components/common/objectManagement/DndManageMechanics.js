@@ -181,7 +181,7 @@ class DndManageMechanics extends React.Component {
 DndManageMechanics.propTypes = {
     onChange: PropTypes.func.isRequired,
     picklists: PropTypes.array.isRequired,
-    mechanics: PropTypes.object.isRequired,
+    mechanics: PropTypes.object,
     onRemoveMechanic: PropTypes.func.isRequired,
     onResetMechanic: PropTypes.func.isRequired,
     onAddMechanic: PropTypes.func.isRequired,

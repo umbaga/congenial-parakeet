@@ -35,7 +35,7 @@ class SpellForm extends React.Component {
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={4} id="uncontrolled-tab-example">
+                    <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
                         <Tab eventKey={1} title="General">
                             <div>&nbsp;</div>
                             <DndUniversalInput
