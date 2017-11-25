@@ -166,7 +166,7 @@ export function updateFormState(event, obj, picklists) {
                 if (event.target.checked) {
                     newComponentsArray.push({
                         id: event.target.value,
-                        name: util.picklists.getPicklistItem(picklists, event.target.value)
+                        name: util.picklists.getPicklistItem(picklists, event.target.value).name
                     });
                 } else {
                     let removeIndex = -1;

@@ -25,6 +25,7 @@ class SpellEntry extends React.Component {
         };
         this.cancelSpell = this.cancelSpell.bind(this);
         this.deleteSpell = this.deleteSpell.bind(this);
+        this.resetSpell = this.resetSpell.bind(this);
         this.postAction = this.postAction.bind(this);
         this.saveAndBackSpell = this.saveAndBackSpell.bind(this);
         this.saveAndNewSpell = this.saveAndNewSpell.bind(this);
@@ -66,6 +67,7 @@ class SpellEntry extends React.Component {
 
     cancelSpell(event) {
         event.preventDefault();
+        this.resetSpell();
         this.postAction();
     }
 
@@ -77,6 +79,13 @@ class SpellEntry extends React.Component {
         }
     }
 
+    resetSpell() {
+        const blankSpell = Object.assign({}, util.objectModel.SPELL);
+        blankSpell.components = [];
+        blankSpell.supplementalDescriptions = [];
+        this.setState({spell: blankSpell});
+    }
+    
     postAction() {
         this.props.closeModal();
     }
@@ -93,11 +102,8 @@ class SpellEntry extends React.Component {
 
     saveSpell(event) {
         event.preventDefault();
-        let newSpell = {};
-        newSpell = Object.assign({}, util.objectModel.SPELL);
-        newSpell.components = [];
-        this.setState({saving: true, spell: newSpell});
         this.props.actions.upsertSpell(this.state.spell);
+        this.resetSpell();
     }
     
     saveNewCastingTime() {
