@@ -39,6 +39,20 @@ module.exports = function(app, pg, async, pool) {
                         return callback(null, tmp);
                     });
                 },
+                function deleteSupplementalDescriptionDef(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_supplemental_description';
+                    sql += ' WHERE "descriptionId" IN (SELECT id FROM adm_core_description WHERE "itemId" = $1)';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
                 function deleteDescription(resObj, callback) {
                     sql = 'DELETE FROM adm_core_description';
                     sql += ' WHERE "itemId" = $1';
@@ -1049,6 +1063,79 @@ module.exports = function(app, pg, async, pool) {
                     } else {
                         return callback(null, resObj);
                     }
+                },
+                function insertSupplementalDescription(resObj, callback) {
+                    if (resObj.spell.supplementalDescriptions && resObj.spell.supplementalDescriptions.length != 0) {
+                        vals = [];
+                        results = [];
+                        sql = 'INSERT INTO adm_core_description';
+                        sql += ' ("itemId", "description", "descriptionTypeId")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        for (var d = 0; d < resObj.spell.supplementalDescriptions.length; d++) {
+                            if (d != 0) {
+                                sql += ', ';
+                            }
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', 944)';
+                            first = first + 2;
+                            second = second + 2;
+                            vals.push(resObj.spell.id);
+                            vals.push(resObj.spell.supplementalDescriptions[d].description);
+                        }
+                        sql += ' returning "description", id AS "descriptionId"';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var r= 0; r < results.length; r++) {
+                                for (var d = 0; d < resObj.spell.supplementalDescriptions.length; d++) {
+                                    if (results[r].description == resObj.spell.supplementalDescriptions[d].description) {
+                                        resObj.spell.supplementalDescriptions[d].id = results[r].descriptionId;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertSupplementalDescriptionDef(resObj, callback) {
+                    if (resObj.spell.supplementalDescriptions && resObj.spell.supplementalDescriptions.length != 0) {
+                        vals = [];
+                        results = [];
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        sql = 'INSERT INTO adm_def_supplemental_description';
+                        sql += ' ("descriptionId", "title", "orderIndex")';
+                        sql += ' VALUES ';
+                        for (var d = 0; d < resObj.spell.supplementalDescriptions.length; d++) {
+                            if (d != 0) {
+                                sql += ', ';
+                            }
+                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                            first = first + 3;
+                            second = second + 3;
+                            third = third + 3;
+                            vals.push(resObj.spell.supplementalDescriptions[d].id);
+                            vals.push(resObj.spell.supplementalDescriptions[d].title);
+                            vals.push(resObj.spell.supplementalDescriptions[d].orderIndex);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 }
             ], function(error, result) {
                 if (error) {
@@ -1069,6 +1156,7 @@ module.exports = function(app, pg, async, pool) {
             sql = 'SELECT i.id, i."itemName" AS name, spell.level';
             sql += '  , description.description';
             sql += '  , spell."isRitual"';
+            sql += ', \'[]\' AS "supplementalDescriptions"';
             sql += '  , higherleveldesc.description AS "atHigherLevels"';
             sql += '  ,  CASE WHEN basedmgdice.id IS NULL THEN \'{}\' ELSE json_build_object(';
             sql += '      \'dice\', get_dice(basedmgdice.id)';
@@ -1147,6 +1235,12 @@ module.exports = function(app, pg, async, pool) {
             sql += '        ) chart_row ON (chart_row.id = dc."chartId")';
             sql += '        GROUP BY d.id';
             sql += '    ) r(charts, id) WHERE id = i.id) AS charts';
+            sql += ', (SELECT json_agg(descriptions) FROM (SELECT d."id", d."itemId", suppdesc.title, d.description, suppdesc."orderIndex"';
+            sql += ' FROM adm_core_description d';
+            sql += ' INNER JOIN adm_def_supplemental_description suppdesc ON suppdesc."descriptionId" = d.id';
+            sql += ' WHERE d."itemId" = i.id';
+            sql += ' GROUP BY d."id", d."itemId", suppdesc.title, d.description, suppdesc."orderIndex") AS "descriptions")';
+            sql += ' AS "supplementalDescriptions"';
             sql += '   FROM adm_core_item i';
             sql += '   INNER JOIN adm_def_spell spell ON spell."spellId" = i.id';
             sql += '   INNER JOIN adm_core_item school ON school.id = spell."schoolId"';

@@ -235,12 +235,14 @@ export const SPELL = {
     savingThrow: {
         abilityScore: {id: 0, name: ''}
     },
-    school: {id: 0, name: ''}
+    school: {id: 0, name: ''},
+    supplementalDescriptions: []
 };
 export const SPELL_CASTING_TIME = {id: 0, name: ''};
 export const SPELL_COMPONENT = {id: 0, name: ''};
 export const SPELL_DURATION = {id: 0, name: ''};
 export const SPELL_RANGE = {id: 0, name: ''};
+export const SUPPLEMENTAL_DESCRIPTION = {id: 0, title: '', description: ''};
 export const WEAPON = {
     id: 0,
     name: '',

@@ -8,6 +8,7 @@ import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
 import DndManageMechanics from '../../common/objectManagement/DndManageMechanics';
 import DndManageCharts from '../../common/objectManagement/DndManageCharts';
+import DndManageSupplementalDescriptions from '../../common/objectManagement/DndManageSupplementalDescriptions';
 
 class SpellForm extends React.Component {
     constructor(props) {
@@ -183,6 +184,20 @@ class SpellForm extends React.Component {
                                 onResetChart={this.props.onResetChart}
                                 />
                         </Tab>
+                        <Tab eventKey={5} title="Descriptions">
+                            <div>&nbsp;</div>
+                            <DndManageSupplementalDescriptions
+                                descriptions={spell.supplementalDescriptions}
+                                description={this.props.description}
+                                onChange={this.props.onChangeDescriptions}
+                                onChangeDescriptionOrder={this.props.onChangeDescriptionOrder}
+                                onCreateDescription={this.props.onCreateDescription}
+                                onRemoveDescription={this.props.onRemoveDescription}
+                                onSelectDescription={this.props.onSelectDescription}
+                                onResetDescription={this.props.onResetDescription}
+                                onAddDescription={this.props.onAddDescription}
+                                />
+                        </Tab>
                     </Tabs>
                 </form>
             </div>
@@ -217,7 +232,15 @@ SpellForm.propTypes = {
     onRemoveChartColumn: PropTypes.func.isRequired,
     onRemoveChartRow: PropTypes.func.isRequired,
     onSelectChart: PropTypes.func.isRequired,
-    onResetChart: PropTypes.func.isRequired
+    onResetChart: PropTypes.func.isRequired,
+    description: PropTypes.object.isRequired,
+    onChangeDescriptions: PropTypes.func.isRequired,
+    onChangeDescriptionOrder: PropTypes.func.isRequired,
+    onAddDescription: PropTypes.func.isRequired,
+    onCreateDescription: PropTypes.func.isRequired,
+    onRemoveDescription: PropTypes.func.isRequired,
+    onSelectDescription: PropTypes.func.isRequired,
+    onResetDescription: PropTypes.func.isRequired
 };
 
 export default SpellForm;

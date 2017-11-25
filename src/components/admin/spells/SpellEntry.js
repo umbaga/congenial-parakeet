@@ -20,7 +20,8 @@ class SpellEntry extends React.Component {
             selectedChartId: 0,
             saving: false,
             newMechanic: Object.assign({}, util.objectModel.MECHANIC),
-            editChart: Object.assign({}, util.objectModel.CHART)
+            editChart: Object.assign({}, util.objectModel.CHART),
+            editDescription: Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION)
         };
         this.cancelSpell = this.cancelSpell.bind(this);
         this.deleteSpell = this.deleteSpell.bind(this);
@@ -47,6 +48,13 @@ class SpellEntry extends React.Component {
         this.onAddChartRow = this.onAddChartRow.bind(this);
         this.onRemoveChartRow = this.onRemoveChartRow.bind(this);
         this.onResetChart = this.onResetChart.bind(this);
+        this.onAddDescription = this.onAddDescription.bind(this);
+        this.onRemoveDescription = this.onRemoveDescription.bind(this);
+        this.onSelectDescription = this.onSelectDescription.bind(this);
+        this.onResetDescription = this.onResetDescription.bind(this);
+        this.onCreateDescription = this.onCreateDescription.bind(this);
+        this.onChangeDescriptions = this.onChangeDescriptions.bind(this);
+        this.onChangeDescriptionOrder = this.onChangeDescriptionOrder.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -279,8 +287,34 @@ class SpellEntry extends React.Component {
         this.setState({editChart: chart});
     }
     
-    onChangeChartOrder() {
-        
+    onChangeChartOrder(chart, isUp) {
+        const spell = this.state.spell;
+        const charts = spell.charts.sort(function(a, b) {
+            return a.orderIndex - b.orderIndex;
+        });
+        if ((isUp && chart.orderIndex != 0) || (!isUp && chart.orderIndex != charts.length - 1)) {
+            let changedIndex = -1;
+            let otherChangedIndex = -1;
+            let referenceOrderIndex = -1;
+            let referenceOtherOrderIndex = -1;
+            for (let r = 0; r < charts.length; r++) {
+                if (charts[r].id == chart.id) {
+                    changedIndex = r;
+                    otherChangedIndex = isUp ? r - 1 : r + 1;
+                    referenceOrderIndex = charts[r].orderIndex;
+                    referenceOtherOrderIndex = isUp ? referenceOrderIndex - 1 : referenceOrderIndex + 1;
+                    break;
+                }
+            }
+            if (changedIndex != -1 && otherChangedIndex != -1) {
+                charts[changedIndex].orderIndex = referenceOtherOrderIndex;
+                charts[otherChangedIndex].orderIndex = referenceOrderIndex;
+            }
+            spell.charts = charts.sort(function(a, b) {
+                return a.orderIndex - b.orderIndex;
+            });
+            this.setState({spell: spell});
+        }
     }
     
     onCreateChart() {
@@ -349,6 +383,73 @@ class SpellEntry extends React.Component {
         this.setState({editChart: newChart});
     }
     
+    onAddDescription() {
+        const spell = this.state.spell;
+        const newDescription = this.state.editDescription;
+        newDescription.orderIndex = spell.supplementalDescriptions.length;
+        spell.supplementalDescriptions.push(newDescription);
+        const emptyDescription = Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION);
+        emptyDescription.id = spell.supplementalDescriptions.length;
+        this.setState({spell: spell, editDescription: emptyDescription});
+    }
+    
+    onRemoveDescription(descriptionId) {
+        const spell = Object.assign({}, this.state.spell);
+        let removeIndex = util.picklists.getIndexById(spell.supplementalDescriptions, descriptionId);
+        if (removeIndex != -1) {
+            spell.supplementalDescriptions.splice(removeIndex, 1);
+        }
+        this.setState({spell: spell});
+    }
+    
+    onSelectDescription() {
+        
+    }
+    
+    onResetDescription() {
+        const newDescription = Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION);
+        this.setState({editDescription: newDescription});
+    }
+    
+    onCreateDescription() {
+        
+    }
+    
+    onChangeDescriptions(event) {
+        const description = util.common.updateFormState(event, this.state.editDescription, this.props.picklists);
+        this.setState({editDescription: description});
+    }
+    
+    onChangeDescriptionOrder(description, isUp) {
+        const spell = this.state.spell;
+        const descriptions = spell.supplementalDescriptions.sort(function(a, b) {
+            return a.orderIndex - b.orderIndex;
+        });
+        if ((isUp && description.orderIndex != 0) || (!isUp && description.orderIndex != descriptions.length - 1)) {
+            let changedIndex = -1;
+            let otherChangedIndex = -1;
+            let referenceOrderIndex = -1;
+            let referenceOtherOrderIndex = -1;
+            for (let r = 0; r < descriptions.length; r++) {
+                if (descriptions[r].id == description.id) {
+                    changedIndex = r;
+                    otherChangedIndex = isUp ? r - 1 : r + 1;
+                    referenceOrderIndex = descriptions[r].orderIndex;
+                    referenceOtherOrderIndex = isUp ? referenceOrderIndex - 1 : referenceOrderIndex + 1;
+                    break;
+                }
+            }
+            if (changedIndex != -1 && otherChangedIndex != -1) {
+                descriptions[changedIndex].orderIndex = referenceOtherOrderIndex;
+                descriptions[otherChangedIndex].orderIndex = referenceOrderIndex;
+            }
+            spell.supplementalDescriptions = descriptions.sort(function(a, b) {
+                return a.orderIndex - b.orderIndex;
+            });
+            this.setState({spell: spell});
+        }
+    }
+    
     render() {
         const spell = this.state.spell;
         const contents = this.props.canEdit ? (
@@ -379,6 +480,14 @@ class SpellEntry extends React.Component {
                 onRemoveChartRow={this.onRemoveChartRow}
                 onSelectChart={this.onSelectChart}
                 onResetChart={this.onResetChart}
+                description={this.state.editDescription}
+                onChangeDescriptions={this.onChangeDescriptions}
+                onChangeDescriptionOrder={this.onChangeDescriptionOrder}
+                onAddDescription={this.onAddDescription}
+                onCreateDescription={this.onCreateDescription}
+                onRemoveDescription={this.onRemoveDescription}
+                onSelectDescription={this.onSelectDescription}
+                onResetDescription={this.onResetDescription}
                 />
         ) : (
             <SpellDetails

@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import util from '../../../util/util';
+import DndChartDisplay from '../../common/display/DndChartDisplay';
 
 class SpellDetails extends React.Component {
     constructor(props) {
         super(props);
         this.renderAtHighestLevel = this.renderAtHighestLevel.bind(this);
+        this.renderCharts = this.renderCharts.bind(this);
+        this.renderSupplementalDescriptions = this.renderSupplementalDescriptions.bind(this);
     }
     
     componentDidMount() {
@@ -14,6 +17,34 @@ class SpellDetails extends React.Component {
     renderAtHighestLevel() {
         return this.props.spell.atHigherLevels && this.props.spell.atHigherLevels.length != 0 ? (
             <div><strong>At Higher Levels: </strong>{this.props.spell.atHigherLevels}</div>
+        ) : null;
+    }
+    renderCharts() {
+        if (this.props.spell.charts && this.props.spell.charts.length != 0) {
+            return (
+                <div>
+                    {this.props.spell.charts.map(chart =>
+                        <DndChartDisplay
+                            key={chart.id}
+                            chart={chart}
+                            />
+                    )}
+                </div>
+            );
+        } else {
+            return null;
+        }
+    }
+    renderSupplementalDescriptions() {
+        return (this.props.spell.supplementalDescriptions && this.props.spell.supplementalDescriptions.length != 0) ? (
+            <div>
+                {this.props.spell.supplementalDescriptions.map(description =>
+                    <p key={description.id}>
+                        <strong>{description.title}</strong>
+                        {description.description}
+                    </p>
+                )}
+            </div>
         ) : null;
     }
     render() {
@@ -28,8 +59,10 @@ class SpellDetails extends React.Component {
                 <div><strong>Components: </strong>{util.format.forDisplay.obj.spellComponents(spell)}</div>
                 <div><strong>Duration: </strong>{spell.duration.name}</div>
                 <div>&nbsp;</div>
-                <div>{spell.description}</div>
+                <div><p>{spell.description}</p></div>
+                {this.renderSupplementalDescriptions()}
                 {this.renderAtHighestLevel()}
+                {this.renderCharts()}
             </div>
         );
     }

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import util from '../../../util/util';
 
-class DndChartDisplay extends React.Component {
+class DndDieChartDisplay extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.renderHeaderWithDescription = this.renderHeaderWithDescription.bind(this);
@@ -48,8 +48,8 @@ class DndChartDisplay extends React.Component {
     }
 }
 
-DndChartDisplay.propTypes = {
+DndDieChartDisplay.propTypes = {
     chart: PropTypes.object.isRequired
 };
 
-export default DndChartDisplay;
+export default DndDieChartDisplay;
