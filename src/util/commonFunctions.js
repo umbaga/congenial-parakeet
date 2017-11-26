@@ -39,11 +39,14 @@ export function setObjectValue(obj, prop, val, action) {
 export function updateFormState(event, obj, picklists) {
     let retVal = obj;
     let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
+    if (event.target.id) {
+        field = event.target.id;
+    }
     let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
     let newSelectedValue = {};
     let newRenderedValue = '';
     let newDiceRollValue = {};
-    let isAssign = field.split('Unassigned').length == 2 ? true : false;
+    let isAssign = (field !== undefined) ? field.split('Unassigned').length == 2 ? true : false : null;
     let removeThisId = event.target.value;
     let removeThisIndex = -1;
     let referencePicklistItem = util.picklists.getPicklistItem(picklists, removeThisId);
@@ -52,6 +55,8 @@ export function updateFormState(event, obj, picklists) {
     let subfield = '';
     switch (dataType) {
         case util.dataTypes.string.DESCRIPTION:
+            util.common.setObjectValue(retVal, field, event.target.innerHTML);
+            break;
         case util.dataTypes.string.STRING:
         case util.dataTypes.string.LONG_STRING:
         case util.dataTypes.number.INT:

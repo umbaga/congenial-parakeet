@@ -83,6 +83,17 @@ class SpellEntry extends React.Component {
         const blankSpell = Object.assign({}, util.objectModel.SPELL);
         blankSpell.components = [];
         blankSpell.supplementalDescriptions = [];
+        blankSpell.damage = {
+            dice: {id: 0, dieCount: 0, dieType: 0, rendered: ''},
+            type: {id: 0, name: ''},
+            improvement: {
+                dice: {id: 0, dieCount: 0, dieType: 0, rendered: ''}
+            }
+        };
+        blankSpell.savingThrow = {
+            abilityScore: {id: 0, name: ''}
+        };
+        console.log(blankSpell);
         this.setState({spell: blankSpell});
     }
     
@@ -92,6 +103,7 @@ class SpellEntry extends React.Component {
 
     saveAndNewSpell(event) {
         this.saveSpell(event);
+        this.resetSpell();
         this.refs.form.refs.name.setFocus();
     }
 

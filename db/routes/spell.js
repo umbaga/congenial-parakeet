@@ -584,7 +584,8 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertMissingDamageDice(resObj, callback) {
-                    if (resObj.spell.damage && resObj.spell.damage.dieCount && resObj.spell.damage.dieCount != 0) {
+                    console.log('01');
+                    if (resObj.spell.damage && resObj.spell.damage.dice.dieCount && resObj.spell.damage.dice.dieCount != 0) {
                         sql = 'with vals as ';
                         sql += ' (';
                         sql += 'select $1 :: bigint as "dieCount", $2 :: bigint as "dieType"';
@@ -595,10 +596,10 @@ module.exports = function(app, pg, async, pool) {
                         sql += ' select v."dieCount", v."dieType" from vals as v ';
                         sql += ' where not exists (select * from adm_core_dice as t where t."dieCount" = v."dieCount" and t."dieType" = v."dieType")';
                         vals = [
-                            resObj.spell.damage.dieCount, 
-                            resObj.spell.damage.dieType,
-                            resObj.spell.damageImprovement.dieCount,
-                            resObj.spell.damageImprovement.dieType
+                            resObj.spell.damage.dice.dieCount, 
+                            resObj.spell.damage.dice.dieType,
+                            resObj.spell.damage.improvement.dice.dieCount,
+                            resObj.spell.damage.improvement.dice.dieType
                         ];
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -613,15 +614,16 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function assignDamageIds(resObj, callback) {
-                    if (resObj.spell.damage && resObj.spell.damage.dieCount && resObj.spell.damage.dieCount != 0) {
+                    console.log('02');
+                    if (resObj.spell.damage && resObj.spell.damage.dice.dieCount && resObj.spell.damage.dice.dieCount != 0) {
                         sql = 'SELECT * FROM adm_core_dice';
                         sql += ' WHERE ("dieCount" = $1 AND "dieType" = $2)';
                         sql += ' OR ("dieCount" = $3 AND "dieType" = $4)';
                         vals = [
-                            resObj.spell.damage.dieCount, 
-                            resObj.spell.damage.dieType,
-                            resObj.spell.damageImprovement.dieCount,
-                            resObj.spell.damageImprovement.dieType
+                            resObj.spell.damage.dice.dieCount, 
+                            resObj.spell.damage.dice.dieType,
+                            resObj.spell.damage.improvement.dice.dieCount,
+                            resObj.spell.damage.improvement.dice.dieType
                         ];
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -630,10 +632,11 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var e = 0; e < results.length; e++) {
-                                if (resObj.spell.damage.dieType == results[e].dieType && resObj.spell.damage.dieCount == results[e].dieCount) {
-                                    resObj.spell.damage.id = results[e].id;
-                                } else if (resObj.spell.damageImprovement.dieType == results[e].dieType && resObj.spell.damageImprovement.dieCount == results[e].dieCount) {
-                                    resObj.spell.damageImprovement.id = results[e].id;
+                                if (resObj.spell.damage.dice.dieType == results[e].dieType && resObj.spell.damage.dice.dieCount == results[e].dieCount) {
+                                    resObj.spell.damage.dice.id = results[e].id;
+                                }
+                                if (resObj.spell.damage.improvement.dice.dieType == results[e].dieType && resObj.spell.damage.improvement.dice.dieCount == results[e].dieCount) {
+                                    resObj.spell.damage.improvement.dice.id = results[e].id;
                                 }
                             }
                             return callback(null, resObj);
@@ -643,6 +646,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertDamage(resObj, callback) {
+                    console.log('03');
                     if (resObj.spell.damage && resObj.spell.damage.dice && resObj.spell.damage.dice.dieCount && resObj.spell.damage.dice.dieCount != 0) {
                         results = [];
                         vals = [];
@@ -663,12 +667,13 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertImprovementDamage(resObj, callback) {
+                    console.log('04');
                     if (resObj.spell.damage && resObj.spell.damage.improvement && resObj.spell.damage.improvement.dice && resObj.spell.damage.improvement.dice.dieCount != 0) {
                         results = [];
                         vals = [];
                         sql = 'INSERT INTO adm_def_spell_damage';
                         sql += ' ("spellId", "improvementDiceId")';
-                        sql += ' VALUES ($1, $2, $3)';
+                        sql += ' VALUES ($1, $2)';
                         vals = [resObj.spell.id, resObj.spell.damage.improvement.dice.id];
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -683,6 +688,7 @@ module.exports = function(app, pg, async, pool) {
                     }
                 },
                 function insertSavingThrow(resObj, callback) {
+                    console.log('05');
                     if (resObj.spell.needSavingThrow) {
                         sql = 'INSERT INTO adm_def_spell_saving_throw';
                         sql += ' ("spellId", "abilityScoreId")';

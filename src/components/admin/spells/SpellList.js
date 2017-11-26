@@ -6,7 +6,7 @@ import SpellListItem from './SpellListItem';
 
 const SpellList = ({spells, openModal, selectedId, changeSelectedId, onEdit, onViewDetails, selectedLevel, selectedSchoolId}) => {
     return (
-        <tbody>
+        <tbody style={{height: '500px', overflowY: 'scroll', display: 'block', width: '100%', tableLayout: 'fixed'}}>
             {spells.filter(function(spell) {
                 if (selectedLevel != -1 && selectedSchoolId != 0) {
                     return selectedLevel == spell.level && selectedSchoolId == spell.school.id;

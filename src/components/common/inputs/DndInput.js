@@ -189,15 +189,15 @@ class DndInput extends React.Component {
                     longValue = this.props.value;
                 }
                 primaryInput = (
-                    <textarea
-                        name={this.props.name}
-                        rows="6"
-                        placeholder={this.props.placeholder}
-                        value={longValue}
+                    <div
+                        id={this.props.name}
                         datatype={this.props.dataType}
-                        onKeyUp={this.props.onChange}
-                        onChange={this.props.onChange}
-                        className="form-control" />
+                        className="form-control pre-scrollable"
+                        style={{height: '200px'}}
+                        contentEditable
+                        dangerouslySetInnerHTML={{ __html: longValue }}
+                        onBlur={this.props.onChange}
+                        />
                 );
                 break;
             default:

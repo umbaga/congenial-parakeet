@@ -74,6 +74,7 @@ class SpellListPage extends React.Component {
     }
     render() {
         const spells = this.props.spells;
+        console.log(spells);
         const spellLevels = [
             {id: -1, name: 'All'},
             {id: 0, name: 'Cantrip'},
@@ -92,17 +93,17 @@ class SpellListPage extends React.Component {
             <div className="col-md-12">
                 <div>
                     <table className="table table-sm table-striped table-hover">
-                        <thead>
+                        <thead style={{display: 'block', width: '100%', tableLayout: 'fixed'}}>
                             <tr>
                                 <th colSpan="6">
                                     <h2><span><DndButton onClick={this.backToAdminHome} buttonType="back" /></span>Spells</h2>
                                 </th>
                             </tr>
                             <tr>
-                                <th>Name</th>
-                                <th>Level</th>
-                                <th>School</th>
-                                <th>
+                                <th width="50%">Name</th>
+                                <th width="15%">Level</th>
+                                <th width="25%">School</th>
+                                <th width="10%" style={{paddingRight: '25px'}}>
                                     <div className="pull-right">
                                         <DndButton onClick={this.onCreate} buttonType="create" />
                                     </div>

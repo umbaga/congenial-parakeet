@@ -39,10 +39,10 @@ class SpellListItem extends React.Component {
     render() {
         return (
             <tr key={this.props.spell.id}>
-                <td>{this.props.spell.name}</td>
-                <td>{util.format.forDisplay.number.ordinal(this.props.spell.level)}</td>
-                <td>{this.props.spell.school.name}</td>
-                <td>
+                <td width="50%">{this.props.spell.name}</td>
+                <td width="15%">{util.format.forDisplay.number.ordinal(this.props.spell.level)}</td>
+                <td width="25%">{this.props.spell.school.name}</td>
+                <td width="10%">
                     <DndListItemButtonBar
                         listItem={this.props.spell}
                         onEdit={this.editSpell}
