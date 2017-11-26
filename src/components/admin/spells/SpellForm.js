@@ -169,7 +169,7 @@ class SpellForm extends React.Component {
                         <Tab eventKey={4} title="Charts">
                             <div>&nbsp;</div>
                             <DndManageCharts
-                                charts={spell.charts}
+                                charts={spell.charts.standard}
                                 chart={this.props.chart}
                                 onChange={this.props.onChangeChart}
                                 onChangeChartOrder={this.props.onChangeChartOrder}

@@ -599,12 +599,12 @@ module.exports = function(app, pg, async, pool) {
                     console.log("13");
                     results = [];
                     vals = [];
-                    if (resObj.background.charts && resObj.background.charts.length != 0) {
+                    if (resObj.background.charts && resObj.background.charts.die.length != 0) {
                         sql = 'SELECT dice.*';
                         sql += ' FROM adm_core_dice dice';
                         var first = 1;
                         var second = 2;
-                        for (var e = 0; e < resObj.background.charts.length; e++) {
+                        for (var e = 0; e < resObj.background.charts.die.length; e++) {
                             sql += (e == 0) ? ' WHERE' : ' OR';
                             sql += ' (dice."dieCount" = $' + first.toString();
                             sql += ' AND dice."dieType" = $' + second.toString() + ')';
@@ -620,7 +620,7 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var i = 0; i < results.length; i++) {
-                                for (var j = 0; j < resObj.background.charts.length; j++) {
+                                for (var j = 0; j < resObj.background.charts.die.length; j++) {
                                     if (resObj.background.charts[j].dieRoll.dieCount == results[i].dieCount &&
                                        resObj.background.charts[j].dieRoll.dieType == results[i].dieType) {
                                         resObj.background.charts[j].dieRoll.id = results[i].id;
@@ -638,7 +638,7 @@ module.exports = function(app, pg, async, pool) {
                     console.log("14");
                     results = [];
                     vals = [];
-                    if (resObj.background.charts && resObj.background.charts.length != 0) {
+                    if (resObj.background.charts && resObj.background.charts.die.length != 0) {
                         var runInsert = false;
                         sql = 'INSERT INTO adm_core_dice';
                         sql += ' ("dieCount", "dieType")';
@@ -646,7 +646,7 @@ module.exports = function(app, pg, async, pool) {
                         var first = 1;
                         var second = 2;
                         vars = [];
-                        for (var i = 0; i < resObj.background.charts.length; i++) {
+                        for (var i = 0; i < resObj.background.charts.die.length; i++) {
                             if (!resObj.background.charts[i].dieRoll.id || resObj.background.charts[i].dieRoll.id == 0) {
                                 if(!runInsert) {
                                     sql += ', ';
@@ -668,7 +668,7 @@ module.exports = function(app, pg, async, pool) {
                             query.on('end', function() {
                                 done();
                                 for (var i = 0; i < results.length; i++) {
-                                    for (var j = 0; j < resObj.background.charts.length; j++) {
+                                    for (var j = 0; j < resObj.background.charts.die.length; j++) {
                                         if (resObj.background.charts[j].dieRoll.dieCount == results[i].dieCount &&
                                            resObj.background.charts[j].dieRoll.dieType == results[i].dieType) {
                                             resObj.background.charts[j].dieRoll.id = results[i].id;
@@ -688,14 +688,14 @@ module.exports = function(app, pg, async, pool) {
                     console.log("15");
                     results = [];
                     vals = [];
-                    if (resObj.background.charts && resObj.background.charts.length != 0) {
+                    if (resObj.background.charts && resObj.background.charts.die.length != 0) {
                         sql = 'INSERT INTO adm_core_chart';
                         sql += ' ("title")';
                         sql += ' VALUES';
                         var first = 1;
-                        for (var w = 0; w < resObj.background.charts.length; w ++) {
+                        for (var w = 0; w < resObj.background.charts.die.length; w ++) {
                             sql += '($' + first.toString() + ')';
-                            if (w < resObj.background.charts.length - 1) {
+                            if (w < resObj.background.charts.die.length - 1) {
                                 sql += ', ';
                             }
                             //vals.push(resObj.background.charts[w].dieRoll.id);
@@ -710,7 +710,7 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var i = 0; i < results.length; i++) {
-                                for (var j = 0; j < resObj.background.charts.length; j++) {
+                                for (var j = 0; j < resObj.background.charts.die.length; j++) {
                                     if (results[i].title == resObj.background.charts[j].title) {
                                         resObj.background.charts[j].id = results[i].chartId;
                                     }
@@ -726,13 +726,13 @@ module.exports = function(app, pg, async, pool) {
                     console.log("15a");
                     results = [];
                     vals = [];
-                    if (resObj.background.charts && resObj.background.charts.length != 0) {
+                    if (resObj.background.charts && resObj.background.charts.die.length != 0) {
                         sql = 'INSERT INTO adm_def_chart_dice';
                         sql += ' ("chartId", "diceId")';
                         sql += ' VALUES ';
                         first = 1;
                         second = 2;
-                        for (var e = 0; e < resObj.background.charts.length; e++) {
+                        for (var e = 0; e < resObj.background.charts.die.length; e++) {
                             if (e != 0) {
                                 sql += ', ';
                             }
@@ -749,7 +749,7 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var i = 0; i < results.length; i++) {
-                                for (var j = 0; j < resObj.background.charts.length; j++) {
+                                for (var j = 0; j < resObj.background.charts.die.length; j++) {
                                     if (results[i].title == resObj.background.charts[j].title) {
                                         resObj.background.charts[j].id = results[i].chartId;
                                     }
@@ -765,7 +765,7 @@ module.exports = function(app, pg, async, pool) {
                     console.log("16");
                     results = [];
                     vals = [];
-                    if (resObj.background.charts && resObj.background.charts.length != 0) {
+                    if (resObj.background.charts && resObj.background.charts.die.length != 0) {
                         sql = 'INSERT INTO adm_def_chart_dice_entry';
                         sql += ' ("chartId", "minimum", "maximum", "description")';
                         sql += ' VALUES';
@@ -774,7 +774,7 @@ module.exports = function(app, pg, async, pool) {
                         var third = 3;
                         var fourth = 4;
                         var addComma = false;
-                        for (var i = 0; i < resObj.background.charts.length; i++) {
+                        for (var i = 0; i < resObj.background.charts.die.length; i++) {
                             for (var j = 0; j < resObj.background.charts[i].entries.length; j++) {
                                 if (addComma) {
                                     sql += ', ';
@@ -807,14 +807,14 @@ module.exports = function(app, pg, async, pool) {
                     console.log("17");
                     results = [];
                     vals = [];
-                    if (resObj.background.charts && resObj.background.charts.length != 0) {
+                    if (resObj.background.charts && resObj.background.charts.die.length != 0) {
                         sql = 'INSERT INTO adm_link_chart';
                         sql += ' ("referenceId", "chartId", "orderIndex")';
                         sql += ' VALUES ';
                         var first = 1;
                         var second = 2;
                         var third = 3;
-                        for (var e = 0; e < resObj.background.charts.length; e++) {
+                        for (var e = 0; e < resObj.background.charts.die.length; e++) {
                             if (e != 0) {
                                 sql += ', ';
                             }
@@ -991,68 +991,7 @@ module.exports = function(app, pg, async, pool) {
             sql += '      				, case when cntunit."itemCount" IS NULL then 1 else cntunit."itemCount" end AS "count"';
             sql += '      				, case when cntunit."unitName" IS NULL then \'\' else cntunit."unitName" end AS "unit") x)) end AS "assignedEquipment"';
             sql += '    ';
-            sql += '   , (SELECT r.charts';
-            sql += '    FROM (';
-            sql += '        SELECT ';
-            sql += '            json_agg(chart_row) AS charts,';
-            sql += '        	d.id';
-            sql += '        FROM adm_core_item d';
-            sql += '        INNER JOIN adm_link_chart dc ON (dc."referenceId" = d.id)';
-            sql += '        INNER JOIN (';
-            sql += '            SELECT  ';
-            sql += '                c.id,       ';
-            sql += '                c.title,';
-            sql += '            	cd.description,';
-            sql += '            	bgcht."orderIndex",';
-            sql += '                json_agg(cm) AS entries';
-            sql += '                , json_build_object(';
-            sql += '                    \'dieCount\', dice."dieCount", ';
-            sql += '                    \'dieType\', dice."dieType",';
-            sql += '                    \'rendered\', CASE WHEN dice."dieType" = 1 ';
-            sql += '                    THEN dice."dieCount"::text';
-            sql += '                    ELSE dice."dieCount"::text || \'d\' || dice."dieType"::text';
-            sql += '                    END';
-            sql += '                ) AS "dieRoll"';
-            sql += '            FROM adm_core_chart c';
-            sql += '            INNER JOIN adm_link_chart bgcht ON bgcht."chartId" = c.id';
-            sql += '            INNER JOIN adm_def_chart_dice_entry cm ON (cm."chartId" = c.id) ';
-            sql += '            INNER JOIN adm_def_chart_dice chdice ON chdice."chartId" = c.id';
-            sql += '            INNER JOIN adm_core_dice dice ON dice.id = chdice."diceId"';
-            sql += '            LEFT OUTER JOIN adm_core_description cd ON cd."itemId" = c.id';
-            sql += '            GROUP BY c.id, dice."dieType", dice."dieCount", bgcht."orderIndex", cd.description';
-            sql += '            ORDER BY bgcht."orderIndex"';
-            sql += '        ) chart_row ON (chart_row.id = dc."chartId")';
-            sql += '        GROUP BY d.id';
-            sql += '    ) r(charts, id) WHERE id = i.id) AS charts';
-            /*sql += '   , (SELECT r.variants';
-            sql += '    FROM (';
-            sql += '        SELECT ';
-            sql += '            json_agg(variant_row) AS variants,';
-            sql += '        	dc."backgroundId" AS id';
-            sql += '        FROM adm_core_item d';
-            sql += '        INNER JOIN adm_def_background_variant dc ON (dc."backgroundId" = d.id)';
-            sql += '        INNER JOIN (';
-            sql += '            SELECT  ';
-            sql += '                c.id,       ';
-            sql += '                c."itemName" as name';
-            sql += '                , json_build_object(';
-            sql += '                    \'id\', feature."id", ';
-            sql += '                    \'name\', feature."itemName",';
-            sql += '                    \'description\', featuredesc.description';
-            sql += '                ) AS "feature"';
-            sql += '            	, json_build_object(';
-            sql += '                    	\'id\', varres."id",';
-            sql += '                    	\'name\', varres."itemName"';
-            sql += '                    ) AS "resource"';
-            sql += '            FROM adm_core_item c';
-            sql += '            INNER JOIN adm_def_background_variant bgcht ON bgcht."variantBackgroundId" = c.id';
-            sql += '            INNER JOIN adm_core_item feature ON (feature."id" = bgcht."featureId") ';
-            sql += '            INNER JOIN adm_core_description featuredesc ON featuredesc."itemId" = bgcht."featureId"';
-            sql += '            INNER JOIN adm_core_item varres ON varres.id = c."resourceId"';
-            sql += '            GROUP BY c.id, feature."id", feature."itemName", featuredesc.description, varres."id"';
-            sql += '        ) variant_row ON (variant_row.id = dc."variantBackgroundId")';
-            sql += '        GROUP BY dc."backgroundId"';
-            sql += '    ) r(variants, id) WHERE id = i.id) AS variants';*/
+            sql += ', (SELECT construct_chart_object_arrays(i.id)) AS charts';
             sql += '    , (SELECT r.proficiencies';
             sql += '    	FROM (';
             sql += '    		SELECT ';
@@ -1123,12 +1062,12 @@ module.exports = function(app, pg, async, pool) {
             query.on('end', function() {
                 done();
                 for (var t = 0; t < results.length; t++) {
-                    if (results[t].charts && results[t].charts.length != 0) {
-                        results[t].charts = results[t].charts.sort(function (a, b) {
+                    if (results[t].charts && results[t].charts.die && results[t].charts.die.length != 0) {
+                        results[t].charts.die = results[t].charts.die.sort(function (a, b) {
                             return a.orderIndex - b.orderIndex;
-                        })
-                        for (var x = 0; x < results[t].charts.length; x++) {
-                            results[t].charts[x].entries = results[t].charts[x].entries.sort(function (a, b) {
+                        });
+                        for (var x = 0; x < results[t].charts.die.length; x++) {
+                            results[t].charts.die[x].entries = results[t].charts.die[x].entries.sort(function (a, b) {
                                 return a.minimum - b.minimum;
                             });
                         }

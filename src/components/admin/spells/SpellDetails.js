@@ -59,7 +59,7 @@ class SpellDetails extends React.Component {
                 <div><strong>Components: </strong>{util.format.forDisplay.obj.spellComponents(spell)}</div>
                 <div><strong>Duration: </strong>{spell.duration.name}</div>
                 <div>&nbsp;</div>
-                <div><p>{spell.description}</p></div>
+                <div dangerouslySetInnerHTML={{ __html: spell.description }}/>
                 {this.renderSupplementalDescriptions()}
                 {this.renderAtHighestLevel()}
                 {this.renderCharts()}

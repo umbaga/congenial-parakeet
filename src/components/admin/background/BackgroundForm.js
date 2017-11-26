@@ -162,7 +162,7 @@ class BackgroundForm extends React.Component {
                         <Tab eventKey={5} title="Charts">
                             <div>&nbsp;</div>
                             <DndManageDieCharts
-                                charts={this.props.background.charts}
+                                charts={this.props.background.charts.die}
                                 chart={this.props.chart}
                                 onAddChart={this.props.onAddChart}
                                 onChange={this.props.onChange}
