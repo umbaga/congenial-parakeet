@@ -21,7 +21,9 @@ class SpellEntry extends React.Component {
             saving: false,
             newMechanic: Object.assign({}, util.objectModel.MECHANIC),
             editChart: Object.assign({}, util.objectModel.CHART),
-            editDescription: Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION)
+            editDescription: Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION),
+            selectedChartTypeId: 0,
+            editDieChart: Object.assign({}, util.objectModel.DIE_CHART)
         };
         this.cancelSpell = this.cancelSpell.bind(this);
         this.deleteSpell = this.deleteSpell.bind(this);
@@ -56,6 +58,9 @@ class SpellEntry extends React.Component {
         this.onCreateDescription = this.onCreateDescription.bind(this);
         this.onChangeDescriptions = this.onChangeDescriptions.bind(this);
         this.onChangeDescriptionOrder = this.onChangeDescriptionOrder.bind(this);
+        this.onChangeChartType = this.onChangeChartType.bind(this);
+        this.onDieChartExpand = this.onDieChartExpand.bind(this);
+        this.onDieChartRemoveEntry = this.onDieChartRemoveEntry.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -93,6 +98,7 @@ class SpellEntry extends React.Component {
         blankSpell.savingThrow = {
             abilityScore: {id: 0, name: ''}
         };
+        blankSpell.charts = {die: [], standard: []};
         console.log(blankSpell);
         this.setState({spell: blankSpell});
     }
@@ -228,81 +234,214 @@ class SpellEntry extends React.Component {
     
     onChangeChart(event) {
         let chart = null;
-        if (event.target.type !== undefined) {
-            chart = util.common.updateFormState(event, this.state.editChart, this.props.picklists);
-            let newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
-            let newRow = Object.assign({}, util.objectModel.CHART_ROW);
-            switch (event.target.name) {
-                case 'columnCount':
-                    for (let c = 0; c < event.target.value; c++) {
-                        if (c > chart.columns.length - 1) {
-                            newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
-                            newColumn.id = (c + 1) * -1;
-                            newColumn.columnIndex = c + 1;
-                            chart.columns.push(newColumn);
+        if (this.state.selectedChartId == util.itemTypes.CHARTS.STANDARD) {
+            
+        ///switch (this.state.selectedChartId) {
+            //case util.itemTypes.CHARTS.STANDARD:
+            if (event.target.type !== undefined) {
+                chart = util.common.updateFormState(event, this.state.editChart, this.props.picklists);
+                let newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
+                let newRow = Object.assign({}, util.objectModel.CHART_ROW);
+                switch (event.target.name) {
+                    case 'columnCount':
+                        for (let c = 0; c < event.target.value; c++) {
+                            if (c > chart.columns.length - 1) {
+                                newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
+                                newColumn.id = (c + 1) * -1;
+                                newColumn.columnIndex = c + 1;
+                                chart.columns.push(newColumn);
+                            }
+                        }
+                        if (chart.columns.length > event.target.value) {
+                            chart.columns.splice(event.target.value);
+                        }
+                        break;
+                    case 'rowCount':
+                        for (let r = 0; r < event.target.value; r++) {
+                            if (r > chart.rows.length - 1) {
+                                newRow = Object.assign({}, util.objectModel.CHART_ROW);
+                                newRow.id = (r + 1) * -1;
+                                newRow.rowIndex = r + 1;
+                                chart.rows.push(newRow);
+                            }
+                        }
+                        if (chart.rows.length > event.target.value) {
+                            chart.rows.splice(event.target.value);
+                        }
+                        break;
+                    default:
+                }
+                //add new chart.entries
+                let newEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
+                let newEntryId = 0;
+                for (let c = 0; c < chart.columnCount; c++) {
+                    for (let r = 0; r < chart.rowCount; r++) {
+                        //newEntryId = -1 * ((c * (chart.rowCount)) + r + 1);
+                        newEntryId = -1 * (chart.entries.length + 1);
+                        let entryExists = false;
+                        for (let e = 0; e < chart.entries.length; e++) {
+                            if (chart.entries[e].columnIndex == c && chart.entries[e].rowIndex == r) {
+                                entryExists = true;
+                            }
+                        }
+                        if (!entryExists) {
+                            newEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
+                            newEntry.id = newEntryId;
+                            newEntry.columnIndex = c;
+                            newEntry.rowIndex = r;
+                            chart.entries.push(newEntry);
                         }
                     }
-                    if (chart.columns.length > event.target.value) {
-                        chart.columns.splice(event.target.value);
+                }
+                //remove unneeded entries
+                for (let e = 0; e < chart.entries.length; e++) {
+                    if (chart.columnCount <= chart.entries[e].columnIndex || chart.rowCount <= chart.entries[e].rowIndex) {
+                        chart.entries.splice(e, 1);
+                        e--;
+                    }
+                }
+            } else {
+                chart = this.state.editChart;
+                let recordType = event.target.id.split('_')[1];
+                let recordId = parseInt(event.target.id.split('_')[0]);
+                let recordField = event.target.id.split('_')[2];
+                let recordValue = event.target.innerHTML;
+                for (let q = 0; q < chart[recordType].length; q++) {
+                    if (recordId == chart[recordType][q].id) {
+                        chart[recordType][q][recordField] = recordValue;
+                    }
+                }
+            }
+            this.setState({editChart: chart});
+        } else if (this.state.selectedChartId == util.itemTypes.CHARTS.DIE_ROLL) {
+
+            //break;
+        //case util.itemTypes.CHARTS.DIE_ROLL:
+            const chart = this.state.chart;
+            let field = event.target.name;
+            let dataType = event.target.getAttribute('dataType');
+            let newRenderedValue = '';
+            let newDiceRollValue = {};
+            let newEntry = null;
+            let changedEntryId = null;
+            let changedEntryIndex = -1;
+            let higherIndexedEntryExists = false;
+            let removeEntryCount = 0;
+            let removeEntryIndex = -1;
+            let finalEntryIndex = -1;
+            let referenceEntry = {};
+            let chartMaximumValue = 0;
+            switch (dataType) {
+                case util.dataTypes.string.STRING:
+                case util.dataTypes.string.DESCRIPTION:
+                    chart[field] = event.target.value;
+                    break;
+                case util.dataTypes.special.DICE_ROLL:
+                    newRenderedValue = '';
+                    if (event.target.value && event.target.value.length != 0) {
+                        for (let y = 0; y < event.target.value.length; y++) {
+                            if (event.target.value.charAt(y) == '1' || event.target.value.charAt(y) == '2' ||
+                               event.target.value.charAt(y) == '3' || event.target.value.charAt(y) == '4' ||
+                               event.target.value.charAt(y) == '5' || event.target.value.charAt(y) == '6' ||
+                               event.target.value.charAt(y) == '7' || event.target.value.charAt(y) == '8' ||
+                               event.target.value.charAt(y) == '9' || event.target.value.charAt(y) == '0' ||
+                               event.target.value.charAt(y) == 'd' || event.target.value.charAt(y) == 'D') {
+                                newRenderedValue += event.target.value.charAt(y);
+                            }
+                        }
+                    }
+                    if (util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL, [0, 1])) {
+                        newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
+                        newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
+                        chart[field] = newDiceRollValue;
+                        if (chart.entries.length == 0) {
+                            newEntry = Object.assign({}, util.objectModel.DIE_CHART_ENTRY);
+                            newEntry.minimum = newDiceRollValue.dieCount;
+                            newEntry.maximum = newDiceRollValue.dieCount * newDiceRollValue.dieType;
+                            chart.entries.push(newEntry);
+                        } else if (chart.entries.length != 0 && chart.entries[0].maximum == 0) {
+                            chart.entries[0].minimum = newDiceRollValue.dieCount;
+                            chart.entries[0].maximum = newDiceRollValue.dieCount * newDiceRollValue.dieType;
+                        }
+                    }
+                    chart[field].rendered = newRenderedValue;
+                    break;
+                case util.dataTypes.special.DIE_CHART_ENTRY_DIE_ROLL_RANGE:
+                    changedEntryId = parseInt(field.split('_')[0]);
+                    //get index of changed entry
+                    chartMaximumValue = chart.dieRoll.dieCount * chart.dieRoll.dieType;
+                    for (let x = 0; x < chart.entries.length; x++) {
+                        if (chart.entries[x].id == changedEntryId) {
+                            changedEntryIndex = x;
+                            break;
+                        }
+                    }
+                    //change maximum value of changedEntry
+                    chart.entries[changedEntryIndex].maximum = parseInt(event.target.options[event.target.selectedIndex].value);
+                    //check for existence of higher valued entry
+                    if (changedEntryIndex < chart.entries.length - 1) {
+                        higherIndexedEntryExists = true;
+                    }
+                    if (higherIndexedEntryExists) {
+                        //if exists, change minimum value of next record
+                        chart.entries[changedEntryIndex + 1].minimum = parseInt(event.target.options[event.target.selectedIndex].value) + 1;
+                        if (chart.entries[changedEntryIndex + 1].maximum < chart.entries[changedEntryIndex + 1].minimum) {
+                            chart.entries[changedEntryIndex + 1].maximum = chart.entries[changedEntryIndex + 1].minimum;
+                        }
+                        //remove entries with a minimum and maximum < current maximum
+                        for (let p = changedEntryIndex + 1; p < chart.entries.length; p++) {
+                            if (chart.entries[p].minimum <= parseInt(event.target.options[event.target.selectedIndex].value) && chart.entries[p].maximum <= parseInt(event.target.options[event.target.selectedIndex].value)) {
+                                if (removeEntryIndex == -1) {
+                                    removeEntryIndex = p;
+                                }
+                                removeEntryCount++;
+                            }
+                            if (finalEntryIndex == -1 && chart.entries[p].maximum == chartMaximumValue) {
+                                finalEntryIndex = p;
+                            }
+                        }
+                        chart.entries.splice(removeEntryIndex, removeEntryCount);
+                        chart.entries.splice(finalEntryIndex + 1, chart.entries.length - 1);
+                        //final check on chart entry
+                        for (let h = 0; h < chart.entries.length; h++) {
+                            if (referenceEntry.minimum) {
+                                if (chart.entries[h].maximum >= referenceEntry.maximum) {
+                                    chart.entries[h].minimum = referenceEntry.maximum + 1;
+                                    chart.entries[h].maximum = referenceEntry.maximum + 1;
+                                    if (h == chart.entries.length - 1) {
+                                        chart.entries[h].maximum = chartMaximumValue;
+                                    }
+                                }
+                            }
+                            referenceEntry.minimum = chart.entries[h].minimum;
+                            referenceEntry.maximum = chart.entries[h].maximum;
+                        }
+
+                    } else {
+                        //if not exists, create new entry
+                        newEntry = Object.assign({}, util.objectModel.DIE_CHART_ENTRY);
+                        newEntry.id = -1 * chart.entries.length;
+                        newEntry.minimum = parseInt(event.target.options[event.target.selectedIndex].value) + 1;
+                        newEntry.maximum = chartMaximumValue;//chart.dieRoll.dieCount * chart.dieRoll.dieType;
+                        chart.entries.push(newEntry);
                     }
                     break;
-                case 'rowCount':
-                    for (let r = 0; r < event.target.value; r++) {
-                        if (r > chart.rows.length - 1) {
-                            newRow = Object.assign({}, util.objectModel.CHART_ROW);
-                            newRow.id = (r + 1) * -1;
-                            newRow.rowIndex = r + 1;
-                            chart.rows.push(newRow);
+                case util.dataTypes.special.DIE_CHART_ENTRY_DESCRIPTION:
+                    changedEntryId = parseInt(field.split('_')[0]);
+                    for (let x = 0; x < chart.entries.length; x++) {
+                        if (chart.entries[x].id == changedEntryId) {
+                            changedEntryIndex = x;
+                            break;
                         }
                     }
-                    if (chart.rows.length > event.target.value) {
-                        chart.rows.splice(event.target.value);
-                    }
+                    chart.entries[changedEntryIndex].description = event.target.value;
                     break;
                 default:
             }
-            //add new chart.entries
-            let newEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
-            let newEntryId = 0;
-            for (let c = 0; c < chart.columnCount; c++) {
-                for (let r = 0; r < chart.rowCount; r++) {
-                    //newEntryId = -1 * ((c * (chart.rowCount)) + r + 1);
-                    newEntryId = -1 * (chart.entries.length + 1);
-                    let entryExists = false;
-                    for (let e = 0; e < chart.entries.length; e++) {
-                        if (chart.entries[e].columnIndex == c && chart.entries[e].rowIndex == r) {
-                            entryExists = true;
-                        }
-                    }
-                    if (!entryExists) {
-                        newEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
-                        newEntry.id = newEntryId;
-                        newEntry.columnIndex = c;
-                        newEntry.rowIndex = r;
-                        chart.entries.push(newEntry);
-                    }
-                }
-            }
-            //remove unneeded entries
-            for (let e = 0; e < chart.entries.length; e++) {
-                if (chart.columnCount <= chart.entries[e].columnIndex || chart.rowCount <= chart.entries[e].rowIndex) {
-                    chart.entries.splice(e, 1);
-                    e--;
-                }
-            }
-        } else {
-            chart = this.state.editChart;
-            let recordType = event.target.id.split('_')[1];
-            let recordId = parseInt(event.target.id.split('_')[0]);
-            let recordField = event.target.id.split('_')[2];
-            let recordValue = event.target.innerHTML;
-            for (let q = 0; q < chart[recordType].length; q++) {
-                if (recordId == chart[recordType][q].id) {
-                    chart[recordType][q][recordField] = recordValue;
-                }
-            }
+            this.setState({editDieChart: chart});
+                //break;
+            //default:
         }
-        this.setState({editChart: chart});
     }
     
     onChangeChartOrder(chart, isUp) {
@@ -468,6 +607,42 @@ class SpellEntry extends React.Component {
         }
     }
     
+    onChangeChartType(event) {
+        this.setState({selectedChartTypeId: parseInt(event.target.value)});
+        
+    }
+    onDieChartExpand() {
+        const chart = util.common.expandChart(this.state.dieChart);
+        this.setState({editDieChart: chart});
+    }
+    onDieChartRemoveEntry(entry) {
+        const chart = this.state.dieChart;
+        let removeIndex = -1;
+        let refMin = entry.minimum;
+        let refId = entry.id;
+        for (let r = 0; r < chart.entries.length; r++) {
+            if (entry.id == chart.entries[r].id) {
+                removeIndex = r;
+                refMin = chart.entries[r].minimum;
+            }
+        }
+        let isFirst = removeIndex == 0;
+        let isLast = removeIndex == chart.entries.length - 1;
+        if (removeIndex != -1) {
+            chart.entries.splice(removeIndex, 1);
+            if (isFirst) {
+                chart.entries[0].minimum = chart.dieRoll.dieCount;
+                chart.entries[0].id = refId;
+            } else if (isLast) {
+                chart.entries[chart.entries.length - 1].maximum = chart.dieRoll.dieCount * chart.dieRoll.dieType;
+                chart.entries[chart.entries.length - 1].id = refId;
+            } else {
+                chart.entries[removeIndex].minimum = refMin;
+                chart.entries[removeIndex].id = refId;
+            }
+        }
+        this.setState({editDieChart: chart});
+    }
     render() {
         const spell = this.state.spell;
         const contents = this.props.canEdit ? (
@@ -506,6 +681,11 @@ class SpellEntry extends React.Component {
                 onRemoveDescription={this.onRemoveDescription}
                 onSelectDescription={this.onSelectDescription}
                 onResetDescription={this.onResetDescription}
+                onChangeChartType={this.onChangeChartType}
+                selectedChartTypeId={this.state.selectedChartTypeId}
+                dieChart={this.state.editDieChart}
+                onDieChartExpand={this.onDieChartExpand}
+                onDieChartRemoveEntry={this.onDieChartRemoveEntry}
                 />
         ) : (
             <SpellDetails

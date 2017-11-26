@@ -20,7 +20,7 @@ export const BACKGROUND = {
     id: 0,
     name: '',
     assignedEquipment: [],
-    charts: [],
+    charts:  {die: [], standard: []},
     feature: {
         id: 0,
         name: '',
@@ -214,7 +214,7 @@ export const SPELL = {
     atHigherLevels: '',
     description: '',
     castingTime: {id: 0, name: ''},
-    charts: [],
+    charts: {die: [], standard: []},
     components: [],
     damage: {
         dice: {id: 0, dieCount: 0, dieType: 0, rendered: ''},

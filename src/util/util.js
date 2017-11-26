@@ -6,6 +6,7 @@ import * as picklistInfo from './picklistInfo';
 import * as itemTypeDefinition from './itemTypeDefinition';
 import unicode from './unicode';
 import * as common from './commonFunctions';
+//import * as hardCodedPicklists from './hardCodedPicklists';
 
 let util = {};
 util.objectModel = objectModel;
@@ -15,6 +16,7 @@ format.forDb = forDb;
 util.format = format;
 util.dataTypes = dataTypes;
 util.picklists = picklistInfo;
+//util.picklists.hardCodedPicklists = hardCodedPicklists;
 util.unicode = unicode;
 util.common = common;
 util.itemTypes = itemTypeDefinition;

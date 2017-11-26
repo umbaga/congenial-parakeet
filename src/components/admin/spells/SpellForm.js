@@ -9,11 +9,13 @@ import { Tabs, Tab } from 'react-bootstrap';
 import DndManageMechanics from '../../common/objectManagement/DndManageMechanics';
 import DndManageCharts from '../../common/objectManagement/DndManageCharts';
 import DndManageSupplementalDescriptions from '../../common/objectManagement/DndManageSupplementalDescriptions';
+import DndManageDieCharts from '../../common/objectManagement/DndManageDieCharts';
 
 class SpellForm extends React.Component {
     constructor(props) {
         super(props);
         this.setFocus = this.setFocus.bind(this);
+        this.renderChartControl = this.renderChartControl.bind(this);
     }
     
     componentDidMount() {
@@ -24,8 +26,51 @@ class SpellForm extends React.Component {
         this.refs.name.setFocus();
     }
     
+    renderChartControl(spell) {
+        console.log(spell);
+        switch (this.props.selectedChartTypeId) {
+            case util.itemTypes.CHARTS.STANDARD:
+                return (
+                    <DndManageCharts
+                        charts={spell.charts.standard}
+                        chart={this.props.chart}
+                        onChange={this.props.onChangeChart}
+                        onChangeChartOrder={this.props.onChangeChartOrder}
+                        onAddChart={this.props.onAddChart}
+                        onAddColumn={this.props.onAddChartColumn}
+                        onAddRow={this.props.onAddChartRow}
+                        onCreateChart={this.props.onCreateChart}
+                        onRemoveChart={this.props.onRemoveChart}
+                        onRemoveColumn={this.props.onRemoveChartColumn}
+                        onRemoveRow={this.props.onRemoveChartRow}
+                        onSelectChart={this.props.onSelectChart}
+                        onResetChart={this.props.onResetChart}
+                        />
+                );
+            case util.itemTypes.CHARTS.DIE_ROLL:
+                return (
+                    <DndManageDieCharts
+                        charts={spell.charts.die}
+                        chart={this.props.dieChart}
+                        onAddChart={this.props.onAddChart}
+                        onChange={this.props.onChange}
+                        onChangeChart={this.props.onChangeChart}
+                        onRemoveChart={this.props.onRemoveChart}
+                        onResetChart={this.props.onResetChart}
+                        onSelectChart={this.props.onSelectChart}
+                        onRemoveEntry={this.props.onDieChartRemoveEntry}
+                        onChangeChartOrder={this.props.onChangeChartOrder}
+                        onClickExpand={this.props.onDieChartExpand}
+                        />
+                );
+            default:
+                return null;
+        }
+    }
+    
     render() {
         const spell = this.props.spell;
+        console.log(this.props.picklists);
         const castingTimes = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_CASTING_TIME);
         const components = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_COMPONENT);
         const durations = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_DURATION);
@@ -33,6 +78,10 @@ class SpellForm extends React.Component {
         const schools = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC);
         const damageTypes = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE);
         const abilityScores = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE);
+        const chartTypes = [
+            {id: util.itemTypes.CHARTS.STANDARD, name: 'Standard'},
+            {id: util.itemTypes.CHARTS.DIE_ROLL, name: 'Die Roll'}
+        ];
         return (
             <div>
                 <form>
@@ -168,21 +217,15 @@ class SpellForm extends React.Component {
                         </Tab>
                         <Tab eventKey={4} title="Charts">
                             <div>&nbsp;</div>
-                            <DndManageCharts
-                                charts={spell.charts.standard}
-                                chart={this.props.chart}
-                                onChange={this.props.onChangeChart}
-                                onChangeChartOrder={this.props.onChangeChartOrder}
-                                onAddChart={this.props.onAddChart}
-                                onAddColumn={this.props.onAddChartColumn}
-                                onAddRow={this.props.onAddChartRow}
-                                onCreateChart={this.props.onCreateChart}
-                                onRemoveChart={this.props.onRemoveChart}
-                                onRemoveColumn={this.props.onRemoveChartColumn}
-                                onRemoveRow={this.props.onRemoveChartRow}
-                                onSelectChart={this.props.onSelectChart}
-                                onResetChart={this.props.onResetChart}
+                            <DndInput
+                                name="chartType"
+                                label="Chart Type"
+                                dataType={util.dataTypes.picklist.CHART_TYPE}
+                                valueObj={{id: this.props.selectedChartTypeId}}
+                                onChange={this.props.onChangeChartType}
+                                picklist={chartTypes}
                                 />
+                            {this.renderChartControl(spell)}
                         </Tab>
                         <Tab eventKey={5} title="Descriptions">
                             <div>&nbsp;</div>
@@ -240,7 +283,12 @@ SpellForm.propTypes = {
     onCreateDescription: PropTypes.func.isRequired,
     onRemoveDescription: PropTypes.func.isRequired,
     onSelectDescription: PropTypes.func.isRequired,
-    onResetDescription: PropTypes.func.isRequired
+    onResetDescription: PropTypes.func.isRequired,
+    onChangeChartType: PropTypes.func.isRequired,
+    selectedChartTypeId: PropTypes.number.isRequired,
+    dieChart: PropTypes.object.isRequired,
+    onDieChartExpand: PropTypes.func.isRequired,
+    onDieChartRemoveEntry: PropTypes.func.isRequired
 };
 
 export default SpellForm;
