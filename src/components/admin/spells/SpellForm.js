@@ -27,7 +27,6 @@ class SpellForm extends React.Component {
     }
     
     renderChartControl(spell) {
-        console.log(spell);
         switch (this.props.selectedChartTypeId) {
             case util.itemTypes.CHARTS.STANDARD:
                 return (
@@ -70,7 +69,6 @@ class SpellForm extends React.Component {
     
     render() {
         const spell = this.props.spell;
-        console.log(this.props.picklists);
         const castingTimes = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_CASTING_TIME);
         const components = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_COMPONENT);
         const durations = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_DURATION);

@@ -99,7 +99,6 @@ class SpellEntry extends React.Component {
             abilityScore: {id: 0, name: ''}
         };
         blankSpell.charts = {die: [], standard: []};
-        console.log(blankSpell);
         this.setState({spell: blankSpell});
     }
     
@@ -234,10 +233,7 @@ class SpellEntry extends React.Component {
     
     onChangeChart(event) {
         let chart = null;
-        if (this.state.selectedChartId == util.itemTypes.CHARTS.STANDARD) {
-            
-        ///switch (this.state.selectedChartId) {
-            //case util.itemTypes.CHARTS.STANDARD:
+        if (this.state.selectedChartTypeId == util.itemTypes.CHARTS.STANDARD) {
             if (event.target.type !== undefined) {
                 chart = util.common.updateFormState(event, this.state.editChart, this.props.picklists);
                 let newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
@@ -313,11 +309,8 @@ class SpellEntry extends React.Component {
                 }
             }
             this.setState({editChart: chart});
-        } else if (this.state.selectedChartId == util.itemTypes.CHARTS.DIE_ROLL) {
-
-            //break;
-        //case util.itemTypes.CHARTS.DIE_ROLL:
-            const chart = this.state.chart;
+        } else if (this.state.selectedChartTypeId == util.itemTypes.CHARTS.DIE_ROLL) {
+            const chart = this.state.editDieChart;
             let field = event.target.name;
             let dataType = event.target.getAttribute('dataType');
             let newRenderedValue = '';
@@ -439,8 +432,6 @@ class SpellEntry extends React.Component {
                 default:
             }
             this.setState({editDieChart: chart});
-                //break;
-            //default:
         }
     }
     
@@ -480,18 +471,42 @@ class SpellEntry extends React.Component {
     
     onAddChart() {
         const spell = this.state.spell;
-        const chart = this.state.editChart;
-        chart.orderIndex = spell.charts.length;
-        spell.charts.push(chart);
+        let chart = this.state.editChart;
+        switch (this.state.selectedChartTypeId) {
+            case util.itemTypes.CHARTS.DIE_ROLL:
+                chart = this.state.editDieChart;
+                chart.orderIndex = spell.charts.die.length;
+                spell.charts.die.push(chart);
+                break;
+            case util.itemTypes.CHARTS.STANDARD:
+                chart = this.state.editChart;
+                chart.orderIndex = spell.charts.standard.length;
+                spell.charts.standard.push(chart);
+                break;
+            default:
+        }
         this.setState({spell: spell});
         this.onResetChart();
     }
     
     onRemoveChart(chart) {
         const spell = Object.assign({}, this.state.spell);
-        let removeIndex = util.picklists.getIndexById(spell.charts, chart.id);
-        if (removeIndex != -1) {
-            spell.charts.splice(removeIndex, 1);
+        let removeIndex = null;
+        
+        switch (this.state.selectedChartTypeId) {
+            case util.itemTypes.CHARTS.DIE_ROLL:
+                removeIndex = util.picklists.getIndexById(spell.charts.die, chart.id);
+                if (removeIndex != -1) {
+                    spell.charts.die.splice(removeIndex, 1);
+                }
+                break;
+            case util.itemTypes.CHARTS.STANDARD:
+                removeIndex = util.picklists.getIndexById(spell.charts.standard, chart.id);
+                if (removeIndex != -1) {
+                    spell.charts.standard.splice(removeIndex, 1);
+                }
+                break;
+            default:
         }
         this.setState({spell: spell});
     }

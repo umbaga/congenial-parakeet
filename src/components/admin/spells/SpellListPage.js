@@ -74,7 +74,6 @@ class SpellListPage extends React.Component {
     }
     render() {
         const spells = this.props.spells;
-        console.log(spells);
         const spellLevels = [
             {id: -1, name: 'All'},
             {id: 0, name: 'Cantrip'},

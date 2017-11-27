@@ -70,7 +70,7 @@ class BackgroundDetails extends React.Component {
                 {this.renderFeatureInfo(background.feature)}
                 {this.renderVariantInfo(background)}
                 {
-                    background.charts.map(chart =>
+                    background.charts.die.map(chart =>
                                           <DndDieChartDisplay
                                               key={chart.id}
                                               chart={chart}

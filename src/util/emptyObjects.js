@@ -20,7 +20,7 @@ export const BACKGROUND = {
     id: 0,
     name: '',
     assignedEquipment: [],
-    charts:  {die: [], standard: []},
+    charts: {die: [], standard: []},
     feature: {
         id: 0,
         name: '',

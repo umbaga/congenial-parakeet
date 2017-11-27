@@ -159,14 +159,23 @@ module.exports = function(app, pg, async, pool) {
                     }
                 }
                 row.items = row.items.sort(function(a, b) {
-                    if(a.name < b.name) return -1;
-                    if(a.name > b.name) return 1;
+                    if (a.name < b.name) return -1;
+                    if (a.name > b.name) return 1;
                     return 0;
                 });
                 results.push(row);
             });
             query.on('end', function() {
                 done();
+                for (var r = 0; r < results.length; r++) {
+                    if (results[r].id == 72) {
+                        results[r].items = results[r].items.sort(function (a, b) {
+                            if (a.name < b.name) return 1;
+                            if (a.name > b.name) return -1;
+                            return 0;
+                        });
+                    }
+                }
                 return res.json(results);
             });
         });

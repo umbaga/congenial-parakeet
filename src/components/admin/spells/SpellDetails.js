@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import util from '../../../util/util';
 import DndChartDisplay from '../../common/display/DndChartDisplay';
+import DndDieChartDisplay from '../../common/display/DndDieChartDisplay';
 
 class SpellDetails extends React.Component {
     constructor(props) {
@@ -9,6 +10,7 @@ class SpellDetails extends React.Component {
         this.renderAtHighestLevel = this.renderAtHighestLevel.bind(this);
         this.renderCharts = this.renderCharts.bind(this);
         this.renderSupplementalDescriptions = this.renderSupplementalDescriptions.bind(this);
+        this.renderDieCharts = this.renderDieCharts.bind(this);
     }
     
     componentDidMount() {
@@ -16,15 +18,34 @@ class SpellDetails extends React.Component {
     }
     renderAtHighestLevel() {
         return this.props.spell.atHigherLevels && this.props.spell.atHigherLevels.length != 0 ? (
-            <div><strong>At Higher Levels: </strong>{this.props.spell.atHigherLevels}</div>
+            <div>
+                <strong>At Higher Levels: </strong>
+                <div dangerouslySetInnerHTML={{ __html: this.props.spell.atHigherLevels }}/>
+            </div>
         ) : null;
     }
     renderCharts() {
-        if (this.props.spell.charts && this.props.spell.charts.length != 0) {
+        if (this.props.spell.charts && this.props.spell.charts.standard && this.props.spell.charts.standard.length != 0) {
             return (
                 <div>
-                    {this.props.spell.charts.map(chart =>
+                    {this.props.spell.charts.standard.map(chart =>
                         <DndChartDisplay
+                            key={chart.id}
+                            chart={chart}
+                            />
+                    )}
+                </div>
+            );
+        } else {
+            return null;
+        }
+    }
+    renderDieCharts() {
+        if (this.props.spell.charts && this.props.spell.charts.die && this.props.spell.charts.die.length != 0) {
+            return (
+                <div>
+                    {this.props.spell.charts.die.map(chart =>
+                        <DndDieChartDisplay
                             key={chart.id}
                             chart={chart}
                             />
@@ -63,6 +84,7 @@ class SpellDetails extends React.Component {
                 {this.renderSupplementalDescriptions()}
                 {this.renderAtHighestLevel()}
                 {this.renderCharts()}
+                {this.renderDieCharts()}
             </div>
         );
     }
