@@ -14,7 +14,7 @@ class DndUniversalInput extends React.Component {
     }
     
     render() {
-        const resourcePicklist = this.props.picklists ? util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.RESOURCE) : null;
+        const resourcePicklist = this.props.picklists ? util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.RESOURCE) : null;
         const resourceLabel = this.props.labelPrefix && this.props.labelPrefix.length != 0 ? this.props.labelPrefix + ' Resource' : 'Resource';
         const nameLabel = this.props.labelPrefix && this.props.labelPrefix.length != 0 ? this.props.labelPrefix + ' Name' : 'Name';
         const descriptionLabel = this.props.labelPrefix && this.props.labelPrefix.length != 0 ? this.props.labelPrefix + ' Description' : 'Description';

@@ -23,7 +23,7 @@ class EquipmentForm extends React.Component {
     renderAmmunitionTypePicklist() {
         let ammunitionTypePicklistField = null;
         if (this.props.equipment.category.id == util.itemTypes.EQUIPMENT_CATEGORY.AMMUNTION) {
-            let ammunitionTypePicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.AMMUNITION_TYPE);
+            let ammunitionTypePicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.AMMUNITION_TYPE);
             ammunitionTypePicklistField = (
                     <div className="col-md-6">
                         <DndInput
@@ -41,7 +41,7 @@ class EquipmentForm extends React.Component {
     }
     
     renderImprovisedWeaponFields() {
-        let damageTypePicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE);
+        let damageTypePicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE);
         return this.props.hasImprovisedWeapon ? (
             <div>
                 <div className="col-md-4">
@@ -74,7 +74,7 @@ class EquipmentForm extends React.Component {
     }
     
     render() {
-        let categoryPicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.EQUIPMENT_CATEGORY);
+        let categoryPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.EQUIPMENT_CATEGORY);
         return (
             <div>
                 <form>

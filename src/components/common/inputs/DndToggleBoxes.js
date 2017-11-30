@@ -22,7 +22,7 @@ class DndToggleBoxes extends React.Component {
                         size={selectBoxSize}
                         datatype={this.props.dataType}
                         onDoubleClick={this.props.toggleAddItem}>
-                        {util.picklists.filterPicklistByAssigned(this.props.unselectedItemArray, this.props.selectedItemArray).map(picklistItem =>
+                        {util.common.picklists.filterPicklistByAssigned(this.props.unselectedItemArray, this.props.selectedItemArray).map(picklistItem =>
                                                                                                                     <option
                                                                                                                         key={picklistItem[idKey]}
                                                                                                                         value={picklistItem[idKey]}>

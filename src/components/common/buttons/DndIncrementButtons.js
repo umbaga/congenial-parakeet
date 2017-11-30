@@ -5,18 +5,11 @@ import { ButtonGroup, Button } from 'react-bootstrap';
 class DndIncrementButtons extends React.Component {
     constructor(props, context) {
         super(props, context);
-        
-        this._moveItemDown = this._moveItemDown.bind(this);
-        this._moveItemUp = this._moveItemUp.bind(this);
-        
+        this._moveItem = this._moveItem.bind(this);
     }
     
-    _moveItemDown() {
-        this.props.onMoveItem(this.props.item, false);
-    }
-    
-    _moveItemUp() {
-        this.props.onMoveItem(this.props.item, true);
+    _moveItem(event) {
+        this.props.onMoveItem(event, this.props.item, true);
     }
     
     render() {
@@ -26,10 +19,10 @@ class DndIncrementButtons extends React.Component {
         return (
             <div className={wrapperClass}>
                 <ButtonGroup className="btn-group-vertical">
-                    <Button bsStyle="default" onClick={this._moveItemUp} className="button-increment" disabled={upDisabled}>
+                    <Button bsStyle="default" onClick={this._moveItem} className="button-increment" disabled={upDisabled} datatype={this.props.moveItemUpAction}>
                         <i className="fa fa-caret-up"></i>
                     </Button>
-                    <Button bsStyle="default" onClick={this._moveItemDown} className="button-increment" disabled={downDisabled}>
+                    <Button bsStyle="default" onClick={this._moveItem} className="button-increment" disabled={downDisabled} datatype={this.props.moveItemDownAction}>
                         <i className="fa fa-caret-down"></i>
                     </Button>
                 </ButtonGroup>
@@ -43,7 +36,9 @@ DndIncrementButtons.propTypes = {
     items: PropTypes.array.isRequired,
     onMoveItem: PropTypes.func.isRequired,
     downIcon: PropTypes.string,
-    upIcon: PropTypes.string
+    upIcon: PropTypes.string,
+    moveItemDownAction: PropTypes.string,
+    moveItemUpAction: PropTypes.string
 };
 
 export default DndIncrementButtons;

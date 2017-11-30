@@ -77,7 +77,7 @@ class ProficiencyEntry extends React.Component {
     }
 
     updateFormState(event) {
-        return this.setState({proficiency: util.common.updateFormState(event, this.state.proficiency, this.props.picklists)});
+        return this.setState({proficiency: util.common.formState.standard(event, this.state.proficiency, this.props.picklists)});
     }
     render() {
         return (

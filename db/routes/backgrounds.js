@@ -447,12 +447,12 @@ module.exports = function(app, pg, async, pool) {
                     console.log("13");
                     results = [];
                     vals = [];
-                    if (resObj.background.charts && resObj.background.charts.die.length != 0) {
+                    if (resObj.background.charts && resObj.background.charts.length != 0) {
                         sql = 'SELECT dice.*';
                         sql += ' FROM adm_core_dice dice';
                         var first = 1;
                         var second = 2;
-                        for (var e = 0; e < resObj.background.charts.die.length; e++) {
+                        for (var e = 0; e < resObj.background.charts.length; e++) {
                             sql += (e == 0) ? ' WHERE' : ' OR';
                             sql += ' (dice."dieCount" = $' + first.toString();
                             sql += ' AND dice."dieType" = $' + second.toString() + ')';
@@ -468,7 +468,7 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var i = 0; i < results.length; i++) {
-                                for (var j = 0; j < resObj.background.charts.die.length; j++) {
+                                for (var j = 0; j < resObj.background.charts.length; j++) {
                                     if (resObj.background.charts[j].dieRoll.dieCount == results[i].dieCount &&
                                        resObj.background.charts[j].dieRoll.dieType == results[i].dieType) {
                                         resObj.background.charts[j].dieRoll.id = results[i].id;
@@ -486,14 +486,14 @@ module.exports = function(app, pg, async, pool) {
                     console.log("15");
                     results = [];
                     vals = [];
-                    if (resObj.background.charts && resObj.background.charts.die.length != 0) {
+                    if (resObj.background.charts && resObj.background.charts.length != 0) {
                         sql = 'INSERT INTO adm_core_chart';
                         sql += ' ("title")';
                         sql += ' VALUES';
                         var first = 1;
-                        for (var w = 0; w < resObj.background.charts.die.length; w ++) {
+                        for (var w = 0; w < resObj.background.charts.length; w ++) {
                             sql += '($' + first.toString() + ')';
-                            if (w < resObj.background.charts.die.length - 1) {
+                            if (w < resObj.background.charts.length - 1) {
                                 sql += ', ';
                             }
                             vals.push(resObj.background.charts[w].title);
@@ -507,7 +507,7 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var i = 0; i < results.length; i++) {
-                                for (var j = 0; j < resObj.background.charts.die.length; j++) {
+                                for (var j = 0; j < resObj.background.charts.length; j++) {
                                     if (results[i].title == resObj.background.charts[j].title) {
                                         resObj.background.charts[j].id = results[i].chartId;
                                     }
@@ -523,13 +523,13 @@ module.exports = function(app, pg, async, pool) {
                     console.log("15a");
                     results = [];
                     vals = [];
-                    if (resObj.background.charts && resObj.background.charts.die.length != 0) {
+                    if (resObj.background.charts && resObj.background.charts.length != 0) {
                         sql = 'INSERT INTO adm_def_chart_dice';
                         sql += ' ("chartId", "diceId")';
                         sql += ' VALUES ';
                         first = 1;
                         second = 2;
-                        for (var e = 0; e < resObj.background.charts.die.length; e++) {
+                        for (var e = 0; e < resObj.background.charts.length; e++) {
                             if (e != 0) {
                                 sql += ', ';
                             }
@@ -546,7 +546,7 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var i = 0; i < results.length; i++) {
-                                for (var j = 0; j < resObj.background.charts.die.length; j++) {
+                                for (var j = 0; j < resObj.background.charts.length; j++) {
                                     if (results[i].title == resObj.background.charts[j].title) {
                                         resObj.background.charts[j].id = results[i].chartId;
                                     }
@@ -562,7 +562,7 @@ module.exports = function(app, pg, async, pool) {
                     console.log("16");
                     results = [];
                     vals = [];
-                    if (resObj.background.charts && resObj.background.charts.die.length != 0) {
+                    if (resObj.background.charts && resObj.background.charts.length != 0) {
                         sql = 'INSERT INTO adm_def_chart_dice_entry';
                         sql += ' ("chartId", "minimum", "maximum", "description")';
                         sql += ' VALUES';
@@ -571,7 +571,7 @@ module.exports = function(app, pg, async, pool) {
                         var third = 3;
                         var fourth = 4;
                         var addComma = false;
-                        for (var i = 0; i < resObj.background.charts.die.length; i++) {
+                        for (var i = 0; i < resObj.background.charts.length; i++) {
                             for (var j = 0; j < resObj.background.charts[i].entries.length; j++) {
                                 if (addComma) {
                                     sql += ', ';
@@ -604,14 +604,14 @@ module.exports = function(app, pg, async, pool) {
                     console.log("17");
                     results = [];
                     vals = [];
-                    if (resObj.background.charts && resObj.background.charts.die.length != 0) {
+                    if (resObj.background.charts && resObj.background.charts.length != 0) {
                         sql = 'INSERT INTO adm_link_chart';
                         sql += ' ("referenceId", "chartId", "orderIndex")';
                         sql += ' VALUES ';
                         var first = 1;
                         var second = 2;
                         var third = 3;
-                        for (var e = 0; e < resObj.background.charts.die.length; e++) {
+                        for (var e = 0; e < resObj.background.charts.length; e++) {
                             if (e != 0) {
                                 sql += ', ';
                             }
@@ -862,12 +862,12 @@ module.exports = function(app, pg, async, pool) {
             query.on('end', function() {
                 done();
                 for (var t = 0; t < results.length; t++) {
-                    if (results[t].charts && results[t].charts.die && results[t].charts.die.length != 0) {
-                        results[t].charts.die = results[t].charts.die.sort(function (a, b) {
+                    if (results[t].charts && results[t].charts && results[t].charts.length != 0) {
+                        results[t].charts = results[t].charts.sort(function (a, b) {
                             return a.orderIndex - b.orderIndex;
                         });
-                        for (var x = 0; x < results[t].charts.die.length; x++) {
-                            results[t].charts.die[x].entries = results[t].charts.die[x].entries.sort(function (a, b) {
+                        for (var x = 0; x < results[t].charts.length; x++) {
+                            results[t].charts[x].entries = results[t].charts[x].entries.sort(function (a, b) {
                                 return a.minimum - b.minimum;
                             });
                         }

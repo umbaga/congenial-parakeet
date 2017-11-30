@@ -8,6 +8,16 @@ import { Panel } from 'react-bootstrap';
 class DndCollapsibleTableRow extends React.Component {
     constructor(props, context) {
         super(props, context);
+        this._onSelectEditedItem = this._onSelectEditedItem.bind(this);
+        this._onRemoveItem = this._onRemoveItem.bind(this);
+    }
+    
+    _onSelectEditedItem(event) {
+        this.props.onSelectItem(event, this.props.item);
+    }
+    
+    _onRemoveItem(event) {
+        this.props.onRemoveItem(event, this.props.item);
     }
     
     render() {
@@ -24,9 +34,7 @@ class DndCollapsibleTableRow extends React.Component {
                 <td>
                     {item.title}
                     <Panel collapsible expanded={this.props.showThisId == item.id}>
-                        <table>
                             {this.props.children}
-                        </table>
                     </Panel>
                 </td>
                 <td>
@@ -34,13 +42,18 @@ class DndCollapsibleTableRow extends React.Component {
                         item={item}
                         items={items}
                         onMoveItem={this.props.onChangeOrder}
+                        moveItemDownAction={this.props.moveItemDownAction}
+                        moveItemUpAction={this.props.moveItemUpAction}
                         />
                 </td>
                 <td>
                     <DndListItemButtonBar
                         listItem={item}
-                        onEdit={this.props.onSelectItem}
-                        onDelete={this.props.onRemoveItem}
+                        onEdit={this._onSelectEditedItem}
+                        onDelete={this._onRemoveItem}
+                        editAction={this.props.selectItemAction}
+                        deleteAction={this.props.removeItemAction}
+                        returnCompleteObject
                         />
                 </td>
             </tr>
@@ -55,8 +68,13 @@ DndCollapsibleTableRow.propTypes = {
     onChangeOrder: PropTypes.func.isRequired,
     onSelectItem: PropTypes.func.isRequired,
     onRemoveItem: PropTypes.func.isRequired,
-    boundClick: PropTypes.func.isRequired,
-    showThisId: PropTypes.number
+    boundClick: PropTypes.func,
+    showThisId: PropTypes.number,
+    changeOrderAction: PropTypes.string,
+    removeItemAction: PropTypes.string,
+    selectItemAction: PropTypes.string,
+    moveItemDownAction: PropTypes.string,
+    moveItemUpAction: PropTypes.string
 };
 
 export default DndCollapsibleTableRow;

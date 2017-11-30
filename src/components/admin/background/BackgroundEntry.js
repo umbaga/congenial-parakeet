@@ -116,7 +116,7 @@ class BackgroundEntry extends React.Component {
         let isAssign = field.split('Unassigned').length == 2 ? true : false;
         let removeThisId = event.target.value;
         let removeThisIndex = -1;
-        let referencePicklistItem = util.picklists.getPicklistItemFromSinglePicklist(this.props.proficiencies, removeThisId);
+        let referencePicklistItem = util.common.picklists.getPicklistItemFromSinglePicklist(this.props.proficiencies, removeThisId);
         let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         switch (dataType) {
             case util.dataTypes.number.INT:
@@ -148,7 +148,7 @@ class BackgroundEntry extends React.Component {
     }
     
     updateFormState(event) {
-        return this.setState({background: util.common.updateFormState(event, this.state.background, this.props.picklists)});
+        return this.setState({background: util.common.formState.standard(event, this.state.background, this.props.picklists)});
     }
     
     onAddProficiencyGroup() {
@@ -183,7 +183,7 @@ class BackgroundEntry extends React.Component {
         const background = this.state.background;
         const chart = this.state.chart;
         if (this.state.chart.id > 0) {
-            background.charts[util.picklists.getIndexById(background.charts, this.state.chart.id)] = chart;
+            background.charts[util.common.picklists.getIndexById(background.charts, this.state.chart.id)] = chart;
         } else {
             chart.orderIndex = background.charts.length;
             background.charts.push(chart);
@@ -351,7 +351,7 @@ class BackgroundEntry extends React.Component {
     
     onRemoveChart(chartId) {
         const background = this.state.background;
-        background.charts.splice(util.picklists.getIndexById(background.charts, chartId), 1);
+        background.charts.splice(util.common.picklists.getIndexById(background.charts, chartId), 1);
         this.setState({background: background});
     }
     
@@ -408,7 +408,7 @@ class BackgroundEntry extends React.Component {
         const blankVariant = Object.assign({}, util.objectModel.BACKGROUND_VARIANT);
         blankVariant.feature = Object.assign({}, util.objectModel.FEATURE);
         if (this.state.variant.id > 0) {
-            background.variants[util.picklists.getIndexById(background.variants, this.state.variant.id)] = this.state.variant;
+            background.variants[util.common.picklists.getIndexById(background.variants, this.state.variant.id)] = this.state.variant;
         } else {
             background.variants.push(newVariant);
         }
@@ -446,7 +446,7 @@ class BackgroundEntry extends React.Component {
     
     onRemoveVariant(variantId) {
         const background = this.state.background;
-        background.variants.splice(util.picklists.getIndexById(background.variants, variantId), 1);
+        background.variants.splice(util.common.picklists.getIndexById(background.variants, variantId), 1);
         this.setState({background: background});
     }
     
@@ -510,12 +510,15 @@ class BackgroundEntry extends React.Component {
             self.setState({selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT), background: background});
         });
     }
+    
     onCancelNewEquipmentButtonClick() {
         this.setState({selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT)});
     }
+    
     onCreateNewEquipmentButtonClick() {
         this.setState({selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT)});
     }
+    
     onChangeEquipment(event) {
         let field = event.target.name.split('.')[1];
         const selectedEquipment = this.state.selectedEquipment;
@@ -533,6 +536,7 @@ class BackgroundEntry extends React.Component {
         }
         return this.setState({selectedEquipment: selectedEquipment});
     }
+    
     render() {
         const contents = this.props.canEdit ? (
             <BackgroundForm

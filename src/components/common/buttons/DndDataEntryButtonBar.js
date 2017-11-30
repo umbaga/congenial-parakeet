@@ -11,11 +11,11 @@ class DndDataEntryButtonBar extends React.Component {
     
     render() {
         let wrapperClass = 'form-group';
-        const cancelButton = this.props.onCancel ? (<DndButton onClick={this.props.onCancel} buttonType="cancel" />) : null;
-        const deleteButton = this.props.onDelete ? (<DndButton onClick={this.props.onDelete} buttonType="delete" />) : null;
-        const resetButton = this.props.onReset ? (<DndButton onClick={this.props.onReset} buttonType="reset" />) : null;
-        const saveButton = this.props.onSave ? (<DndButton onClick={this.props.onSave} buttonType="save" />) : null;
-        const saveNewButton = this.props.onSaveNew ? (<DndButton onClick={this.props.onSaveNew} buttonType="savenew" />) : null;
+        const cancelButton = this.props.onCancel ? (<DndButton onClick={this.props.onCancel} buttonType="cancel" dataType={this.props.cancelAction} />) : null;
+        const deleteButton = this.props.onDelete ? (<DndButton onClick={this.props.onDelete} buttonType="delete" dataType={this.props.deleteAction} />) : null;
+        const resetButton = this.props.onReset ? (<DndButton onClick={this.props.onReset} buttonType="reset" dataType={this.props.resetAction} />) : null;
+        const saveButton = this.props.onSave ? (<DndButton onClick={this.props.onSave} buttonType="save" dataType={this.props.saveAction} />) : null;
+        const saveNewButton = this.props.onSaveNew ? (<DndButton onClick={this.props.onSaveNew} buttonType="savenew" dataType={this.props.saveAction} />) : null;
         return (
             <div className={wrapperClass}>
                 <div className="pull-right">
@@ -40,7 +40,11 @@ DndDataEntryButtonBar.propTypes = {
     onReset: PropTypes.func,
     onSave: PropTypes.func,
     onSaveNew: PropTypes.func,
-    saving: PropTypes.bool
+    saving: PropTypes.bool,
+    cancelAction: PropTypes.string,
+    deleteAction: PropTypes.string,
+    resetAction: PropTypes.string,
+    saveAction: PropTypes.string
 };
 
 export default DndDataEntryButtonBar;

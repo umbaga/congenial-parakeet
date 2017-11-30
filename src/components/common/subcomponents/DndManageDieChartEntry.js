@@ -8,25 +8,25 @@ class DndManageDieChartEntry extends React.Component {
         super(props, context);
         this.renderDieRangeSelect = this.renderDieRangeSelect.bind(this);
         this.renderDescriptionInput = this.renderDescriptionInput.bind(this);
-        this._onRemoveEntry = this._onRemoveEntry.bind(this);
+        this._onChange = this._onChange.bind(this);
         this.renderDeleteButton = this.renderDeleteButton.bind(this);
     }
     
-    _onRemoveEntry() {
-        this.props.onRemoveEntry(this.props.entry);
+    _onChange(event) {
+        this.props.onChange(event, this.props.entry);
     }
     
     renderDieRangeSelect(chart, entry) {
         let dieRollRangeArray = [];
-        for (let v = entry.minimum; v <= chart.dieRoll.dieCount * chart.dieRoll.dieType; v++) {
+        for (let v = entry.minimum; v <= chart.dice.dieCount * chart.dice.dieType; v++) {
             dieRollRangeArray.push({minimum: entry.minimum, maximum: v});
         }
         return (
             <select
                 name={entry.id + '_select'}
                 value={entry.maximum}
-                onChange={this.props.onChangeChart}
-                datatype={util.dataTypes.special.DIE_CHART_ENTRY_DIE_ROLL_RANGE}
+                onChange={this._onChange}
+                datatype={util.dataTypes.special.CHART_ENTRY_DIE_ROLL_RANGE}
                 className="form-control"
                 >
                 {dieRollRangeArray.map(rollRange =>
@@ -46,8 +46,8 @@ class DndManageDieChartEntry extends React.Component {
                 name={entry.id + '_description'}
                 type="text"
                 value={entry.description}
-                onChange={this.props.onChangeChart}
-                datatype={util.dataTypes.special.DIE_CHART_ENTRY_DESCRIPTION}
+                onChange={this._onChange}
+                datatype={util.dataTypes.special.CHART_ENTRY_DESCRIPTION}
                 className="form-control"
                 />
         );
@@ -57,7 +57,8 @@ class DndManageDieChartEntry extends React.Component {
             <span className="input-group-btn">
                 <DndButton
                     buttonType="delete"
-                    onClick={this._onRemoveEntry}
+                    onClick={this._onChange}
+                    dataType={util.dataTypes.action.CHART.REMOVE_ENTRY}
                     />
             </span>
         ) : null;
@@ -78,23 +79,11 @@ class DndManageDieChartEntry extends React.Component {
         );
     }
 }
-/*
-            <tr>
-                <td>
-                    <div className=" input-group input-inline">
-                        {this.renderDieRangeSelect(chart, entry)}
-                    </div>
-                    <div className=" input-group input-inline">
-                        {this.renderDescriptionInput(entry)}
-                        {this.renderDeleteButton(chart)}
-                    </div>
-                </td>
-            </tr>*/
+
 DndManageDieChartEntry.propTypes = {
     chart: PropTypes.object.isRequired,
     entry: PropTypes.object.isRequired,
-    onChangeChart: PropTypes.func.isRequired,
-    onRemoveEntry: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired
 };
 
 export default DndManageDieChartEntry;

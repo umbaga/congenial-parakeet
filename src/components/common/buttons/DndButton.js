@@ -100,11 +100,19 @@ class DndButton extends React.Component {
             <div><i className={fontawesomeStyle + extraClasses}></i>{extraText}</div>
         );
         const finalBootstrapStyle = (this.props.bsButtonStyle && this.props.bsButtonStyle.length != 0) ? this.props.bsButtonStyle : bootstrapStyle;
-        return (
-            <Button bsStyle={finalBootstrapStyle} onClick={this.props.onClick}>
-                {renderedLabel}
-            </Button>
-        );
+        if (this.props.dataType && this.props.dataType.length != 0) {
+            return (
+                <Button bsStyle={finalBootstrapStyle} onClick={this.props.onClick} datatype={this.props.dataType}>
+                    {renderedLabel}
+                </Button>
+            );
+        } else {
+            return (
+                <Button bsStyle={finalBootstrapStyle} onClick={this.props.onClick}>
+                    {renderedLabel}
+                </Button>
+            );
+        }
     }
 }
 
@@ -114,7 +122,8 @@ DndButton.propTypes = {
     isBadge: PropTypes.bool,
     additionalButtonStyles: PropTypes.string,
     label: PropTypes.string,
-    bsButtonStyle: PropTypes.string
+    bsButtonStyle: PropTypes.string,
+    dataType: PropTypes.string
 };
 
 export default DndButton;

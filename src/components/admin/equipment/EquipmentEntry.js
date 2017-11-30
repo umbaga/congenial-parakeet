@@ -85,7 +85,7 @@ class EquipmentEntry extends React.Component {
     }
     
     updateFormState(event) {
-        return this.setState({equipment: util.common.updateFormState(event, this.state.equipment, this.props.picklists)});
+        return this.setState({equipment: util.common.formState.standard(event, this.state.equipment, this.props.picklists)});
     }
     render() {
         return (

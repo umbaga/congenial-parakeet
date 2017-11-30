@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import util from '../../../util/util';
 import DndInput from '../inputs/DndInput';
 import DndDataEntryButtonBar from '../buttons/DndDataEntryButtonBar';
-import DndCollapsibleTableRow from '../subcomponents/DndCollapsibleTableRow';
+//import DndCollapsibleTableRow from '../subcomponents/DndCollapsibleTableRow';
+import DndStandardChartForm from './charts/forms/DndStandardChartForm';
+import DndDieChartForm from './charts/forms/DndDieChartForm';
+import DndCollapsibleList from './DndCollapsibleList';
 
 class DndManageCharts extends React.Component {
     constructor(props, context) {
@@ -11,74 +14,13 @@ class DndManageCharts extends React.Component {
         this.state = {
             showThisId: null
         };
-        this.renderEditChart = this.renderEditChart.bind(this);
-        this.renderChartList = this.renderChartList.bind(this);
         this.setShowThisId = this.setShowThisId.bind(this);
-    }
-    
-    renderEditChart() {
-        let renderThis = false;
-        const chart = this.props.chart;
-        if (this.props.chart.columnCount > 0 && this.props.chart.rowCount > 0) {
-            renderThis = true;
-        }
-        return renderThis ? (
-            <div className="col-sm-12">
-                <DndInput
-                    name="title"
-                    label="Title"
-                    value={chart.title}
-                    dataType={util.dataTypes.string.STRING}
-                    onChange={this.props.onChange}
-                    />
-                <table className="table table-sm table-striped table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            {chart.columns.map(column =>
-                                <th
-                                    contentEditable
-                                    onBlur={this.props.onChange}
-                                    key={column.id}
-                                    id={column.id + '_columns_title'}>
-                                                   {column.title}
-                                               </th>
-                            )}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {chart.rows.map(row =>
-                        <tr
-                            key={row.id}>
-                            <th
-                                    contentEditable
-                                    onBlur={this.props.onChange}
-                            id={row.id + '_rows_title'}>
-                                {row.title}
-                            </th>
-                            {chart.entries.filter(function(entry) {
-                                return row.id == -1 * (entry.rowIndex + 1);
-                            }).map(entry =>
-                                <td
-                                    contentEditable
-                                    onBlur={this.props.onChange}
-                                    id={entry.id + '_entries_description'}
-                                    key={entry.id}>
-                                       {entry.description}
-                                </td>
-                            )}
-                        </tr>)}
-                    </tbody>
-                </table>
-                <DndInput
-                    name="description"
-                    label="Description"
-                    value={chart.description}
-                    dataType={util.dataTypes.string.DESCRIPTION}
-                    onChange={this.props.onChange}
-                    />
-            </div>
-        ) : null;
+        this.renderChartForm = this.renderChartForm.bind(this);
+        this.renderTypeSpecificForm = this.renderTypeSpecificForm.bind(this);
+        this.renderFormButtons = this.renderFormButtons.bind(this);
+        this.renderChartList = this.renderChartList.bind(this);
+        this.validateChart = this.validateChart.bind(this);
+        this._onSaveClick = this._onSaveClick.bind(this);
     }
     
     setShowThisId(chart) {
@@ -89,116 +31,142 @@ class DndManageCharts extends React.Component {
         this.setState({showThisId: newId});
     }
     
-    renderChartRows(chart) {
-        return (
-            <tbody>
-                {chart.rows.map(row =>
-                           <tr key={row.id}>
-                                <th>{row.title}</th>
-                                {chart.entries.filter(function(entry) {
-                                    return row.rowIndex == entry.rowIndex;
-                                }).map(entry =>
-                                    <td key={entry.id}>{entry.description}</td>
-                                )}
-                            </tr>
-                           )}
-            </tbody>
-        );
+    renderChartList(charts) {
+        if (charts && charts.length != 0) {
+            return (
+                <DndCollapsibleList
+                    objects={charts}
+                    onChange={this.props.onChange}
+                    onSelectEditedItem={this.props.onSelectEdited}
+                    removeItemAction={util.dataTypes.action.CHART.REMOVE}
+                    selectItemAction={util.dataTypes.action.CHART.SELECT}
+                    onReset={this.props.onReset}
+                    moveItemDownAction={util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.DOWN}
+                    moveItemUpAction={util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.UP}
+                    />
+            );
+        }
+        return null;
     }
     
-    renderChartList(charts) {
-        if (charts && charts.length) {
-            return (
-                <fieldset>
-                    <legend>Charts</legend>
-                    <table className="table table-sm table-striped table-hover">
-                        <tbody>
-                            {charts.map(function(c) {
-                                let boundClick = this.setShowThisId.bind(this, c);
-                                return (
-                                    <DndCollapsibleTableRow
-                                        key={c.id}
-                                        item={c}
-                                        items={charts}
-                                        onChangeOrder={this.props.onChangeChartOrder}
-                                        onSelectItem={this.props.onSelectChart}
-                                        onRemoveItem={this.props.onRemoveChart}
-                                        boundClick={boundClick}
-                                        showThisId={this.state.showThisId}
-                                        >
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                {c.columns.map(column =>
-                                                              <th key={column.id}>{column.title}</th>
-                                                              )}
-                                            </tr>
-                                        </thead>
-                                        {this.renderChartRows(c)}
-                                    </DndCollapsibleTableRow>
-                                );
-                            }.bind(this))}
-                        </tbody>
-                    </table>
-                </fieldset>
-            );
-        } else {
-            return null;
+    _onSaveClick(event) {
+        this.props.onChange(event);
+        this.props.onReset();
+    }
+    
+    validateChart() {
+        const chart = this.props.chart;
+        let isValid = true;
+        if (!chart.title || (chart.title && chart.title.length == 0)) {
+            isValid = false;
         }
+        switch (this.props.selectedChartType.id) {
+            case util.itemTypes.CHARTS.DIE_ROLL:
+                if (!util.dataTypes.compareDataType(chart.dice.rendered, util.dataTypes.special.DICE_ROLL)) {
+                    isValid = false;
+                }
+                for (let q = 0; q < chart.entries.length; q++) {
+                    if (!chart.entries[q].description || (chart.entries[q].description && chart.entries[q].description.length == 0)) {
+                        isValid = false;
+                    }
+                }
+                break;
+            case util.itemTypes.CHARTS.STANDARD:
+                if (chart.rowCount == 0 || chart.columnCount == 0) {
+                    isValid = false;
+                }
+                for (let c = 0; c < chart.columns.length; c++) {
+                    if (chart.columns[c].title.length == 0) {
+                        isValid = false;
+                    }
+                }
+                for (let e = 0; e < chart.entries.length; e++) {
+                    if (chart.entries[e].description.length == 0) {
+                        isValid = false;
+                    }
+                }
+                break;
+            default:
+        }
+        return isValid;
+    }
+    
+    renderChartForm(chart) {
+        return (this.props.selectedChartType.id != 0) ? (
+            <div>
+                <DndInput
+                    dataType={util.dataTypes.string.STRING}
+                    label="Title"
+                    name="title"
+                    onChange={this.props.onChange}
+                    value={this.props.chart.title}
+                    />
+                {this.renderTypeSpecificForm(chart)}
+            </div>
+        ) : null;
+    }
+    
+    renderTypeSpecificForm(chart) {
+        switch (this.props.selectedChartType.id) {
+            case util.itemTypes.CHARTS.DIE_ROLL:
+                return (
+                    <DndDieChartForm
+                        chart={chart}
+                        onChange={this.props.onChange}
+                        />
+                );
+            case util.itemTypes.CHARTS.STANDARD:
+                return (
+                    <DndStandardChartForm
+                        chart={chart}
+                        onChange={this.props.onChange}
+                        />
+                );
+            default:
+                return null;
+        }
+    }
+    
+    renderFormButtons() {
+        return this.validateChart() ? (
+            <DndDataEntryButtonBar
+                onSave={this._onSaveClick}
+                onReset={this.props.onReset}
+                saveAction={util.dataTypes.action.CHART.ADD}
+                resetAction={util.dataTypes.action.CHART.RESET}
+                />
+        ) : null;
     }
     
     render() {
         const charts = this.props.charts;
         const chart = this.props.chart;
+        const chartTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.CHART_TYPE);
         return (
             <div>
-                <div>
-                    <div className="col-sm-6">
-                        <DndInput
-                            dataType={util.dataTypes.number.INT}
-                            name="columnCount"
-                            label="Coulmns"
-                            value={chart.columnCount.toString()}
-                            onChange={this.props.onChange}
-                            />
-                    </div>
-                    <div className="col-sm-6">
-                        <DndInput
-                            dataType={util.dataTypes.number.INT}
-                            name="rowCount"
-                            label="Rows"
-                            value={chart.rowCount.toString()}
-                            onChange={this.props.onChange}
-                            />
-                    </div>
-                    {this.renderEditChart()}
-                    <DndDataEntryButtonBar
-                        onCancel={this.props.onResetChart}
-                        onSave={this.props.onAddChart}
-                        />
-                </div>
-                <div>
-                    {this.renderChartList(charts)}
-                </div>
+                <DndInput
+                    dataType={util.dataTypes.picklist.CHART_TYPE}
+                    label="Type of Chart"
+                    name="charType"
+                    onChange={this.props.onChange}
+                    picklist={chartTypes}
+                    valueObj={this.props.selectedChartType}
+                    />
+                {this.renderChartForm(chart)}
+                {this.renderFormButtons()}
+                {this.renderChartList(charts)}
             </div>
         );
     }
 }
-
 DndManageCharts.propTypes = {
     charts: PropTypes.array.isRequired,
     chart: PropTypes.object.isRequired,
+    picklists: PropTypes.array,
+    selectedChartType: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    onChangeChartOrder: PropTypes.func.isRequired,
-    onAddChart: PropTypes.func.isRequired,
-    onAddColumn: PropTypes.func.isRequired,
-    onAddRow: PropTypes.func.isRequired,
-    onCreateChart: PropTypes.func.isRequired,
-    onRemoveChart: PropTypes.func.isRequired,
-    onRemoveColumn: PropTypes.func.isRequired,
-    onRemoveRow: PropTypes.func.isRequired,
-    onSelectChart: PropTypes.func.isRequired,
-    onResetChart: PropTypes.func.isRequired
+    onReset: PropTypes.func.isRequired,
+    onSelectEdited: PropTypes.func.isRequired
 };
 
 export default DndManageCharts;

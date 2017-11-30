@@ -68,7 +68,7 @@ class ArmorEntry extends React.Component {
     }
 
     updateFormState(event) {
-        return this.setState({armor: util.common.updateFormState(event, this.state.armor, this.props.picklists)});
+        return this.setState({armor: util.common.formState.standard(event, this.state.armor, this.props.picklists)});
     }
     render() {
         return (

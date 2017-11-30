@@ -9,7 +9,7 @@ import DndListItemButtonBar from '../buttons/DndListItemButtonBar';
 import DndIncrementButtons from '../buttons/DndIncrementButtons';
 import { Panel } from 'react-bootstrap';
 
-class DndManageDieCharts extends React.Component {
+class _DndManageDieCharts extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -189,7 +189,7 @@ class DndManageDieCharts extends React.Component {
     }
 }
 
-DndManageDieCharts.propTypes = {
+_DndManageDieCharts.propTypes = {
     charts: PropTypes.array.isRequired,
     chart: PropTypes.object.isRequired,
     onAddChart: PropTypes.func.isRequired,
@@ -203,4 +203,4 @@ DndManageDieCharts.propTypes = {
     onClickExpand: PropTypes.func.isRequired
 };
 
-export default DndManageDieCharts;
+export default _DndManageDieCharts;

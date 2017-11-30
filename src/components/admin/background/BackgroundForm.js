@@ -6,7 +6,7 @@ import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
 import DndManageAssignedItems from '../../common/objectManagement/DndManageAssignedItems';
 import DndManageItemGroups from '../../common/objectManagement/DndManageItemGroups';
-import DndManageDieCharts from '../../common/objectManagement/DndManageDieCharts';
+import DndManageCharts from '../../common/objectManagement/DndManageCharts';
 import DndListItemButtonBar from '../../common/buttons/DndListItemButtonBar';
 
 class BackgroundForm extends React.Component {
@@ -161,8 +161,8 @@ class BackgroundForm extends React.Component {
                         </Tab>
                         <Tab eventKey={5} title="Charts">
                             <div>&nbsp;</div>
-                            <DndManageDieCharts
-                                charts={this.props.background.charts.die}
+                            <DndManageCharts
+                                charts={this.props.background.charts}
                                 chart={this.props.chart}
                                 onAddChart={this.props.onAddChart}
                                 onChange={this.props.onChange}
@@ -173,6 +173,7 @@ class BackgroundForm extends React.Component {
                                 onRemoveEntry={this.props.onRemoveEntry}
                                 onChangeChartOrder={this.props.onChangeChartOrder}
                                 onClickExpand={this.props.onChartExpand}
+                                disallowStandardCharts
                                 />
                         </Tab>
                     </Tabs>

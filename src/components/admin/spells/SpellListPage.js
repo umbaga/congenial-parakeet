@@ -87,7 +87,7 @@ class SpellListPage extends React.Component {
             {id: 8, name: '8th'},
             {id: 9, name: '9th'}
         ];
-        const schools = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC);
+        const schools = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC);
         return (
             <div className="col-md-12">
                 <div>

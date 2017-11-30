@@ -20,9 +20,9 @@ class SpellEntry extends React.Component {
             selectedChartId: 0,
             saving: false,
             newMechanic: Object.assign({}, util.objectModel.MECHANIC),
+            editChart: Object.assign({}, util.objectModel.CHART),
             editDescription: Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION),
-            selectedChartType: Object.assign({}, util.objectModel.CHART_TYPE),
-            editChart: Object.assign({}, util.objectModel.CHART)
+            selectedChartType: Object.assign({}, util.objectModel.CHART_TYPE)
         };
         this.cancelSpell = this.cancelSpell.bind(this);
         this.deleteSpell = this.deleteSpell.bind(this);
@@ -39,6 +39,17 @@ class SpellEntry extends React.Component {
         this.onRemoveMechanic = this.onRemoveMechanic.bind(this);
         this.onResetMechanic = this.onResetMechanic.bind(this);
         this.onAddMechanic = this.onAddMechanic.bind(this);
+        this.onChangeChart = this.onChangeChart.bind(this);
+        this.onChangeChartOrder = this.onChangeChartOrder.bind(this);
+        this.onCreateChart = this.onCreateChart.bind(this);
+        this.onAddChart = this.onAddChart.bind(this);
+        this.onRemoveChart = this.onRemoveChart.bind(this);
+        this.onSelectChart = this.onSelectChart.bind(this);
+        this.onAddChartColumn = this.onAddChartColumn.bind(this);
+        this.onRemoveChartColumn = this.onRemoveChartColumn.bind(this);
+        this.onAddChartRow = this.onAddChartRow.bind(this);
+        this.onRemoveChartRow = this.onRemoveChartRow.bind(this);
+        this.onResetChart = this.onResetChart.bind(this);
         this.onAddDescription = this.onAddDescription.bind(this);
         this.onRemoveDescription = this.onRemoveDescription.bind(this);
         this.onSelectDescription = this.onSelectDescription.bind(this);
@@ -46,9 +57,9 @@ class SpellEntry extends React.Component {
         this.onCreateDescription = this.onCreateDescription.bind(this);
         this.onChangeDescriptions = this.onChangeDescriptions.bind(this);
         this.onChangeDescriptionOrder = this.onChangeDescriptionOrder.bind(this);
-        this.onChangeChart = this.onChangeChart.bind(this);
-        this.onResetChart = this.onResetChart.bind(this);
-        this.onSelectEditedChart = this.onSelectEditedChart.bind(this);
+        this.onChangeChartType = this.onChangeChartType.bind(this);
+        this.onDieChartExpand = this.onDieChartExpand.bind(this);
+        this.onChangeDieRollRange = this.onChangeDieRollRange.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -86,7 +97,7 @@ class SpellEntry extends React.Component {
         blankSpell.savingThrow = {
             abilityScore: {id: 0, name: ''}
         };
-        blankSpell.charts = [];
+        blankSpell.charts = {die: [], standard: []};
         this.setState({spell: blankSpell});
     }
     
@@ -163,13 +174,12 @@ class SpellEntry extends React.Component {
     }
     
     updateFormState(event) {
-        const spell = util.common.formState.standard(event, this.state.spell, this.props.picklists);
-        //this.onReset();
+        const spell = util.common.updateFormState(event, this.state.spell, this.props.picklists);
         return this.setState({spell: spell});
     }
     
     onChangeMechanic(event) {
-        const mechanic = util.common.formState.standard(event, this.state.newMechanic, this.props.picklists);
+        const mechanic = util.common.updateFormState(event, this.state.newMechanic, this.props.picklists);
         return this.setState({newMechanic: mechanic});
     }
     
@@ -220,6 +230,158 @@ class SpellEntry extends React.Component {
         this.setState({newMechanic: newMechanic});
     }
     
+    onChangeChart(event) {
+        const chart = util.common.updateChartFormState(event, this.state.editChart, this.props.picklists);
+        this.setState({editChart: chart});
+    }
+    
+    onChangeChartOrder(chart, isUp) {
+        const spell = this.state.spell;
+        const charts = spell.charts.sort(function(a, b) {
+            return a.orderIndex - b.orderIndex;
+        });
+        if ((isUp && chart.orderIndex != 0) || (!isUp && chart.orderIndex != charts.length - 1)) {
+            let changedIndex = -1;
+            let otherChangedIndex = -1;
+            let referenceOrderIndex = -1;
+            let referenceOtherOrderIndex = -1;
+            for (let r = 0; r < charts.length; r++) {
+                if (charts[r].id == chart.id) {
+                    changedIndex = r;
+                    otherChangedIndex = isUp ? r - 1 : r + 1;
+                    referenceOrderIndex = charts[r].orderIndex;
+                    referenceOtherOrderIndex = isUp ? referenceOrderIndex - 1 : referenceOrderIndex + 1;
+                    break;
+                }
+            }
+            if (changedIndex != -1 && otherChangedIndex != -1) {
+                charts[changedIndex].orderIndex = referenceOtherOrderIndex;
+                charts[otherChangedIndex].orderIndex = referenceOrderIndex;
+            }
+            spell.charts = charts.sort(function(a, b) {
+                return a.orderIndex - b.orderIndex;
+            });
+            this.setState({spell: spell});
+        }
+    }
+    
+    onChangeChartType(event) {
+        let newChartType = Object.assign({}, util.objectModel.CHART_TYPE);
+        if (parseInt(event.target.value) != 0) {
+            newChartType = util.common.picklists.getPicklistItem(this.props.picklists, parseInt(event.target.value));
+        }
+        this.setState({selectedChartType: newChartType});
+    }
+    
+    onCreateChart() {
+        
+    }
+    
+    onAddChart() {
+        const spell = this.state.spell;
+        let chart = this.state.editChart;
+        chart = this.state.editDieChart;
+        chart.orderIndex = spell.charts.die.length;
+        spell.charts.push(chart);
+        this.setState({spell: spell});
+        this.onResetChart();
+    }
+    
+    onRemoveChart(chart) {
+        const spell = Object.assign({}, this.state.spell);
+        let removeIndex = null;
+        removeIndex = util.common.picklists.getIndexById(spell.charts, chart.id);
+        if (removeIndex != -1) {
+            spell.charts.splice(removeIndex, 1);
+        }
+        this.setState({spell: spell});
+    }
+    
+    onSelectChart(chart) {
+        this.setState({selectedChartId: chart.id});
+    }
+    
+    onAddChartColumn() {
+        const newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
+        const editChart = Object.assign({}, this.state.editChart);
+        editChart.columns.push(newColumn);
+        this.setState({editChart: editChart});
+    }
+    
+    onRemoveChartColumn(column) {
+        const editChart = this.state.editChart;
+        let removeIndex = util.common.picklists.getIndexById(editChart.columns, column.id);
+        if (removeIndex != -1) {
+            editChart.columns.splice(removeIndex, 1);
+        }
+        this.setState({editChart: editChart});
+    }
+    
+    onAddChartRow() {
+        const newRow = Object.assign({}, util.objectModel.CHART_ROW);
+        const editChart = Object.assign({}, this.state.editChart);
+        editChart.rows.push(newRow);
+        this.setState({editChart: editChart});
+    }
+    
+    onRemoveChartRow(row) {
+        const editChart = this.state.editChart;
+        let removeIndex = util.common.picklists.getIndexById(editChart.rows, row.id);
+        if (removeIndex != -1) {
+            editChart.rows.splice(removeIndex, 1);
+        }
+        this.setState({editChart: editChart});
+    }
+    
+    onResetChart() {
+        const newChart = Object.assign({}, util.objectModel.CHART);
+        const newChartType = util.objectModel.CHART_TYPE;
+        newChart.columns = [];
+        newChart.rows = [];
+        newChart.entries = [];
+        newChart.dieRoll = {};
+        newChart.type = {id: 0};
+        this.setState({editChart: newChart, selectedChartType: newChartType});
+    }
+    
+    onDieChartExpand() {
+        const chart = util.common.expandChart(this.state.dieChart);
+        this.setState({editChart: chart});
+    }
+    
+    /*onDieChartRemoveEntry(entry) {
+        const chart = this.state.dieChart;
+        let removeIndex = -1;
+        let refMin = entry.minimum;
+        let refId = entry.id;
+        for (let r = 0; r < chart.entries.length; r++) {
+            if (entry.id == chart.entries[r].id) {
+                removeIndex = r;
+                refMin = chart.entries[r].minimum;
+            }
+        }
+        let isFirst = removeIndex == 0;
+        let isLast = removeIndex == chart.entries.length - 1;
+        if (removeIndex != -1) {
+            chart.entries.splice(removeIndex, 1);
+            if (isFirst) {
+                chart.entries[0].minimum = chart.dieRoll.dieCount;
+                chart.entries[0].id = refId;
+            } else if (isLast) {
+                chart.entries[chart.entries.length - 1].maximum = chart.dieRoll.dieCount * chart.dieRoll.dieType;
+                chart.entries[chart.entries.length - 1].id = refId;
+            } else {
+                chart.entries[removeIndex].minimum = refMin;
+                chart.entries[removeIndex].id = refId;
+            }
+        }
+        this.setState({editDieChart: chart});
+    }*/
+    
+    onChangeDieRollRange() {
+        
+    }
+    
     onAddDescription() {
         const spell = this.state.spell;
         const newDescription = this.state.editDescription;
@@ -253,7 +415,7 @@ class SpellEntry extends React.Component {
     }
     
     onChangeDescriptions(event) {
-        const description = util.common.formState.standard(event, this.state.editDescription, this.props.picklists);
+        const description = util.common.updateFormState(event, this.state.editDescription, this.props.picklists);
         this.setState({editDescription: description});
     }
     
@@ -287,39 +449,6 @@ class SpellEntry extends React.Component {
         }
     }
     
-    onChangeChart(event, refObj, isOrderChange) {
-        const newChartType = util.common.formState.chartType(event, this.state.selectedChartType, this.props.picklists);
-        const newChart = util.common.formState.chart(event, this.state.editChart, refObj, this.props.picklists);
-        newChart.type = newChartType;
-        newChart.orderIndex = this.state.spell.charts.length;
-        newChart.id = (this.state.spell.charts.length + 1) * -1;
-        let newSpell = null;
-        if (isOrderChange) {
-            newSpell = util.common.formState.arrayProperty(event, this.state.spell, refObj);
-        } else {
-            newSpell = util.common.formState.arrayProperty(event, this.state.spell, newChart);
-        }
-        newSpell.charts = util.common.picklists.refactorUnsavedItemIds(newSpell.charts);
-        this.setState({spell: newSpell, editChart: newChart, selectedChartType: newChartType});
-    }
-    
-    onResetChart() {
-        const emptyChartType = util.objectModel.CHART_TYPE;
-        const emptyChart = Object.assign({}, util.objectModel.CHART);
-        emptyChart.id = (this.state.spell.charts.length + 1) * -1;
-        emptyChart.orderIndex = this.state.spell.charts.length;
-        emptyChart.rows = [];
-        emptyChart.columns = [];
-        emptyChart.entries = [];
-        emptyChart.dice = util.objectModel.DICE;
-        emptyChart.type = emptyChartType;
-        this.setState({editChart: emptyChart, selectedChartType: emptyChartType});
-    }
-    
-    onSelectEditedChart() {
-        
-    }
-    
     render() {
         const spell = this.state.spell;
         const contents = this.props.canEdit ? (
@@ -346,11 +475,6 @@ class SpellEntry extends React.Component {
                 onRemoveDescription={this.onRemoveDescription}
                 onSelectDescription={this.onSelectDescription}
                 onResetDescription={this.onResetDescription}
-                chart={this.state.editChart}
-                selectedChartType={this.state.selectedChartType}
-                onChangeChart={this.onChangeChart}
-                onResetChart={this.onResetChart}
-                onSelectEditedChart={this.onChangeChart}
                 />
         ) : (
             <SpellDetails

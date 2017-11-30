@@ -14,14 +14,14 @@ class ProficiencyForm extends React.Component {
     }
     
     render() {
-        const categoryPicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.PROFICIENCY_CATEGORY).filter(function(category) {
+        const categoryPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.PROFICIENCY_CATEGORY).filter(function(category) {
             return !category.isEquipmentBased;
         });
-        const abilityScorePicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE);
-        const languageRarityPicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.LANGUAGE_RARITY);
-        const langaugeScriptPicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.LANGUAGE_SCRIPT);
+        const abilityScorePicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE);
+        const languageRarityPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.LANGUAGE_RARITY);
+        const langaugeScriptPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.LANGUAGE_SCRIPT);
         
-        let selectedCategory = util.picklists.getPicklistItem(this.props.picklists, this.props.proficiency.category.id);
+        let selectedCategory = util.common.picklists.getPicklistItem(this.props.picklists, this.props.proficiency.category.id);
         let languageForm = null;
         let abilityScoreForm = null;
         if (selectedCategory && selectedCategory.requireAbilityScore) {

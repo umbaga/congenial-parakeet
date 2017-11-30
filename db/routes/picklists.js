@@ -122,7 +122,9 @@ module.exports = function(app, pg, async, pool) {
                 return res.status(500).json({ success: false, data: err});
             }
             sql = 'SELECT t.id, t."typeName" as name, t."isPicklist"';
-            sql += ', json_agg((SELECT x FROM (SELECT i."itemName" AS "name", i."id"';
+            sql += ', json_agg((SELECT x FROM (SELECT ';
+            sql += 'CASE WHEN i."itemName" IS NOT NULL THEN i."itemName" ELSE typ."typeName" END AS "name"';
+            sql += ', CASE WHEN i."itemName" IS NOT NULL THEN i.id ELSE typ.id END AS id';
             sql += ', wpnProp."requireRange"';
             sql += ', wpnProp."requireDamage"';
             sql += ', wpnProp."requireAmmunition"';
@@ -142,7 +144,9 @@ module.exports = function(app, pg, async, pool) {
             sql += ' LEFT OUTER JOIN adm_def_damage_type dmgtype ON dmgtype."damageTypeId" = i.id';
             sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id AND description."descriptionTypeId" = 171';
             sql += ' LEFT OUTER JOIN adm_def_spell_component spcomp ON spcomp."spellComponentId" = i.id';
-            sql += ' WHERE t."isPicklist" = true';
+            sql += ' LEFT OUTER JOIN adm_link_type_picklist lnk ON lnk."picklistId" = t.id';
+            sql += ' LEFT OUTER JOIN adm_core_type typ ON typ.id = lnk."typeId"';
+            sql += ' WHERE t."isPicklist" = true OR t."isTypePicklist" = true';
             sql += ' GROUP BY t.id';
             sql += ' ORDER BY t."typeName"';
             var query = client.query(new pg.Query(sql));

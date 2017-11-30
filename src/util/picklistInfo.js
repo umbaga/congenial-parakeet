@@ -61,3 +61,15 @@ export function getIndexById(arr, id) {
     }
     return retVal;
 }
+
+export function refactorUnsavedItemIds(arr) {
+    let retVal = arr;
+    let newId = -1;
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].id <= 0) {
+            arr[i].id = newId;
+            newId--;
+        }
+    }
+    return retVal;
+}

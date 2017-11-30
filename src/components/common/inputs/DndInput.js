@@ -51,6 +51,8 @@ class DndInput extends React.Component {
             case util.dataTypes.number.INT:
             case util.dataTypes.number.SPELL_LEVEL:
             case util.dataTypes.number.WEIGHT:
+            case util.dataTypes.special.CHART_COLUMN_COUNT:
+            case util.dataTypes.special.CHART_ROW_COUNT:
                 if (this.props.dataType == util.dataTypes.number.SPELL_LEVEL) {
                     primaryInput = (<input
                                         type="number"
@@ -97,6 +99,7 @@ class DndInput extends React.Component {
             case util.dataTypes.picklist.ARMOR_PROFICIENCY:
             case util.dataTypes.picklist.CHART_TYPE:
             case util.dataTypes.picklist.DAMAGE_TYPE:
+            case util.dataTypes.picklist.DESCRIPTION_TYPE:
             case util.dataTypes.picklist.EQUIPMENT_CATEGORY:
             case util.dataTypes.picklist.GENERAL:
             case util.dataTypes.picklist.LANGUAGE_RARITY:

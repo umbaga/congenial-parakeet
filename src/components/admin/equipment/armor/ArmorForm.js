@@ -19,7 +19,7 @@ class ArmorForm extends React.Component {
     }
     
     render() {
-        let proficiencyPicklist = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ARMOR_PROFICIENCY);
+        let proficiencyPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ARMOR_PROFICIENCY);
 
         let hasMaxDexInput = null;
         let maximumDexInput = null;

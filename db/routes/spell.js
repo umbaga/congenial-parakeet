@@ -492,13 +492,16 @@ module.exports = function(app, pg, async, pool) {
                         tmp.spell.hasAnyTypeOfChart = false;
                         tmp.spell.hasDieChart = false;
                         tmp.spell.hasStandardCharts = false;
-                        if (tmp.spell.charts && tmp.spell.charts.die && tmp.spell.charts.die.length != 0) {
+                        if (tmp.spell.charts && tmp.spell.charts.length != 0) {
                             tmp.spell.hasAnyTypeOfChart = true;
-                            tmp.spell.hasDieChart = true;
-                        }
-                        if (tmp.spell.charts && tmp.spell.charts.standard && tmp.spell.charts.standard.length != 0) {
-                            tmp.spell.hasAnyTypeOfChart = true;
-                            tmp.spell.hasStandardCharts = true;
+                            for (var c = 0; c < tm.spell.charts.length; c++) {
+                                if (tmp.spell.charts[c].type.id == 904) {
+                                    tmp.spell.hasStandardCharts = true;
+                                }
+                                if (tmp.spell.charts[c].type.id == 806) {
+                                    tmp.spell.hasDieChart = true;
+                                }
+                            }
                         }
                         console.log(tmp.spell.hasAnyTypeOfChart);
                         console.log(tmp.spell.hasDieChart);
@@ -781,24 +784,13 @@ module.exports = function(app, pg, async, pool) {
                         results = [];
                         var addComma = false;
                         first = 1;
-                        if (resObj.spell.charts.standard && resObj.spell.charts.standard.length != 0) {
-                            for (var e = 0; e < resObj.spell.charts.standard.length; e++) {
+                        if (resObj.spell.charts && resObj.spell.charts.length != 0) {
+                            for (var e = 0; e < resObj.spell.charts.length; e++) {
                                 if (addComma) {
                                     sql += ', ';
                                 }
-                                first = first + 1;
                                 sql += ' ($' + first.toString() + ', 904)';
-                                vals.push(resObj.spell.charts.standard[e].title);
-                                addComma = true;
-                            }
-                        }
-                        if (resObj.spell.charts.die && resObj.spell.charts.die.length != 0) {
-                            for (var e = 0; e < resObj.spell.charts.die.length; e++) {
-                                if (addComma) {
-                                    sql += ', ';
-                                }
-                                sql += ' ($' + first.toString() + ', 806)';
-                                vals.push(resObj.spell.charts.die[e].title);
+                                vals.push(resObj.spell.charts[e].title);
                                 first = first + 1;
                                 addComma = true;
                             }
@@ -813,16 +805,9 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var e = 0; e < results.length; e++) {
-                                for (var d = 0; d < resObj.spell.charts.standard.length; d++) {
-                                    if (results[e].title == resObj.spell.charts.standard[d].title) {
-                                        resObj.spell.charts.standard[d].id = results[e].chartId;
-                                    }
-                                }
-                            }
-                            for (var e = 0; e < results.length; e++) {
-                                for (var d = 0; d < resObj.spell.charts.die.length; d++) {
-                                    if (results[e].title == resObj.spell.charts.die[d].title) {
-                                        resObj.spell.charts.die[d].id = results[e].chartId;
+                                for (var d = 0; d < resObj.spell.charts.length; d++) {
+                                    if (results[e].title == resObj.spell.charts[d].title) {
+                                        resObj.spell.charts[d].id = results[e].chartId;
                                     }
                                 }
                             }
@@ -843,7 +828,7 @@ module.exports = function(app, pg, async, pool) {
                         third = 3;
                         vals = [];
                         results = [];
-                        for (var e = 0; e < resObj.spell.charts.standard.length; e++) {
+                        for (var e = 0; e < resObj.spell.charts.length; e++) {
                             if (e != 0) {
                                 sql += ', ';
                             }
@@ -851,9 +836,9 @@ module.exports = function(app, pg, async, pool) {
                             first = first + 3;
                             second = second + 3;
                             third = third + 3;
-                            vals.push(resObj.spell.charts.standard[e].id);
-                            vals.push(resObj.spell.charts.standard[e].columnCount);
-                            vals.push(resObj.spell.charts.standard[e].rowCount);
+                            vals.push(resObj.spell.charts[e].id);
+                            vals.push(resObj.spell.charts[e].columnCount);
+                            vals.push(resObj.spell.charts[e].rowCount);
                         }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -871,14 +856,8 @@ module.exports = function(app, pg, async, pool) {
                     console.log('C');
                     if (resObj.spell.hasAnyTypeOfChart) {
                         var hasDescriptions = false;
-                        for (var e = 0; e < resObj.spell.charts.standard.length; e++) {
-                            if (resObj.spell.charts.standard[e].description && resObj.spell.charts.standard[e].description.length != 0) {
-                                hasDescriptions = true;
-                                break;
-                            }
-                        }
-                        for (var e = 0; e < resObj.spell.charts.die.length; e++) {
-                            if (resObj.spell.charts.die[e].description && resObj.spell.charts.die[e].description.length != 0) {
+                        for (var e = 0; e < resObj.spell.charts.length; e++) {
+                            if (resObj.spell.charts[e].description && resObj.spell.charts[e].description.length != 0) {
                                 hasDescriptions = true;
                                 break;
                             }
@@ -892,27 +871,14 @@ module.exports = function(app, pg, async, pool) {
                             second = 2;
                             vals = [];
                             results = [];
-                            for (var e = 0; e < resObj.spell.charts.standard.length; e++) {
-                                if (resObj.spell.charts.standard[e].description && resObj.spell.charts.standard[e].description.length != 0) {
+                            for (var e = 0; e < resObj.spell.charts.length; e++) {
+                                if (resObj.spell.charts[e].description && resObj.spell.charts[e].description.length != 0) {
                                     if (includeComma) {
                                         sql += ', ';
                                     }
                                     sql += ' ($' + first.toString() + ', $' + second.toString() + ', 907)';
-                                    vals.push(resObj.spell.charts.standard[e].id);
-                                    vals.push(resObj.spell.charts.standard[e].description);
-                                    first = first + 2;
-                                    second = second + 2;
-                                    includeComma = true;
-                                }
-                            }
-                            for (var e = 0; e < resObj.spell.charts.die.length; e++) {
-                                if (resObj.spell.charts.die[e].description && resObj.spell.charts.die[e].description.length != 0) {
-                                    if (includeComma) {
-                                        sql += ', ';
-                                    }
-                                    sql += ' ($' + first.toString() + ', $' + second.toString() + ', 907)';
-                                    vals.push(resObj.spell.charts.die[e].id);
-                                    vals.push(resObj.spell.charts.die[e].description);
+                                    vals.push(resObj.spell.charts[e].id);
+                                    vals.push(resObj.spell.charts[e].description);
                                     first = first + 2;
                                     second = second + 2;
                                     includeComma = true;
@@ -937,17 +903,17 @@ module.exports = function(app, pg, async, pool) {
                     console.log("C-D");
                     results = [];
                     vals = [];
-                    if (resObj.spell.charts && resObj.spell.charts.die && resObj.spell.charts.die.length != 0) {
+                    if (resObj.spell.hasDieChart) {
                         sql = 'SELECT dice.*';
                         sql += ' FROM adm_core_dice dice';
                         var first = 1;
                         var second = 2;
-                        for (var e = 0; e < resObj.spell.charts.die.length; e++) {
+                        for (var e = 0; e < resObj.spell.charts.length; e++) {
                             sql += (e == 0) ? ' WHERE' : ' OR';
                             sql += ' (dice."dieCount" = $' + first.toString();
                             sql += ' AND dice."dieType" = $' + second.toString() + ')';
-                            vals.push(resObj.spell.charts.die[e].dieRoll.dieCount);
-                            vals.push(resObj.spell.charts.die[e].dieRoll.dieType);
+                            vals.push(resObj.spell.charts[e].dieRoll.dieCount);
+                            vals.push(resObj.spell.charts[e].dieRoll.dieType);
                             first = first + 2;
                             second = second + 2;
                         }
@@ -958,10 +924,10 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var i = 0; i < results.length; i++) {
-                                for (var j = 0; j < resObj.spell.charts.die.length; j++) {
-                                    if (resObj.spell.charts.die[j].dieRoll.dieCount == results[i].dieCount &&
-                                       resObj.spell.charts.die[j].dieRoll.dieType == results[i].dieType) {
-                                        resObj.spell.charts.die[j].dieRoll.id = results[i].id;
+                                for (var j = 0; j < resObj.spell.charts.length; j++) {
+                                    if (resObj.spell.charts[j].dieRoll.dieCount == results[i].dieCount &&
+                                       resObj.spell.charts[j].dieRoll.dieType == results[i].dieType) {
+                                        resObj.spell.charts[j].dieRoll.id = results[i].id;
                                     }
                                 }
                             }
@@ -982,15 +948,15 @@ module.exports = function(app, pg, async, pool) {
                         sql += ' VALUES ';
                         first = 1;
                         second = 2;
-                        for (var e = 0; e < resObj.spell.charts.die.length; e++) {
+                        for (var e = 0; e < resObj.spell.charts.length; e++) {
                             if (e != 0) {
                                 sql += ', ';
                             }
                             sql += '($' + first.toString() + ', $' + second.toString() + ')';
                             first = first + 2;
                             second = second + 2;
-                            vals.push(resObj.spell.charts.die[e].id);
-                            vals.push(resObj.spell.charts.die[e].dieRoll.id);
+                            vals.push(resObj.spell.charts[e].id);
+                            vals.push(resObj.spell.charts[e].dieRoll.id);
                         }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -999,9 +965,9 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var i = 0; i < results.length; i++) {
-                                for (var j = 0; j < resObj.spell.charts.die.length; j++) {
-                                    if (results[i].title == resObj.spell.charts.die[j].title) {
-                                        resObj.spell.charts.die[j].id = results[i].chartId;
+                                for (var j = 0; j < resObj.spell.charts.length; j++) {
+                                    if (results[i].title == resObj.spell.charts[j].title) {
+                                        resObj.spell.charts[j].id = results[i].chartId;
                                     }
                                 }
                             }
@@ -1024,16 +990,16 @@ module.exports = function(app, pg, async, pool) {
                         var third = 3;
                         var fourth = 4;
                         var addComma = false;
-                        for (var i = 0; i < resObj.spell.charts.die.length; i++) {
-                            for (var j = 0; j < resObj.spell.charts.die[i].entries.length; j++) {
+                        for (var i = 0; i < resObj.spell.charts.length; i++) {
+                            for (var j = 0; j < resObj.spell.charts[i].entries.length; j++) {
                                 if (addComma) {
                                     sql += ', ';
                                 }
                                 sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
-                                vals.push(resObj.spell.charts.die[i].id);
-                                vals.push(resObj.spell.charts.die[i].entries[j].minimum);
-                                vals.push(resObj.spell.charts.die[i].entries[j].minimum);
-                                vals.push(resObj.spell.charts.die[i].entries[j].description);
+                                vals.push(resObj.spell.charts[i].id);
+                                vals.push(resObj.spell.charts[i].entries[j].minimum);
+                                vals.push(resObj.spell.charts[i].entries[j].minimum);
+                                vals.push(resObj.spell.charts[i].entries[j].description);
                                 first = first + 4;
                                 second = second + 4;
                                 third = third + 4;
@@ -1064,8 +1030,8 @@ module.exports = function(app, pg, async, pool) {
                         first = 1;
                         second = 2;
                         third = 3;
-                        for (var c = 0; c < resObj.spell.charts.standard.length; c++) {
-                            for (var e = 0; e < resObj.spell.charts.standard[c].columns.length; e ++) {
+                        for (var c = 0; c < resObj.spell.charts.length; c++) {
+                            for (var e = 0; e < resObj.spell.charts[c].columns.length; e ++) {
                                 if (!(c == 0 && e == 0)) {
                                     sql += ', ';
                                 }
@@ -1073,9 +1039,9 @@ module.exports = function(app, pg, async, pool) {
                                 first = first + 3;
                                 second = second + 3;
                                 third = third + 3;
-                                vals.push(resObj.spell.charts.standard[c].id);
-                                vals.push(resObj.spell.charts.standard[c].columns[e].columnIndex);
-                                vals.push(resObj.spell.charts.standard[c].columns[e].title);
+                                vals.push(resObj.spell.charts[c].id);
+                                vals.push(resObj.spell.charts[c].columns[e].columnIndex);
+                                vals.push(resObj.spell.charts[c].columns[e].title);
                             }
                         }
                         sql += ' returning "chartId", "columnIndex", id AS "columnId";';
@@ -1086,11 +1052,11 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var r = 0; r < results.length; r++) {
-                                for (var c = 0; c < resObj.spell.charts.standard.length; c++) {
-                                    for (var e = 0; e < resObj.spell.charts.standard[c].columns.length; e++) {
-                                        if (results[r].chartId == resObj.spell.charts.standard[c].id) {
-                                            if (results[r].columnIndex == resObj.spell.charts.standard[c].columns[e].columnIndex) {
-                                                resObj.spell.charts.standard[c].columns[e].id = results[r].columnId;
+                                for (var c = 0; c < resObj.spell.charts.length; c++) {
+                                    for (var e = 0; e < resObj.spell.charts[c].columns.length; e++) {
+                                        if (results[r].chartId == resObj.spell.charts[c].id) {
+                                            if (results[r].columnIndex == resObj.spell.charts[c].columns[e].columnIndex) {
+                                                resObj.spell.charts[c].columns[e].id = results[r].columnId;
                                             }
                                         }
                                     }
@@ -1108,9 +1074,9 @@ module.exports = function(app, pg, async, pool) {
                         vals = [];
                         results = [];
                         var hasRowTitles = false;
-                        for (var c = 0; c < resObj.spell.charts.standard.length; c++) {
-                            for (var r = 0; r < resObj.spell.charts.standard[c].rows.length; r++) {
-                                if (resObj.spell.charts.standard[c].rows[r].title && resObj.spell.charts.standard[c].rows[r].title.length != 0) {
+                        for (var c = 0; c < resObj.spell.charts.length; c++) {
+                            for (var r = 0; r < resObj.spell.charts[c].rows.length; r++) {
+                                if (resObj.spell.charts[c].rows[r].title && resObj.spell.charts[c].rows[r].title.length != 0) {
                                     hasRowTitles = true;
                                 }
                             }
@@ -1123,9 +1089,9 @@ module.exports = function(app, pg, async, pool) {
                             second = 2;
                             third = 3;
                             var addComma = false;
-                            for (var c = 0; c < resObj.spell.charts.standard.length; c++) {
-                                for (var r = 0; r < resObj.spell.charts.standard[c].rows.length; r++) {
-                                    if (resObj.spell.charts.standard[c].rows[r].title && resObj.spell.charts.standard[c].rows[r].title.length != 0) {
+                            for (var c = 0; c < resObj.spell.charts.length; c++) {
+                                for (var r = 0; r < resObj.spell.charts[c].rows.length; r++) {
+                                    if (resObj.spell.charts[c].rows[r].title && resObj.spell.charts[c].rows[r].title.length != 0) {
                                         if (addComma) {
                                             sql += ', ';
                                         }
@@ -1133,9 +1099,9 @@ module.exports = function(app, pg, async, pool) {
                                         first = first + 3;
                                         second = second + 3;
                                         third = third + 3;
-                                        vals.push(resObj.spell.charts.standard[c].id);
-                                        vals.push(resObj.spell.charts.standard[c].rows[r].rowIndex);
-                                        vals.push(resObj.spell.charts.standard[c].rows[r].title);
+                                        vals.push(resObj.spell.charts[c].id);
+                                        vals.push(resObj.spell.charts[c].rows[r].rowIndex);
+                                        vals.push(resObj.spell.charts[c].rows[r].title);
                                         
                                         addComma = true;
                                     }
@@ -1149,11 +1115,11 @@ module.exports = function(app, pg, async, pool) {
                             query.on('end', function() {
                                 done();
                                 for (var r = 0; r < results.length; r++) {
-                                    for (var c = 0; c < resObj.spell.charts.standard.length; c++) {
-                                        for (var e = 0; e < resObj.spell.charts.standard[c].rows.length; e++) {
-                                            if (results[r].chartId == resObj.spell.charts.standard[c].id) {
-                                                if (results[r].rowIndex == resObj.spell.charts.standard[c].rows[e].rowIndex) {
-                                                    resObj.spell.charts.standard[c].rows[e].id = results[r].rowId;
+                                    for (var c = 0; c < resObj.spell.charts.length; c++) {
+                                        for (var e = 0; e < resObj.spell.charts[c].rows.length; e++) {
+                                            if (results[r].chartId == resObj.spell.charts[c].id) {
+                                                if (results[r].rowIndex == resObj.spell.charts[c].rows[e].rowIndex) {
+                                                    resObj.spell.charts[c].rows[e].id = results[r].rowId;
                                                 }
                                             }
                                         }
@@ -1180,8 +1146,8 @@ module.exports = function(app, pg, async, pool) {
                         second = 2;
                         third = 3;
                         fourth = 4;
-                        for (var c = 0; c < resObj.spell.charts.standard.length; c++) {
-                            for (var e = 0; e < resObj.spell.charts.standard[c].entries.length; e++) {
+                        for (var c = 0; c < resObj.spell.charts.length; c++) {
+                            for (var e = 0; e < resObj.spell.charts[c].entries.length; e++) {
                                 if(!(c == 0 && e == 0)) {
                                     sql += ', ';
                                 }
@@ -1190,10 +1156,10 @@ module.exports = function(app, pg, async, pool) {
                                 second = second + 4;
                                 third = third + 4;
                                 fourth = fourth + 4;
-                                vals.push(resObj.spell.charts.standard[c].id);
-                                vals.push(resObj.spell.charts.standard[c].entries[e].columnIndex);
-                                vals.push(resObj.spell.charts.standard[c].entries[e].rowIndex);
-                                vals.push(resObj.spell.charts.standard[c].entries[e].description);
+                                vals.push(resObj.spell.charts[c].id);
+                                vals.push(resObj.spell.charts[c].entries[e].columnIndex);
+                                vals.push(resObj.spell.charts[c].entries[e].rowIndex);
+                                vals.push(resObj.spell.charts[c].entries[e].description);
                             }
                         }
                         sql += 'returning "chartId", "rowIndex", "columnIndex", id AS "entryId";';
@@ -1204,11 +1170,11 @@ module.exports = function(app, pg, async, pool) {
                         query.on('end', function() {
                             done();
                             for (var r = 0; r < results.length; r++) {
-                                for (var c = 0; c < resObj.spell.charts.standard.length; c++) {
-                                    for (var e = 0; e < resObj.spell.charts.standard[c].entries.length; e++) {
-                                        if (results[r].chartId == resObj.spell.charts.standard[c].id) {
-                                            if (results[r].rowIndex == resObj.spell.charts.standard[c].entries[e].rowIndex && results[r].columnIndex == resObj.spell.charts.standard[c].entries[e].columnIndex) {
-                                                resObj.spell.charts.standard[c].entries[e].id = results[r].entryId;
+                                for (var c = 0; c < resObj.spell.charts.length; c++) {
+                                    for (var e = 0; e < resObj.spell.charts[c].entries.length; e++) {
+                                        if (results[r].chartId == resObj.spell.charts[c].id) {
+                                            if (results[r].rowIndex == resObj.spell.charts[c].entries[e].rowIndex && results[r].columnIndex == resObj.spell.charts[c].entries[e].columnIndex) {
+                                                resObj.spell.charts[c].entries[e].id = results[r].entryId;
                                             }
                                         }
                                     }
@@ -1232,7 +1198,7 @@ module.exports = function(app, pg, async, pool) {
                         second = 2;
                         third = 3;
                         addComma = false
-                        for (var c = 0; c < resObj.spell.charts.standard.length; c++) {
+                        for (var c = 0; c < resObj.spell.charts.length; c++) {
                             if (addComma) {
                                 sql += ', ';
                             }
@@ -1241,21 +1207,8 @@ module.exports = function(app, pg, async, pool) {
                             second = second + 3;
                             third = third + 3;
                             vals.push(resObj.spell.id);
-                            vals.push(resObj.spell.charts.standard[c].id);
-                            vals.push(resObj.spell.charts.standard[c].orderIndex);
-                            addComma = true;
-                        }
-                        for (var c = 0; c < resObj.spell.charts.die.length; c++) {
-                            if (addComma) {
-                                sql += ', ';
-                            }
-                            sql += '($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
-                            first = first + 3;
-                            second = second + 3;
-                            third = third + 3;
-                            vals.push(resObj.spell.id);
-                            vals.push(resObj.spell.charts.die[c].id);
-                            vals.push(resObj.spell.charts.die[c].orderIndex);
+                            vals.push(resObj.spell.charts[c].id);
+                            vals.push(resObj.spell.charts[c].orderIndex);
                             addComma = true;
                         }
                         var query = client.query(new pg.Query(sql, vals));
@@ -1462,29 +1415,31 @@ module.exports = function(app, pg, async, pool) {
             query.on('end', function() {
                 done();
                 for (var t = 0; t < results.length; t++) {
-                    if (results[t].charts && results[t].charts.standard && results[t].charts.standard.length != 0) {
-                        results[t].charts.standard = results[t].charts.standard.sort(function (a, b) {
+                    if (results[t].charts && results[t].charts && results[t].charts.length != 0) {
+                        results[t].charts = results[t].charts.sort(function (a, b) {
                             return a.orderIndex - b.orderIndex;
                         });
-                        for (var x = 0; x < results[t].charts.standard.length; x++) {
-                            results[t].charts.standard[x].columns = results[t].charts.standard[x].columns.sort(function (a, b) {
-                                return a.columnIndex - b.columnIndex;
-                            });
-                            results[t].charts.standard[x].entries = results[t].charts.standard[x].entries.sort(function(a, b) {
+                        for (var x = 0; x < results[t].charts.length; x++) {
+                            if (results[t].charts[x].columns && results[t].charts[x].columns.length != 0) {
+                                results[t].charts[x].columns = results[t].charts[x].columns.sort(function (a, b) {
+                                    return a.columnIndex - b.columnIndex;
+                                });
+                            }
+                            results[t].charts[x].entries = results[t].charts[x].entries.sort(function(a, b) {
                                 return a.rowIndex - b.rowIndex || a.columnIndex - b.columnIndex;
                             });
-                            if(results[t].charts.standard[x].rows && results[t].charts.standard[x].rows.length != 0) {
-                                results[t].charts.standard[x].rows = results[t].charts.standard[x].rows.sort(function(a,b) {
+                            if(results[t].charts[x].rows && results[t].charts[x].rows.length != 0) {
+                                results[t].charts[x].rows = results[t].charts[x].rows.sort(function(a,b) {
                                     return a.rowIndex - b.rowIndex;
                                 });
                             } else {
                                 var compareVal = -1;
                                 var newIndex = 0;
-                                results[t].charts.standard[x].rows = [];
-                                for (var q = 0; q < results[t].charts.standard[x].entries.length; q++) {
-                                    if (compareVal != results[t].charts.standard[x].entries[q].rowIndex) {
-                                        compareVal = results[t].charts.standard[x].entries[q].rowIndex;
-                                        results[t].charts.standard[x].rows.push({
+                                results[t].charts[x].rows = [];
+                                for (var q = 0; q < results[t].charts[x].entries.length; q++) {
+                                    if (compareVal != results[t].charts[x].entries[q].rowIndex) {
+                                        compareVal = results[t].charts[x].entries[q].rowIndex;
+                                        results[t].charts[x].rows.push({
                                             id: -1 * newIndex,
                                             title: '',
                                             rowIndex: newIndex

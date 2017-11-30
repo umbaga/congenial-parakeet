@@ -59,7 +59,7 @@ class ProficiencyListPage extends React.Component {
 
     render() {
         const proficiencies = this.props.proficiencies;
-        const proficiencyCategories = util.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.PROFICIENCY_CATEGORY);
+        const proficiencyCategories = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.PROFICIENCY_CATEGORY);
         return (
             <div className="col-md-12">
                 <div>

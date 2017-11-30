@@ -78,7 +78,7 @@ class WeaponEntry extends React.Component {
     }
 
     updateFormState(event) {
-        return this.setState({weapon: util.common.updateFormState(event, this.state.weapon, this.props.picklists)});
+        return this.setState({weapon: util.common.formState.standard(event, this.state.weapon, this.props.picklists)});
     }
 
     render() {

@@ -12,14 +12,22 @@ class DndListItemButtonBar extends React.Component {
         this._onViewDetails = this._onViewDetails.bind(this);
     }
 
-    _onEdit() {
+    _onEdit(event) {
         this._hidePopover();
-        this.props.onEdit(this.props.listItem.id);
+        if (this.props.returnCompleteObject) {
+            this.props.onEdit(event, this.props.listItem);
+        } else {
+            this.props.onEdit(this.props.listItem.id);
+        }
     }
 
-    _onDelete() {
+    _onDelete(event) {
         this._hidePopover();
-        this.props.onDelete(this.props.listItem.id);
+        if (this.props.returnCompleteObject) {
+            this.props.onDelete(event, this.props.listItem);
+        } else {
+            this.props.onDelete(this.props.listItem.id);
+        }
     }
     
     _hidePopover() {
@@ -28,7 +36,11 @@ class DndListItemButtonBar extends React.Component {
     
     _onViewDetails() {
         this._hidePopover();
-        this.props.onViewDetails(this.props.listItem.id);
+        if (this.props.returnCompleteObject) {
+            this.props.onViewDetails(event, this.props.listItem);
+        } else {
+            this.props.onViewDetails(this.props.listItem.id);
+        }
     }
 
     render() {
@@ -37,7 +49,7 @@ class DndListItemButtonBar extends React.Component {
         if (this.props.hideDeleteButton) {
             deleteButton = null;
         } else {
-            deleteButton = (<DndButton onClick={this._onDelete} buttonType="delete" />);
+            deleteButton = (<DndButton onClick={this._onDelete} buttonType="delete" dataType={this.props.deleteAction}/>);
         }
         let detailsButton = null;
         if (this.props.showDetailsButton) {
@@ -50,7 +62,7 @@ class DndListItemButtonBar extends React.Component {
                 <ButtonGroup>
                     {deleteButton}
                     {detailsButton}
-                    <DndButton onClick={this._onEdit} buttonType="edit" />
+                    <DndButton onClick={this._onEdit} buttonType="edit" dataType={this.props.editAction}/>
                 </ButtonGroup>
             </Popover>
         );
@@ -72,7 +84,10 @@ DndListItemButtonBar.propTypes = {
     onDelete: PropTypes.func,
     onViewDetails: PropTypes.func,
     hideDeleteButton: PropTypes.bool,
-    showDetailsButton: PropTypes.bool
+    showDetailsButton: PropTypes.bool,
+    deleteAction: PropTypes.string,
+    editAction: PropTypes.string,
+    returnCompleteObject: PropTypes.bool
 };
 
 export default DndListItemButtonBar;

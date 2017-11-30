@@ -123,7 +123,7 @@ class PackEntry extends React.Component {
     }
     
     updateFormState(event) {
-        return this.setState({pack: util.common.updateFormState(event, this.state.pack, this.props.picklists)});
+        return this.setState({pack: util.common.formState.standard(event, this.state.pack, this.props.picklists)});
     }
 
     render() {
