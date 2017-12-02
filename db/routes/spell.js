@@ -494,7 +494,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         tmp.spell.hasStandardCharts = false;
                         if (tmp.spell.charts && tmp.spell.charts.length != 0) {
                             tmp.spell.hasAnyTypeOfChart = true;
-                            for (var c = 0; c < tm.spell.charts.length; c++) {
+                            for (var c = 0; c < tmp.spell.charts.length; c++) {
                                 if (tmp.spell.charts[c].type.id == 904) {
                                     tmp.spell.hasStandardCharts = true;
                                 }
@@ -786,9 +786,9 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                                 if (addComma) {
                                     sql += ', ';
                                 }
-                                sql += ' ($' + first.toString() + ', ' + second.toString() + ')';
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
                                 vals.push(resObj.spell.charts[e].title);
-                                vals.push(resObj.spell.charts[e].type.id)
+                                vals.push(resObj.spell.charts[e].type.id);
                                 first = first + 2;
                                 second = second + 2;
                                 addComma = true;
@@ -1226,6 +1226,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertSupplementalDescription(resObj, callback) {
+                    console.log('J');
                     if (resObj.spell.supplementalDescriptions && resObj.spell.supplementalDescriptions.length != 0) {
                         vals = [];
                         results = [];
@@ -1239,15 +1240,17 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             if (d != 0) {
                                 sql += ', ';
                             }
-                            sql += '($' + first.toString() + ', $' + second.toString() + ', ' + third.toString() + ')';
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
                             first = first + 3;
                             second = second + 3;
                             third = third + 3;
                             vals.push(resObj.spell.id);
                             vals.push(resObj.spell.supplementalDescriptions[d].description);
+                            console.log(itemtypes.DESCRIPTION.SUPPLEMENTAL_DESCRIPTION);
                             vals.push(itemtypes.DESCRIPTION.SUPPLEMENTAL_DESCRIPTION);
                         }
                         sql += ' returning "description", id AS "descriptionId"';
+                        console.log(sql);
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
@@ -1268,6 +1271,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertSupplementalDescriptionDef(resObj, callback) {
+                    console.log('K');
                     if (resObj.spell.supplementalDescriptions && resObj.spell.supplementalDescriptions.length != 0) {
                         vals = [];
                         results = [];

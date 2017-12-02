@@ -10,12 +10,12 @@ class SpellDetails extends React.Component {
         this.renderAtHighestLevel = this.renderAtHighestLevel.bind(this);
         this.renderCharts = this.renderCharts.bind(this);
         this.renderSupplementalDescriptions = this.renderSupplementalDescriptions.bind(this);
-        this.renderDieCharts = this.renderDieCharts.bind(this);
     }
     
     componentDidMount() {
         
     }
+    
     renderAtHighestLevel() {
         return this.props.spell.atHigherLevels && this.props.spell.atHigherLevels.length != 0 ? (
             <div>
@@ -24,11 +24,12 @@ class SpellDetails extends React.Component {
             </div>
         ) : null;
     }
+    
     renderCharts() {
-        if (this.props.spell.charts && this.props.spell.charts.standard && this.props.spell.charts.standard.length != 0) {
+        if (this.props.spell.charts && this.props.spell.charts.length != 0) {
             return (
                 <div>
-                    {this.props.spell.charts.standard.map(chart =>
+                    {this.props.spell.charts.map(chart =>
                         <DndChartDisplay
                             key={chart.id}
                             chart={chart}
@@ -40,22 +41,7 @@ class SpellDetails extends React.Component {
             return null;
         }
     }
-    renderDieCharts() {
-        if (this.props.spell.charts && this.props.spell.charts.die && this.props.spell.charts.die.length != 0) {
-            return (
-                <div>
-                    {this.props.spell.charts.die.map(chart =>
-                        <DndDieChartDisplay
-                            key={chart.id}
-                            chart={chart}
-                            />
-                    )}
-                </div>
-            );
-        } else {
-            return null;
-        }
-    }
+    
     renderSupplementalDescriptions() {
         return (this.props.spell.supplementalDescriptions && this.props.spell.supplementalDescriptions.length != 0) ? (
             <div>
@@ -68,8 +54,10 @@ class SpellDetails extends React.Component {
             </div>
         ) : null;
     }
+    
     render() {
         const spell = this.props.spell;
+        console.log(spell);
         return (
             <div>
                 <div><em>{spell.name}</em></div>
@@ -84,7 +72,6 @@ class SpellDetails extends React.Component {
                 {this.renderSupplementalDescriptions()}
                 {this.renderAtHighestLevel()}
                 {this.renderCharts()}
-                {this.renderDieCharts()}
             </div>
         );
     }

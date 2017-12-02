@@ -65,7 +65,7 @@ class DndManageSupplementalDescriptions extends React.Component {
                                         boundClick={boundClick}
                                         showThisId={this.state.showThisId}
                                         >
-                                            <tbody><tr><td>{c.description}</td></tr></tbody>
+                                        <div>{c.description}</div>
                                     </DndCollapsibleTableRow>
                                 );
                             }.bind(this))}
