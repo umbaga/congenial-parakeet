@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool) {
+module.exports = function(app, pg, async, pool, itemtypes, modules) {
     app.delete('/api/adm/equipment/armor/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -201,8 +201,8 @@ module.exports = function(app, pg, async, pool) {
                 function insertItem(req, callback) {
                     sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "resourceId", "itemTypeId")';
-                    sql += ' VALUES ($1, $2, 456) returning id AS "equipmentId";';
-                    vals = [req.body.armor.name, req.body.armor.resource.id];
+                    sql += ' VALUES ($1, $2, $3) returning id AS "equipmentId";';
+                    vals = [req.body.armor.name, req.body.armor.resource.id, itemtypes.TYPE.ARMOR];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -217,8 +217,8 @@ module.exports = function(app, pg, async, pool) {
                 function insertEquipment(resObj, callback) {
                     sql = 'INSERT INTO adm_def_equipment';
                     sql += ' ("equipmentId", "weight", "cost", "categoryId")';
-                    sql += ' VALUES ($1, $2, $3, 457);';
-                    vals = [resObj.armor.id, resObj.armor.weight, resObj.armor.cost];
+                    sql += ' VALUES ($1, $2, $3, $4);';
+                    vals = [resObj.armor.id, resObj.armor.weight, resObj.armor.cost, itemtypes.EQUIPMENT_CATEGORY.ARMOR];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
                     query.on('row', function(row) {
@@ -294,6 +294,7 @@ module.exports = function(app, pg, async, pool) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
+            console.log('armor');
             
             sql = 'SELECT i."itemName" AS name, i.id, eq.cost, eq.weight, arm."stealthDisadvantage", arm."minimumStrength"';
             sql += ', arm."baseArmorClass", arm."applyDexModifier", arm."hasMaxDexModifier", arm."maxDexModifier", arm."isCumulative"';

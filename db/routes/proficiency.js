@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool) {
+module.exports = function(app, pg, async, pool, itemtypes, modules) {
     app.delete('/api/adm/proficiency/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -315,20 +315,20 @@ module.exports = function(app, pg, async, pool) {
                 function insertItemTable(req, callback) {
                     var itemTypeId = 0;
                     switch (req.body.proficiency.category.id) {
-                        case 92://armor
-                            itemTypeId = 20;
+                        case itemtypes.PROFICIENCY_CATEGORY.ARMOR:
+                            itemTypeId = itemtypes.TYPE.ARMOR_PROFICIENCY;
                             break;
-                        case 101://weapon
-                            itemTypeId = 21;
+                        case itemtypes.PROFICIENCY_CATEGORY.WEAPON:
+                            itemTypeId = itemtypes.TYPE.WEAPON_PROFICIENCY;
                             break;
-                        case 98://skill
-                            itemTypeId = 396;
+                        case itemtypes.PROFICIENCY_CATEGORY.SKILL:
+                            itemTypeId = itemtypes.TYPE.SKILL;
                             break;
-                        case 95://language
-                            itemTypeId = 394;
+                        case itemtypes.PROFICIENCY_CATEGORY.LANGUAGE:
+                            itemTypeId = itemtypes.TYPE.LANGUAGE;
                             break;
-                        case 100://vehicle
-                            itemTypeId = 395;
+                        case itemtypes.PROFICIENCY_CATEGORY.VEHICLE:
+                            itemTypeId = itemtypes.TYPE.VEHICLE;
                             break;
                     }
                     sql = 'INSERT INTO adm_core_item';
@@ -370,15 +370,11 @@ module.exports = function(app, pg, async, pool) {
                     });
                 },
                 function insertProficiencyAbilityScoreTable(resObj, callback) {
-                    console.log(resObj.needsAbilityScore);
                     if(resObj.proficiency.needsAbilityScore) {
-                        console.log(resObj);
                         sql = 'INSERT INTO adm_def_proficiency_ability_score';
                         sql += ' ("proficiencyId", "abilityScoreId")';
                         sql += ' VALUES ($1, $2);';
-                        console.log(sql);
                         vals = [resObj.proficiency.id, resObj.proficiency.abilityScore.id];
-                        console.log(vals);
                         var query = client.query(new pg.Query(sql, vals));
                         var results = [];
                         query.on('row', function(row) {
@@ -448,7 +444,8 @@ module.exports = function(app, pg, async, pool) {
             }
             sql = 'SELECT i.id, i."itemName" as name';
             sql += ', description.description';
-            sql += ' , json_build_object(\'name\', cat."itemName", \'id\', cat."id", \'isTool\', CASE WHEN cat."id" IN (238, 241, 242, 243, 541) THEN true ELSE false END) AS "category"';
+            sql += ' , json_build_object(\'name\', cat."itemName", \'id\', cat."id", \'isTool\', ';
+            sql += ' CASE WHEN cat."id" IN ($1, $2, $3, $4, $5) THEN true ELSE false END) AS "category"';
             sql += ' , CASE WHEN ability.id IS NULL THEN \'{}\' ';
             sql += ' ELSE json_build_object(\'name\', ability."itemName", \'id\', ability."id") END AS "abilityScore"';
             sql += ' , CASE WHEN script."id" IS NULL THEN \'{}\' ';
@@ -466,7 +463,14 @@ module.exports = function(app, pg, async, pool) {
             sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id';
             sql += ' INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
             sql += ' ORDER BY cat."itemName", i."itemName"';
-            var query = client.query(new pg.Query(sql));
+            vals = [
+                itemtypes.PROFICIENCY_CATEGORY.ARTISANS_TOOL, 
+                itemtypes.PROFICIENCY_CATEGORY.GAMING_SET, 
+                itemtypes.PROFICIENCY_CATEGORY.MUSICAL_INSTRUMENT, 
+                itemtypes.PROFICIENCY_CATEGORY.TOOL, 
+                itemtypes.PROFICIENCY_CATEGORY.VEHICLE
+            ];
+            var query = client.query(new pg.Query(sql, vals));
             query.on('row', function(row) {
                 results.push(row);
             });

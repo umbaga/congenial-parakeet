@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool) {
+module.exports = function(app, pg, async, pool, itemtypes, modules) {
     app.delete('/api/adm/spell/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -471,8 +471,8 @@ module.exports = function(app, pg, async, pool) {
                     vals = [];
                     sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "resourceId", "itemTypeId")';
-                    sql += ' VALUES ($1, $2, 119) returning id AS "spellId";';
-                    vals = [req.body.spell.name, req.body.spell.resource.id];
+                    sql += ' VALUES ($1, $2, $3) returning id AS "spellId";';
+                    vals = [req.body.spell.name, req.body.spell.resource.id, itemtypes.TYPE.SPELL];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -555,8 +555,8 @@ module.exports = function(app, pg, async, pool) {
                         vals = [];
                         sql = 'INSERT INTO adm_core_description';
                         sql += ' ("itemId", "description", "descriptionTypeId")';
-                        sql += ' VALUES ($1, $2, 122) returning id AS "atHigherLevelsId";';
-                        vals = [resObj.spell.id, resObj.spell.atHigherLevels];
+                        sql += ' VALUES ($1, $2, $3) returning id AS "atHigherLevelsId";';
+                        vals = [resObj.spell.id, resObj.spell.atHigherLevels, itemtypes.DESCRIPTION.AT_HIGHER_LEVELS];
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
@@ -784,14 +784,17 @@ module.exports = function(app, pg, async, pool) {
                         results = [];
                         var addComma = false;
                         first = 1;
+                        second = 2;
                         if (resObj.spell.charts && resObj.spell.charts.length != 0) {
                             for (var e = 0; e < resObj.spell.charts.length; e++) {
                                 if (addComma) {
                                     sql += ', ';
                                 }
-                                sql += ' ($' + first.toString() + ', 904)';
+                                sql += ' ($' + first.toString() + ', ' + second.toString() + ')';
                                 vals.push(resObj.spell.charts[e].title);
-                                first = first + 1;
+                                vals.push(resObj.spell.charts[e].type.id)
+                                first = first + 2;
+                                second = second + 2;
                                 addComma = true;
                             }
                         }
@@ -869,6 +872,7 @@ module.exports = function(app, pg, async, pool) {
                             sql += ' VALUES ';
                             first = 1;
                             second = 2;
+                            third = 3;
                             vals = [];
                             results = [];
                             for (var e = 0; e < resObj.spell.charts.length; e++) {
@@ -876,11 +880,13 @@ module.exports = function(app, pg, async, pool) {
                                     if (includeComma) {
                                         sql += ', ';
                                     }
-                                    sql += ' ($' + first.toString() + ', $' + second.toString() + ', 907)';
+                                    sql += ' ($' + first.toString() + ', $' + second.toString() + ', ' + third.toString() + ')';
                                     vals.push(resObj.spell.charts[e].id);
                                     vals.push(resObj.spell.charts[e].description);
-                                    first = first + 2;
-                                    second = second + 2;
+                                    vals.push(itemtypes.DESCRIPTION.CHART);
+                                    first = first + 3;
+                                    second = second + 3;
+                                    third = third + 3;
                                     includeComma = true;
                                 }
                             }
@@ -1232,15 +1238,18 @@ module.exports = function(app, pg, async, pool) {
                         sql += ' VALUES ';
                         first = 1;
                         second = 2;
+                        third = 3;
                         for (var d = 0; d < resObj.spell.supplementalDescriptions.length; d++) {
                             if (d != 0) {
                                 sql += ', ';
                             }
-                            sql += '($' + first.toString() + ', $' + second.toString() + ', 944)';
-                            first = first + 2;
-                            second = second + 2;
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', ' + third.toString() + ')';
+                            first = first + 3;
+                            second = second + 3;
+                            third = third + 3;
                             vals.push(resObj.spell.id);
                             vals.push(resObj.spell.supplementalDescriptions[d].description);
+                            vals.push(itemtypes.DESCRIPTION.SUPPLEMENTAL_DESCRIPTION);
                         }
                         sql += ' returning "description", id AS "descriptionId"';
                         var query = client.query(new pg.Query(sql, vals));
@@ -1306,12 +1315,15 @@ module.exports = function(app, pg, async, pool) {
     });
     app.get('/api/adm/spells', function(req, res) {
         var results = [];
+        var vals = [];
         pool.connect(function(err, client, done) {
             if (err) {
                 done();
+                console.log('---');
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
+            console.log('spell');
             sql = 'SELECT i.id, i."itemName" AS name, spell.level';
             sql += '  , description.description';
             sql += '  , spell."isRitual"';
@@ -1382,10 +1394,10 @@ module.exports = function(app, pg, async, pool) {
             sql += '   INNER JOIN adm_core_item duration ON duration.id = spell."durationId"';
             sql += '   INNER JOIN adm_core_item range ON range.id = spell."rangeId"';
             sql += '   INNER JOIN adm_core_item casting ON casting.id = spell."castingTimeId"';
-            sql += '   LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = 171)';
+            sql += '   LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = $1)';
             sql += '   LEFT OUTER JOIN adm_link_spell_component lnkcomp ON lnkcomp."referenceId" = i.id';
             sql += '   LEFT OUTER JOIN adm_core_item comp ON comp.id = lnkcomp."componentId"';
-            sql += '   LEFT OUTER JOIN adm_core_description higherleveldesc ON (higherleveldesc."itemId" = i.id AND higherleveldesc."descriptionTypeId" = 122)';
+            sql += '   LEFT OUTER JOIN adm_core_description higherleveldesc ON (higherleveldesc."itemId" = i.id AND higherleveldesc."descriptionTypeId" = $2)';
             sql += '   INNER JOIN adm_core_item resource ON resource.id = i."resourceId"';
             sql += '   LEFT OUTER JOIN adm_def_spell_saving_throw save ON save."spellId" = i.id';
             sql += '   LEFT OUTER JOIN adm_core_item saveability ON saveability.id = save."abilityScoreId"';
@@ -1408,7 +1420,11 @@ module.exports = function(app, pg, async, pool) {
             sql += '  , improvedmgdice.id';
             sql += '  , spell."isRitual"';
             sql += '   ORDER BY i."itemName"';
-            var query = client.query(new pg.Query(sql));
+            vals = [
+                itemtypes.DESCRIPTION.GENERAL,
+                itemtypes.DESCRIPTION.AT_HIGHER_LEVELS
+            ];
+            var query = client.query(new pg.Query(sql, vals));
             query.on('row', function(row) {
                 results.push(row);
             });

@@ -1,5 +1,8 @@
 var express = require('express');
 
+var itemtypes = require('./modules/itemtypeDefinition');
+var modules = require('./modules/manageObjects');
+
 var runArmors = require('./routes/armors');
 var runBackgrounds = require('./routes/backgrounds');
 var runCore = require('./routes/core');
@@ -28,16 +31,16 @@ app.use(bodyParser.urlencoded({ extended: true })); app.use(bodyParser.urlencode
 
 var async = require('async');
 
-runArmors(app, pg, async, pool);
-runBackgrounds(app, pg, async, pool);
-runCore(app, pg, async, pool);
-runEquipment(app, pg, async, pool);
-runItemtypes(app, pg, async, pool);
-runPacks(app, pg, async, pool);
-runPicklists(app, pg, async, pool);
-runProficiency(app, pg, async, pool);
-runSpells(app, pg, async, pool);
-runWeapons(app, pg, async, pool);
+runArmors(app, pg, async, pool, itemtypes, modules);
+runBackgrounds(app, pg, async, pool, itemtypes, modules);
+runCore(app, pg, async, pool, itemtypes, modules);
+runEquipment(app, pg, async, pool, itemtypes, modules);
+runItemtypes(app, pg, async, pool, itemtypes, modules);
+runPacks(app, pg, async, pool, itemtypes, modules);
+runPicklists(app, pg, async, pool, itemtypes, modules);
+runProficiency(app, pg, async, pool, itemtypes, modules);
+runSpells(app, pg, async, pool, itemtypes, modules);
+runWeapons(app, pg, async, pool, itemtypes, modules);
 
 app.listen(5000);
 

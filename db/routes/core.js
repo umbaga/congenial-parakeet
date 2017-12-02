@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool) {
+module.exports = function(app, pg, async, pool, itemtypes, modules) {
     app.get('/api/adm/core/dierolls', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {

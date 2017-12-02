@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool) {
+module.exports = function(app, pg, async, pool, itemtypes, modules) {
     app.delete('/api/adm/itemtype/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -79,6 +79,7 @@ module.exports = function(app, pg, async, pool) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
+            console.log('item types');
             sql = 'SELECT adm_core_type."id"';
             sql += ', adm_core_type."typeName" AS "name"';
             sql += ', adm_core_type."isPicklist"';

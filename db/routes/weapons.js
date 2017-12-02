@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool) {
+module.exports = function(app, pg, async, pool, itemtypes, modules) {
     app.delete('/api/adm/equipment/weapon/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -672,8 +672,8 @@ module.exports = function(app, pg, async, pool) {
                 function insertItem(req, callback) {
                     sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "resourceId", "itemTypeId")';
-                    sql += ' VALUES ($1, $2, 455) returning id AS "equipmentId";';
-                    vals = [req.body.weapon.name, req.body.weapon.resource.id];
+                    sql += ' VALUES ($1, $2, $3) returning id AS "equipmentId";';
+                    vals = [req.body.weapon.name, req.body.weapon.resource.id, itemtypes.TYPE.WEAPON];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -760,8 +760,8 @@ module.exports = function(app, pg, async, pool) {
                 function insertEquipment(resObj, callback) {
                     sql = 'INSERT INTO adm_def_equipment';
                     sql += ' ("equipmentId", "weight", "cost", "categoryId")';
-                    sql += ' VALUES ($1, $2, $3, 458);';
-                    vals = [resObj.weapon.id, resObj.weapon.weight, resObj.weapon.cost];
+                    sql += ' VALUES ($1, $2, $3, $4);';
+                    vals = [resObj.weapon.id, resObj.weapon.weight, resObj.weapon.cost, itemtypes.EQUIPMENT_CATEGORY.WEAPON];
                     var query = client.query(new pg.Query(sql, vals));
                     var results = [];
                     query.on('row', function(row) {
@@ -910,8 +910,8 @@ module.exports = function(app, pg, async, pool) {
                 function insertProficiency(resObj, callback) {
                     if (resObj.weapon.needsAltDamage) {
                         sql = 'INSERT INTO adm_def_proficiency ("proficiencyId", "categoryId")';
-                        sql += ' VALUES ($1, 236);';
-                        vals = [resObj.weapon.id];
+                        sql += ' VALUES ($1, $2);';
+                        vals = [resObj.weapon.id, itemtypes.PROFICIENCY_CATEGORY.SPECIFIC_WEAPON];
                         var query = client.query(new pg.Query(sql, vals));
                         var results = [];
                         query.on('row', function(row) {
@@ -957,10 +957,11 @@ module.exports = function(app, pg, async, pool) {
         pool.connect(function(err, client, done) {
             if (err) {
                 done();
+                console.log('----');
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            
+            console.log('weapon');
             sql = 'SELECT i.id, i."itemName" as name';
             sql += ', eq.cost, eq.weight';
             sql += ', description.description';

@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool) {
+module.exports = function(app, pg, async, pool, itemtypes, modules) {
     app.delete('/api/adm/background/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -258,8 +258,8 @@ module.exports = function(app, pg, async, pool) {
                     vals = [];
                     sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "resourceId", "itemTypeId")';
-                    sql += ' VALUES ($1, $2, 116) returning id AS "backgroundId";';
-                    vals = [req.body.background.name, req.body.background.resource.id];
+                    sql += ' VALUES ($1, $2, $3) returning id AS "backgroundId";';
+                    vals = [req.body.background.name, req.body.background.resource.id, itemtypes.TYPE.BACKGROUND];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -277,8 +277,8 @@ module.exports = function(app, pg, async, pool) {
                     vals = [];
                     sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "resourceId", "itemTypeId")';
-                    sql += ' VALUES ($1, $2, 120) returning id AS "featureId";';
-                    vals = [resObj.background.feature.name, resObj.background.resource.id];
+                    sql += ' VALUES ($1, $2, $3) returning id AS "featureId";';
+                    vals = [resObj.background.feature.name, resObj.background.resource.id, itemtypes.TYPE.FEATURE];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -296,8 +296,8 @@ module.exports = function(app, pg, async, pool) {
                         vals = [];
                         sql = 'INSERT INTO adm_core_description';
                         sql += ' ("itemId", "description", "descriptionTypeId")';
-                        sql += ' VALUES ($1, $2, 121)';
-                        vals = [resObj.background.id, resObj.background.suggestedCharacteristics];
+                        sql += ' VALUES ($1, $2, $3)';
+                        vals = [resObj.background.id, resObj.background.suggestedCharacteristics, itemtypes.DESCRIPTION.SUGGESTED_CHARACTERISTICS];
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
@@ -320,17 +320,20 @@ module.exports = function(app, pg, async, pool) {
                         sql += ' VALUES ';
                         var first = 1;
                         var second = 2;
+                        var third = 3;
                         var tmpItemName = '';
                         for (var e = 0; e < resObj.background.proficiencyGroups.length; e++) {
                             if (e != 0) {
                                 sql += ', ';
                             }
-                            sql += '($' + first.toString() + ', $' + second.toString() + ', 605)';
-                            first = first + 2;
-                            second = second + 2;
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', ' + third.toString() + ')';
+                            first = first + 3;
+                            second = second + 3;
+                            third = third + 3;
                             tmpItemName = resObj.background.name + ': ' + resObj.background.proficiencyGroups[e].mechanic.name + ' - ' + e.toString();
                             vals.push(tmpItemName);
                             vals.push(resObj.background.resource.id);
+                            vals.push(itemtypes.TYPE.ITEM_GROUP);
                         }
                         sql += ' returning id AS "itemGroupId";';
                         var query = client.query(new pg.Query(sql, vals));
@@ -763,12 +766,14 @@ module.exports = function(app, pg, async, pool) {
     });
     app.get('/api/adm/backgrounds', function(req, res) {
         var results = [];
+        var vals = [];
         pool.connect(function(err, client, done) {
             if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
+            console.log('background');
             sql = 'SELECT i.id, i."itemName" as name';
             sql += '   , bg."startingGold"';
             sql += '   , description.description';
@@ -828,12 +833,13 @@ module.exports = function(app, pg, async, pool) {
             sql += '    			INNER JOIN adm_core_item mech ON mech.id = pgrp."mechanicTypeId"';
             sql += '    			INNER JOIN adm_link_item_group_assignment cm ON (cm."itemGroupId" = c.id)';
             sql += '    			INNER JOIN adm_core_item prof ON (prof.id = cm."itemId")';
-            sql += '    			LEFT OUTER JOIN adm_def_proficiency profdef ON profdef."proficiencyId" = prof.id AND mech.id IN (79, 81)';
+            sql += '    			LEFT OUTER JOIN adm_def_proficiency profdef ON profdef."proficiencyId" = prof.id AND mech.id IN ($1, $2)';
             sql += '    			LEFT OUTER JOIN adm_core_item profcat ON profcat.id = profdef."categoryId"';
             sql += '               LEFT OUTER JOIN adm_def_proficiency_category profcatdef ON profcatdef."proficiencyCategoryId" = profcat.id';
-            sql += '               LEFT OUTER JOIN adm_core_item catcat ON catcat.id = cm."itemId" AND mech."id" = 80';
+            sql += '               LEFT OUTER JOIN adm_core_item catcat ON catcat.id = cm."itemId" AND mech."id" = $3';
             sql += '               LEFT OUTER JOIN adm_def_proficiency_category catcatdef ON catcatdef."proficiencyCategoryId" = catcat.id';
-            sql += '    			GROUP BY c.id, mech.id, pgrp."selectCount", profcat.id, profcat."itemName", catcat.id, catcat."itemName", profcatdef."parentId", catcatdef."parentId"';
+            sql += '    			GROUP BY c.id, mech.id, pgrp."selectCount", profcat.id, profcat."itemName", catcat.id, catcat."itemName"';
+            sql += '                    , profcatdef."parentId", catcatdef."parentId"';
             sql += '    	) proficiency_row ON (proficiency_row.id = dc."itemGroupId")';
             sql += '    	GROUP BY d.id';
             sql += '    ) r(proficiencies, id) WHERE id = i.id) AS "proficiencyGroups"';
@@ -845,8 +851,10 @@ module.exports = function(app, pg, async, pool) {
             sql += '     LEFT OUTER JOIN adm_core_item eqi ON eqi.id = bglnkeq."equipmentId"';
             sql += '     LEFT OUTER JOIN adm_def_equipment eq ON eq."equipmentId" = eqi.id';
             sql += '     LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = eqi.id';
-            sql += '     LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = 123)';
-            sql += '     LEFT OUTER JOIN adm_core_description suggchardesc ON (suggchardesc."itemId" = i.id AND suggchardesc."descriptionTypeId" = 124)';
+            //sql += '     LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = 171)';
+            //sql += '     LEFT OUTER JOIN adm_core_description suggchardesc ON (suggchardesc."itemId" = i.id AND suggchardesc."descriptionTypeId" = 121)';
+            sql += '     LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = $4)';
+            sql += '     LEFT OUTER JOIN adm_core_description suggchardesc ON (suggchardesc."itemId" = i.id AND suggchardesc."descriptionTypeId" = $5)';
             sql += '    INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
             sql += '     GROUP BY i."itemName", i.id';
             sql += '   , rsrc.id, rsrc."itemName"';
@@ -855,7 +863,14 @@ module.exports = function(app, pg, async, pool) {
             sql += '   , description.description';
             sql += '   , suggchardesc.description';
             sql += '    ORDER BY i."itemName"';
-            var query = client.query(new pg.Query(sql));
+            vals = [
+                itemtypes.SELECTION_MECHANIC.ASSIGNMENT, 
+                itemtypes.SELECTION_MECHANIC.SELECT_FROM.LIST, 
+                itemtypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY,
+                itemtypes.DESCRIPTION.GENERAL,
+                itemtypes.DESCRIPTION.SUGGESTED_CHARACTERISTICS
+            ];
+            var query = client.query(new pg.Query(sql, vals));
             query.on('row', function(row) {
                 results.push(row);
             });

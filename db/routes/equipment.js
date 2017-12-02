@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool) {
+module.exports = function(app, pg, async, pool, itemtypes, modules) {
     app.delete('/api/adm/equipment/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -421,8 +421,8 @@ module.exports = function(app, pg, async, pool) {
                 function insertItemTable(req, callback) {
                     sql = 'INSERT INTO adm_core_item';
                     sql += ' ("itemName", "resourceId", "itemTypeId")';
-                    sql += ' VALUES ($1, $2, 49) returning id AS "equipmentId";';
-                    vals = [req.body.equipment.name, req.body.equipment.resource.id];
+                    sql += ' VALUES ($1, $2, $3) returning id AS "equipmentId";';
+                    vals = [req.body.equipment.name, req.body.equipment.resource.id, itemtypes.TYPE.EQUIPMENT];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -634,13 +634,14 @@ module.exports = function(app, pg, async, pool) {
     });
     app.get('/api/adm/equipments', function(req, res) {
         var results = [];
+        var vals = []
         pool.connect(function(err, client, done) {
             if (err) {
                 done();
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            
+            console.log('equipment');
             sql = 'SELECT i."itemName" AS name, i.id';
             sql += ' , equip.cost, equip.weight';
             sql += ' , description.description';
@@ -674,7 +675,7 @@ module.exports = function(app, pg, async, pool) {
             sql += '  LEFT OUTER JOIN adm_def_equipment_improvised_weapon impweap ON impweap."equipmentId" = i.id';
             sql += '  LEFT OUTER JOIN adm_core_item dmgtype ON dmgtype.id = impweap."damageTypeId"';
             sql += '  LEFT OUTER JOIN adm_core_dice dmgdice ON dmgdice.id = impweap."damageDiceId"';
-            sql += '  WHERE equip."categoryId" NOT IN (97, 178, 175)';
+            sql += '  WHERE equip."categoryId" NOT IN ($1, $2, $3)';
             sql += '  GROUP BY i.id, equip.cost, equip.weight';
             sql += ' , cat.id, cat."itemName"';
             sql += ' , rsrc.id, rsrc."itemName"';
@@ -684,7 +685,8 @@ module.exports = function(app, pg, async, pool) {
             sql += ' , impweap."range", dmgdice."dieCount", dmgdice."dieType"';
             sql += ' , impweap."damageTypeId", dmgtype."itemName", impweap.range';
             sql += '  ORDER BY i."itemName"';
-            var query = client.query(new pg.Query(sql));
+            vals = [itemtypes.EQUIPMENT_CATEGORY.ARMOR, itemtypes.EQUIPMENT_CATEGORY.EQUIPMENT_PACK, itemtypes.EQUIPMENT_CATEGORY.WEAPON];
+            var query = client.query(new pg.Query(sql, vals));
             query.on('row', function(row) {
                 results.push(row);
             });
