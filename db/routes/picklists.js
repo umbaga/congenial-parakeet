@@ -7,7 +7,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            console.log('picklists');
             sql = 'SELECT i.id, i."itemName" as name';
             sql += ', wp."requireRange", wp."requireDamage", wp."requireDescription"';
             sql += 'FROM adm_core_item i';

@@ -253,7 +253,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     cb(null, req);
                 },
                 function insertItem(req, callback) {
-                    console.log("01");
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_core_item';
@@ -272,7 +271,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                 },
                 function insertFeatureItem(resObj, callback) {
-                    console.log("02");
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_core_item';
@@ -290,7 +288,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                 },
                 function insertSuggestedCharacteristicsDescription(resObj, callback) {
-                    console.log("04");
                     if (resObj.background.suggestedCharacteristics && resObj.background.suggestedCharacteristics.length != 0) {
                         results = [];
                         vals = [];
@@ -311,7 +308,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertProficiencyGroupItems(resObj, callback) {
-                    console.log("07");
                     results = [];
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
@@ -352,7 +348,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertBackgroundDescription(resObj, callback) {
-                    console.log("08");
                     results = [];
                     vals = [];
                     if (resObj.background.description && resObj.background.description.length != 0) {
@@ -373,7 +368,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertFeatureDescription(resObj, callback) {
-                    console.log("09");
                     results = [];
                     vals = [];
                     if (resObj.background.feature.description && resObj.background.feature.description.length != 0) {
@@ -394,7 +388,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertBackground(resObj, callback) {
-                    console.log("11");
                     results = [];
                     vals = [];
                     sql = 'INSERT INTO adm_def_background';
@@ -411,7 +404,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                 },
                 function insertEqupmentLink(resObj, callback) {
-                    console.log("12");
                     results = [];
                     vals = [];
                     if (resObj.background.assignedEquipment && resObj.background.assignedEquipment.length != 0) {
@@ -447,7 +439,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function assignExistentDiceId(resObj, callback) {
-                    console.log("13");
                     results = [];
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
@@ -486,7 +477,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     
                 },
                 function insertCharts(resObj, callback) {
-                    console.log("15");
                     results = [];
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
@@ -523,7 +513,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertChartDice(resObj, callback) {
-                    console.log("15a");
                     results = [];
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
@@ -562,7 +551,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertChartEntries(resObj, callback) {
-                    console.log("16");
                     results = [];
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
@@ -604,7 +592,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertChartLink(resObj, callback) {
-                    console.log("17");
                     results = [];
                     vals = [];
                     if (resObj.background.charts && resObj.background.charts.length != 0) {
@@ -642,7 +629,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     return callback(null, resObj);
                 },
                 function insertProficiencyGroups(resObj, callback) {
-                    console.log("18");
                     results = [];
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
@@ -677,7 +663,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertProficiencies(resObj, callback) {
-                    console.log("19");
                     results = [];
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
@@ -725,7 +710,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertProficiencyGroupLinks(resObj, callback) {
-                    console.log("20");
                     results = [];
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
@@ -773,96 +757,102 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            console.log('background');
             sql = 'SELECT i.id, i."itemName" as name';
-            sql += '   , bg."startingGold"';
-            sql += '   , description.description';
-            sql += '   , suggchardesc.description AS "suggestedCharacteristics"';
-            sql += '   , json_build_object(';
-            sql += '       \'id\', rsrc."id",';
-            sql += '       \'name\', rsrc."itemName") AS "resource"';
-            sql += '   , json_build_object(';
-            sql += '          \'name\', feature."itemName", ';
-            sql += '          \'id\', feature."id",';
-            sql += '          \'description\', featuredesc.description';
-            sql += '    ) AS "feature"';
-            sql += '   , case ';
-            sql += '    when count(eq) = 0 ';
-            sql += '    then \'[]\' ';
-            sql += '    else ';
-            sql += '    	json_agg((';
-            sql += '    		SELECT x FROM (';
-            sql += '    			SELECT eqi.id, eq.cost, eq.weight, eqi."itemName" as "name", bglnkeq."assignedCount"';
-            sql += '      				, case when cntunit."itemCount" IS NULL then 1 else cntunit."itemCount" end AS "count"';
-            sql += '      				, case when cntunit."unitName" IS NULL then \'\' else cntunit."unitName" end AS "unit") x)) end AS "assignedEquipment"';
-            sql += '    ';
-            sql += ', (SELECT construct_chart_object_arrays(i.id)) AS charts';
-            sql += '    , (SELECT r.proficiencies';
-            sql += '    	FROM (';
-            sql += '    		SELECT ';
-            sql += '    			json_agg(proficiency_row) AS proficiencies,';
-            sql += '    			d.id';
-            sql += '    		FROM adm_core_item d';
-            sql += '    		INNER JOIN adm_link_item_group dc ON (dc."referenceId" = d.id)';
-            sql += '    		INNER JOIN (';
-            sql += '    			SELECT  ';
-            sql += '    				c.id,       ';
-            sql += '    				c."itemName" AS name,';
-            sql += '                   json_build_object(';
-            sql += '                                   \'id\', CASE WHEN profcat.id IS NULL THEN catcat.id ELSE profcat.id END,';
-            sql += '                                   \'name\', CASE WHEN profcat."itemName" IS NULL THEN catcat."itemName" ELSE profcat."itemName" END,';
-            sql += '                                  \'parentId\', CASE WHEN profcat."itemName" IS NULL THEN catcatdef."parentId" ELSE profcatdef."parentId" END,';
-            sql += '                       			\'isTool\', CASE WHEN profcat."itemName" IS NULL THEN';
-            sql += '                       				CASE WHEN catcatdef."parentId"::int <> 0 THEN true ELSE false END';
-            sql += '                       			ELSE';
-            sql += '                       				CASE WHEN profcatdef."parentId"::int <> 0 THEN true ELSE false END';
-            sql += '                       			END';
-            sql += '                               ) AS category,';
-            sql += '    				pgrp."selectCount",';
-            sql += '    				json_agg(json_build_object(';
-            sql += '    		                \'id\', prof."id", ';
-            sql += '    		                \'name\', prof."itemName"';
-            sql += '    		            )) AS proficiencies';
-            sql += '    		            , json_build_object(';
-            sql += '    		                \'id\', mech."id", ';
-            sql += '    		                \'name\', mech."itemName"';
-            sql += '    		            ) AS "mechanic"';
-            sql += '    			FROM adm_core_item c';
-            sql += '    			INNER JOIN adm_link_item_group bgcht ON bgcht."itemGroupId" = c.id';
-            sql += '    			INNER JOIN adm_def_item_group pgrp ON pgrp."itemGroupId" = bgcht."itemGroupId"';
-            sql += '    			INNER JOIN adm_core_item mech ON mech.id = pgrp."mechanicTypeId"';
-            sql += '    			INNER JOIN adm_link_item_group_assignment cm ON (cm."itemGroupId" = c.id)';
-            sql += '    			INNER JOIN adm_core_item prof ON (prof.id = cm."itemId")';
-            sql += '    			LEFT OUTER JOIN adm_def_proficiency profdef ON profdef."proficiencyId" = prof.id AND mech.id IN ($1, $2)';
-            sql += '    			LEFT OUTER JOIN adm_core_item profcat ON profcat.id = profdef."categoryId"';
-            sql += '               LEFT OUTER JOIN adm_def_proficiency_category profcatdef ON profcatdef."proficiencyCategoryId" = profcat.id';
-            sql += '               LEFT OUTER JOIN adm_core_item catcat ON catcat.id = cm."itemId" AND mech."id" = $3';
-            sql += '               LEFT OUTER JOIN adm_def_proficiency_category catcatdef ON catcatdef."proficiencyCategoryId" = catcat.id';
-            sql += '    			GROUP BY c.id, mech.id, pgrp."selectCount", profcat.id, profcat."itemName", catcat.id, catcat."itemName"';
-            sql += '                    , profcatdef."parentId", catcatdef."parentId"';
-            sql += '    	) proficiency_row ON (proficiency_row.id = dc."itemGroupId")';
-            sql += '    	GROUP BY d.id';
-            sql += '    ) r(proficiencies, id) WHERE id = i.id) AS "proficiencyGroups"';
-            sql += '    FROM adm_core_item i';
-            sql += '    INNER JOIN adm_def_background bg ON bg."backgroundId" = i.id';
-            sql += '    INNER JOIN adm_core_item feature ON feature.id = bg."featureId"';
-            sql += '    INNER JOIN adm_core_description featuredesc ON featuredesc."itemId" = bg."featureId"';
-            sql += '     LEFT OUTER JOIN adm_link_equipment bglnkeq ON bglnkeq."referenceId" = i.id';
-            sql += '     LEFT OUTER JOIN adm_core_item eqi ON eqi.id = bglnkeq."equipmentId"';
-            sql += '     LEFT OUTER JOIN adm_def_equipment eq ON eq."equipmentId" = eqi.id';
-            sql += '     LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = eqi.id';
-            //sql += '     LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = 171)';
-            //sql += '     LEFT OUTER JOIN adm_core_description suggchardesc ON (suggchardesc."itemId" = i.id AND suggchardesc."descriptionTypeId" = 121)';
-            sql += '     LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = $4)';
-            sql += '     LEFT OUTER JOIN adm_core_description suggchardesc ON (suggchardesc."itemId" = i.id AND suggchardesc."descriptionTypeId" = $5)';
-            sql += '    INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
-            sql += '     GROUP BY i."itemName", i.id';
-            sql += '   , rsrc.id, rsrc."itemName"';
-            sql += '   , bg."startingGold"';
-            sql += '   , feature."itemName", feature."id", featuredesc.description';
-            sql += '   , description.description';
-            sql += '   , suggchardesc.description';
-            sql += '    ORDER BY i."itemName"';
+            sql += ', bg."startingGold"';
+            sql += ', description.description';
+            sql += ', suggchardesc.description AS "suggestedCharacteristics"';
+            sql += ', json_build_object(';
+            sql += '    \'id\', rsrc."id"';
+            sql += '    , \'name\', rsrc."itemName"';
+            sql += ') AS "resource"';
+            sql += ', json_build_object(';
+            sql += '    \'name\', feature."itemName"';
+            sql += '    , \'id\', feature."id"';
+            sql += '    , \'description\', featuredesc.description';
+            sql += ') AS "feature"';
+            sql += ', case when count(eq) = 0 then \'[]\' else json_agg(';
+            sql += '    (';
+            sql += '        SELECT x FROM (';
+            sql += '            SELECT eqi.id, eq.cost, eq.weight, eqi."itemName" as "name"';
+            sql += '            , bglnkeq."assignedCount"';
+            sql += '            , case when cntunit."itemCount" IS NULL then 1 else cntunit."itemCount" end AS "count"';
+            sql += '            , case when cntunit."unitName" IS NULL then \'\' else cntunit."unitName" end AS "unit"';
+            sql += '        ) x';
+            sql += '    )';
+            sql += ') end AS "assignedEquipment"';
+            sql += ', (';
+            sql += '    SELECT construct_chart_object_arrays(i.id)';
+            sql += ') AS charts';
+            sql += ', (';
+            sql += '    SELECT r.proficiencies FROM (';
+            sql += '        SELECT json_agg(proficiency_row) AS proficiencies';
+            sql += '        , d.id FROM adm_core_item d ';
+            sql += '        INNER JOIN adm_link_item_group dc ON (dc."referenceId" = d.id) ';
+            sql += '        INNER JOIN (';
+            sql += '            SELECT  c.id, c."itemName" AS name';
+            sql += '            , json_build_object(';
+            sql += '                \'id\', CASE WHEN profcat.id IS NULL THEN catcat.id ELSE profcat.id END';
+            sql += '                , \'name\', CASE WHEN profcat."itemName" IS NULL THEN catcat."itemName" ELSE profcat."itemName" END';
+            sql += '                , \'parentId\', CASE WHEN profcat."itemName" IS NULL THEN catcatdef."parentId" ELSE profcatdef."parentId" END';
+            sql += '                , \'isTool\', CASE WHEN profcat."itemName" IS NULL THEN CASE WHEN catcatdef."parentId"::int <> 0 THEN true ELSE false END ELSE CASE WHEN profcatdef."parentId"::int <> 0 THEN true ELSE false END END';
+            sql += '            ) AS category';
+            sql += '            , pgrp."selectCount"';
+            sql += '            , json_agg(';
+            sql += '                json_build_object(';
+            sql += '                    \'id\', prof."id", \'name\', prof."itemName"';
+            sql += '                )';
+            sql += '            ) AS proficiencies';
+            sql += '            , json_build_object(';
+            sql += '                \'id\', mech."id", \'name\', mech."itemName"';
+            sql += '            ) AS "mechanic" ';
+            sql += '            FROM adm_core_item c ';
+            sql += '            INNER JOIN adm_link_item_group bgcht ON bgcht."itemGroupId" = c.id ';
+            sql += '            INNER JOIN adm_def_item_group pgrp ON pgrp."itemGroupId" = bgcht."itemGroupId" ';
+            sql += '            INNER JOIN adm_core_item mech ON mech.id = pgrp."mechanicTypeId" ';
+            sql += '            INNER JOIN adm_link_item_group_assignment cm ON (';
+            sql += '                cm."itemGroupId" = c.id';
+            sql += '            ) ';
+            sql += '            INNER JOIN adm_core_item prof ON (';
+            sql += '                prof.id = cm."itemId"';
+            sql += '            ) ';
+            sql += '            LEFT OUTER JOIN adm_def_proficiency profdef ON profdef."proficiencyId" = prof.id AND mech.id IN ($1, $2) ';
+            sql += '            LEFT OUTER JOIN adm_core_item profcat ON profcat.id = profdef."categoryId" ';
+            sql += '            LEFT OUTER JOIN adm_def_proficiency_category profcatdef ON profcatdef."proficiencyCategoryId" = profcat.id ';
+            sql += '            LEFT OUTER JOIN adm_core_item catcat ON catcat.id = cm."itemId" AND mech."id" = $3 ';
+            sql += '            LEFT OUTER JOIN adm_def_proficiency_category catcatdef ON catcatdef."proficiencyCategoryId" = catcat.id ';
+            sql += '            GROUP BY c.id';
+            sql += '            , mech.id';
+            sql += '            , pgrp."selectCount"';
+            sql += '            , profcat.id, profcat."itemName"';
+            sql += '            , catcat.id, catcat."itemName"';
+            sql += '            , profcatdef."parentId"';
+            sql += '            , catcatdef."parentId"';
+            sql += '        ) proficiency_row ON (';
+            sql += '            proficiency_row.id = dc."itemGroupId"';
+            sql += '        ) ';
+            sql += '        GROUP BY d.id';
+            sql += '    ) r(proficiencies, id) ';
+            sql += '    WHERE id = i.id';
+            sql += ') AS "proficiencyGroups"';
+            sql += ' FROM adm_core_item i';
+            sql += '	INNER JOIN adm_def_background bg ON bg."backgroundId" = i.id';
+            sql += '	INNER JOIN adm_core_item feature ON feature.id = bg."featureId"';
+            sql += '	INNER JOIN adm_core_description featuredesc ON featuredesc."itemId" = bg."featureId"';
+            sql += '	LEFT OUTER JOIN adm_link_equipment bglnkeq ON bglnkeq."referenceId" = i.id';
+            sql += '	LEFT OUTER JOIN adm_core_item eqi ON eqi.id = bglnkeq."equipmentId"';
+            sql += '	LEFT OUTER JOIN adm_def_equipment eq ON eq."equipmentId" = eqi.id';
+            sql += '	LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = eqi.id';
+            sql += '	LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = $4)';
+            sql += '	LEFT OUTER JOIN adm_core_description suggchardesc ON (suggchardesc."itemId" = i.id AND suggchardesc."descriptionTypeId" = $5)';
+            sql += '	INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
+            sql += ' GROUP BY i."itemName", i.id';
+            sql += ', rsrc.id, rsrc."itemName"';
+            sql += ', bg."startingGold"';
+            sql += ', feature."itemName", feature."id"';
+            sql += ', featuredesc.description';
+            sql += ', description.description';
+            sql += ', suggchardesc.description';
+            sql += ' ORDER BY i."itemName"';
             vals = [
                 itemtypes.SELECTION_MECHANIC.ASSIGNMENT, 
                 itemtypes.SELECTION_MECHANIC.SELECT_FROM.LIST, 

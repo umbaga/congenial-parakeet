@@ -79,7 +79,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            console.log('item types');
             sql = 'SELECT adm_core_type."id"';
             sql += ', adm_core_type."typeName" AS "name"';
             sql += ', adm_core_type."isPicklist"';

@@ -294,20 +294,20 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                 console.error(err);
                 return res.status(500).json({ success: false, data: err});
             }
-            console.log('armor');
             
-            sql = 'SELECT i."itemName" AS name, i.id, eq.cost, eq.weight, arm."stealthDisadvantage", arm."minimumStrength"';
-            sql += ', arm."baseArmorClass", arm."applyDexModifier", arm."hasMaxDexModifier", arm."maxDexModifier", arm."isCumulative"';
+            sql = 'SELECT i."itemName" AS name, i.id';
+            sql += ', eq.cost, eq.weight';
+            sql += ', arm."stealthDisadvantage", arm."minimumStrength", arm."baseArmorClass", arm."applyDexModifier", arm."hasMaxDexModifier"';
+            sql += ', arm."maxDexModifier", arm."isCumulative"';
             sql += ', description.description';
-            //sql += ',json_build_object(\'baseArmorClass\', arm."baseArmorClass", \'applyDexModifier\', arm."applyDexModifier", \'hasMaxDexModifier\', arm."hasMaxDexModifier", \'maxDexModifier\', arm."maxDexModifier", \'isCumulative\', arm."isCumulative") AS "armorClass"';
             sql += ', json_build_object(\'name\', armprof."itemName", \'id\', armprof."id") AS "proficiency"';
             sql += ', json_build_object(\'name\', rsrc."itemName", \'id\', rsrc."id") AS "resource"';
-            sql += ' FROM adm_core_item i';
-            sql += ' INNER JOIN adm_def_equipment eq ON eq."equipmentId" = i.id';
-            sql += ' INNER JOIN adm_def_equipment_armor arm ON arm."equipmentId" = i.id';
-            sql += ' INNER JOIN adm_core_item armprof ON armprof.id = arm."proficiencyId"';
-            sql += ' INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
-            sql += ' LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id';
+            sql += '	FROM adm_core_item i';
+            sql += '	INNER JOIN adm_def_equipment eq ON eq."equipmentId" = i.id';
+            sql += '	INNER JOIN adm_def_equipment_armor arm ON arm."equipmentId" = i.id';
+            sql += '	INNER JOIN adm_core_item armprof ON armprof.id = arm."proficiencyId"';
+            sql += '	INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
+            sql += '	LEFT OUTER JOIN adm_core_description description ON description."itemId" = i.id';
             sql += ' ORDER BY arm."baseArmorClass"';
             var query = client.query(new pg.Query(sql));
             query.on('row', function(row) {
