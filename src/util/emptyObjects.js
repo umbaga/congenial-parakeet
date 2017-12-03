@@ -79,7 +79,7 @@ export const CHART_ENTRY = {
     maximum: 0
 };
 export const CHART_TYPE = {id: 0, name: ''};
-export const DICE = {id: 0, dieCount: 0, dieType: 0, rendered: ''};
+export const DICE = {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0};
 export const EQUIPMENT = {
     id: 0,
     name: '',
@@ -152,6 +152,7 @@ export const ITEMTYPE = {
 export const MECHANIC = {
     id: 0,
     assignmentType: {id: 1},
+    dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
     target: {id: 0, name: ''},
     type: {id: 0, name: ''},
     value: 0
@@ -209,10 +210,12 @@ export const SPELL = {
     charts: [],
     components: [],
     damage: {
-        dice: {id: 0, dieCount: 0, dieType: 0, rendered: ''},
+        dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
         type: {id: 0, name: ''},
+        attackRollType: {id: 0, name: ''},
+        condition: {id: 0, name: ''},
         improvement: {
-            dice: {id: 0, dieCount: 0, dieType: 0, rendered: ''}
+            dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}
         }
     },
     duration: {id: 0, name: ''},
@@ -223,7 +226,7 @@ export const SPELL = {
         base: []
     },
     range: {id: 0, name: ''},
-    resource: {id: 0, name: ''},
+    resource: {id: 2, name: 'Player\'s Handbook'},
     savingThrow: {
         abilityScore: {id: 0, name: ''}
     },

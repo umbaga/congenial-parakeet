@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import util from '../../../util/util';
 import DndChartDisplay from '../../common/display/DndChartDisplay';
-import DndDieChartDisplay from '../../common/display/DndDieChartDisplay';
 
 class SpellDetails extends React.Component {
     constructor(props) {
@@ -57,7 +56,6 @@ class SpellDetails extends React.Component {
     
     render() {
         const spell = this.props.spell;
-        console.log(spell);
         return (
             <div>
                 <div><em>{spell.name}</em></div>

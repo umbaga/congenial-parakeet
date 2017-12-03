@@ -349,7 +349,11 @@ obj.mechanic = function(val) {
         case util.itemTypes.MECHANIC_TYPE.IMMUNITY:
             retVal = 'Immune to ' + val.target.name;
             break;
+        case util.itemTypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT:
+            retVal = '+' + util.format.forDisplay.string.dieRoll(val.dice) + ' to ' + val.target.name;
+            break;
         default:
+            retVal = 'need to add to switch in format.forDisplay.obj.mechanic';
     }
     return retVal;
 };
@@ -422,6 +426,17 @@ string.dieRoll = function(val, omitOnes) {
                 retVal += 'd' + val.dieType.toString();
             } else {
                 retVal = val.dieCount.toString() + 'd' + val.dieType.toString();
+                if (val.modifier != 0) {
+                    if (val.modifier > 0) {
+                        retVal += '+' + val.modifier.toString();
+                    } else {
+                        retVal += val.modifier.toString();
+                    }
+                } else if (val.multiplier != 1) {
+                    retVal += 'x' + val.multiplier.toString();
+                } else if (val.divisor != 1) {
+                    retVal += '/' + val.divisor.toString();
+                }
             }
         }
     }

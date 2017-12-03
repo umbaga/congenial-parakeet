@@ -4,6 +4,7 @@ module.exports = {
         AMMUNITION_TYPE: 67,
         ARMOR: 456,
         ARMOR_PROFICIENCY: 20,
+        ATTACK_ROLL_TYPE: 1381,
         BACKGROUND: 116,
         CHART_TYPE: 1232,
         CONDITION: 849,
@@ -35,6 +36,11 @@ module.exports = {
         WEAPON_CATEGORY: 22,
         WEAPON_PROFICIENCY: 21,
         WEAPON_PROPERTY: 23
+    },
+    ATTACK_ROLL: {
+        MELEE: 1382,
+        RANGED: 1383,
+        RANGED_SPELL: 1384
     },
     DESCRIPTION: {
         CHART: 907,
@@ -77,6 +83,7 @@ module.exports = {
         ADVANTAGE: 866,
         ADVANTAGE_SAVING_THROW: 870,
         BONUS: 847,
+        DIE_ROLL_BONUS_TO_STAT: 1428,
         DISADVANTAGE: 867,
         DISADVANTAGE_SAVING_THROW: 871,
         IMMUNITY: 872,

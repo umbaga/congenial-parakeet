@@ -435,6 +435,8 @@ export const formState = {
             case util.dataTypes.picklist.ABILITY_SCORE:
             case util.dataTypes.picklist.AMMUNITION_TYPE:
             case util.dataTypes.picklist.ARMOR_PROFICIENCY:
+            case util.dataTypes.picklist.ATTACK_ROLL_TYPE:
+            case util.dataTypes.picklist.CONDITION:
             case util.dataTypes.picklist.DAMAGE_TYPE:
             case util.dataTypes.picklist.EQUIPMENT_CATEGORY:
             case util.dataTypes.picklist.GENERAL:
@@ -469,12 +471,40 @@ export const formState = {
                            event.target.value.charAt(y) == '5' || event.target.value.charAt(y) == '6' ||
                            event.target.value.charAt(y) == '7' || event.target.value.charAt(y) == '8' ||
                            event.target.value.charAt(y) == '9' || event.target.value.charAt(y) == '0' ||
-                           event.target.value.charAt(y) == 'd' || event.target.value.charAt(y) == 'D') {
+                           event.target.value.charAt(y) == 'd' || event.target.value.charAt(y) == 'D' ||
+                           event.target.value.charAt(y) == '+' || event.target.value.charAt(y) == '-' ||
+                           event.target.value.charAt(y) == 'x' || event.target.value.charAt(y) == 'X' ||
+                            event.target.value.charAt(y) == '*' || event.target.value.charAt(y) == '/') {
                             newRenderedValue += event.target.value.charAt(y);
                         }
                     }
                 }
                 if (util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL)) {
+                    if (event.target.value.indexOf('+') != -1 || event.target.value.indexOf('-') != -1) {
+                        if (event.target.value.indexOf('+') != -1) {
+                            newDiceRollValue.modifier = parseInt(event.target.value.split('+')[1]);
+                        } else {
+                            newDiceRollValue.modifier = -1 * parseInt(event.target.value.split('-')[1]);
+                        }
+                        newDiceRollValue.multiplier = 1;
+                        newDiceRollValue.divisor = 1;
+                    } else if (event.target.value.indexOf('x') != -1 || event.target.value.indexOf('*') != -1) {
+                        if (event.target.value.indexOf('x') != -1) {
+                            newDiceRollValue.multiplier = parseInt(event.target.value.toLowerCase().split('x')[1]);
+                        } else {
+                            newDiceRollValue.multiplier = parseInt(event.target.value.split('*')[1]);
+                        }
+                        newDiceRollValue.modifier = 0;
+                        newDiceRollValue.divisor = 1;
+                    } else if (event.target.value.indexOf('/') != -1) {
+                        newDiceRollValue.divisor = parseInt(event.target.value.split('/')[1]);
+                        newDiceRollValue.modifier = 0;
+                        newDiceRollValue.multiplier = 1;
+                    } else {
+                        newDiceRollValue.modifier = 0;
+                        newDiceRollValue.multiplier = 1;
+                        newDiceRollValue.divisor = 1;
+                    }
                     newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
                     newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
                     util.common.setObjectValue(retVal, field, newDiceRollValue);

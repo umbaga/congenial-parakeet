@@ -97,7 +97,9 @@ class DndInput extends React.Component {
             case util.dataTypes.picklist.ABILITY_SCORE:
             case util.dataTypes.picklist.AMMUNITION_TYPE:
             case util.dataTypes.picklist.ARMOR_PROFICIENCY:
+            case util.dataTypes.picklist.ATTACK_ROLL_TYPE:
             case util.dataTypes.picklist.CHART_TYPE:
+            case util.dataTypes.picklist.CONDITION:
             case util.dataTypes.picklist.DAMAGE_TYPE:
             case util.dataTypes.picklist.DESCRIPTION_TYPE:
             case util.dataTypes.picklist.EQUIPMENT_CATEGORY:

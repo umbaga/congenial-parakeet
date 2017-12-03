@@ -81,7 +81,9 @@ class SpellEntry extends React.Component {
             type: {id: 0, name: ''},
             improvement: {
                 dice: {id: 0, dieCount: 0, dieType: 0, rendered: ''}
-            }
+            },
+            attackRollType: {id: 0, name: ''},
+            condition: {id: 0, name: ''}
         };
         blankSpell.savingThrow = {
             abilityScore: {id: 0, name: ''}

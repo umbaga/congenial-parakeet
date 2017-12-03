@@ -33,10 +33,12 @@ class SpellForm extends React.Component {
         const schools = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC);
         const damageTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE);
         const abilityScores = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE);
+        const attackRollTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ATTACK_ROLL_TYPE);
+        const conditions = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.CONDITION);
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+                    <Tabs defaultActiveKey={3} id="uncontrolled-tab-example">
                         <Tab eventKey={1} title="General">
                             <div>&nbsp;</div>
                             <DndUniversalInput
@@ -137,12 +139,28 @@ class SpellForm extends React.Component {
                                 onChange={this.props.onChange}
                                 />
                             <DndInput
+                                name="damage.attackRollType"
+                                label="Attack Roll"
+                                dataType={util.dataTypes.picklist.ATTACK_ROLL_TYPE}
+                                valueObj={this.props.spell.damage.attackRollType}
+                                onChange={this.props.onChange}
+                                picklist={attackRollTypes}
+                                />
+                            <DndInput
                                 name="damage.type"
                                 label="Damage Type"
                                 dataType={util.dataTypes.picklist.DAMAGE_TYPE}
                                 valueObj={this.props.spell.damage.type}
                                 onChange={this.props.onChange}
                                 picklist={damageTypes}
+                                />
+                            <DndInput
+                                name="damage.condition"
+                                label="Resulting Condition"
+                                dataType={util.dataTypes.picklist.CONDITION}
+                                valueObj={this.props.spell.damage.condition}
+                                onChange={this.props.onChange}
+                                picklist={conditions}
                                 />
                             <DndInput
                                 name="savingThrow.abilityScore"

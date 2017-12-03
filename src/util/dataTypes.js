@@ -57,7 +57,9 @@ export const picklist = {
     ABILITY_SCORE: 'DATA_PICKLIST_ABILITY_SCORE',
     AMMUNITION_TYPE: 'DATA_PICKLIST_AMMUNITION_TYPE',
     ARMOR_PROFICIENCY: 'DATA_PICKLIST_ARMOR_PROFICIENCY',
+    ATTACK_ROLL_TYPE: 'DATA_PICKLIST_ATTACK_ROLL_TYPE',
     CHART_TYPE: 'DATA_PICKLIST_CHART_TYPE',
+    CONDITION: 'DATA_PICKLIST_CONDITION',
     DAMAGE_TYPE: 'DATA_PICKLIST_DAMAGE_TYPE',
     DESCRIPTION_TYPE: 'DATA_PICKLIST_DESCRIPTION_TYPE',
     EQUIPMENT_CATEGORY: 'DATA_PICKLIST_EQUIPMENT_CATEGORY',
@@ -103,10 +105,37 @@ export function compareDataType (val, dataType, disallowValues) {
     let retVal = true;
     let tmpDieType = 0;
     let tmpArr = [];
+    let tmpArr2 = [];
+    let usesPositiveModifier = (val.indexOf('+') != -1);
+    let usesNegativeModifier = (val.indexOf('-') != -1);
+    let usesMultiplier = (val.indexOf('x') != -1) || (val.indexOf('*') != -1);
+    let usesDivisor = (val.indexOf('/') != -1);
+    //let renderSign = '';
     switch (dataType) {
         case special.DICE_ROLL:
             tmpArr = val.toLowerCase().split('d');
             if (tmpArr.length == 2) {
+                if (usesPositiveModifier || usesNegativeModifier || usesMultiplier || usesDivisor) {
+                    if (usesPositiveModifier) {
+                        tmpArr2 = tmpArr[1].split('+');
+                        //renderSign = '+';
+                    } else if (usesNegativeModifier) {
+                        tmpArr2 = tmpArr[1].split('-');
+                        //renderSign = '';
+                    } else if (usesMultiplier) {
+                        if (val.indexOf('x') != -1) {
+                            tmpArr2 = tmpArr[1].split('x');
+                        } else if (val.indexOf('*') != -1) {
+                            tmpArr2 = tmpArr[1].split('*');
+                        }
+                        //renderSign = 'x';
+                    } else if (usesDivisor) {
+                        tmpArr2 = tmpArr[1].split('/');
+                        //renderSign = '/';
+                    }
+                    tmpArr[1] = tmpArr2[0];
+                    tmpArr[2] = tmpArr2[1];
+                }
                 if (Number.isInteger(parseInt(tmpArr[0]))) {
                     if (Number.isInteger(parseInt(tmpArr[1]))) {
                         tmpDieType = parseInt(tmpArr[1]);
@@ -121,7 +150,15 @@ export function compareDataType (val, dataType, disallowValues) {
                                     }
                                 }
                             } else {
-                                retVal = true;
+                                if (usesPositiveModifier || usesNegativeModifier || usesMultiplier || usesDivisor) {
+                                    if (Number.isInteger(parseInt(tmpArr[2]))) {
+                                        retVal = true;
+                                    } else {
+                                        retVal = false;
+                                    }
+                                } else {
+                                    retVal = true;
+                                }
                             }
                         } else {
                             retVal = false;

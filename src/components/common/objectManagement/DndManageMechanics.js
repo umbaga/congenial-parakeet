@@ -109,17 +109,23 @@ class DndManageMechanics extends React.Component {
     }
     
     renderValueInput() {
-        let renderThis = false;
         if (this.props.newMechanic && this.props.newMechanic.type && this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.BONUS) {
-            renderThis = true;
-        }
-        if (renderThis) {
             return (
                 <DndInput
                     name="value"
                     label="Value"
                     dataType={util.dataTypes.number.INT}
                     value={this.props.newMechanic.value.toString()}
+                    onChange={this.props.onChange}
+                    />
+            );
+        } else if (this.props.newMechanic && this.props.newMechanic.type && this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT) {
+            return (
+                <DndInput
+                    name="dice"
+                    label="Die Value"
+                    dataType={util.dataTypes.special.DICE_ROLL}
+                    valueObj={this.props.newMechanic.dice}
                     onChange={this.props.onChange}
                     />
             );
@@ -131,6 +137,7 @@ class DndManageMechanics extends React.Component {
         const mechanicTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.MECHANIC_TYPE);
         let mechanicTargets = [];
         switch (this.props.newMechanic.type.id) {
+            case util.itemTypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT:
             case util.itemTypes.MECHANIC_TYPE.BONUS:
                 mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE)
                     .concat(util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.STAT));
