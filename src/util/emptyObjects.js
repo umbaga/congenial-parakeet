@@ -79,6 +79,10 @@ export const CHART_ENTRY = {
     maximum: 0
 };
 export const CHART_TYPE = {id: 0, name: ''};
+export const DAMAGE = {
+    dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
+    type: {id: 0, name: ''}
+};
 export const DICE = {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0};
 export const EQUIPMENT = {
     id: 0,
@@ -216,7 +220,11 @@ export const SPELL = {
         condition: {id: 0, name: ''},
         improvement: {
             dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}
-        }
+        },
+        supplemental: [],
+        applyAbilityScoreModifier: false,
+        abilityScore: {id: 0, name: ''},
+        maximum: {dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}}
     },
     duration: {id: 0, name: ''},
     isRitual: false,
@@ -228,7 +236,8 @@ export const SPELL = {
     range: {id: 0, name: ''},
     resource: {id: 2, name: 'Player\'s Handbook'},
     savingThrow: {
-        abilityScore: {id: 0, name: ''}
+        abilityScore: {id: 0, name: ''},
+        effect: {id: 0, name: ''}
     },
     school: {id: 0, name: ''},
     supplementalDescriptions: []
@@ -238,6 +247,7 @@ export const SPELL_COMPONENT = {id: 0, name: ''};
 export const SPELL_DURATION = {id: 0, name: ''};
 export const SPELL_RANGE = {id: 0, name: ''};
 export const SUPPLEMENTAL_DESCRIPTION = {id: 0, title: '', description: ''};
+export const TYPE = {id: 0, name: ''};
 export const WEAPON = {
     id: 0,
     name: '',

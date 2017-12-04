@@ -2,6 +2,7 @@ module.exports = {
     TYPE: {
         ABILITY_SCORE: 24,
         AMMUNITION_TYPE: 67,
+        AREA_OF_EFFECT_SHAPE: 1479,
         ARMOR: 456,
         ARMOR_PROFICIENCY: 20,
         ATTACK_ROLL_TYPE: 1381,
@@ -20,6 +21,7 @@ module.exports = {
         MECHANIC_TYPE: 843,
         PROFICIENCY_CATEGORY: 65,
         RESOURCE: 1,
+        SAVE_EFFECT: 1698,
         SCHOOL_OF_MAGIC: 70,
         SELECTION_MECHANIC: 66,
         SKILL: 396,
@@ -36,6 +38,13 @@ module.exports = {
         WEAPON_CATEGORY: 22,
         WEAPON_PROFICIENCY: 21,
         WEAPON_PROPERTY: 23
+    },
+    AREA_OF_EFFECT_SHAPE: {
+        CONE: 1481,
+        CUBE: 1482,
+        CYLINDER: 1484,
+        LINE: 1480,
+        SPHERE: 1483
     },
     ATTACK_ROLL: {
         MELEE: 1382,
@@ -87,6 +96,7 @@ module.exports = {
         DISADVANTAGE: 867,
         DISADVANTAGE_SAVING_THROW: 871,
         IMMUNITY: 872,
+        MULTIPLY_STAT: 1617,
         RESISTANCE: 868,
         VULNERABILITY: 869
     },

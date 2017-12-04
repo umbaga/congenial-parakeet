@@ -102,7 +102,7 @@ class DndButton extends React.Component {
         const finalBootstrapStyle = (this.props.bsButtonStyle && this.props.bsButtonStyle.length != 0) ? this.props.bsButtonStyle : bootstrapStyle;
         if (this.props.dataType && this.props.dataType.length != 0) {
             return (
-                <Button bsStyle={finalBootstrapStyle} onClick={this.props.onClick} datatype={this.props.dataType}>
+                <Button bsStyle={finalBootstrapStyle} onClick={this.props.onClick} datatype={this.props.dataType} name={this.props.name}>
                     {renderedLabel}
                 </Button>
             );
@@ -123,7 +123,8 @@ DndButton.propTypes = {
     additionalButtonStyles: PropTypes.string,
     label: PropTypes.string,
     bsButtonStyle: PropTypes.string,
-    dataType: PropTypes.string
+    dataType: PropTypes.string,
+    name: PropTypes.string
 };
 
 export default DndButton;

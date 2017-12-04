@@ -10,6 +10,10 @@ export const action = {
         REMOVE_ENTRY: 'DATA_ACTION_CHART_REMOVE_ENTRY',
         SELECT: 'DATA_ACTION_CHART_SELECT',
         RESET: 'DATA_ACTION_CHART_RESET'
+    },
+    DAMAGE_GROUPING: {
+        ADD: 'DATA_ACTION_DATA_GROUPING_ADD',
+        REMOVE: 'DATA_ACTION_DATA_GROUPING_REMOVE'
     }
 };
 
@@ -23,6 +27,10 @@ export const bool = {
     BOOL: 'DATA_BOOL_STANDARD',
     HAS_DISADVANTAGE: 'DATA_BOOL_HAS_DISADVANTAGE',
     YES_NO: 'DATA_BOOL_YES_NO'
+};
+
+export const combo = {
+    DAMAGE_AND_DAMAGE_TYPE: 'DATA_COMBO_DAMAGE_AND_DAMAGE_TYPE'
 };
 
 export const number = {
@@ -71,6 +79,7 @@ export const picklist = {
     PROFICIENCY_CATEGORY: 'DATA_PICKLIST_PROFICIENCY_CATEGORY',
     PROFICIENCY_SELECTION_MECHANIC: 'DATA_PICKLIST_PROFICIENCY_SELECTION_MECHANIC',
     RESOURCE: 'DATA_PICKLIST_RESOURCE',
+    SAVE_EFFECT: 'DATA_PICKLIST_SAVE_EFFECT',
     SCHOOL_OF_MAGIC: 'DATA_PICKLIST_SCHOOL_OF_MAGIC',
     SPELL_CASTING_TIME: 'DATA_PICKLIST_SPELL_CASTING_TIME',
     SPELL_COMPONENT: 'DATA_PICKLIST_SPELL_COMPONENT',
@@ -110,7 +119,6 @@ export function compareDataType (val, dataType, disallowValues) {
     let usesNegativeModifier = (val.indexOf('-') != -1);
     let usesMultiplier = (val.indexOf('x') != -1) || (val.indexOf('*') != -1);
     let usesDivisor = (val.indexOf('/') != -1);
-    //let renderSign = '';
     switch (dataType) {
         case special.DICE_ROLL:
             tmpArr = val.toLowerCase().split('d');
@@ -118,20 +126,16 @@ export function compareDataType (val, dataType, disallowValues) {
                 if (usesPositiveModifier || usesNegativeModifier || usesMultiplier || usesDivisor) {
                     if (usesPositiveModifier) {
                         tmpArr2 = tmpArr[1].split('+');
-                        //renderSign = '+';
                     } else if (usesNegativeModifier) {
                         tmpArr2 = tmpArr[1].split('-');
-                        //renderSign = '';
                     } else if (usesMultiplier) {
                         if (val.indexOf('x') != -1) {
                             tmpArr2 = tmpArr[1].split('x');
                         } else if (val.indexOf('*') != -1) {
                             tmpArr2 = tmpArr[1].split('*');
                         }
-                        //renderSign = 'x';
                     } else if (usesDivisor) {
                         tmpArr2 = tmpArr[1].split('/');
-                        //renderSign = '/';
                     }
                     tmpArr[1] = tmpArr2[0];
                     tmpArr[2] = tmpArr2[1];

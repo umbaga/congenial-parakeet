@@ -111,6 +111,7 @@ class DndInput extends React.Component {
             case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
             case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
             case util.dataTypes.picklist.RESOURCE:
+            case util.dataTypes.picklist.SAVE_EFFECT:
             case util.dataTypes.picklist.SCHOOL_OF_MAGIC:
             case util.dataTypes.picklist.SPELL_CASTING_TIME:
             case util.dataTypes.picklist.SPELL_COMPONENT:
@@ -206,7 +207,38 @@ class DndInput extends React.Component {
                         />
                 );
                 break;
+            case util.dataTypes.combo.DAMAGE_AND_DAMAGE_TYPE:
+                primaryInput = (
+                    <div className=" input-group input-inline">
+                        <input
+                            type="text"
+                            name={this.props.name + '.dice'}
+                            ref={this.props.name + '.dice'}
+                            value={this.props.valueObj.dice.rendered}
+                            datatype={util.dataTypes.special.DICE_ROLL}
+                            onKeyUp={this.props.onChange}
+                            onChange={this.props.onChange}
+                            className="form-control" />
+                        <select
+                            value={this.props.valueObj.type.id}
+                            name={this.props.name + '.type'}
+                            ref={this.props.name + '.type'}
+                            className="form-control"
+                            onChange={this.props.onChange}
+                            datatype={util.dataTypes.picklist.DAMAGE_TYPE}>
+                            <option value="0">SELECT ONE</option>
+                            {this.props.picklist.map(picklistItem =>
+                                 <option
+                                     key={picklistItem.id}
+                                     value={picklistItem.id}>
+                                     {picklistItem.name}
+                                 </option>)}
+                        </select>
+                    </div>
+                );
+                break;
             default:
+                primaryInput = (<div>Need to add dataType to switch in DndInput</div>);
         }
         const buttonType = (this.props.buttonType && this.props.buttonType.length) != 0 ? this.props.buttonType : 'additem';
         const finalInput = hasButton ? (

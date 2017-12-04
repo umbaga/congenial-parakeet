@@ -109,7 +109,9 @@ class DndManageMechanics extends React.Component {
     }
     
     renderValueInput() {
-        if (this.props.newMechanic && this.props.newMechanic.type && this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.BONUS) {
+        if (this.props.newMechanic && this.props.newMechanic.type
+            && (this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.BONUS
+                || this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.MULTIPLY_STAT)) {
             return (
                 <DndInput
                     name="value"
@@ -137,6 +139,7 @@ class DndManageMechanics extends React.Component {
         const mechanicTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.MECHANIC_TYPE);
         let mechanicTargets = [];
         switch (this.props.newMechanic.type.id) {
+            case util.itemTypes.MECHANIC_TYPE.MULTIPLY_STAT:
             case util.itemTypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT:
             case util.itemTypes.MECHANIC_TYPE.BONUS:
                 mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE)

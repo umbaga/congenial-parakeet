@@ -22,7 +22,8 @@ class SpellEntry extends React.Component {
             newMechanic: Object.assign({}, util.objectModel.MECHANIC),
             editDescription: Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION),
             selectedChartType: Object.assign({}, util.objectModel.CHART_TYPE),
-            editChart: Object.assign({}, util.objectModel.CHART)
+            editChart: Object.assign({}, util.objectModel.CHART),
+            editDamageGroupinf: Object.assign({}, util.objectModel.DAMAGE)
         };
         this.cancelSpell = this.cancelSpell.bind(this);
         this.deleteSpell = this.deleteSpell.bind(this);
@@ -49,6 +50,9 @@ class SpellEntry extends React.Component {
         this.onChangeChart = this.onChangeChart.bind(this);
         this.onResetChart = this.onResetChart.bind(this);
         this.onSelectEditedChart = this.onSelectEditedChart.bind(this);
+        this.onAddDamageGrouping = this.onAddDamageGrouping.bind(this);
+        this.onRemoveDamageGrouping = this.onRemoveDamageGrouping.bind(this);
+        this.onResetDamageGrouping = this.onResetDamageGrouping.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -77,18 +81,24 @@ class SpellEntry extends React.Component {
         blankSpell.components = [];
         blankSpell.supplementalDescriptions = [];
         blankSpell.damage = {
-            dice: {id: 0, dieCount: 0, dieType: 0, rendered: ''},
+            dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
             type: {id: 0, name: ''},
-            improvement: {
-                dice: {id: 0, dieCount: 0, dieType: 0, rendered: ''}
-            },
             attackRollType: {id: 0, name: ''},
-            condition: {id: 0, name: ''}
+            condition: {id: 0, name: ''},
+            improvement: {
+                dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}
+            },
+            supplemental: [],
+            applyAbilityScoreModifier: false,
+            abilityScore: {id: 0, name: ''},
+            maximum: {dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}}
         };
         blankSpell.savingThrow = {
-            abilityScore: {id: 0, name: ''}
+            abilityScore: {id: 0, name: ''},
+            effect: {id: 0, name: ''}
         };
         blankSpell.charts = [];
+        blankSpell.mechanics = {base: [], advancement: []};
         this.setState({spell: blankSpell});
     }
     
@@ -166,7 +176,6 @@ class SpellEntry extends React.Component {
     
     updateFormState(event) {
         const spell = util.common.formState.standard(event, this.state.spell, this.props.picklists);
-        //this.onReset();
         return this.setState({spell: spell});
     }
     
@@ -322,6 +331,33 @@ class SpellEntry extends React.Component {
         
     }
     
+    onAddDamageGrouping() {
+        const spell = this.state.spell;
+        const newDamageGrouping = {
+            dice: spell.damage.dice,
+            type: spell.damage.type
+        };
+        spell.damage.dice = Object.assign({}, util.objectModel.DICE);
+        spell.damage.type = Object.assign({}, util.objectModel.TYPE);
+        spell.damage.supplemental.push(newDamageGrouping);
+        this.setState({spell: spell});
+        this.onResetDamageGrouping();
+    }
+    
+    onRemoveDamageGrouping(event) {
+        let removeIndex = util.common.formState.setFieldFromTargetName(event).split('_')[0];
+        const spell = this.state.spell;
+        spell.damage.supplemental.splice(removeIndex, 1);
+        this.setState({spell: spell});
+    }
+    
+    onResetDamageGrouping() {
+        const newDamageGroup = Object.assign({}, util.objectModel.DAMAGE);
+        newDamageGroup.dice = Object.assign({}, util.objectModel.DICE);
+        newDamageGroup.type = Object.assign({}, util.objectModel.TYPE);
+        this.setState({editDamageGrouping: newDamageGroup});
+    }
+    
     render() {
         const spell = this.state.spell;
         const contents = this.props.canEdit ? (
@@ -353,6 +389,8 @@ class SpellEntry extends React.Component {
                 onChangeChart={this.onChangeChart}
                 onResetChart={this.onResetChart}
                 onSelectEditedChart={this.onChangeChart}
+                onAddDamageGrouping={this.onAddDamageGrouping}
+                onRemoveDamageGrouping={this.onRemoveDamageGrouping}
                 />
         ) : (
             <SpellDetails

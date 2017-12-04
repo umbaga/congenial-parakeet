@@ -517,6 +517,13 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                                 tmp.spell.needDiceCheck = true;
                             }
                         }
+                        if (tmp.spell.damage && tmp.spell.damage.supplemental && tmp.spell.damage.supplemental.length != 0) {
+                            for (var s = 0; s < tmp.spell.damage.supplemental.length; s++) {
+                                if (tmp.spell.damage.supplemental[s].dice && tmp.spell.damage.supplemental[s].dice.dieCount != 0) {
+                                    tmp.spell.needDiceCheck = true;
+                                }
+                            }
+                        }
                         return callback(null, tmp);
                     });
                 },
@@ -657,9 +664,30 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             vals.push(resObj.spell.damage.improvement.dice.multiplier);
                             vals.push(resObj.spell.damage.improvement.dice.divisor);
                         }
+                        if (resObj.spell.damage && resObj.spell.damage.maximum && resObj.spell.damage.maximum.dice.dieCount && resObj.spell.damage.maximum.dice.dieCount != 0) {
+                            if (includeUnion) {
+                                sql += ' UNION ';
+                            }
+                            sql += 'select $' + first.toString() +' :: bigint as "dieCount", $' + second.toString() +' :: bigint as "dieType"';
+                            sql += ', $' + third.toString() +' :: smallint as "modifier", $' + fourth.toString() +' :: smallint as "multiplier"';
+                            sql += ', $' + fifth.toString() +' :: smallint as "divisor"';
+                            first = first + 5;
+                            second = second + 5;
+                            third = third + 5;
+                            fourth = fourth + 5;
+                            fifth = fifth + 5;
+                            vals.push(resObj.spell.damage.maximum.dice.dieCount);
+                            vals.push(resObj.spell.damage.maximum.dice.dieType);
+                            vals.push(resObj.spell.damage.maximum.dice.modifier);
+                            vals.push(resObj.spell.damage.maximum.dice.multiplier);
+                            vals.push(resObj.spell.damage.maximum.dice.divisor);
+                        }
                         if (resObj.spell.mechanics && resObj.spell.mechanics.base && resObj.spell.mechanics.base.length != 0) {
                             for (var m = 0; m < resObj.spell.mechanics.base.length; m++) {
                                 if (resObj.spell.mechanics.base[m].dice && resObj.spell.mechanics.base[m].dice.dieCount != 0) {
+                                    if (includeUnion) {
+                                        sql += ' UNION ';
+                                    }
                                     sql += 'select $' + first.toString() +' :: bigint as "dieCount", $' + second.toString() +' :: bigint as "dieType"';
                                     sql += ', $' + third.toString() +' :: smallint as "modifier", $' + fourth.toString() +' :: smallint as "multiplier"';
                                     sql += ', $' + fifth.toString() +' :: smallint as "divisor"';
@@ -680,6 +708,9 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         if (resObj.spell.mechanics && resObj.spell.mechanics.advacement && resObj.spell.mechanics.advacement.length != 0) {
                             for (var m = 0; m < resObj.spell.mechanics.advacement.length; m++) {
                                 if (resObj.spell.mechanics.advacement[m].dice && resObj.spell.mechanics.advacement[m].dice.dieCount != 0) {
+                                    if (includeUnion) {
+                                        sql += ' UNION ';
+                                    }
                                     sql += 'select $' + first.toString() +' :: bigint as "dieCount", $' + second.toString() +' :: bigint as "dieType"';
                                     sql += ', $' + third.toString() +' :: smallint as "modifier", $' + fourth.toString() +' :: smallint as "multiplier"';
                                     sql += ', $' + fifth.toString() +' :: smallint as "divisor"';
@@ -694,6 +725,29 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                                     vals.push(resObj.spell.mechanics.advacement[m].dice.modifier);
                                     vals.push(resObj.spell.mechanics.advacement[m].dice.multiplier);
                                     vals.push(resObj.spell.mechanics.advacement[m].dice.divisor);
+                                }
+                            }
+                        }
+                        if (resObj.spell.damage && resObj.spell.damage.supplemental && resObj.spell.damage.supplemental.length != 0) {
+                            for (var s = 0; s < resObj.spell.damage.supplemental.length; s++) {
+                                if (resObj.spell.damage.supplemental[s].dice && resObj.spell.damage.supplemental[s].dice.dieCount != 0) {
+                                    if (includeUnion) {
+                                        sql += ' UNION ';
+                                    }
+                                    sql += 'select $' + first.toString() +' :: bigint as "dieCount", $' + second.toString() +' :: bigint as "dieType"';
+                                    sql += ', $' + third.toString() +' :: smallint as "modifier", $' + fourth.toString() +' :: smallint as "multiplier"';
+                                    sql += ', $' + fifth.toString() +' :: smallint as "divisor"';
+                                    first = first + 5;
+                                    second = second + 5;
+                                    third = third + 5;
+                                    fourth = fourth + 5;
+                                    fifth = fifth + 5;
+                                    includeUnion = true;
+                                    vals.push(resObj.spell.damage.supplemental[s].dice.dieCount);
+                                    vals.push(resObj.spell.damage.supplemental[s].dice.dieType);
+                                    vals.push(resObj.spell.damage.supplemental[s].dice.modifier);
+                                    vals.push(resObj.spell.damage.supplemental[s].dice.multiplier);
+                                    vals.push(resObj.spell.damage.supplemental[s].dice.divisor);
                                 }
                             }
                         }
@@ -764,6 +818,44 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             vals.push(resObj.spell.damage.improvement.dice.divisor);
                             usesOrClause = true;
                         }
+                        if (resObj.spell.damage && resObj.spell.damage.maximum && resObj.spell.damage.maximum.dice.dieCount && resObj.spell.damage.maximum.dice.dieCount != 0) {
+                            sql += usesOrClause ? ' OR ' : ' WHERE ';
+                            sql += ' ("dieCount" = $' + first.toString() + ' AND "dieType" = $' + second.toString();
+                            sql += ' AND "modifier" = $' + third.toString() + ' AND "multiplier" = $' + fourth.toString();
+                            sql += ' AND "divisor" = $' + fifth.toString() + ')';
+                            first = first + 5;
+                            second = second + 5;
+                            third = third + 5;
+                            fourth = fourth + 5;
+                            fifth = fifth + 5;
+                            vals.push(resObj.spell.damage.maximum.dice.dieCount);
+                            vals.push(resObj.spell.damage.maximum.dice.dieType);
+                            vals.push(resObj.spell.damage.maximum.dice.modifier);
+                            vals.push(resObj.spell.damage.maximum.dice.multiplier);
+                            vals.push(resObj.spell.damage.maximum.dice.divisor);
+                            usesOrClause = true;
+                        }
+                        if (resObj.spell.damage && resObj.spell.damage.supplemental && resObj.spell.damage.supplemental.length != 0) {
+                            for (var s = 0; s < resObj.spell.damage.supplemental.length; s++) {
+                                if (resObj.spell.damage.supplemental[s].dice && resObj.spell.damage.supplemental[s].dice.dieCount != 0) {
+                                    sql += usesOrClause ? ' OR ' : ' WHERE ';
+                                    sql += ' ("dieCount" = $' + first.toString() + ' AND "dieType" = $' + second.toString();
+                                    sql += ' AND "modifier" = $' + third.toString() + ' AND "multiplier" = $' + fourth.toString();
+                                    sql += ' AND "divisor" = $' + fifth.toString() + ')';
+                                    first = first + 5;
+                                    second = second + 5;
+                                    third = third + 5;
+                                    fourth = fourth + 5;
+                                    fifth = fifth + 5;
+                                    vals.push(resObj.spell.damage.supplemental[s].dice.dieCount);
+                                    vals.push(resObj.spell.damage.supplemental[s].dice.dieType);
+                                    vals.push(resObj.spell.damage.supplemental[s].dice.modifier);
+                                    vals.push(resObj.spell.damage.supplemental[s].dice.multiplier);
+                                    vals.push(resObj.spell.damage.supplemental[s].dice.divisor);
+                                    usesOrClause = true;
+                                }
+                            }
+                        }
                         if (resObj.spell.mechanics && resObj.spell.mechanics.base && resObj.spell.mechanics.base.length != 0) {
                             for (var m = 0; m < resObj.spell.mechanics.base.length; m++) {
                                 if (resObj.spell.mechanics.base[m].dice && resObj.spell.mechanics.base[m].dice.dieCount != 0) {
@@ -824,8 +916,15 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                                     if (resObj.spell.damage.improvement.dice.dieCount == results[e].dieCount && resObj.spell.damage.improvement.dice.dieType == results[e].dieType
                                        && resObj.spell.damage.improvement.dice.modifier == results[e].modifier && resObj.spell.damage.improvement.dice.multiplier == results[e].multiplier
                                        && resObj.spell.damage.improvement.dice.divisor == results[e].divisor) {
-                                        resObj.spell.improvement.damage.dice.id = results[e].id;
-                                    }
+                                        resObj.spell.damage.improvement.dice.id = results[e].id;
+                                    } 
+                                }
+                                if (resObj.spell.damage && resObj.spell.damage.maximum && resObj.spell.damage.maximum.dice && resObj.spell.damage.maximum.dice.dieCount != 0) {
+                                    if (resObj.spell.damage.maximum.dice.dieCount == results[e].dieCount && resObj.spell.damage.maximum.dice.dieType == results[e].dieType
+                                       && resObj.spell.damage.maximum.dice.modifier == results[e].modifier && resObj.spell.damage.maximum.dice.multiplier == results[e].multiplier
+                                       && resObj.spell.damage.maximum.dice.divisor == results[e].divisor) {
+                                        resObj.spell.damage.maximum.dice.id = results[e].id;
+                                    } 
                                 }
                                 if (resObj.spell.mechanics && resObj.spell.mechanics.base && resObj.spell.mechanics.base.length != 0) {
                                     for (var m = 0; m < resObj.spell.mechanics.base.length; m++) {
@@ -849,7 +948,54 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                                         }
                                     }
                                 }
+                                if (resObj.spell.damage && resObj.spell.damage.supplemental && resObj.spell.damage.supplemental.length != 0) {
+                                    for (var s = 0; s < resObj.spell.damage.supplemental.length; s++) {
+                                        if (resObj.spell.damage.supplemental[s].dice && resObj.spell.damage.supplemental[s].dice.dieCount != 0) {
+                                            if (resObj.spell.damage.supplemental[s].dice.dieCount == results[e].dieCount
+                                               && resObj.spell.damage.supplemental[s].dice.dieType == results[e].dieType
+                                               && resObj.spell.damage.supplemental[s].dice.modifier == results[e].modifier
+                                               && resObj.spell.damage.supplemental[s].dice.multiplier == results[e].multiplier
+                                               && resObj.spell.damage.supplemental[s].dice.divisor == results[e].divisor) {
+                                                resObj.spell.damage.supplemental[s].dice.id = results[e].id;
+                                            }
+                                        }
+                                    }
+                                }
                             }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertSupplementalDamage(resObj, callback) {
+                    if (resObj.spell.damage && resObj.spell.damage.supplemental && resObj.spell.damage.supplemental.length != 0) {
+                        vals = [];
+                        results = [];
+                        sql = 'INSERT INTO adm_link_supplemental_damage';
+                        sql += ' ("referenceId", "diceId", "damageTypeId")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        for (var s = 0; s < resObj.spell.damage.supplemental.length; s++) {
+                            if (s != 0) {
+                                sql += ', ';
+                            }
+                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                            first = first + 3;
+                            second = second + 3;
+                            third = third + 3;
+                            vals.push(resObj.spell.id);
+                            vals.push(resObj.spell.damage.supplemental[s].dice.id);
+                            vals.push(resObj.spell.damage.supplemental[s].type.id);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
                             return callback(null, resObj);
                         });
                     } else {
@@ -861,9 +1007,18 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         results = [];
                         vals = [];
                         sql = 'INSERT INTO adm_def_damage';
-                        sql += ' ("referenceId", "diceId", "damageTypeId")';
-                        sql += ' VALUES ($1, $2, $3)';
-                        vals = [resObj.spell.id, resObj.spell.damage.dice.id, resObj.spell.damage.type.id];
+                        sql += ' ("referenceId", "diceId", "damageTypeId", "abilityScoreModifierId")';
+                        sql += ' VALUES ($1, $2, $3, $4)';
+                        vals = [
+                            resObj.spell.id, 
+                            resObj.spell.damage.dice.id, 
+                            resObj.spell.damage.type.id,
+                        ];
+                        if (resObj.spell.damage.applyAbilityScoreModifier) {
+                            vals.push(resObj.spell.damage.abilityScore.id);
+                        } else {
+                            vals.push(0);
+                        }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
@@ -883,13 +1038,14 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         results = [];
                         vals = [];
                         sql = 'INSERT INTO adm_def_spell_damage';
-                        sql += ' ("spellId", "improvementDiceId", "attackRollTypeId", "conditionId")';
-                        sql += ' VALUES ($1, $2, $3, $4)';
+                        sql += ' ("spellId", "improvementDiceId", "attackRollTypeId", "conditionId", "maximumDamageDiceId")';
+                        sql += ' VALUES ($1, $2, $3, $4, $5)';
                         vals = [
                             resObj.spell.id,
                             resObj.spell.damage.improvement.dice.id,
                             resObj.spell.damage.attackRollType.id,
-                            resObj.spell.damage.condition.id
+                            resObj.spell.damage.condition.id,
+                            resObj.spell.damage.maximum.dice.id
                         ];
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -1530,15 +1686,42 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '    , \'attackRollType\', json_build_object(';
             sql += '        \'id\', attrolltype."id"';
             sql += '        , \'name\', attrolltype."itemName"';
-            sql += '    )   ';
+            sql += '    )';
             sql += '    , \'condition\', json_build_object(';
             sql += '        \'id\', condition."id"';
             sql += '        , \'name\', condition."itemName"';
+            sql += '    )';
+            sql += '    , \'maximum\', json_build_object(';
+            sql += '        \'dice\', get_dice(dmgbase."maximumDamageDiceId")';
+            sql += '    )';
+            sql += '    , \'abilityScore\', json_build_object(';
+            sql += '        \'id\', abilityscore."id"';
+            sql += '        , \'name\', abilityscore."itemName"';
+            sql += '    )';
+            sql += '    , \'supplemental\', (';
+            sql += '        SELECT r.damage_groups';
+            sql += '        FROM (';
+            sql += '            SELECT json_agg(group_row) AS damage_groups, d.id';
+            sql += '            FROM adm_core_item d';
+            sql += '            LEFT OUTER JOIN (';
+            sql += '                SELECT suppdmg."referenceId"';
+            sql += '                , json_build_object(\'id\', dmgtype.id, \'name\', dmgtype."itemName") AS "type"';
+            sql += '                , json_build_object(\'id\', ability.id, \'name\', ability."itemName") AS "abilityScore"';
+            sql += '                , get_dice(suppdmg."diceId") AS "dice"';
+            sql += '                FROM adm_link_supplemental_damage suppdmg';
+            sql += '                LEFT OUTER JOIN adm_core_item dmgtype ON dmgtype.id = suppdmg."damageTypeId"';
+            sql += '                LEFT OUTER JOIN adm_core_item ability ON ability.id = suppdmg."abilityScoreModifierId"';
+            sql += '            ) group_row ON (group_row."referenceId" = d.id)';
+            sql += '            GROUP BY d.id';
+            sql += '        ) r (damage_groups, id) WHERE id = i.id';
             sql += '    )';
             sql += ') END AS "damage" ';
             sql += ', CASE WHEN count(saveability.id) = 0 THEN \'{}\' ELSE json_build_object(';
             sql += '    \'abilityScore\', json_build_object(';
             sql += '        \'id\', saveability.id, \'name\', saveability."itemName"';
+            sql += '    )';
+            sql += '    , \'effect\', json_build_object(';
+            sql += '        \'id\', saveeffect.id, \'name\', saveeffect."itemName"';
             sql += '    )';
             sql += ')  END  AS "savingThrow"   ';
             sql += ', json_build_object(';
@@ -1642,6 +1825,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ' LEFT OUTER JOIN adm_core_dice improvedmgdice ON improvedmgdice.id = dmgbase."improvementDiceId" ';
             sql += ' LEFT OUTER JOIN adm_core_item attrolltype ON attrolltype.id = dmgbase."attackRollTypeId"';
             sql += ' LEFT OUTER JOIN adm_core_item condition ON condition.id = dmgbase."conditionId"'
+            sql += ' LEFT OUTER JOIN adm_core_item abilityscore ON abilityscore.id = dmg."abilityScoreModifierId"';
+            sql += ' LEFT OUTER JOIN adm_core_item saveeffect ON saveeffect.id = save."effectId"';
             sql += ' GROUP BY i.id, i."itemName", spell.level   ';
             sql += ', school.id, school."itemName"   ';
             sql += ', duration.id, duration."itemName"   ';
@@ -1657,6 +1842,9 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ', spell."isRitual" ';
             sql += ', attrolltype.id, attrolltype."itemName"';
             sql += ', condition.id, condition."itemName"';
+            sql += ', abilityscore.id, abilityscore."itemName"';
+            sql += ', dmgbase."maximumDamageDiceId"';
+            sql += ', saveeffect.id, saveeffect."itemName"';
             sql += ' ORDER BY i."itemName"';
             vals = [
                 itemtypes.DESCRIPTION.GENERAL,

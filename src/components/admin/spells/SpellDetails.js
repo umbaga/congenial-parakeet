@@ -47,7 +47,7 @@ class SpellDetails extends React.Component {
                 {this.props.spell.supplementalDescriptions.map(description =>
                     <p key={description.id}>
                         <strong>{description.title}</strong>
-                        {description.description}
+                        <div dangerouslySetInnerHTML={{ __html: description.description }}/>
                     </p>
                 )}
             </div>

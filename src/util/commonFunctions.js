@@ -42,14 +42,15 @@ export function setObjectValue(obj, prop, val, action) {
 export const formState = {
     setFieldFromTargetName: function(event) {
         if (event.target) {
-            //return event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
             if (event.target.id) {
                 return event.target.id;
             } else {
-                if (event.target.name) {
+                if (event.target.name !== undefined) {
                     return event.target.name;
-                } else if (event.target.parentElement) {
-                    event.target.parentElement.name;
+                } else if (event.target.parentElement.name) {
+                    return event.target.parentElement.name;
+                } else if (event.target.parentElement.parentElement.name) {
+                    return event.target.parentElement.parentElement.name;
                 } else {
                     return null;
                 }
@@ -196,7 +197,7 @@ export const formState = {
                         newEntry = Object.assign({}, util.objectModel.DIE_CHART_ENTRY);
                         newEntry.id = -1 * chart.entries.length;
                         newEntry.minimum = parseInt(event.target.options[event.target.selectedIndex].value) + 1;
-                        newEntry.maximum = chartMaximumValue;//chart.dice.dieCount * chart.dice.dieType;
+                        newEntry.maximum = chartMaximumValue;
                         chart.entries.push(newEntry);
                     }
                     break;
@@ -271,8 +272,7 @@ export const formState = {
             }
         } else {
             //this controls button clicks and div.innerHTML stuff
-            let dataType = formState.setDataTypeFromTarget(event.target);//event.target.parentElement.parentElement.getAttribute('dataType');
-            //let dataType = event.target.parentElement.parentElement.getAttribute('dataType');
+            let dataType = formState.setDataTypeFromTarget(event.target);
             let recordType = event.target.id.split('_')[1];
             let recordId = parseInt(event.target.id.split('_')[0]);
             let recordField = event.target.id.split('_')[2];
@@ -344,9 +344,7 @@ export const formState = {
     },
     arrayProperty: function(event, obj, refObj) {
         let retVal = obj;
-        //let field = event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
-        let dataType = formState.setDataTypeFromTarget(event.target);//event.target.parentElement.parentElement.getAttribute('dataType');
-        //let dataType = event.target.parentElement.parentElement.getAttribute('dataType');
+        let dataType = formState.setDataTypeFromTarget(event.target);
         let removeIndex = -1;
         let changedIndex = -1;
         let otherChangedIndex = -1;
@@ -399,10 +397,7 @@ export const formState = {
     },
     standard: function(event, obj, picklists) {
         let retVal = obj;
-        let field = formState.setFieldFromTargetName(event);//event.target.name !== undefined ? event.target.name : event.target.parentElement.name;
-        /*if (event.target.id) {
-            field = event.target.id;
-        }*/
+        let field = formState.setFieldFromTargetName(event);
         let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         let newSelectedValue = {};
         let newRenderedValue = '';
@@ -414,9 +409,13 @@ export const formState = {
         let newComponentsArray = [];
         let inputType = event.target.type;
         let subfield = '';
+        let tmpText = '';
         switch (dataType) {
             case util.dataTypes.string.DESCRIPTION:
-                util.common.setObjectValue(retVal, field, event.target.innerHTML);
+                tmpText = event.target.innerHTML.trim().replace('W ', 'W').replace('becom e', 'become').replace('W isdom', 'Wisdom').replace('m m', 'mm')
+                .replace('nonmagical', 'non-magical').replace('becom es', 'becomes').replace('summ ons', 'summons').replace('consum ed', 'consumed')
+                .replace('1dlO ', '1d10 ').replace('Som e', 'Some').replace('som e', 'some').replace('com m on', 'common').replace('consum e', 'consume');
+                util.common.setObjectValue(retVal, field, tmpText.trim());
                 break;
             case util.dataTypes.string.STRING:
             case util.dataTypes.string.LONG_STRING:
@@ -447,6 +446,7 @@ export const formState = {
             case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
             case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
             case util.dataTypes.picklist.RESOURCE:
+            case util.dataTypes.picklist.SAVE_EFFECT:
             case util.dataTypes.picklist.SCHOOL_OF_MAGIC:
             case util.dataTypes.picklist.SPELL_CASTING_TIME:
             case util.dataTypes.picklist.SPELL_DURATION:
@@ -507,8 +507,14 @@ export const formState = {
                     }
                     newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
                     newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
-                    util.common.setObjectValue(retVal, field, newDiceRollValue);
+                } else {
+                    newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
+                    newDiceRollValue.dieType = 1;
+                    newDiceRollValue.modifier = 0;
+                    newDiceRollValue.multiplier = 1;
+                    newDiceRollValue.divisor = 1;
                 }
+                util.common.setObjectValue(retVal, field, newDiceRollValue);
                 util.common.setObjectValue(retVal, field + '.rendered', newRenderedValue);
                 break;
             case util.dataTypes.array.PROFICIENCIES:
@@ -554,8 +560,15 @@ export const formState = {
                     subfield = tmp[1];
                     let changedId = tmp[2];
                     for (let e = 0; e < newComponentsArray.length; e++) {
+                        tmpText = event.target.value;
+                        if (tmpText.indexOf('(') != -1) {
+                            tmpText = tmpText.replace('(', '').trim();
+                        }
+                        if (tmpText.indexOf(')') != -1) {
+                            tmpText = tmpText.replace(')', '').trim();
+                        }
                         if (changedId == newComponentsArray[e].id) {
-                            retVal[field][e][subfield] = event.target.value;
+                            retVal[field][e][subfield] = tmpText;
                         }
                     }
                 } else {
