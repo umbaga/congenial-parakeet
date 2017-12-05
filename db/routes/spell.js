@@ -1034,18 +1034,25 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                 function insertImprovementDamage(resObj, callback) {
                     if ((resObj.spell.damage && resObj.spell.damage.improvement && resObj.spell.damage.improvement.dice && resObj.spell.damage.improvement.dice.dieCount != 0) ||
                        (resObj.spell.damage && resObj.spell.damage.attackRollType && resObj.spell.damage.attackRollType.id != 0) ||
-                       (resObj.spell.damage && resObj.spell.damage.condition && resObj.spell.damage.condition.id != 0)) {
+                       (resObj.spell.damage && resObj.spell.damage.condition && resObj.spell.damage.condition.id != 0) ||
+                       (resObj.spell.damage && resObj.spell.damage.projectileCount != 0)) {
                         results = [];
                         vals = [];
                         sql = 'INSERT INTO adm_def_spell_damage';
-                        sql += ' ("spellId", "improvementDiceId", "attackRollTypeId", "conditionId", "maximumDamageDiceId")';
-                        sql += ' VALUES ($1, $2, $3, $4, $5)';
+                        sql += ' ("spellId", "improvementDiceId"';
+                        sql += ', "attackRollTypeId", "conditionId"';
+                        sql += ', "maximumDamageDiceId", "improvementLevelCount"';
+                        sql += ', "projectileCount", "improvementProjectileCount")';
+                        sql += ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
                         vals = [
                             resObj.spell.id,
                             resObj.spell.damage.improvement.dice.id,
                             resObj.spell.damage.attackRollType.id,
                             resObj.spell.damage.condition.id,
-                            resObj.spell.damage.maximum.dice.id
+                            resObj.spell.damage.maximum.dice.id,
+                            resObj.spell.damage.improvement.levelCount,
+                            resObj.spell.damage.projectileCount,
+                            resObj.spell.damage.improvement.projectileCount
                         ];
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -1062,9 +1069,13 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                 function insertSavingThrow(resObj, callback) {
                     if (resObj.spell.needSavingThrow) {
                         sql = 'INSERT INTO adm_def_spell_saving_throw';
-                        sql += ' ("spellId", "abilityScoreId")';
-                        sql += ' VALUES ($1, $2)';
-                        vals = [resObj.spell.id, resObj.spell.savingThrow.abilityScore.id];
+                        sql += ' ("spellId", "abilityScoreId", "effectId")';
+                        sql += ' VALUES ($1, $2, $3)';
+                        vals = [
+                            resObj.spell.id, 
+                            resObj.spell.savingThrow.abilityScore.id, 
+                            resObj.spell.savingThrow.effect.id
+                        ];
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
@@ -1080,44 +1091,49 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                 function insertMechanics(resObj, callback) {
                     if (resObj.spell.mechanics && resObj.spell.mechanics.base && resObj.spell.mechanics.base.length != 0) {
                         sql = 'INSERT INTO adm_link_mechanic';
-                        sql += ' ("referenceId", "targetId", "typeId", "value", "diceId")';
+                        sql += ' ("referenceId", "targetId", "typeId", "value", "diceId", "valueObjectId")';
                         sql += ' VALUES ';
                         var first = 1;
                         var second = 2;
                         var third = 3;
                         var fourth = 4;
                         var fifth = 5;
+                        var sixth = 6;
                         vals = [];
                         for (var e = 0; e < resObj.spell.mechanics.base.length; e++) {
                             if (e != 0) {
                                 sql += ', ';
                             }
-                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ', $' + fifth.toString() + ')';
-                            first = first + 5;
-                            second = second + 5;
-                            third = third + 5;
-                            fourth = fourth + 5;
-                            fifth = fifth + 5;
+                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ', $' + fifth.toString() + ', $' + sixth.toString() + ')';
+                            first = first + 6;
+                            second = second + 6;
+                            third = third + 6;
+                            fourth = fourth + 6;
+                            fifth = fifth + 6;
+                            sixth = sixth + 6;
                             vals.push(resObj.spell.id);
                             vals.push(resObj.spell.mechanics.base[e].target.id);
                             vals.push(resObj.spell.mechanics.base[e].type.id);
                             vals.push(resObj.spell.mechanics.base[e].value);
                             vals.push(resObj.spell.mechanics.base[e].dice.id);
+                            vals.push(resObj.spell.mechanics.base[e].valueObject.id);
                         }
                         if (resObj.spell.atHigherLevelsId && resObj.spell.atHigherLevelsId != 0) {
                             if (resObj.spell.mechanics.advancement && resObj.spell.mechanics.advancement.length != 0) {
                                 for (var e = 0; e < resObj.spell.mechanics.advancement.length; e++) {
-                                    sql += ', ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ', $' + fifth.toString() + ')';
-                                    first = first + 5;
-                                    second = second + 5;
-                                    third = third + 5;
-                                    fourth = fourth + 5;
-                                    fifth = fifth + 5;
+                                    sql += ', ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ', $' + fifth.toString() + ', $' + sixth.toString() + ')';
+                                    first = first + 6;
+                                    second = second + 6;
+                                    third = third + 6;
+                                    fourth = fourth + 6;
+                                    fifth = fifth + 6;
+                                    sixth = sixth + 6;
                                     vals.push(resObj.spell.atHigherLevelsId);
                                     vals.push(resObj.spell.mechanics.advancement[e].target.id);
                                     vals.push(resObj.spell.mechanics.advancement[e].type.id);
                                     vals.push(resObj.spell.mechanics.advancement[e].value);
                                     vals.push(resObj.spell.mechanics.advancement[e].dice.id);
+                                    vals.push(resObj.spell.mechanics.advancement[e].valueObject.id);
                                 }
                             }
                         }
@@ -1271,8 +1287,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             sql += (e == 0) ? ' WHERE' : ' OR';
                             sql += ' (dice."dieCount" = $' + first.toString();
                             sql += ' AND dice."dieType" = $' + second.toString() + ')';
-                            vals.push(resObj.spell.charts[e].dieRoll.dieCount);
-                            vals.push(resObj.spell.charts[e].dieRoll.dieType);
+                            vals.push(resObj.spell.charts[e].dice.dieCount);
+                            vals.push(resObj.spell.charts[e].dice.dieType);
                             first = first + 2;
                             second = second + 2;
                         }
@@ -1284,9 +1300,9 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             done();
                             for (var i = 0; i < results.length; i++) {
                                 for (var j = 0; j < resObj.spell.charts.length; j++) {
-                                    if (resObj.spell.charts[j].dieRoll.dieCount == results[i].dieCount &&
-                                       resObj.spell.charts[j].dieRoll.dieType == results[i].dieType) {
-                                        resObj.spell.charts[j].dieRoll.id = results[i].id;
+                                    if (resObj.spell.charts[j].dice.dieCount == results[i].dieCount &&
+                                       resObj.spell.charts[j].dice.dieType == results[i].dieType) {
+                                        resObj.spell.charts[j].dice.id = results[i].id;
                                     }
                                 }
                             }
@@ -1314,7 +1330,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             first = first + 2;
                             second = second + 2;
                             vals.push(resObj.spell.charts[e].id);
-                            vals.push(resObj.spell.charts[e].dieRoll.id);
+                            vals.push(resObj.spell.charts[e].dice.id);
                         }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -1355,7 +1371,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                                 sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
                                 vals.push(resObj.spell.charts[i].id);
                                 vals.push(resObj.spell.charts[i].entries[j].minimum);
-                                vals.push(resObj.spell.charts[i].entries[j].minimum);
+                                vals.push(resObj.spell.charts[i].entries[j].maximum);
                                 vals.push(resObj.spell.charts[i].entries[j].description);
                                 first = first + 4;
                                 second = second + 4;
@@ -1682,6 +1698,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '    )       ';
             sql += '    , \'improvement\', json_build_object(';
             sql += '        \'dice\', get_dice(improvedmgdice.id)';
+            sql += '        , \'levelCount\', dmgbase."improvementLevelCount"';
+            sql += '        , \'projectileCount\', dmgbase."improvementProjectileCount"';
             sql += '    )';
             sql += '    , \'attackRollType\', json_build_object(';
             sql += '        \'id\', attrolltype."id"';
@@ -1698,6 +1716,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '        \'id\', abilityscore."id"';
             sql += '        , \'name\', abilityscore."itemName"';
             sql += '    )';
+            sql += '    , \'projectileCount\', dmgbase."projectileCount"';
             sql += '    , \'supplemental\', (';
             sql += '        SELECT r.damage_groups';
             sql += '        FROM (';
@@ -1760,10 +1779,14 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '                    \'id\', typ.id, \'name\', typ."itemName"';
             sql += '                ) AS type ';
             sql += '                , get_dice(ml."diceId") AS "dice"';
+            sql += '                , json_build_object(';
+            sql += '                    \'id\', valobj.id, \'name\', valobj."itemName"';
+            sql += '                ) AS "vaueObject"';
             sql += '                FROM adm_link_mechanic ml';
             sql += '                INNER JOIN adm_core_item ii ON ii.id = ml."referenceId"';
             sql += '                LEFT OUTER JOIN adm_core_item targ ON targ.id = ml."targetId"';
             sql += '                LEFT OUTER JOIN adm_core_item typ ON typ.id = ml."typeId"';
+            sql += '                LEFT OUTER JOIN adm_core_item valobj ON valobj.id = ml."valueObjectId"';
             sql += '            ) mechanic_row ON (mechanic_row."referenceId" = d.id)';
             sql += '            GROUP BY d.id ';
             sql += '        ) r(mechanics, id) WHERE id = i.id)';
@@ -1784,10 +1807,14 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '                    \'id\', typ.id, \'name\', typ."itemName"';
             sql += '                ) AS type ';
             sql += '                , get_dice(ml."diceId") AS "dice"';
+            sql += '                , json_build_object(';
+            sql += '                    \'id\', valobj.id, \'name\', valobj."itemName"';
+            sql += '                ) AS "vaueObject"';
             sql += '                FROM adm_link_mechanic ml ';
             sql += '                INNER JOIN adm_core_description ii ON ii.id = ml."referenceId"  ';
             sql += '                LEFT OUTER JOIN adm_core_item targ ON targ.id = ml."targetId"';
             sql += '                LEFT OUTER JOIN adm_core_item typ ON typ.id = ml."typeId"';
+            sql += '                LEFT OUTER JOIN adm_core_item valobj ON valobj.id = ml."valueObjectId"';
             sql += '            ) mechanic_row ON (mechanic_row."referenceId" = d.id)';
             sql += '            GROUP BY d.id';
             sql += '        ) r(mechanics, id) WHERE id = i.id';
@@ -1843,7 +1870,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ', attrolltype.id, attrolltype."itemName"';
             sql += ', condition.id, condition."itemName"';
             sql += ', abilityscore.id, abilityscore."itemName"';
-            sql += ', dmgbase."maximumDamageDiceId"';
+            sql += ', dmgbase."maximumDamageDiceId", dmgbase."improvementLevelCount"';
+            sql += ', dmgbase."projectileCount", dmgbase."improvementProjectileCount"';
             sql += ', saveeffect.id, saveeffect."itemName"';
             sql += ' ORDER BY i."itemName"';
             vals = [

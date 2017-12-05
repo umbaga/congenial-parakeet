@@ -1,6 +1,7 @@
 module.exports = {
     TYPE: {
         ABILITY_SCORE: 24,
+        ADVANTAGE_TARGET: 2026,
         AMMUNITION_TYPE: 67,
         AREA_OF_EFFECT_SHAPE: 1479,
         ARMOR: 456,
@@ -91,10 +92,12 @@ module.exports = {
     MECHANIC_TYPE: {
         ADVANTAGE: 866,
         ADVANTAGE_SAVING_THROW: 870,
+        APPLY_ABILITY_SCORE_TO_STAT: 2199,
         BONUS: 847,
         DIE_ROLL_BONUS_TO_STAT: 1428,
         DISADVANTAGE: 867,
         DISADVANTAGE_SAVING_THROW: 871,
+        DIVIDE_STAT: 2003,
         IMMUNITY: 872,
         MULTIPLY_STAT: 1617,
         RESISTANCE: 868,

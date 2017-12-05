@@ -52,11 +52,11 @@ export const formState = {
                 } else if (event.target.parentElement.parentElement.name) {
                     return event.target.parentElement.parentElement.name;
                 } else {
-                    return null;
+                    return undefined;
                 }
             }
         } else {
-            return null;
+            return undefined;
         }
     },
     setDataTypeFromTarget: function(target) {
@@ -219,7 +219,7 @@ export const formState = {
                             if (c > chart.columns.length - 1) {
                                 newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
                                 newColumn.id = (c + 1) * -1;
-                                newColumn.columnIndex = c + 1;
+                                newColumn.columnIndex = c;
                                 chart.columns.push(newColumn);
                             }
                         }
@@ -232,7 +232,7 @@ export const formState = {
                             if (r > chart.rows.length - 1) {
                                 newRow = Object.assign({}, util.objectModel.CHART_ROW);
                                 newRow.id = (r + 1) * -1;
-                                newRow.rowIndex = r + 1;
+                                newRow.rowIndex = r;
                                 chart.rows.push(newRow);
                             }
                         }
@@ -414,7 +414,10 @@ export const formState = {
             case util.dataTypes.string.DESCRIPTION:
                 tmpText = event.target.innerHTML.trim().replace('W ', 'W').replace('becom e', 'become').replace('W isdom', 'Wisdom').replace('m m', 'mm')
                 .replace('nonmagical', 'non-magical').replace('becom es', 'becomes').replace('summ ons', 'summons').replace('consum ed', 'consumed')
-                .replace('1dlO ', '1d10 ').replace('Som e', 'Some').replace('som e', 'some').replace('com m on', 'common').replace('consum e', 'consume');
+                .replace('1dlO ', '1d10 ').replace('Som e', 'Some').replace('som e', 'some').replace('com m on', 'common').replace('consum e', 'consume')
+                .replace('com ing', 'coming').replace('sm oke', 'smoke').replace('w eapon', 'weapon').replace('m essage', 'message')
+                    .replace('circum stance', 'circumstance').replace('m em or', 'memor').replace('mem or', 'memor').replace('m emor', 'memor')
+                .replace('dism iss', 'dismiss').replace('outcom es', 'outcomes').replace('sum m oned', 'summoned').replace('summ oned', 'summoned');
                 util.common.setObjectValue(retVal, field, tmpText.trim());
                 break;
             case util.dataTypes.string.STRING:
@@ -508,7 +511,12 @@ export const formState = {
                     newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
                     newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
                 } else {
-                    newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
+                    newDiceRollValue.id = 0;
+                    if (event.target.value.length != 0) {
+                        newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
+                    } else {
+                        newDiceRollValue.dieCount = 0;
+                    }
                     newDiceRollValue.dieType = 1;
                     newDiceRollValue.modifier = 0;
                     newDiceRollValue.multiplier = 1;

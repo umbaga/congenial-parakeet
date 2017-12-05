@@ -159,7 +159,8 @@ export const MECHANIC = {
     dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
     target: {id: 0, name: ''},
     type: {id: 0, name: ''},
-    value: 0
+    value: 0,
+    valueObject: {id: 0, name: ''}
 };
 export const PICKLIST = {id: 0, name: '', items: []};
 export const PICKLISTITEM = {id: 0, name: '', picklistId: 0, defaultSelected: false};
@@ -219,12 +220,15 @@ export const SPELL = {
         attackRollType: {id: 0, name: ''},
         condition: {id: 0, name: ''},
         improvement: {
-            dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}
+            dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
+            levelCount: 0,
+            projectileCount: 0
         },
         supplemental: [],
         applyAbilityScoreModifier: false,
         abilityScore: {id: 0, name: ''},
-        maximum: {dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}}
+        maximum: {dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}},
+        projectileCount: 0
     },
     duration: {id: 0, name: ''},
     isRitual: false,

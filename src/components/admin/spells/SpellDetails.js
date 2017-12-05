@@ -45,10 +45,10 @@ class SpellDetails extends React.Component {
         return (this.props.spell.supplementalDescriptions && this.props.spell.supplementalDescriptions.length != 0) ? (
             <div>
                 {this.props.spell.supplementalDescriptions.map(description =>
-                    <p key={description.id}>
+                    <div key={description.id}>
                         <strong>{description.title}</strong>
                         <div dangerouslySetInnerHTML={{ __html: description.description }}/>
-                    </p>
+                    </div>
                 )}
             </div>
         ) : null;

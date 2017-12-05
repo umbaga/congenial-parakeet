@@ -355,6 +355,12 @@ obj.mechanic = function(val) {
         case util.itemTypes.MECHANIC_TYPE.MULTIPLY_STAT:
             retVal = 'x' + val.value.toString() + ' to ' + val.target.name;
             break;
+        case util.itemTypes.MECHANIC_TYPE.DIVIDE_STAT:
+            retVal = 'divide ' + val.target.name + ' by ' + val.value.toString();
+            break;
+        case util.itemTypes.MECHANIC_TYPE.APPLY_ABILITY_SCORE_TO_STAT:
+            retVal = '+' + val.valueObject.name + ' modifier to ' + val.target.name;
+            break;
         default:
             retVal = 'need to add to switch in format.forDisplay.obj.mechanic';
     }

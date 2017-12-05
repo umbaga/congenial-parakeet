@@ -146,7 +146,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ' LEFT OUTER JOIN adm_def_spell_component spcomp ON spcomp."spellComponentId" = i.id';
             sql += ' LEFT OUTER JOIN adm_link_type_picklist lnk ON lnk."picklistId" = t.id';
             sql += ' LEFT OUTER JOIN adm_core_type typ ON typ.id = lnk."typeId"';
-            sql += ' WHERE t."isPicklist" = true OR t."isTypePicklist" = true';
+            sql += ' WHERE (t."isPicklist" = true) OR (t."isChart" = false AND t."isDescription" = false) OR (t."isTypePicklist" = true)';
+            //sql += ' WHERE t."isPicklist" = true OR t."isTypePicklist" = true';
             sql += ' GROUP BY t.id';
             sql += ' ORDER BY t."typeName"';
             var query = client.query(new pg.Query(sql));

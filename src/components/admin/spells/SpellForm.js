@@ -18,7 +18,6 @@ class SpellForm extends React.Component {
         super(props);
         this.setFocus = this.setFocus.bind(this);
         this.renderSupplementalDamages = this.renderSupplementalDamages.bind(this);
-        this.renderMaximumDamage = this.renderMaximumDamage.bind(this);
     }
     
     componentDidMount() {
@@ -50,18 +49,6 @@ class SpellForm extends React.Component {
                     }.bind(this))}
                 </div>
             </DndInputWrapper>
-        ) : null;
-    }
-    
-    renderMaximumDamage(spell) {
-        return spell.damage.improvement && spell.damage.improvement.dice && spell.damage.improvement.dice.dieCount != 0 ? (
-            <DndInput
-                name="damage.maximum.dice"
-                label="Maximum Damage"
-                dataType={util.dataTypes.special.DICE_ROLL}
-                valueObj={spell.damage.maximum.dice}
-                onChange={this.props.onChange}
-                />
         ) : null;
     }
     
@@ -185,7 +172,34 @@ class SpellForm extends React.Component {
                                 valueObj={spell.damage.improvement.dice}
                                 onChange={this.props.onChange}
                                 />
-                            {this.renderMaximumDamage(spell)}
+                            <DndInput
+                                name="damage.maximum.dice"
+                                label="Maximum Damage"
+                                dataType={util.dataTypes.special.DICE_ROLL}
+                                valueObj={spell.damage.maximum.dice}
+                                onChange={this.props.onChange}
+                                />
+                            <DndInput
+                                name="damage.improvement.levelCount"
+                                label="Improve every # levels"
+                                dataType={util.dataTypes.number.SPELL_LEVEL}
+                                value={spell.damage.improvement.levelCount.toString()}
+                                onChange={this.props.onChange}
+                                />
+                            <DndInput
+                                label="Projectile Count"
+                                name="damage.projectileCount"
+                                value={spell.damage.projectileCount.toString()}
+                                onChange={this.props.onChange}
+                                dataType={util.dataTypes.number.INT}
+                                />
+                            <DndInput
+                                label="Projectiles gained per extra spell slot level"
+                                name="damage.improvement.projectileCount"
+                                value={spell.damage.improvement.projectileCount.toString()}
+                                onChange={this.props.onChange}
+                                dataType={util.dataTypes.number.INT}
+                                />
                             <DndCheckboxPicklist
                                 checked={spell.damage.applyAbilityScoreModifier}
                                 dataType={util.dataTypes.picklist.ABILITY_SCORE}

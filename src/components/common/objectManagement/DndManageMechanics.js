@@ -73,7 +73,7 @@ class DndManageMechanics extends React.Component {
         }
     }
     
-    renderFormInputs(targets, types) {
+    renderFormInputs(targets, types, valueObjects) {
         return (
             <div>
                 {this.renderBaseAdvancementInput()}
@@ -86,7 +86,7 @@ class DndManageMechanics extends React.Component {
                     picklist={types}
                     />
                 {this.renderTargetInput(targets)}
-                {this.renderValueInput()}
+                {this.renderValueInput(valueObjects)}
                 <DndDataEntryButtonBar
                     onReset={this.props.onResetMechanic}
                     onSave={this.props.onAddMechanic}
@@ -108,9 +108,10 @@ class DndManageMechanics extends React.Component {
         ) : null;
     }
     
-    renderValueInput() {
+    renderValueInput(valueObjects) {
         if (this.props.newMechanic && this.props.newMechanic.type
             && (this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.BONUS
+                || this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.DIVIDE_STAT
                 || this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.MULTIPLY_STAT)) {
             return (
                 <DndInput
@@ -131,6 +132,17 @@ class DndManageMechanics extends React.Component {
                     onChange={this.props.onChange}
                     />
             );
+        } else if (this.props.newMechanic && this.props.newMechanic.type && this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.APPLY_ABILITY_SCORE_TO_STAT) {
+            return (
+                <DndInput
+                    name="valueObject"
+                    label="Ability Score Modifier"
+                    dataType={util.dataTypes.picklist.GENERAL}
+                    valueObj={this.props.newMechanic.valueObject}
+                    picklist={valueObjects}
+                    onChange={this.props.onChange}
+                    />
+            );
         }
         return null;
     }
@@ -138,16 +150,23 @@ class DndManageMechanics extends React.Component {
     render() {
         const mechanicTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.MECHANIC_TYPE);
         let mechanicTargets = [];
+        let mechanicValueObjects = [];
+        
         switch (this.props.newMechanic.type.id) {
+            case util.itemTypes.MECHANIC_TYPE.DIVIDE_STAT:
             case util.itemTypes.MECHANIC_TYPE.MULTIPLY_STAT:
             case util.itemTypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT:
+            case util.itemTypes.MECHANIC_TYPE.APPLY_ABILITY_SCORE_TO_STAT:
             case util.itemTypes.MECHANIC_TYPE.BONUS:
                 mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE)
-                    .concat(util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.STAT));
+                    .concat(util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.STAT))
+                    .concat(util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SKILL));
+                mechanicValueObjects = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE);
                 break;
             case util.itemTypes.MECHANIC_TYPE.ADVANTAGE:
             case util.itemTypes.MECHANIC_TYPE.DISADVANTAGE:
-                mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.STAT);
+                mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SKILL)
+                    .concat(util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ADVANTAGE_TARGET));
                 break;
             case util.itemTypes.MECHANIC_TYPE.ADVANTAGE_SAVING_THROW:
             case util.itemTypes.MECHANIC_TYPE.DISADVANTAGE_SAVING_THROW:
@@ -178,7 +197,7 @@ class DndManageMechanics extends React.Component {
         return (
             <div>
                 <div className="col-md-12">
-                    {this.renderFormInputs(mechanicTargets, mechanicTypes)}
+                    {this.renderFormInputs(mechanicTargets, mechanicTypes, mechanicValueObjects)}
                 </div>
                 <div className="col-md-12">
                     {this.renderMechanicLists(this.props.mechanics)}
