@@ -12,6 +12,7 @@ var runPacks = require('./routes/packs');
 var runPicklists = require('./routes/picklists');
 var runProficiency = require('./routes/proficiency');
 var runSpells = require('./routes/spell');
+var runSpellLists = require('./routes/spell_list');
 var runWeapons = require('./routes/weapons');
 
 var pg = require('pg');
@@ -40,6 +41,7 @@ runPacks(app, pg, async, pool, itemtypes, modules);
 runPicklists(app, pg, async, pool, itemtypes, modules);
 runProficiency(app, pg, async, pool, itemtypes, modules);
 runSpells(app, pg, async, pool, itemtypes, modules);
+runSpellLists(app, pg, async, pool, itemtypes, modules);
 runWeapons(app, pg, async, pool, itemtypes, modules);
 
 app.listen(5000);

@@ -16,6 +16,7 @@ import {loadPacks} from './actions/admin/packActions';
 import {loadPicklists} from './actions/admin/picklistActions';
 import {loadProficiencies} from './actions/admin/proficiencyActions';
 import {loadSpells} from './actions/admin/spellActions';
+import {loadSpellLists} from './actions/admin/spelllistActions';
 import {loadWeapons} from './actions/admin/weaponActions';
 
 const store = configureStore();
@@ -29,6 +30,7 @@ store.dispatch(loadPacks());
 store.dispatch(loadPicklists());
 store.dispatch(loadProficiencies());
 store.dispatch(loadSpells());
+store.dispatch(loadSpellLists());
 store.dispatch(loadWeapons());
 
 render(

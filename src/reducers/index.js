@@ -9,6 +9,7 @@ import packs from './packReducer';
 import picklists from './picklistReducer';
 import proficiencies from './proficiencyReducer';
 import spells from './spellReducer';
+import spelllists from './spelllistReducer';
 import weapons from './weaponReducer';
 
 const rootReducer = combineReducers({
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
     picklists,
     proficiencies,
     spells,
+    spelllists,
     weapons,
     session
 });

@@ -249,6 +249,12 @@ export const SPELL = {
 export const SPELL_CASTING_TIME = {id: 0, name: ''};
 export const SPELL_COMPONENT = {id: 0, name: ''};
 export const SPELL_DURATION = {id: 0, name: ''};
+export const SPELL_LIST = {
+    id: 0,
+    name: '',
+    resource: {id: 2, name: 'Player\'s Handbook'},
+    spells: []
+};
 export const SPELL_RANGE = {id: 0, name: ''};
 export const SUPPLEMENTAL_DESCRIPTION = {id: 0, title: '', description: ''};
 export const TYPE = {id: 0, name: ''};

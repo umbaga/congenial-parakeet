@@ -412,12 +412,7 @@ export const formState = {
         let tmpText = '';
         switch (dataType) {
             case util.dataTypes.string.DESCRIPTION:
-                tmpText = event.target.innerHTML.trim().replace('W ', 'W').replace('becom e', 'become').replace('W isdom', 'Wisdom').replace('m m', 'mm')
-                .replace('nonmagical', 'non-magical').replace('becom es', 'becomes').replace('summ ons', 'summons').replace('consum ed', 'consumed')
-                .replace('1dlO ', '1d10 ').replace('Som e', 'Some').replace('som e', 'some').replace('com m on', 'common').replace('consum e', 'consume')
-                .replace('com ing', 'coming').replace('sm oke', 'smoke').replace('w eapon', 'weapon').replace('m essage', 'message')
-                    .replace('circum stance', 'circumstance').replace('m em or', 'memor').replace('mem or', 'memor').replace('m emor', 'memor')
-                .replace('dism iss', 'dismiss').replace('outcom es', 'outcomes').replace('sum m oned', 'summoned').replace('summ oned', 'summoned');
+                tmpText = event.target.innerHTML;
                 util.common.setObjectValue(retVal, field, tmpText.trim());
                 break;
             case util.dataTypes.string.STRING:

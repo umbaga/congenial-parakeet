@@ -8,6 +8,7 @@ export default {
     picklists: [],
     proficiencies: [],
     spells: [],
+    spelllists: [],
     weapons: [],
     session: !!sessionStorage.jwt
 };
