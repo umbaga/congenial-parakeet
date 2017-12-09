@@ -8,8 +8,9 @@ import itemtypes from './itemtypeReducer';
 import packs from './packReducer';
 import picklists from './picklistReducer';
 import proficiencies from './proficiencyReducer';
+import races from './raceReducer';
 import spells from './spellReducer';
-import spelllists from './spelllistReducer';
+import spelllists from './spellListReducer';
 import weapons from './weaponReducer';
 
 const rootReducer = combineReducers({
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
     packs,
     picklists,
     proficiencies,
+    races,
     spells,
     spelllists,
     weapons,

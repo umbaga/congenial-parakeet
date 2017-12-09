@@ -84,6 +84,7 @@ class SpellForm extends React.Component {
                                 value={spell.level.toString()}
                                 onChange={this.props.onChange}
                                 dataType={util.dataTypes.number.SPELL_LEVEL}
+                                hideSelectOneOption
                                 />
                             <DndInput
                                 label="School of Magic"

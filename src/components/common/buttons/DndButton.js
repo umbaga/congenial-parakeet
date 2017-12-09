@@ -45,6 +45,14 @@ class DndButton extends React.Component {
                 fontawesomeStyle += 'edit';
                 bootstrapStyle += 'primary';
                 break;
+            case 'doubleleft':
+                fontawesomeStyle += 'angle-double-left';
+                bootstrapStyle += 'default';
+                break;
+            case 'doubleright':
+                fontawesomeStyle += 'angle-double-right';
+                bootstrapStyle += 'default';
+                break;
             case 'expand':
                 fontawesomeStyle += 'caret-down';
                 bootstrapStyle += 'default';
@@ -56,6 +64,10 @@ class DndButton extends React.Component {
             case 'hamburger':
                 fontawesomeStyle += 'bars';
                 bootstrapStyle += 'primary';
+                break;
+            case 'left':
+                fontawesomeStyle += 'angle-left';
+                bootstrapStyle += 'default';
                 break;
             case 'movedown':
                 fontawesomeStyle += 'caret-down';
@@ -72,6 +84,10 @@ class DndButton extends React.Component {
             case 'reset':
                 fontawesomeStyle += 'undo';
                 bootstrapStyle += 'primary';
+                break;
+            case 'right':
+                fontawesomeStyle += 'angle-right';
+                bootstrapStyle += 'default';
                 break;
             case 'save':
                 fontawesomeStyle += 'floppy-o';

@@ -14,7 +14,9 @@ class SpellListEntry extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            spelllist: this.props.spelllist
+            spelllist: this.props.spelllist,
+            spells: this.props.spells,
+            selectedSpellLevel: Object.assign({}, {id: -1})
         };
         this.cancelSpellList = this.cancelSpellList.bind(this);
         this.deleteSpellList = this.deleteSpellList.bind(this);
@@ -24,6 +26,9 @@ class SpellListEntry extends React.Component {
         this.saveAndNewSpellList = this.saveAndNewSpellList.bind(this);
         this.saveSpellList = this.saveSpellList.bind(this);
         this.updateFormState = this.updateFormState.bind(this);
+        this.onChangeSelectedSpellLevel = this.onChangeSelectedSpellLevel.bind(this);
+        this.onAddSpell = this.onAddSpell.bind(this);
+        this.onRemoveSpell = this.onRemoveSpell.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -49,6 +54,7 @@ class SpellListEntry extends React.Component {
 
     resetSpellList() {
         const blankSpellList = Object.assign({}, util.objectModel.SPELL_LIST);
+        blankSpellList.spells = [];
         this.setState({spelllist: blankSpellList});
     }
     
@@ -78,21 +84,64 @@ class SpellListEntry extends React.Component {
         return this.setState({spelllist: spelllist});
     }
     
+    onChangeSelectedSpellLevel(event) {
+        const newSpellLevel = Object.assign({}, {id: event.target.value});
+        return this.setState({selectedSpellLevel: newSpellLevel});
+    }
+    
+    onAddSpell(event) {
+        const spelllist = this.state.spelllist;
+        let selectedSpell = this.props.spells.filter(function(spell) {
+            return spell.id == event.target.value;
+        })[0];
+        const finalSpell = {
+            id: selectedSpell.id,
+            name: selectedSpell.name,
+            level: selectedSpell.level
+        };
+        spelllist.spells.push(finalSpell);
+        this.setState({spelllist: spelllist});
+    }
+    
+    onRemoveSpell(event) {
+        const spelllist = this.state.spelllist;
+        let removeThisIndex = -1;
+        for (let q = 0; q < spelllist.spells.length; q++) {
+            if (spelllist.spells[q].id == event.target.value) {
+                removeThisIndex = q;
+                break;
+            }
+        }
+        if (removeThisIndex != -1) {
+            spelllist.spells.splice(removeThisIndex, 1);
+        }
+        this.setState({spelllist: spelllist});
+    }
+    
     render() {
         const spelllist = this.state.spelllist;
+        const spellLevels = util.hardCoded.picklist.spellLevels;
+        const spells = this.props.spells;
         const contents = this.props.canEdit ? (
             <SpellListForm
                 ref="form"
                 spelllist={spelllist}
+                spells={spells}
                 isCreate={this.props.isCreate}
                 picklists={this.props.picklists}
                 saving={this.state.saving}
                 onChange={this.updateFormState}
+                spellLevels={spellLevels}
+                selectedSpellLevel={this.state.selectedSpellLevel}
+                onChangeSelectedSpellLevel={this.onChangeSelectedSpellLevel}
+                onAddSpell={this.onAddSpell}
+                onRemoveSpell={this.onRemoveSpell}
                 />
         ) : (
             <SpellListDetails
                 spelllist={spelllist}
                 picklists={this.props.picklists}
+                spellLevels={spellLevels}
                 />
         );
         return (
@@ -115,6 +164,7 @@ class SpellListEntry extends React.Component {
 
 SpellListEntry.propTypes = {
     spelllist: PropTypes.object,
+    spells: PropTypes.array,
     actions: PropTypes.object,
     canEdit: PropTypes.bool,
     closeModal: PropTypes.func.isRequired,

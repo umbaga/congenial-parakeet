@@ -3,20 +3,22 @@ import PropTypes from 'prop-types';
 import {browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import SpellListList from './SpellListList';
-import SpellListEntry from './SpellListEntry';
-import * as actions from '../../../actions/admin/spelllistActions';
+import RaceList from './RaceList';
+import RaceEntry from './RaceEntry';
+import * as actions from '../../../actions/admin/raceActions';
 import util from '../../../util/util';
 import DndButton from '../../common/buttons/DndButton';
 
-class SpellListListPage extends React.Component {
+class RaceListPage extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
             canEdit: true,
             isCreate: false,
             selectedId: 0,
-            showModal: false
+            showModal: false,
+            selectedLevel: -1,
+            selectedSchoolId: 0
         };
         this.changeSelectedId = this.changeSelectedId.bind(this);
         this.close = this.close.bind(this);
@@ -27,8 +29,8 @@ class SpellListListPage extends React.Component {
     }
 
     componentWillMount() {
-        if (this.props.spelllists[0].id == '') {
-            this.props.actions.loadSpellLists();
+        if (this.props.races[0].id == '') {
+            this.props.actions.loadRaces();
         }
     }
 
@@ -61,8 +63,11 @@ class SpellListListPage extends React.Component {
     onViewDetails() {
         this.setState({isCreate: false, canEdit: false});
     }
+    
     render() {
-        const spelllists = this.props.spelllists;
+        const races = this.props.races;
+        const picklists = this.props.picklists;
+        const proficiencies = this.props.proficiencies;
         const spells = this.props.spells;
         return (
             <div className="col-md-12">
@@ -70,34 +75,35 @@ class SpellListListPage extends React.Component {
                     <table className="table table-sm table-striped table-hover">
                         <thead>
                             <tr>
-                                <th colSpan="6">
-                                    <h2><span><DndButton onClick={this.backToAdminHome} buttonType="back" /></span>SpellLists</h2>
+                                <th colSpan="2">
+                                    <h2><span><DndButton onClick={this.backToAdminHome} buttonType="back" /></span>Races</h2>
                                 </th>
                             </tr>
                             <tr>
-                                <th width="50%">Name</th>
-                                <th width="10%" style={{paddingRight: '25px'}}>
+                                <th>Name</th>
+                                <th style={{paddingRight: '25px'}}>
                                     <div className="pull-right">
                                         <DndButton onClick={this.onCreate} buttonType="create" />
                                     </div>
                                 </th>
                             </tr>
                         </thead>
-                        <SpellListList
-                            spelllists={spelllists}
+                        <RaceList
+                            races={races}
                             openModal={this.open}
                             selectedId={this.state.selectedId}
                             changeSelectedId={this.changeSelectedId}
                             onEdit={this.onEdit}
                             onViewDetails={this.onViewDetails}
+                            selectedLevel={this.state.selectedLevel}
+                            selectedSchoolId={this.state.selectedSchoolId}
                             />
                     </table>
                 </div>
-                <SpellListEntry
+                <RaceEntry
                     closeModal={this.close}
                     openModal={this.open}
-                    spelllists={spelllists}
-                    spells={spells}
+                    races={races}
                     isCreate={this.state.isCreate}
                     canEdit={this.state.canEdit}
                     selectedId={this.state.selectedId}
@@ -105,20 +111,22 @@ class SpellListListPage extends React.Component {
                     showModal={this.state.showModal}
                     onEdit={this.onEdit}
                     onViewDetails={this.onViewDetails}
-                    proficiencies={this.props.proficiencies}
                     />
             </div>
         );
     }
 }
-
-SpellListListPage.propTypes = {
-    spelllists: PropTypes.array.isRequired,
-    spells: PropTypes.array.isRequired,
+/*
+                    */
+                            
+                            
+RaceListPage.propTypes = {
+    races: PropTypes.array.isRequired,
     actions: PropTypes.object,
     children: PropTypes.object,
     picklists: PropTypes.array,
-    proficiencies: PropTypes.array
+    proficiencies: PropTypes.array,
+    spells: PropTypes.array
 };
 
 function mapStateToProps(state) {
@@ -126,21 +134,27 @@ function mapStateToProps(state) {
     if (state.picklists.length > 0) {
         picklists = Object.assign([{}], state.picklists);
     }
+    let proficiencies = Object.assign([{}], [util.objectModel.PROFICIENCY]);
+    if (state.proficiencies.length > 0) {
+        proficiencies = Object.assign([{}], state.proficiencies);
+    }
     let spells = Object.assign([{}], [util.objectModel.SPELL]);
     if (state.spells.length > 0) {
         spells = Object.assign([{}], state.spells);
     }
-    if (state.spelllists.length > 0) {
+    if (state.races.length > 0) {
         return {
-            spells: spells,
-            spelllists: state.spelllists,
-            picklists: picklists
+            races: state.races,
+            picklists: picklists,
+            proficiencies: proficiencies,
+            spells: spells
         };
     } else {
         return {
-            spells: spells,
-            spelllists: [util.objectModel.SPELL_LIST],
-            picklists: picklists
+            races: [util.objectModel.RACE],
+            picklists: picklists,
+            proficiencies: proficiencies,
+            spells: spells
         };
     }
 }
@@ -149,4 +163,4 @@ function mapDispatchToProps(dispatch) {
     return {actions: bindActionCreators(actions, dispatch)};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SpellListListPage);
+export default connect(mapStateToProps, mapDispatchToProps)(RaceListPage);

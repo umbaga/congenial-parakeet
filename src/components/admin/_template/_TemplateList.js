@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SpellListListItem from './SpellListListItem';
+import _TemplateListItem from './_TemplateListItem';
+//import util from '../../../util/util';
 
 
-const SpellListList = ({spelllists, openModal, selectedId, changeSelectedId, onEdit, onViewDetails}) => {
+const _TemplateList = ({_templates, openModal, selectedId, changeSelectedId, onEdit, onViewDetails}) => {
     return (
         <tbody>
-            {spelllists.map(spelllist =>
-                             <SpellListListItem
-                                 key={spelllist.id}
-                                 spelllist={spelllist}
+            {_templates.map(_template =>
+                             <_TemplateListItem
+                                 key={_template.id}
+                                 _template={_template}
                                  changeSelectedId={changeSelectedId}
                                  onEdit={onEdit}
                                  onViewDetails={onViewDetails}
@@ -21,8 +22,8 @@ const SpellListList = ({spelllists, openModal, selectedId, changeSelectedId, onE
     );
 };
 
-SpellListList.propTypes = {
-    spelllists: PropTypes.array.isRequired,
+_TemplateList.propTypes = {
+    _templates: PropTypes.array.isRequired,
     changeSelectedId: PropTypes.func.isRequired,
     onEdit: PropTypes.func,
     onViewDetails: PropTypes.func,
@@ -30,4 +31,4 @@ SpellListList.propTypes = {
     selectedId: PropTypes.number.isRequired
 };
 
-export default SpellListList;
+export default _TemplateList;

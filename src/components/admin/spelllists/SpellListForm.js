@@ -1,22 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndButton from '../../common/buttons/DndButton';
-import DndInput from '../../common/inputs/DndInput';
-import DndInputWrapper from '../../common/inputs/DndInputWrapper';
-import DndUniversalInput from '../../common/inputs/DndUniversalInput';
-import DndPicklistAddSelect from '../../common/inputs/DndPicklistAddSelect';
-import DndCheckboxList from '../../common/inputs/DndCheckboxList';
-import DndCheckboxPicklist from '../../common/inputs/DndCheckboxPicklist';
 import util from '../../../util/util';
-import { Tabs, Tab } from 'react-bootstrap';
-import DndManageMechanics from '../../common/objectManagement/DndManageMechanics';
-import DndManageCharts from '../../common/objectManagement/DndManageCharts';
-import DndManageSupplementalDescriptions from '../../common/objectManagement/DndManageSupplementalDescriptions';
+import DndInput from '../../common/inputs/DndInput';
+import DndUniversalInput from '../../common/inputs/DndUniversalInput';
+import DndToggleBoxes from '../../common/inputs/DndToggleBoxes';
 
 class SpellListForm extends React.Component {
     constructor(props) {
         super(props);
         this.setFocus = this.setFocus.bind(this);
+        
     }
     
     componentDidMount() {
@@ -29,8 +22,21 @@ class SpellListForm extends React.Component {
     
     render() {
         const spelllist = this.props.spelllist;
-        console.log(spelllist);
-        console.log(this.props.picklists);
+        const spellLevels = this.props.spellLevels;
+        const spells = this.props.spells.filter(function(spell) {
+            if (this.props.selectedSpellLevel.id == -1) {
+                return true;
+            } else {
+                return this.props.selectedSpellLevel.id == spell.level;
+            }
+        }.bind(this));
+        const displaySpells = spelllist.spells.filter(function(spell) {
+            if (this.props.selectedSpellLevel.id == -1) {
+                return true;
+            } else {
+                return this.props.selectedSpellLevel.id == spell.level;
+            }
+        }.bind(this));
         return (
             <div>
                 <form>
@@ -41,6 +47,23 @@ class SpellListForm extends React.Component {
                         picklists={this.props.picklists}
                         hideDescription
                         />
+                    <DndInput
+                        label="Spell Level"
+                        name="school"
+                        valueObj={this.props.selectedSpellLevel}
+                        onChange={this.props.onChangeSelectedSpellLevel}
+                        dataType={util.dataTypes.picklist.SPELL_LEVEL}
+                        picklist={spellLevels}
+                        hideSelectOneOption
+                        />
+                    <DndToggleBoxes
+                        dataType={util.dataTypes.array.ASSIGNED_SPELLS}
+                        name="spells"
+                        selectedItemArray={displaySpells}
+                        unselectedItemArray={spells}
+                        onAddItem={this.props.onAddSpell}
+                        onRemoveItem={this.props.onRemoveSpell}
+                        />
                 </form>
             </div>
         );
@@ -49,12 +72,18 @@ class SpellListForm extends React.Component {
 
 SpellListForm.propTypes = {
     spelllist: PropTypes.object.isRequired,
+    spells: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
     isCreate: PropTypes.bool.isRequired,
     onEdit: PropTypes.func,
     onViewDetails: PropTypes.func,
     saving: PropTypes.bool,
-    picklists: PropTypes.array
+    picklists: PropTypes.array,
+    selectedSpellLevel: PropTypes.object.isRequired,
+    spellLevels: PropTypes.array.isRequired,
+    onChangeSelectedSpellLevel: PropTypes.func.isRequired,
+    onAddSpell: PropTypes.func.isRequired,
+    onRemoveSpell: PropTypes.func.isRequired
 };
 
 export default SpellListForm;

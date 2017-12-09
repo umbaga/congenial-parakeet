@@ -6,6 +6,7 @@ import * as dataTypes from './dataTypes';
 import * as itemTypeDefinition from './itemTypeDefinition';
 import unicode from './unicode';
 import * as common from './commonFunctions';
+import * as hardCoded from './hardcoded';
 //import * as hardCodedPicklists from './hardCodedPicklists';
 
 let util = {};
@@ -20,5 +21,6 @@ util.dataTypes = dataTypes;
 util.unicode = unicode;
 util.common = common;
 util.itemTypes = itemTypeDefinition;
+util.hardCoded = hardCoded;
 
 export default util;

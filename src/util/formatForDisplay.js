@@ -366,6 +366,29 @@ obj.mechanic = function(val) {
     }
     return retVal;
 };
+obj.monsterTypeSizeBlock = function(val) {
+    let retVal = '';
+    if (val.size && val.size.name && val.size.name.length != 0) {
+        retVal += val.size.name;
+    }
+    if (val.type && val.type.name && val.type.name.length != 0) {
+        if (retVal.length != 0) {
+            retVal += ' ';
+        }
+        retVal += val.type.name;
+    }
+    if (val.tags && val.tags.length != 0) {
+        retVal += ' (';
+        for (let t = 0; t < val.tags.length; t++) {
+            if (t != 0) {
+                retVal += ', ';
+            }
+            retVal += val.tags[t].name;
+        }
+        retVal += ')';
+    }
+    return retVal;
+};
 obj.proficiencyGroup = function(val) {
     let retVal = '';
     switch (val.mechanic.id) {

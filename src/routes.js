@@ -3,7 +3,6 @@ import { Route, IndexRoute } from 'react-router';
 import App from './components/App';
 
 import AdminHomePage from './components/admin/home/adminHomePage';
-import testbed from './components/admin/_testbed/testbed';
 
 import ArmorListPage from './components/admin/equipment/armor/ArmorListPage';
 import BackgroundListPage from './components/admin/background/BackgroundListPage';
@@ -12,6 +11,7 @@ import ItemtypeListPage from './components/admin/itemtypes/ItemtypeListPage';
 import PackListPage from './components/admin/equipment/pack/PackListPage';
 import PicklistListPage from './components/admin/picklists/PicklistListPage';
 import ProficiencyListPage from './components/admin/proficiencies/ProficiencyListPage';
+import RaceListPage from './components/admin/races/RaceListPage';
 import SpellListPage from './components/admin/spells/SpellListPage';
 import SpellListListPage from './components/admin/spelllists/SpellListListPage';
 import WeaponListPage from './components/admin/equipment/weapon/WeaponListPage';
@@ -24,7 +24,6 @@ export default (
     <Route path="/" component={App}>
         <IndexRoute component={AdminHomePage} />
         <Route path="/Home" component={AdminHomePage} />
-        <Route path="/admin/testbed" component={testbed} />
         <Route path="/admin/backgrounds" component={BackgroundListPage} />
         <Route path="/admin/equipment" component={EquipmentListPage} />
         <Route path="/admin/equipment/armors" component={ArmorListPage} />
@@ -33,6 +32,7 @@ export default (
         <Route path="/admin/itemtypes" component={ItemtypeListPage} />
         <Route path="/admin/picklists" component={PicklistListPage} />
         <Route path="/admin/proficiencies" component={ProficiencyListPage} />
+        <Route path="/admin/races" component={RaceListPage} />
         <Route path="/admin/spelllists" component={SpellListListPage} />
         <Route path="/admin/spells" component={SpellListPage} />
         <Route path="/login" component={LogInPage} />

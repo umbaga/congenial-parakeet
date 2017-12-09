@@ -136,6 +136,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ', profcat."requireLanguageInfo"';
             sql += ', description.description';
             sql += ', spcomp."requireDescription"';
+            sql += ', itemorder."orderIndex"';
             sql += ') x ORDER BY i."itemName")) AS items';
             sql += ' FROM adm_core_type t';
             sql += ' LEFT OUTER JOIN adm_core_item i ON i."itemTypeId" = t.id';
@@ -146,8 +147,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ' LEFT OUTER JOIN adm_def_spell_component spcomp ON spcomp."spellComponentId" = i.id';
             sql += ' LEFT OUTER JOIN adm_link_type_picklist lnk ON lnk."picklistId" = t.id';
             sql += ' LEFT OUTER JOIN adm_core_type typ ON typ.id = lnk."typeId"';
+            sql += ' LEFT OUTER JOIN adm_def_picklist_item itemorder ON itemorder."picklistItemId" = i.id';
             sql += ' WHERE (t."isPicklist" = true) OR (t."isChart" = false AND t."isDescription" = false) OR (t."isTypePicklist" = true)';
-            //sql += ' WHERE t."isPicklist" = true OR t."isTypePicklist" = true';
             sql += ' GROUP BY t.id';
             sql += ' ORDER BY t."typeName"';
             var query = client.query(new pg.Query(sql));
@@ -164,8 +165,17 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 }
                 row.items = row.items.sort(function(a, b) {
-                    if (a.name < b.name) return -1;
-                    if (a.name > b.name) return 1;
+                    if (a.orderIndex != undefined) {
+                        if (a.orderIndex == b.orderIndex) {
+                            if (a.name < b.name) return -1;
+                            if (a.name > b.name) return 1;
+                        } else {
+                            return a.orderIndex - b.orderIndex;
+                        }
+                    } else {
+                        if (a.name < b.name) return -1;
+                        if (a.name > b.name) return 1;
+                    }
                     return 0;
                 });
                 results.push(row);

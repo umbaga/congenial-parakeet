@@ -8,11 +8,19 @@ import DndButton from '../buttons/DndButton';
 class DndInput extends React.Component {
     constructor(props, context) {
         super(props, context);
-
+        this.renderSelectOneOption = this.renderSelectOneOption.bind(this);
     }
     
     setFocus() {
         this.refs[this.props.name].focus();
+    }
+    
+    renderSelectOneOption(placeholderText) {
+        if (this.props.hideSelectOneOption) {
+            return null;
+        } else {
+            return (<option value="0">{placeholderText}</option>);
+        }
     }
     
     render() {
@@ -22,6 +30,11 @@ class DndInput extends React.Component {
         let numberMinVal = this.props.numberMinVal ? this.props.numberMinVal : 0;
         let numberStepVal = this.props.numberStepVal ? this.props.numberStepVal : 1;
         let hasButton = this.props.buttonOnClick ? true : false;
+        let size = 10;
+        if (this.props.selectBoxSize) {
+            size = this.props.selectBoxSize;
+        }
+        let placeholderText = '';
         switch (this.props.dataType) {
             case util.dataTypes.bool.BOOL:
             case util.dataTypes.bool.HAS_DISADVANTAGE:
@@ -108,17 +121,21 @@ class DndInput extends React.Component {
             case util.dataTypes.picklist.LANGUAGE_SCRIPT:
             case util.dataTypes.picklist.MECHANIC_TARGET:
             case util.dataTypes.picklist.MECHANIC_TYPE:
+            case util.dataTypes.picklist.MONSTER_TYPE:
             case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
             case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
             case util.dataTypes.picklist.RESOURCE:
             case util.dataTypes.picklist.SAVE_EFFECT:
             case util.dataTypes.picklist.SCHOOL_OF_MAGIC:
+            case util.dataTypes.picklist.SIZE:
             case util.dataTypes.picklist.SPELL_CASTING_TIME:
             case util.dataTypes.picklist.SPELL_COMPONENT:
             case util.dataTypes.picklist.SPELL_DURATION:
+            case util.dataTypes.picklist.SPELL_LEVEL:
             case util.dataTypes.picklist.SPELL_RANGE:
             case util.dataTypes.picklist.WEAPON_CATEGORY:
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
+                placeholderText = (this.props.placeholder && this.props.placeholder.length != 0) ? this.props.placeholder : 'SELECT ONE';
                 primaryInput = (<select
                                     value={this.props.valueObj.id}
                                     name={this.props.name}
@@ -126,7 +143,7 @@ class DndInput extends React.Component {
                                     className="form-control"
                                     onChange={this.props.onChange}
                                     datatype={this.props.dataType}>
-                        <option value="0">SELECT ONE</option>
+                        {this.renderSelectOneOption(placeholderText)}
                         {this.props.picklist.map(picklistItem =>
                                                  <option
                                                      key={picklistItem.id}
@@ -135,16 +152,18 @@ class DndInput extends React.Component {
                                                  </option>)}
                     </select>);
                 break;
+            case util.dataTypes.array.MONSTER_TAGS:
             case util.dataTypes.array.PROFICIENCIES:
             case util.dataTypes.array.WEAPON_PROPERTIES:
                 primaryInput = (
                     <DndToggleBoxes
                         dataType={this.props.dataType}
-                        toggleAddItem={this.props.onChange}
-                        toggleRemoveItem={this.props.onChange}
+                        onAddItem={this.props.onChange}
+                        onRemoveItem={this.props.onChange}
                         unselectedItemArray={this.props.picklist}
                         selectedItemArray={this.props.valueArray}
                         name={this.props.name}
+                        selectBoxSize={size}
                         />
                 );
                 break;
@@ -288,7 +307,9 @@ DndInput.propTypes = {
     valueObj: PropTypes.object,
     buttonType: PropTypes.string,
     buttonOnClick: PropTypes.func,
-    bsButtonStyle: PropTypes.string
+    bsButtonStyle: PropTypes.string,
+    hideSelectOneOption: PropTypes.bool,
+    selectBoxSize: PropTypes.number
 };
 
 export default DndInput;

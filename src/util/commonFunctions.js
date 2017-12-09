@@ -395,6 +395,43 @@ export const formState = {
         }
         return retVal;
     },
+    movement: function(event, obj, picklists) {
+        const movementTypes = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.MOVEMENT_TYPE);
+        let retVal = obj;
+        let movementTypeId = parseInt(event.target.name);
+        let newValue = event.target.value.length == 0 ? 0 : parseInt(event.target.value);
+        let itemIndex = -1;
+        for (let q = 0; q < obj.movement.length; q++) {
+            if (obj.movement[q].id == movementTypeId) {
+                itemIndex = q;
+                break;
+            }
+        }
+        let newMovementObject = {};
+        for (let q = 0; q < movementTypes.length; q++) {
+            if (movementTypes[q].id == movementTypeId) {
+                newMovementObject.id = movementTypes[q].id;
+                newMovementObject.name = movementTypes[q].name;
+                newMovementObject.speed = newValue;
+                break;
+            }
+        }
+        if (newValue == 0) {
+            //remove item from array
+            if (itemIndex != -1) {
+                obj.movement.splice(itemIndex, 1);
+            }
+        } else {
+            if (itemIndex != -1) {
+                //edit item array
+                obj.movement[itemIndex].speed = newValue;
+            } else {
+                //add item to array
+                obj.movement.push(newMovementObject);
+            }
+        }
+        return retVal;
+    },
     standard: function(event, obj, picklists) {
         let retVal = obj;
         let field = formState.setFieldFromTargetName(event);
@@ -441,11 +478,13 @@ export const formState = {
             case util.dataTypes.picklist.LANGUAGE_SCRIPT:
             case util.dataTypes.picklist.MECHANIC_TARGET:
             case util.dataTypes.picklist.MECHANIC_TYPE:
+            case util.dataTypes.picklist.MONSTER_TYPE:
             case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
             case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
             case util.dataTypes.picklist.RESOURCE:
             case util.dataTypes.picklist.SAVE_EFFECT:
             case util.dataTypes.picklist.SCHOOL_OF_MAGIC:
+            case util.dataTypes.picklist.SIZE:
             case util.dataTypes.picklist.SPELL_CASTING_TIME:
             case util.dataTypes.picklist.SPELL_DURATION:
             case util.dataTypes.picklist.SPELL_RANGE:
@@ -520,33 +559,40 @@ export const formState = {
                 util.common.setObjectValue(retVal, field, newDiceRollValue);
                 util.common.setObjectValue(retVal, field + '.rendered', newRenderedValue);
                 break;
+            case util.dataTypes.array.ASSIGNED_SPELLS:
+            case util.dataTypes.array.MONSTER_TAGS:
             case util.dataTypes.array.PROFICIENCIES:
             case util.dataTypes.array.WEAPON_PROPERTIES:
                 if (isAssign) {
                     field = field.replace('Unassigned', '');
                     util.common.setObjectValue(retVal, field, referencePicklistItem, 'add');
                 } else {
-                    for (let b = 0; b < retVal.weaponProperties.length; b++) {
+                    for (let b = 0; b < retVal[field].length; b++) {
                         if (dataType == util.dataTypes.array.PROFICIENCIES) {
                             if (retVal.proficiencies[b].id == referencePicklistItem.id) {
                                 removeThisIndex = b;
                                 break;
                             }
                         } else if (dataType == util.dataTypes.array.WEAPON_PROPERTIES) {
-                            if (retVal.weaponProperties[b].requireDamage) {
+                            if (retVal[field][b].requireDamage) {
                                 retVal.damage.versatile.dice = Object.assign({}, {rendered: ''});
                             }
-                            if (retVal.weaponProperties[b].requireDescription) {
+                            if (retVal[field][b].requireDescription) {
                                 retVal.specialDescription = null;
                             }
-                            if (retVal.weaponProperties[b].requireRange) {
+                            if (retVal[field][b].requireRange) {
                                 retVal.ramge = {};
                             }
-                            if (retVal.weaponProperties[b].requireAmmunition) {
+                            if (retVal[field][b].requireAmmunition) {
                                 retVal.ammunition = {};
                             }
                             removeThisIndex = b;
                             break;
+                        } else if (dataType == util.dataTypes.array.ASSIGNED_SPELLS) {
+                            if (retVal.spells[b].id == referencePicklistItem.id) {
+                                removeThisIndex = b;
+                                break;
+                            }
                         }
                     }
                     util.common.setObjectValue(retVal, field, removeThisIndex, 'remove');

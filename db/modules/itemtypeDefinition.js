@@ -20,11 +20,16 @@ module.exports = {
         LANGUAGE_RARITY: 68,
         LANGUAGE_SCRIPT: 69,
         MECHANIC_TYPE: 843,
+        MONSTER_TAG: 2253,
+        MONSTER_TYPE: 2252,
+        MOVEMENT_TYPE: 2274,
         PROFICIENCY_CATEGORY: 65,
+        RACE: 117,
         RESOURCE: 1,
         SAVE_EFFECT: 1698,
         SCHOOL_OF_MAGIC: 70,
         SELECTION_MECHANIC: 66,
+        SIZE: 2251,
         SKILL: 396,
         SPELL: 119,
         SPELLCASTING_FOCUS: 483,
@@ -103,6 +108,13 @@ module.exports = {
         RESISTANCE: 868,
         VULNERABILITY: 869
     },
+    MOVEMENT_TYPE: {
+        BURROWING: 2279,
+        CLIMBING: 2277,
+        FLYING: 2278,
+        SWIMMING: 2276,
+        WALKING: 2275
+    },
     PROFICIENCY_CATEGORY: {
         ARMOR: 92,
         ARTISAN_TOOL: 93,
@@ -123,6 +135,14 @@ module.exports = {
             CATEGORY: 80,
             LIST: 81
         }
+    },
+    SIZE: {
+        GARGANTUAN: 2273,
+        HUGE: 2272,
+        LARGE: 2271,
+        MEDIUM: 2270,
+        SMALL: 2269,
+        TINY: 2268
     },
     SPELL_COMPONENT: {
         MATERIAL: 103,

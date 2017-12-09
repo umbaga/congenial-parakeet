@@ -205,6 +205,34 @@ export const PROFICIENCY_GROUP = {
     proficiencies: [],
     selectCount: 1
 };
+export const RACE = {
+    id: 0,
+    name: '',
+    abilityScores: {
+        strength: 0,
+        dexterity: 0,
+        constitution: 0,
+        intelligence: 0,
+        wisdom: 0,
+        charisma: 0,
+        selection: {
+            count: 0,
+            modifier: 0
+        }
+    },
+    movement: [
+        {id: 2275, name: 'Walking', speed: 30}
+    ],
+    parentId: 0,
+    resource: {id: 2, name: 'Player\'s Handbook'},
+    size: {id: 0, name: 'Medium'},
+    tags: [],
+    type: {id: 0, name: 'Humanoid'}
+};
+/*
+    size: {id: 2270, name: 'Medium'},
+    tags: [],
+    type: {id: 2263, name: 'Humanoid'}*/
 export const SCHOOL_OF_MAGIC = {id: 0, name: ''};
 export const SPELL = {
     id: 0,

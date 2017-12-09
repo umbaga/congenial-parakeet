@@ -7,6 +7,7 @@ export default {
     packs: [],
     picklists: [],
     proficiencies: [],
+    races: [],
     spells: [],
     spelllists: [],
     weapons: [],
