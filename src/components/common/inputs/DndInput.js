@@ -60,6 +60,8 @@ class DndInput extends React.Component {
                                     className="form-control"
                                     readOnly={isReadOnly} />);
                 break;
+            case util.dataTypes.array.ADVANCED_SENSE:
+            case util.dataTypes.array.MOVEMENT:
             case util.dataTypes.number.COIN:
             case util.dataTypes.number.INT:
             case util.dataTypes.number.SPELL_LEVEL:

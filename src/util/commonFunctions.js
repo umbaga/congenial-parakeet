@@ -395,43 +395,6 @@ export const formState = {
         }
         return retVal;
     },
-    movement: function(event, obj, picklists) {
-        const movementTypes = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.MOVEMENT_TYPE);
-        let retVal = obj;
-        let movementTypeId = parseInt(event.target.name);
-        let newValue = event.target.value.length == 0 ? 0 : parseInt(event.target.value);
-        let itemIndex = -1;
-        for (let q = 0; q < obj.movement.length; q++) {
-            if (obj.movement[q].id == movementTypeId) {
-                itemIndex = q;
-                break;
-            }
-        }
-        let newMovementObject = {};
-        for (let q = 0; q < movementTypes.length; q++) {
-            if (movementTypes[q].id == movementTypeId) {
-                newMovementObject.id = movementTypes[q].id;
-                newMovementObject.name = movementTypes[q].name;
-                newMovementObject.speed = newValue;
-                break;
-            }
-        }
-        if (newValue == 0) {
-            //remove item from array
-            if (itemIndex != -1) {
-                obj.movement.splice(itemIndex, 1);
-            }
-        } else {
-            if (itemIndex != -1) {
-                //edit item array
-                obj.movement[itemIndex].speed = newValue;
-            } else {
-                //add item to array
-                obj.movement.push(newMovementObject);
-            }
-        }
-        return retVal;
-    },
     standard: function(event, obj, picklists) {
         let retVal = obj;
         let field = formState.setFieldFromTargetName(event);
@@ -447,7 +410,56 @@ export const formState = {
         let inputType = event.target.type;
         let subfield = '';
         let tmpText = '';
+        let refArray = [];
+        let newIntValue = 0;
+        let itemIndex = -1;
+        let itemArrayId = 0;
+        let newObject = {};
+        let textboxArrayField = '';
         switch (dataType) {
+            case util.dataTypes.array.ADVANCED_SENSE:
+            case util.dataTypes.array.MOVEMENT:
+                if (dataType == util.dataTypes.array.ADVANCED_SENSE) {
+                    refArray = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.ADVANCED_SENSE);
+                    textboxArrayField = 'range';
+                } else if (dataType == util.dataTypes.array.MOVEMENT) {
+                    refArray = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.MOVEMENT_TYPE);
+                    textboxArrayField = 'speed';
+                }
+                if (refArray && refArray.length != 0) {
+                    itemArrayId = parseInt(field.split('_')[1]);
+                    field = field.split('_')[0];
+                    newIntValue = event.target.value.length == 0 ? 0 : parseInt(event.target.value);
+                    for (let q = 0; q < retVal[field].length; q++) {
+                        if (retVal[field][q].id == itemArrayId) {
+                            itemIndex = q;
+                            break;
+                        }
+                    }
+                    for (let q = 0; q < refArray.length; q++) {
+                        if (refArray[q].id == itemArrayId) {
+                            newObject.id = refArray[q].id;
+                            newObject.name = refArray[q].name;
+                            newObject[textboxArrayField] = newIntValue;
+                            break;
+                        }
+                    }
+                    if (newIntValue == 0) {
+                        //remove item from array
+                        if (itemIndex != -1) {
+                            retVal[field].splice(itemIndex, 1);
+                        }
+                    } else {
+                        if (itemIndex != -1) {
+                            //edit item array
+                            retVal[field][itemIndex][textboxArrayField] = newIntValue;
+                        } else {
+                            //add item to array
+                            retVal[field].push(newObject);
+                        }
+                    }
+                }
+                break;
             case util.dataTypes.string.DESCRIPTION:
                 tmpText = event.target.innerHTML;
                 util.common.setObjectValue(retVal, field, tmpText.trim());

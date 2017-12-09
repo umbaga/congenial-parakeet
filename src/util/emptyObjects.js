@@ -225,6 +225,7 @@ export const RACE = {
     ],
     parentId: 0,
     resource: {id: 2, name: 'Player\'s Handbook'},
+    senses: [],
     size: {id: 0, name: 'Medium'},
     tags: [],
     type: {id: 0, name: 'Humanoid'}

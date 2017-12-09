@@ -506,7 +506,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ', get_item(race."sizeId") AS "size"';
             sql += ', get_item(race."monsterTypeId") AS "type"';
             sql += ', get_monster_tags(i.id) AS "tags"';
-            sql += ', get_movement_types(i.id) AS "movement"';
+            sql += ', get_array_with_int_value(i.id, $2, \'speed\') AS "movement"';
+            sql += ', get_array_with_int_value(i.id, $3, \'range\') AS "senses"';
             sql += ', json_build_object(';
             sql += '	\'strength\', ability.strength';
             sql += '    , \'dexterity\', ability.dexterity';
@@ -518,18 +519,10 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '        \'count\', ability."selectCount"';
             sql += '        , \'modifier\', ability."selectModifier"';
             sql += '    )';
-            /*sql += '    , \'selections\', json_agg(';
-            sql += '        (';
-            sql += '            SELECT x FROM (';
-            sql += '                SELECT abilityselect."selectValue" AS "modifier", abilityselect."selectCount" as "count"';
-            sql += '    		) x';
-            sql += '    	)';
-            sql += '    )';*/
             sql += ') AS "abilityScores"';
             sql += ' FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_race race ON race."raceId" = i.id';
             sql += ' LEFT OUTER JOIN adm_def_race_ability_score ability ON ability."raceId" = i.id';
-            //sql += ' LEFT OUTER JOIN adm_link_ability_score_select abilityselect ON abilityselect."referenceId" = i.id';
             sql += ' WHERE i."itemTypeId" = $1';
             sql += ' GROUP BY i.id, i."itemName"';
             sql += ', race."sizeId", race."monsterTypeId", race."parentId"';
@@ -537,7 +530,9 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ', ability."selectCount", ability."selectModifier"';
             sql += ' ORDER BY i."itemName"';
             vals = [
-                itemtypes.TYPE.RACE
+                itemtypes.TYPE.RACE,
+                itemtypes.TYPE.MOVEMENT_TYPE,
+                itemtypes.TYPE.ADVANCED_SENSE
             ];
             var query = client.query(new pg.Query(sql, vals));
             query.on('row', function(row) {

@@ -28,7 +28,6 @@ class RaceEntry extends React.Component {
         this.saveAndNewRace = this.saveAndNewRace.bind(this);
         this.saveRace = this.saveRace.bind(this);
         this.updateFormState = this.updateFormState.bind(this);
-        this.onChangeMovement = this.onChangeMovement.bind(this);
         this.onChangeSubrace = this.onChangeSubrace.bind(this);
     }
     
@@ -108,11 +107,6 @@ class RaceEntry extends React.Component {
         return this.setState({race: race});
     }
     
-    onChangeMovement(event) {
-        const race = util.common.formState.movement(event, this.state.race, this.props.picklists);
-        return this.setState({race: race});
-    }
-    
     onChangeSubrace(event) {
         let isSubrace = this.state.isSubrace;
         const race = this.state.race;
@@ -135,7 +129,6 @@ class RaceEntry extends React.Component {
                 picklists={this.props.picklists}
                 saving={this.state.saving}
                 onChange={this.updateFormState}
-                onChangeMovement={this.onChangeMovement}
                 isSubrace={this.state.isSubrace}
                 onChangeSubrace={this.onChangeSubrace}
                 />
@@ -172,7 +165,9 @@ RaceEntry.propTypes = {
     openModal: PropTypes.func.isRequired,
     showModal: PropTypes.bool.isRequired,
     isCreate: PropTypes.bool,
-    picklists: PropTypes.array
+    picklists: PropTypes.array.isRequired,
+    proficiencies: PropTypes.array.isRequired,
+    spells: PropTypes.array.isRequired
 };
 
 function getRaceById(races, id) {

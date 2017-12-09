@@ -1,6 +1,7 @@
 module.exports = {
     TYPE: {
         ABILITY_SCORE: 24,
+        ADVANCED_SENSE: 2283,
         ADVANTAGE_TARGET: 2026,
         AMMUNITION_TYPE: 67,
         AREA_OF_EFFECT_SHAPE: 1479,

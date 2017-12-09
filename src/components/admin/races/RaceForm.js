@@ -5,7 +5,7 @@ import DndUniversalInput from '../../common/inputs/DndUniversalInput';
 import DndCheckboxPicklist from '../../common/inputs/DndCheckboxPicklist';
 import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
-import DndManageMovement from '../../common/objectManagement/DndManageMovement';
+import DndManageTextBoxList from '../../common/objectManagement/DndManageTextBoxList';
 
 class RaceForm extends React.Component {
     constructor(props) {
@@ -33,7 +33,7 @@ class RaceForm extends React.Component {
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
+                    <Tabs defaultActiveKey={3} id="uncontrolled-tab-example">
                         <Tab eventKey={1} title="Size/Type">
                             <div>&nbsp;</div>
                             <DndUniversalInput
@@ -156,11 +156,29 @@ class RaceForm extends React.Component {
                                     dataType={util.dataTypes.number.INT}
                                     />
                             </div>
+                        </Tab>
+                        <Tab eventKey={3} title="Movement & Senses">
+                            <div>&nbsp;</div>
                             <div className="col-md-12">
-                                <DndManageMovement
-                                    onChange={this.props.onChangeMovement}
+                                <DndManageTextBoxList
+                                    name="movement"
+                                    onChange={this.props.onChange}
                                     picklists={picklists}
-                                    movementArray={race.movement}
+                                    primaryArray={race.movement}
+                                    arrayType={util.itemTypes.TYPES.MOVEMENT_TYPE}
+                                    textValueFieldName="speed"
+                                    dataType={util.dataTypes.array.MOVEMENT}
+                                    />
+                            </div>
+                            <div className="col-md-12">
+                                <DndManageTextBoxList
+                                    name="senses"
+                                    onChange={this.props.onChange}
+                                    picklists={picklists}
+                                    primaryArray={race.senses}
+                                    arrayType={util.itemTypes.TYPES.ADVANCED_SENSE}
+                                    textValueFieldName="range"
+                                    dataType={util.dataTypes.array.ADVANCED_SENSE}
                                     />
                             </div>
                         </Tab>
@@ -170,7 +188,7 @@ class RaceForm extends React.Component {
         );
     }
 }
-
+/**/
 RaceForm.propTypes = {
     race: PropTypes.object.isRequired,
     races: PropTypes.array.isRequired,
@@ -180,7 +198,6 @@ RaceForm.propTypes = {
     onViewDetails: PropTypes.func,
     saving: PropTypes.bool,
     picklists: PropTypes.array,
-    onChangeMovement: PropTypes.func.isRequired,
     isSubrace: PropTypes.bool.isRequired,
     onChangeSubrace: PropTypes.func.isRequired
 };

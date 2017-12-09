@@ -107,10 +107,12 @@ class RaceListPage extends React.Component {
                     isCreate={this.state.isCreate}
                     canEdit={this.state.canEdit}
                     selectedId={this.state.selectedId}
-                    picklists={this.props.picklists}
+                    picklists={picklists}
                     showModal={this.state.showModal}
                     onEdit={this.onEdit}
                     onViewDetails={this.onViewDetails}
+                    proficiencies={proficiencies}
+                    spells={spells}
                     />
             </div>
         );
