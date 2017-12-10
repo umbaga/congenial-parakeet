@@ -21,31 +21,33 @@ class ItemtypeForm extends React.Component {
         return (
             <div>
                 <form>
-                    <DndInput
-                        name="name"
-                        ref="name"
-                        label="Name"
-                        dataType={util.dataTypes.string.STRING}
-                        value={this.props.itemtype.name}
-                        onChange={this.props.onChange} />
-                    <DndInput
-                        name="isPicklist"
-                        label="Is Picklist"
-                        dataType={util.dataTypes.bool.YES_NO}
-                        checked={this.props.itemtype.isPicklist}
-                        onChange={this.props.onChange} />
-                    <DndInput
-                        name="isDescription"
-                        label="Is Description"
-                        dataType={util.dataTypes.bool.YES_NO}
-                        checked={this.props.itemtype.isDescription}
-                        onChange={this.props.onChange} />
-                    <DndInput
-                        name="isChart"
-                        label="Is Chart"
-                        dataType={util.dataTypes.bool.YES_NO}
-                        checked={this.props.itemtype.isChart}
-                        onChange={this.props.onChange} />
+                    <div className="modal-no-tabs">
+                        <DndInput
+                            name="name"
+                            ref="name"
+                            label="Name"
+                            dataType={util.dataTypes.string.STRING}
+                            value={this.props.itemtype.name}
+                            onChange={this.props.onChange} />
+                        <DndInput
+                            name="isPicklist"
+                            label="Is Picklist"
+                            dataType={util.dataTypes.bool.YES_NO}
+                            checked={this.props.itemtype.isPicklist}
+                            onChange={this.props.onChange} />
+                        <DndInput
+                            name="isDescription"
+                            label="Is Description"
+                            dataType={util.dataTypes.bool.YES_NO}
+                            checked={this.props.itemtype.isDescription}
+                            onChange={this.props.onChange} />
+                        <DndInput
+                            name="isChart"
+                            label="Is Chart"
+                            dataType={util.dataTypes.bool.YES_NO}
+                            checked={this.props.itemtype.isChart}
+                            onChange={this.props.onChange} />
+                    </div>
                 </form>
             </div>
         );

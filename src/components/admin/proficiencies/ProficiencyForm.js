@@ -64,23 +64,25 @@ class ProficiencyForm extends React.Component {
         return (
             <div>
                 <form>
-                    <DndUniversalInput
-                        ref="name"
-                        referenceObject={this.props.proficiency}
-                        onChange={this.props.onChange}
-                        picklists={this.props.picklists}
-                        />
-                    <div className="col-md-12">
-                        <DndInput
-                            name="category"
-                            label="Category"
-                            dataType={util.dataTypes.picklist.PROFICIENCY_CATEGORY}
-                            valueObj={this.props.proficiency.category}
+                    <div className="modal-no-tabs">
+                        <DndUniversalInput
+                            ref="name"
+                            referenceObject={this.props.proficiency}
                             onChange={this.props.onChange}
-                            picklist={categoryPicklist} />
+                            picklists={this.props.picklists}
+                            />
+                        <div className="col-md-12">
+                            <DndInput
+                                name="category"
+                                label="Category"
+                                dataType={util.dataTypes.picklist.PROFICIENCY_CATEGORY}
+                                valueObj={this.props.proficiency.category}
+                                onChange={this.props.onChange}
+                                picklist={categoryPicklist} />
+                        </div>
+                        {languageForm}
+                        {abilityScoreForm}
                     </div>
-                    {languageForm}
-                    {abilityScoreForm}
                 </form>
             </div>
         );

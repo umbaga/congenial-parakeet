@@ -76,70 +76,72 @@ class WeaponForm extends React.Component {
         return (
             <div>
                 <form>
-                    <DndUniversalInput
-                        ref="name"
-                        referenceObject={this.props.weapon}
-                        onChange={this.props.onChange}
-                        picklists={this.props.picklists}
-                        hideDescription
-                        />
-                    <div className="col-md-6">
-                        <DndInput
-                            name="cost"
-                            label="Cost"
-                            dataType={util.dataTypes.number.COIN}
-                            value={this.props.weapon.cost}
-                            onChange={this.props.onChange} />
-                    </div>
-                    <div className="col-md-6">
-                        <DndInput
-                            name="weight"
-                            label="Weight"
-                            dataType={util.dataTypes.number.WEIGHT}
-                            value={this.props.weapon.weight}
-                            onChange={this.props.onChange} />
-                    </div>
-                    <div className="col-md-6">
-                        <DndInput
-                            name="proficiency"
-                            label="Proficiency"
-                            dataType={util.dataTypes.picklist.WEAPON_PROFICIENCY}
-                            valueObj={this.props.weapon.proficiency}
+                    <div className="modal-no-tabs">
+                        <DndUniversalInput
+                            ref="name"
+                            referenceObject={this.props.weapon}
                             onChange={this.props.onChange}
-                            picklist={proficiencyPicklist} />
-                    </div>
-                    <div className="col-md-6">
-                        <DndInput
-                            name="category"
-                            label="Category"
-                            dataType={util.dataTypes.picklist.WEAPON_CATEGORY}
-                            valueObj={this.props.weapon.category}
-                            onChange={this.props.onChange}
-                            picklist={categoryPicklist} />
-                    </div>
-                    <div className="col-md-12">
-                        <DndInput
-                            name="damage"
-                            label="Damage and Type"
-                            dataType={util.dataTypes.combo.DAMAGE_AND_DAMAGE_TYPE}
-                            valueObj={this.props.weapon.damage}
-                            onChange={this.props.onChange}
-                            picklist={damageTypePicklist}
+                            picklists={this.props.picklists}
+                            hideDescription
                             />
+                        <div className="col-md-6">
+                            <DndInput
+                                name="cost"
+                                label="Cost"
+                                dataType={util.dataTypes.number.COIN}
+                                value={this.props.weapon.cost}
+                                onChange={this.props.onChange} />
+                        </div>
+                        <div className="col-md-6">
+                            <DndInput
+                                name="weight"
+                                label="Weight"
+                                dataType={util.dataTypes.number.WEIGHT}
+                                value={this.props.weapon.weight}
+                                onChange={this.props.onChange} />
+                        </div>
+                        <div className="col-md-6">
+                            <DndInput
+                                name="proficiency"
+                                label="Proficiency"
+                                dataType={util.dataTypes.picklist.WEAPON_PROFICIENCY}
+                                valueObj={this.props.weapon.proficiency}
+                                onChange={this.props.onChange}
+                                picklist={proficiencyPicklist} />
+                        </div>
+                        <div className="col-md-6">
+                            <DndInput
+                                name="category"
+                                label="Category"
+                                dataType={util.dataTypes.picklist.WEAPON_CATEGORY}
+                                valueObj={this.props.weapon.category}
+                                onChange={this.props.onChange}
+                                picklist={categoryPicklist} />
+                        </div>
+                        <div className="col-md-12">
+                            <DndInput
+                                name="damage"
+                                label="Damage and Type"
+                                dataType={util.dataTypes.combo.DAMAGE_AND_DAMAGE_TYPE}
+                                valueObj={this.props.weapon.damage}
+                                onChange={this.props.onChange}
+                                picklist={damageTypePicklist}
+                                />
+                        </div>
+                        <div className="col-md-12">
+                            <DndInput
+                                name="weaponProperties"
+                                label="Properties"
+                                dataType={util.dataTypes.array.WEAPON_PROPERTIES}
+                                valueArray={this.props.weapon.weaponProperties}
+                                onChange={this.props.onChange}
+                                picklist={weaponPropertyPicklist} />
+                        </div>
+                        {rangeInput}
+                        {ammunitionTypeInput}
+                        {versatileDamageInput}
+                        {specialDescriptionInput}
                     </div>
-                    <div className="col-md-12">
-                        <DndInput
-                            name="weaponProperties"
-                            label="Properties"
-                            dataType={util.dataTypes.array.WEAPON_PROPERTIES}
-                            valueArray={this.props.weapon.weaponProperties}
-                            onChange={this.props.onChange}
-                            picklist={weaponPropertyPicklist} />
-                    </div>
-                    {rangeInput}
-                    {ammunitionTypeInput}
-                    {versatileDamageInput}
-                    {specialDescriptionInput}
                 </form>
             </div>
         );

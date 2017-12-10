@@ -40,30 +40,32 @@ class SpellListForm extends React.Component {
         return (
             <div>
                 <form>
-                    <DndUniversalInput
-                        ref="name"
-                        referenceObject={spelllist}
-                        onChange={this.props.onChange}
-                        picklists={this.props.picklists}
-                        hideDescription
-                        />
-                    <DndInput
-                        label="Spell Level"
-                        name="school"
-                        valueObj={this.props.selectedSpellLevel}
-                        onChange={this.props.onChangeSelectedSpellLevel}
-                        dataType={util.dataTypes.picklist.SPELL_LEVEL}
-                        picklist={spellLevels}
-                        hideSelectOneOption
-                        />
-                    <DndToggleBoxes
-                        dataType={util.dataTypes.array.ASSIGNED_SPELLS}
-                        name="spells"
-                        selectedItemArray={displaySpells}
-                        unselectedItemArray={spells}
-                        onAddItem={this.props.onAddSpell}
-                        onRemoveItem={this.props.onRemoveSpell}
-                        />
+                    <div className="modal-no-tabs">
+                        <DndUniversalInput
+                            ref="name"
+                            referenceObject={spelllist}
+                            onChange={this.props.onChange}
+                            picklists={this.props.picklists}
+                            hideDescription
+                            />
+                        <DndInput
+                            label="Spell Level"
+                            name="school"
+                            valueObj={this.props.selectedSpellLevel}
+                            onChange={this.props.onChangeSelectedSpellLevel}
+                            dataType={util.dataTypes.picklist.SPELL_LEVEL}
+                            picklist={spellLevels}
+                            hideSelectOneOption
+                            />
+                        <DndToggleBoxes
+                            dataType={util.dataTypes.array.ASSIGNED_SPELLS}
+                            name="spells"
+                            selectedItemArray={displaySpells}
+                            unselectedItemArray={spells}
+                            onAddItem={this.props.onAddSpell}
+                            onRemoveItem={this.props.onRemoveSpell}
+                            />
+                    </div>
                 </form>
             </div>
         );

@@ -39,27 +39,29 @@ class PicklistForm extends React.Component {
         return (
             <div>
                 <form>
-                    <div>
-                        <label htmlFor="newPicklistItem">Add Picklist Item</label>
-                        <div className="input-group">
-                            <input type="text" name="newPicklistItem" ref="newPicklistItem" className="form-control" onChange={this.props.onChange} />
-                            <span className="input-group-btn">
-                                <DndButton
-                                    buttonType="additem"
-                                    onClick={this._onAdd} />
-                            </span>
+                    <div className="modal-no-tabs">
+                        <div>
+                            <label htmlFor="newPicklistItem">Add Picklist Item</label>
+                            <div className="input-group">
+                                <input type="text" name="newPicklistItem" ref="newPicklistItem" className="form-control" onChange={this.props.onChange} />
+                                <span className="input-group-btn">
+                                    <DndButton
+                                        buttonType="additem"
+                                        onClick={this._onAdd} />
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            {this.renderItems()}
-                        </table>
+                        <div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                {this.renderItems()}
+                            </table>
+                        </div>
                     </div>
                 </form>
             </div>

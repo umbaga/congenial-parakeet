@@ -74,47 +74,49 @@ class PackForm extends React.Component {
         return (
             <div>
                 <form>
-                    <DndUniversalInput
-                        ref="name"
-                        referenceObject={this.props.pack}
-                        onChange={this.props.onChange}
-                        picklists={this.props.picklists}
-                        />
-                    <div className="col-md-6">
-                        <DndInput
-                            name="cost"
-                            label="Cost"
-                            dataType={util.dataTypes.number.COIN}
-                            value={this.props.pack.cost}
+                    <div className="modal-no-tabs">
+                        <DndUniversalInput
+                            ref="name"
+                            referenceObject={this.props.pack}
                             onChange={this.props.onChange}
-                            numberStepVal={util.dataTypes.number.getStepIncrement(this.props.pack.cost)}
-                             />
-                    </div>
-                    <div className="col-md-6">
-                        <DndInput
-                            name="weight"
-                            label="Weight"
-                            dataType={util.dataTypes.number.WEIGHT}
-                            value={this.props.pack.weight}
-                            onChange={this.props.onChange}
-                            isReadOnly
-                             />
-                    </div>
-                    <div className="col-md-12">
-                        <DndManageAssignedItems
-                            name="selectedEquipment"
-                            dataType={util.dataTypes.array.ASSIGNED_EQUIPMENT}
-                            label="Assigned Equipment"
-                            picklist={this.props.equipments}
-                            valueArray={this.props.pack.assignedEquipment}
-                            onAddItem={this._addEquipmentItem}
-                            onChange={this.props.onChange}
-                            onRemoveItem={this._removeEquipmentItem}
-                            onChangeCount={this._changeEquipmentCount}
-                            itemListTitle="Equipment"
-                            showCount
-                            supplementalText="unit"
+                            picklists={this.props.picklists}
                             />
+                        <div className="col-md-6">
+                            <DndInput
+                                name="cost"
+                                label="Cost"
+                                dataType={util.dataTypes.number.COIN}
+                                value={this.props.pack.cost}
+                                onChange={this.props.onChange}
+                                numberStepVal={util.dataTypes.number.getStepIncrement(this.props.pack.cost)}
+                                 />
+                        </div>
+                        <div className="col-md-6">
+                            <DndInput
+                                name="weight"
+                                label="Weight"
+                                dataType={util.dataTypes.number.WEIGHT}
+                                value={this.props.pack.weight}
+                                onChange={this.props.onChange}
+                                isReadOnly
+                                 />
+                        </div>
+                        <div className="col-md-12">
+                            <DndManageAssignedItems
+                                name="selectedEquipment"
+                                dataType={util.dataTypes.array.ASSIGNED_EQUIPMENT}
+                                label="Assigned Equipment"
+                                picklist={this.props.equipments}
+                                valueArray={this.props.pack.assignedEquipment}
+                                onAddItem={this._addEquipmentItem}
+                                onChange={this.props.onChange}
+                                onRemoveItem={this._removeEquipmentItem}
+                                onChangeCount={this._changeEquipmentCount}
+                                itemListTitle="Equipment"
+                                showCount
+                                supplementalText="unit"
+                                />
+                        </div>
                     </div>
                 </form>
             </div>

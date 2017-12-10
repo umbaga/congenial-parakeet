@@ -33,7 +33,7 @@ class RaceForm extends React.Component {
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={3} id="uncontrolled-tab-example">
+                    <Tabs defaultActiveKey={3} id="uncontrolled-tab-example" className="tab-pane-double-row-of-tabs">
                         <Tab eventKey={1} title="Size/Type">
                             <div>&nbsp;</div>
                             <DndUniversalInput

@@ -78,67 +78,69 @@ class EquipmentForm extends React.Component {
         return (
             <div>
                 <form>
-                    <DndUniversalInput
-                        ref="name"
-                        referenceObject={this.props.equipment}
-                        onChange={this.props.onChange}
-                        picklists={this.props.picklists}
-                        />
-                    <div className="col-md-6">
-                        {util.format.forDisplay.obj.equipmentName(this.props.equipment)}
-                    </div>
-                    <div className="col-md-6">
-                        <DndInput
-                            name="category"
-                            label="Category"
-                            dataType={util.dataTypes.picklist.EQUIPMENT_CATEGORY}
-                            valueObj={this.props.equipment.category}
+                    <div className="modal-no-tabs">
+                        <DndUniversalInput
+                            ref="name"
+                            referenceObject={this.props.equipment}
                             onChange={this.props.onChange}
-                            picklist={categoryPicklist} />
-                    </div>
-                    <div className="col-md-6">
-                        <DndInput
-                            name="cost"
-                            label="Cost"
-                            dataType={util.dataTypes.number.COIN}
-                            value={this.props.equipment.cost}
-                            onChange={this.props.onChange} />
-                    </div>
-                    <div className="col-md-6">
-                        <DndInput
-                            name="weight"
-                            label="Weight"
-                            dataType={util.dataTypes.number.WEIGHT}
-                            value={this.props.equipment.weight}
-                            onChange={this.props.onChange} />
-                    </div>
-                    <div className="col-md-6">
-                        <DndInput
-                            name="count"
-                            label="Item Count"
-                            dataType={util.dataTypes.number.INT}
-                            value={this.props.equipment.count.toString()}
-                            onChange={this.props.onChange} />
-                    </div>
-                    <div className="col-md-6">
-                        <DndInput
-                            name="unit"
-                            label="Item Unit"
-                            dataType={util.dataTypes.string.STRING}
-                            value={this.props.equipment.unit}
-                            onChange={this.props.onChange} />
-                    </div>
-                    <div className="col-md-12">
-                        <DndInput
-                            name="showImprovisedWeapon"
-                            label="Is Improvised Weapon"
-                            dataType={util.dataTypes.bool.BOOL}
-                            onChange={this.props.onChangeImprovisedWeapon}
-                            labelCols={4}
+                            picklists={this.props.picklists}
                             />
-                        {this.renderImprovisedWeaponFields()}
+                        <div className="col-md-6">
+                            {util.format.forDisplay.obj.equipmentName(this.props.equipment)}
+                        </div>
+                        <div className="col-md-6">
+                            <DndInput
+                                name="category"
+                                label="Category"
+                                dataType={util.dataTypes.picklist.EQUIPMENT_CATEGORY}
+                                valueObj={this.props.equipment.category}
+                                onChange={this.props.onChange}
+                                picklist={categoryPicklist} />
+                        </div>
+                        <div className="col-md-6">
+                            <DndInput
+                                name="cost"
+                                label="Cost"
+                                dataType={util.dataTypes.number.COIN}
+                                value={this.props.equipment.cost}
+                                onChange={this.props.onChange} />
+                        </div>
+                        <div className="col-md-6">
+                            <DndInput
+                                name="weight"
+                                label="Weight"
+                                dataType={util.dataTypes.number.WEIGHT}
+                                value={this.props.equipment.weight}
+                                onChange={this.props.onChange} />
+                        </div>
+                        <div className="col-md-6">
+                            <DndInput
+                                name="count"
+                                label="Item Count"
+                                dataType={util.dataTypes.number.INT}
+                                value={this.props.equipment.count.toString()}
+                                onChange={this.props.onChange} />
+                        </div>
+                        <div className="col-md-6">
+                            <DndInput
+                                name="unit"
+                                label="Item Unit"
+                                dataType={util.dataTypes.string.STRING}
+                                value={this.props.equipment.unit}
+                                onChange={this.props.onChange} />
+                        </div>
+                        <div className="col-md-12">
+                            <DndInput
+                                name="showImprovisedWeapon"
+                                label="Is Improvised Weapon"
+                                dataType={util.dataTypes.bool.BOOL}
+                                onChange={this.props.onChangeImprovisedWeapon}
+                                labelCols={4}
+                                />
+                            {this.renderImprovisedWeaponFields()}
+                        </div>
+                        {this.renderAmmunitionTypePicklist()}
                     </div>
-                    {this.renderAmmunitionTypePicklist()}
                 </form>
             </div>
         );
