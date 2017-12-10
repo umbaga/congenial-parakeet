@@ -467,6 +467,7 @@ export const formState = {
             case util.dataTypes.string.STRING:
             case util.dataTypes.string.LONG_STRING:
             case util.dataTypes.number.INT:
+            case util.dataTypes.number.LENGTH:
             case util.dataTypes.number.DEC:
             case util.dataTypes.number.COIN:
             case util.dataTypes.number.SPELL_LEVEL:

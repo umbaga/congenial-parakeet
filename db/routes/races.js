@@ -53,8 +53,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, tmp);
                     });
                 },
-                function deleteMovementLinkTable(resObj, callback) {
-                    sql = 'DELETE FROM adm_link_movement';
+                function deleteMovementAndSenseLinkTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_link_array_with_int_value';
                     sql += ' WHERE "referenceId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
@@ -69,6 +69,20 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                 },
                 function deleteMonsterTagsLinkTable(resObj, callback) {
                     sql = 'DELETE FROM adm_link_monster_tag';
+                    sql += ' WHERE "referenceId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteVitalsTable(resObj, callback) {
+                    sql = 'DELETE FROM adm_def_race_vitals';
                     sql += ' WHERE "referenceId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
@@ -114,8 +128,29 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     query.on('end', function() {
                         done();
                         var tmp = req.body;
+                        tmp.race.hasMovementOrSenses = false;
+                        tmp.race.hasMovement = false;
+                        tmp.race.hasSenses = false;
+                        if ((tmp.race.movement && tmp.race.movement.length != 0)) {
+                            tmp.race.hasMovementOrSenses = true;
+                            tmp.race.hasMovement = true;
+                        }
+                        if ((tmp.race.sense && tmp.races.senses.length != 0)) {
+                            tmp.race.hasMovementOrSenses = true;
+                            tmp.race.hasSenses = true;
+                        }
+                        tmp.race.needsDice = false;
+                        if (tmp.race.vitals && tmp.race.vital.height && tmp.race.vital.height.base != 0) {
+                            tmp.race.needsDice = true;
+                        }
                         return callback(null, tmp);
                     });
+                },
+                function insertNeededDice(resObj, callback) {
+                    return callback(null, resObj);
+                },
+                function assignDiceNeededDice(resObj, callback) {
+                    return callback(null, resObj);
                 },
                 function updateRaceTable(resObj, callback) {
                     results = [];
@@ -173,103 +208,13 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     
                 },
                 function deleteMovementLink(resObj, callback) {
-                    results = [];
-                    first = 2;
-                    vals = [req.params.id];
-                    sql = 'DELETE FROM adm_link_movement';
-                    if (resObj.race.movement && resObj.race.movement.length != 0) {
-                        sql += ' WHERE "referenceId" = $1';
-                        sql += ' AND "movementTypeId NOT IN (';
-                        for (var e = 0; e < resObj.race.movement.length; e++) {
-                            sql += '$' + first.toString();
-                            vals.push(resObj.race.movement[e].id);
-                            first = first + 1;
-                        }
-                        sql += ')';
-                    } else {
-                        sql += ' WHERE "referenceId" = $1';
-                    }
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        return callback(null, resObj);
-                    });
+                    return callback(null, resObj);
                 },
                 function insertMovementLink(resObj, callback) {
-                    results = [];
-                    first = 2;
-                    second = 3;
-                    vals = [req.params.id];
-                    if (resObj.race.movement && resObj.race.movement.length != 0) {
-                        sql = 'with vals as (';
-                        for (var e = 0; e < resObj.race.movement.length; e++) {
-                            if (e != 0) {
-                                sql += ' UNION ';
-                            }
-                            sql += 'select $1 :: bigint AS "referenceId"';
-                            sql += ', $' + first.toString() + ' :: bigint AS "movementTypeId"';
-                            sql += ', $' + second.toString() + ' :: smallint AS "speed"';
-                            first = first + 2;
-                            second = second + 2;
-                            vals.push(resObj.race.movement[e].id);
-                            vals.push(resObj.race.movement[e].speed);
-                        }
-                        sql += ')';
-                        sql += ' insert into adm_link_movement ("referenceId", "movementTypeId", "speed")';
-                        sql += ' select v."referenceId", v."movementTypeId", v."speed"';
-                        sql += ' from vals as v';
-                        sql += ' where not exists (select * from adm_link_movement as t';
-                        sql += ' where t."referenceId" = v."referenceId"';
-                        sql += ' and t."movementTypeId" = v."movementTypeId")';
-                        sql += ' returning id';
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
+                    return callback(null, resObj);
                 },
                 function updateMovementLink(resObj, callback) {
-                    results = [];
-                    first = 2;
-                    second = 3;
-                    vals = [req.params.id];
-                    if (resObj.race.movement && resObj.race.movement.length != 0) {
-                        sql = 'UPDATE adm_link_movement as m';
-                        sql += ' SET "speed" = c."speed"';
-                        sql += ' FROM (VALUES';
-                        for (var e = 0; e < resObj.race.movement.length; c++) {
-                            if (e != 0) {
-                                sql += ', ';
-                            }
-                            sql += '($1, $' + first.toString() + ', $' + second.toString() + ')';
-                            first = first + 2;
-                            second = second + 2;
-                            vals.push(resObj.race.movement.id);
-                            vals.push(resObj.race.movement.speed);
-                        }
-                        sql += ') as c("referenceId", "movementTypeId", "speed")';
-                        sql += ' WHERE c."referenceId" = t."referenceId"';
-                        sql += ' AND c."movementTypeId" = t."movementTypeId"';
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
+                    return callback(null, resObj);
                 },
                 function deleteMonsterTags(resObj, callback) {
                     results = [];
@@ -334,6 +279,12 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     } else {
                         return callback(null, resObj);
                     }
+                },
+                function updateVitals(resObj, callback) {
+                    return callback(null, resObj);
+                },
+                function updateVitals(resObj, callback) {
+                    return callback(null, resObj);
                 }
             ], function(error, result) {
                 if (error) {
@@ -357,6 +308,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                 },
                 function insertItem(req, callback) {
                     var first, second, third, fourth, fifth, sixth;
+                    var needsComma = false;
                     vals = [];
                     results = [];
                     sql = 'INSERT INTO adm_core_item';
@@ -370,9 +322,178 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     query.on('end', function() {
                         done();
                         var tmp = req.body;
+                        tmp.race.hasMovementOrSenses = false;
+                        tmp.race.hasMovement = false;
+                        tmp.race.hasSenses = false;
+                        if ((tmp.race.movement && tmp.race.movement.length != 0)) {
+                            tmp.race.hasMovementOrSenses = true;
+                            tmp.race.hasMovement = true;
+                        }
+                        if ((tmp.race.sense && tmp.races.senses.length != 0)) {
+                            tmp.race.hasMovementOrSenses = true;
+                            tmp.race.hasSenses = true;
+                        }
+                        tmp.race.needsDice = false;
+                        if (tmp.race.vitals && tmp.race.vital.height && tmp.race.vital.height.base != 0) {
+                            tmp.race.needsDice = true;
+                        }
                         tmp.race.id = results[0].raceId;
                         return callback(null, tmp);
                     });
+                },
+                function insertDice(resObj, callback) {
+                    if (resObj.race.needsDice) {
+                        var needUnion = false;
+                        results = [];
+                        vals = [];
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        fourth = 4;
+                        fifth = 5;
+                        sql = 'with vals as (';
+                        if (resObj.race.vitals && resObj.race.vitals.height && resObj.race.vitals.height.base != 0) {
+                            if(needUnion) {
+                                sql += ' UNION ';
+                            }
+                            sql += 'select $' + first.toString() + ' :: bigint as "dieCount", $' + second.toString() + ' :: bigint as "dieType"';
+                            sql += ', $' + third.toString() + ' :: bigint as "modifier", $' + fourth.toString() + ' :: bigint as "multiplie"';
+                            sql += ', $' + fifth.toString() + ' :: bigint as "divisor"';
+                            vals.push(resObj.race.vitals.height.dice.dieCount);
+                            vals.push(resObj.race.vitals.height.dice.dieType);
+                            vals.push(resObj.race.vitals.height.dice.modifier);
+                            vals.push(resObj.race.vitals.height.dice.multiplier);
+                            vals.push(resObj.race.vitals.height.dice.divisor);
+                            needUnion = true;
+                            first = first + 5;
+                            second = second + 5;
+                            third = third + 5;
+                            fourth = fourth + 5;
+                            fifth = fifth + 5;
+                            
+                            
+                            if(needUnion) {
+                                sql += ' UNION ';
+                            }
+                            sql += 'select $' + first.toString() + ' :: bigint as "dieCount", $' + second.toString() + ' :: bigint as "dieType"';
+                            sql += ', $' + third.toString() + ' :: bigint as "modifier", $' + fourth.toString() + ' :: bigint as "multiplie"';
+                            sql += ', $' + fifth.toString() + ' :: bigint as "divisor"';
+                            vals.push(resObj.race.vitals.weight.dice.dieCount);
+                            vals.push(resObj.race.vitals.weight.dice.dieType);
+                            vals.push(resObj.race.vitals.weight.dice.modifier);
+                            vals.push(resObj.race.vitals.weight.dice.multiplier);
+                            vals.push(resObj.race.vitals.weight.dice.divisor);
+                            needUnion = true;
+                            first = first + 5;
+                            second = second + 5;
+                            third = third + 5;
+                            fourth = fourth + 5;
+                            fifth = fifth + 5;
+                        }
+                        sql += ')';
+                        sql += ' insert into adm_core_dice ("dieCount", "dieType")';
+                        sql += ' select v."dieCount", v."dieType"';
+                        sql += ' from vals as v';
+                        sql += ' where not exists (select * from adm_core_dice as t where t."dieCount" = v."dieCount" and t."dieType" = v."dieType")';
+                        sql += ' returning id AS "diceId";';
+                        if (resObj.weapon.needsAltDamage) {
+                            vals.push(resObj.weapon.damage.versatile.dice.dieCount);
+                            vals.push(resObj.weapon.damage.versatile.dice.dieType);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function assignDiceId(resObj, callback) {
+                    if (resObj.race.needsDice) {
+                        results = [];
+                        vals = [];
+                        var isOr = false;
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        fourth = 4;
+                        fifth = 5;
+                        sql = 'SELECT dice.id, dice."dieCount", dice."dieType", dice.modifier, dice.multiplier, dice.divisor';
+                        sql += ' FROM adm_core_dice dice';
+                        if (resObj.race.vitals && resObj.race.vitals.height && resObj.race.vitals.height.base != 0) {
+                            if (isOr) {
+                                sql += ' OR ';
+                            } else {
+                                sql += ' WHERE ';
+                            }
+                            sql += '(dice."dieCount" = $' + first.toString() + ' AND dice."dieType" = $' + second.toString();
+                            sql += ' AND dice.modifier = $' + third.toString() + ' AND dice.multiplier = $' + fourth.toString();
+                            sql += ' AND dice.divisor = $' + fifth.toString() + ')';
+                            isOr = true;
+                            first = first + 5;
+                            second = second + 5;
+                            third = third + 5;
+                            fourth = fourth + 5;
+                            fifth = fifth + 5;
+                            vals.push(resObj.race.vitals.height.dice.dieCount);
+                            vals.push(resObj.race.vitals.height.dice.dieType);
+                            vals.push(resObj.race.vitals.height.dice.modifier);
+                            vals.push(resObj.race.vitals.height.dice.multiplier);
+                            vals.push(resObj.race.vitals.height.dice.divisor);
+                            
+                            if (isOr) {
+                                sql += ' OR ';
+                            } else {
+                                sql += ' WHERE ';
+                            }
+                            sql += '(dice."dieCount" = $' + first.toString() + ' AND dice."dieType" = $' + second.toString();
+                            sql += ' AND dice.modifier = $' + third.toString() + ' AND dice.multiplier = $' + fourth.toString();
+                            sql += ' AND dice.divisor = $' + fifth.toString() + ')';
+                            isOr = true;
+                            first = first + 5;
+                            second = second + 5;
+                            third = third + 5;
+                            fourth = fourth + 5;
+                            fifth = fifth + 5;
+                            vals.push(resObj.race.vitals.weight.dice.dieCount);
+                            vals.push(resObj.race.vitals.weight.dice.dieType);
+                            vals.push(resObj.race.vitals.weight.dice.modifier);
+                            vals.push(resObj.race.vitals.weight.dice.multiplier);
+                            vals.push(resObj.race.vitals.weight.dice.divisor);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            if (results.length != 0) {
+                                for (var e = 0; e < results.length; e++) {
+                                    if (results[e].dieCount == resObj.race.vitals.height.dice.dieCount &&
+                                       results[e].dieType == resObj.race.vitals.height.dice.dieType &&
+                                       results[e].modifier == resObj.race.vitals.height.dice.modifier &&
+                                       results[e].multiplier == resObj.race.vitals.height.dice.multiplier &&
+                                       results[e].divisor == resObj.race.vitals.height.dice.divisor) {
+                                        resObj.race.vitals.height.dice.id = results[e].id;
+                                    }
+                                    if (results[e].dieCount == resObj.race.vitals.weight.dice.dieCount &&
+                                       results[e].dieType == resObj.race.vitals.weight.dice.dieType &&
+                                       results[e].modifier == resObj.race.vitals.weight.dice.modifier &&
+                                       results[e].multiplier == resObj.race.vitals.weight.dice.multiplier &&
+                                       results[e].divisor == resObj.race.vitals.weight.dice.divisor) {
+                                        resObj.race.vitals.weight.dice.id = results[e].id;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 },
                 function insertRaceTable(resObj, callback) {
                     vals = [];
@@ -423,24 +544,42 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, resObj);
                     });
                 },
-                function insertMovementLinkTable(resObj, callback) {
-                    if (resObj.race.movement && resObj.race.movement.length != 0) {
+                function insertMovementSenseLinkTable(resObj, callback) {
+                    if (resObj.race.hasMovementOrSenses) {
+                    //if (resObj.race.movement && resObj.race.movement.length != 0) {
                         vals = [resObj.race.id];
                         results = [];
                         first = 2;
                         second = 3;
-                        sql = 'INSERT INTO adm_link_movement';
-                        sql += ' ("referenceId", "movementTypeId", "speed")';
+                        needsComma = false;
+                        sql = 'INSERT INTO adm_link_array_with_int_value';
+                        sql += ' ("referenceId", "referenceTypeId", "intValue")';
                         sql += ' VALUES ';
-                        for (var e = 0; e < resObj.race.movement.length; e++) {
-                            if (e != 0) {
-                                sql += ', ';
+                        if (resObj.race.hasMovement) {
+                            for (var e = 0; e < resObj.race.movement.length; e++) {
+                                if (needsComma) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($1, $' + first.toString() + ', $' + second.toString() + ')';
+                                first = first + 2;
+                                second = second + 2;
+                                needsComma = true;
+                                vals.push(resObj.race.movement.id);
+                                vals.push(resObj.race.movement.speed);
                             }
-                            sql += ' ($1, $' + first.toString() + ', $' + second.toString() + ')';
-                            first = first + 2;
-                            second = second + 2;
-                            vals.push(resObj.race.movement.id);
-                            vals.push(resObj.race.movement.speed);
+                        }
+                        if (resObj.race.hasSenses) {
+                            for (var e = 0; e < resObj.race.senses.length; e++) {
+                                if (needsComma) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($1, $' + first.toString() + ', $' + second.toString() + ')';
+                                first = first + 2;
+                                second = second + 2;
+                                needsComma = true;
+                                vals.push(resObj.race.senses.id);
+                                vals.push(resObj.race.senses.range);
+                            }
                         }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -470,6 +609,31 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             first = first + 1;
                             vals.push(resObj.race.tags.id);
                         }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertVitals(resObj, callback) {
+                    if (resObj.race.vitals && resObj.race.vitals.height && resObj.race.vitals.height.base != 0) {
+                        results = []
+                        sql = 'INSERT INTO adm_def_race_vitals';
+                        sql += ' ("raceId", "baseHeight", "baseWeight", "heightDiceId", "weightDiceId")';
+                        sql += ' VALUES ($1, $2, $3, $4, $5)';
+                        vals = [
+                            resObj.race.id,
+                            resObj.race.height.base,
+                            resObj.race.weight.base,
+                            resObj.race.height.dice.id,
+                            resObj.race.weight.dice.id
+                        ];
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
@@ -520,6 +684,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '        , \'modifier\', ability."selectModifier"';
             sql += '    )';
             sql += ') AS "abilityScores"';
+            sql += ', get_race_vitals(i.id) AS "vitals"';
             sql += ' FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_race race ON race."raceId" = i.id';
             sql += ' LEFT OUTER JOIN adm_def_race_ability_score ability ON ability."raceId" = i.id';
@@ -540,6 +705,21 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             });
             query.on('end', function() {
                 done();
+                console.log(results.length);
+                for (var q = 0; q < results.length; q++) {
+                    if (results[q].vitals == null) {
+                        results[q].vitals = {
+                            height: {
+                                base: 0,
+                                dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+                            },
+                            weight: {
+                                base: 0,
+                                dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+                            }
+                        };
+                    }
+                }
                 return res.json(results);
             });
         });

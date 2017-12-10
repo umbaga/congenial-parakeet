@@ -49,6 +49,7 @@ class DndInput extends React.Component {
                                     className="form-control checkbox-inline" />);
                 break;
             case util.dataTypes.string.STRING:
+            case util.dataTypes.number.LENGTH:
                 primaryInput = (<input
                                     type="text"
                                     name={this.props.name}

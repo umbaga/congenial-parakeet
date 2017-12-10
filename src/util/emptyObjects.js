@@ -228,7 +228,17 @@ export const RACE = {
     senses: [],
     size: {id: 0, name: 'Medium'},
     tags: [],
-    type: {id: 0, name: 'Humanoid'}
+    type: {id: 0, name: 'Humanoid'},
+    vitals: {
+        height: {
+            base: 0,
+            dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+        },
+        weight: {
+            base: 0,
+            dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+        }
+    }
 };
 /*
     size: {id: 2270, name: 'Medium'},

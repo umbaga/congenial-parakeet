@@ -157,7 +157,46 @@ class RaceForm extends React.Component {
                                     />
                             </div>
                         </Tab>
-                        <Tab eventKey={3} title="Movement & Senses">
+                        <Tab eventKey={3} title="Height/Weight">
+                            <div>&nbsp;</div>
+                            <div className="col-sm-7">
+                                <DndInput
+                                    label="Base Height (inches)"
+                                    name="vitals.height.base"
+                                    value={race.vitals.height.base.toString()}
+                                    onChange={this.props.onChange}
+                                    dataType={util.dataTypes.number.LENGTH}
+                                    labelCols={8}
+                                    />
+                                <DndInput
+                                    label="Base Weight (lbs)"
+                                    name="vitals.weight.base"
+                                    value={race.vitals.weight.base.toString()}
+                                    onChange={this.props.onChange}
+                                    dataType={util.dataTypes.number.WEIGHT}
+                                    labelCols={8}
+                                    />
+                            </div>
+                            <div className="col-sm-5">
+                                <DndInput
+                                    label="Height Mod"
+                                    name="vitals.height.dice"
+                                    valueObj={race.vitals.height.dice}
+                                    onChange={this.props.onChange}
+                                    dataType={util.dataTypes.special.DICE_ROLL}
+                                    labelCols={6}
+                                    />
+                                <DndInput
+                                    label="Weight Mod"
+                                    name="vitals.weight.dice"
+                                    valueObj={race.vitals.weight.dice}
+                                    onChange={this.props.onChange}
+                                    dataType={util.dataTypes.special.DICE_ROLL}
+                                    labelCols={6}
+                                    />
+                            </div>
+                        </Tab>
+                        <Tab eventKey={4} title="Movement & Senses">
                             <div>&nbsp;</div>
                             <div className="col-md-12">
                                 <DndManageTextBoxList
@@ -181,6 +220,18 @@ class RaceForm extends React.Component {
                                     dataType={util.dataTypes.array.ADVANCED_SENSE}
                                     />
                             </div>
+                        </Tab>
+                        <Tab eventKey={5} title="Proficiencies">
+                            <div>&nbsp;</div>
+                        
+                        </Tab>
+                        <Tab eventKey={6} title="Mechanics">
+                            <div>&nbsp;</div>
+                        
+                        </Tab>
+                        <Tab eventKey={7} title="Descriptions">
+                            <div>&nbsp;</div>
+                        
                         </Tab>
                     </Tabs>
                 </form>
