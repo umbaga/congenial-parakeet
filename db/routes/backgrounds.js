@@ -783,7 +783,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ', (';
             sql += '    SELECT construct_chart_object_arrays(i.id)';
             sql += ') AS charts';
-            sql += ', (';
+            /*sql += ', (';
             sql += '    SELECT r.proficiencies FROM (';
             sql += '        SELECT json_agg(proficiency_row) AS proficiencies';
             sql += '        , d.id FROM adm_core_item d ';
@@ -833,7 +833,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '        GROUP BY d.id';
             sql += '    ) r(proficiencies, id) ';
             sql += '    WHERE id = i.id';
-            sql += ') AS "proficiencyGroups"';
+            sql += ') AS "proficiencyGroups"';*/
+            sql += ', get_proficiency_groups(i.id) AS "proficiencyGroups"';
             sql += ' FROM adm_core_item i';
             sql += '	INNER JOIN adm_def_background bg ON bg."backgroundId" = i.id';
             sql += '	INNER JOIN adm_core_item feature ON feature.id = bg."featureId"';
@@ -842,8 +843,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '	LEFT OUTER JOIN adm_core_item eqi ON eqi.id = bglnkeq."equipmentId"';
             sql += '	LEFT OUTER JOIN adm_def_equipment eq ON eq."equipmentId" = eqi.id';
             sql += '	LEFT OUTER JOIN adm_def_equipment_count_unit cntunit ON cntunit."equipmentId" = eqi.id';
-            sql += '	LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = $4)';
-            sql += '	LEFT OUTER JOIN adm_core_description suggchardesc ON (suggchardesc."itemId" = i.id AND suggchardesc."descriptionTypeId" = $5)';
+            sql += '	LEFT OUTER JOIN adm_core_description description ON (description."itemId" = i.id AND description."descriptionTypeId" = $1)';
+            sql += '	LEFT OUTER JOIN adm_core_description suggchardesc ON (suggchardesc."itemId" = i.id AND suggchardesc."descriptionTypeId" = $2)';
             sql += '	INNER JOIN adm_core_item rsrc ON rsrc.id = i."resourceId"';
             sql += ' GROUP BY i."itemName", i.id';
             sql += ', rsrc.id, rsrc."itemName"';
@@ -854,9 +855,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ', suggchardesc.description';
             sql += ' ORDER BY i."itemName"';
             vals = [
-                itemtypes.SELECTION_MECHANIC.ASSIGNMENT, 
-                itemtypes.SELECTION_MECHANIC.SELECT_FROM.LIST, 
-                itemtypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY,
                 itemtypes.DESCRIPTION.GENERAL,
                 itemtypes.DESCRIPTION.SUGGESTED_CHARACTERISTICS
             ];

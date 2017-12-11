@@ -685,6 +685,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '    )';
             sql += ') AS "abilityScores"';
             sql += ', get_race_vitals(i.id) AS "vitals"';
+            sql += ', get_proficiency_groups(i.id) AS "proficiencyGroups"';
             sql += ' FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_race race ON race."raceId" = i.id';
             sql += ' LEFT OUTER JOIN adm_def_race_ability_score ability ON ability."raceId" = i.id';
