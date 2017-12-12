@@ -83,6 +83,8 @@ class DndManageItemGroups extends React.Component {
                                         item={group}
                                         displayValue={this._formatText(group)}
                                         onRemoveItem={this.props.onChange}
+                                        deleteButtonName={this.props.buttonClickFieldName}
+                                        deleteButtonAction={util.dataTypes.action[this.props.actionProperty].REMOVE}
                                         />);
                         }.bind(this))}
                     </tbody>

@@ -13,7 +13,7 @@ class DndAssignedItemRow extends React.Component {
     
     _onRemove(event) {
         event.preventDefault();
-        this.props.onRemoveItem(this.props.item);
+        this.props.onRemoveItem(event, this.props.item);
     }
     
     _onChange(event) {
@@ -57,6 +57,8 @@ class DndAssignedItemRow extends React.Component {
                     <DndButton
                         buttonType="removeitem"
                         onClick={this._onRemove}
+                        name={this.props.deleteButtonName}
+                        dataType={this.props.deleteButtonAction}
                         />
                 </td>
             </tr>
@@ -70,7 +72,9 @@ DndAssignedItemRow.propTypes = {
     onRemoveItem: PropTypes.func.isRequired,
     showCount: PropTypes.bool,
     supplementalText: PropTypes.string,
-    displayValue: PropTypes.string
+    displayValue: PropTypes.string,
+    deleteButtonName: PropTypes.string,
+    deleteButtonAction: PropTypes.string
 };
 
 export default DndAssignedItemRow;

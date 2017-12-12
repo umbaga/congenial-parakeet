@@ -392,7 +392,7 @@ export const formState = {
         }
         return retVal;
     },
-    proficiencyGroup: function(event, obj, refObj, picklists, proficiencies) {
+    proficiencyGroup: function(event, obj, refObj, picklists, proficiencies, removeThisGroup) {
         let retVal = obj;
         let field = formState.setFieldFromTargetName(event);
         let isAssign = false;
@@ -435,6 +435,16 @@ export const formState = {
                     retVal.resetProficiencyGroup = true;
                     break;
                 case util.dataTypes.action.PROFICIENCY_GROUP.REMOVE:
+                    if (removeThisGroup) {
+                        for (let e = 0; e < retVal[field].length; e++) {
+                            if (retVal[field][e].id == removeThisGroup.id) {
+                                removeThisIndex = e;
+                            }
+                        }
+                    }
+                    if (removeThisIndex != -1) {
+                        retVal[field].splice(removeThisIndex, 1);
+                    }
                     break;
                 case util.dataTypes.action.PROFICIENCY_GROUP.RESET:
                     retVal.resetProficiencyGroup = true;

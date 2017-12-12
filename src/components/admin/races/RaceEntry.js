@@ -110,9 +110,9 @@ class RaceEntry extends React.Component {
         return this.setState({race: race});
     }
     
-    updateProficiencyGroupFormState(event) {
-        let editProficiencyGroup = util.common.formState.proficiencyGroup(event, this.state.editProficiencyGroup, this.state.race, this.props.picklists, this.props.proficiencies);
-        const race = util.common.formState.proficiencyGroup(event, this.state.race, this.state.editProficiencyGroup, this.props.picklists, this.props.proficiencies);
+    updateProficiencyGroupFormState(event, refObj) {
+        let editProficiencyGroup = util.common.formState.proficiencyGroup(event, this.state.editProficiencyGroup, this.state.race, this.props.picklists, this.props.proficiencies, refObj);
+        const race = util.common.formState.proficiencyGroup(event, this.state.race, this.state.editProficiencyGroup, this.props.picklists, this.props.proficiencies, refObj);
         if (race.resetProficiencyGroup){
             editProficiencyGroup = this.resetProficiencyGroup();
         }
