@@ -20,7 +20,7 @@ export const BACKGROUND = {
     id: 0,
     name: '',
     assignedEquipment: [],
-    charts: {die: [], standard: []},
+    charts: [],
     feature: {
         id: 0,
         name: '',
@@ -224,6 +224,7 @@ export const RACE = {
         {id: 2275, name: 'Walking', speed: 30}
     ],
     parentId: 0,
+    proficiencyGroups: [],
     resource: {id: 2, name: 'Player\'s Handbook'},
     senses: [],
     size: {id: 0, name: 'Medium'},

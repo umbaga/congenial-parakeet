@@ -11,50 +11,53 @@ class DndManageItemGroups extends React.Component {
         this.renderSelectCount = this.renderSelectCount.bind(this);
         this.renderCategory = this.renderCategory.bind(this);
         this.renderItemToggle = this.renderItemToggle.bind(this);
-        this.renderList = this.renderList.bind(this);
+        this.renderItemGroupList = this.renderItemGroupList.bind(this);
         this._formatText = this._formatText.bind(this);
     }
 
-    renderCategory(picklist) {
-        return this.props.itemGroup.mechanic && this.props.itemGroup.mechanic.id != 0 ? (
-            <DndInput
-                name="category"
-                label="Category"
-                dataType={util.dataTypes.picklist.PROFICIENCY_CATEGORY}
-                picklist={picklist}
-                onChange={this.props.onChangeItemGroup}
-                valueObj={this.props.itemGroup.category}
-                />
-        ) : null;
-    }
-    
-    renderSelectCount() {
-        if (this.props.itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY ||
-           this.props.itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST) {
+    renderCategory(itemGroup, hasCategories, picklist) {
+        if ((itemGroup.mechanic && itemGroup.mechanic.id != 0) && hasCategories) {
             return (
-            <DndInput
-                name="selectCount"
-                label="Selection Count"
-                dataType={util.dataTypes.number.INT}
-                onChange={this.props.onChangeItemGroup}
-                value={this.props.itemGroup.selectCount.toString()}
-                />
+                <DndInput
+                    name="category"
+                    label="Category"
+                    dataType={util.dataTypes.picklist.PROFICIENCY_CATEGORY}
+                    picklist={picklist}
+                    onChange={this.props.onChange}
+                    valueObj={itemGroup.category}
+                    />
             );
         }
         return null;
     }
     
-    renderItemToggle(picklist) {
-        if (this.props.itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.ASSIGNMENT ||
-           this.props.itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST) {
-            if (this.props.itemGroup.category && this.props.itemGroup.category.id) {
+    renderSelectCount(itemGroup) {
+        if (itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY ||
+           itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST) {
+            return (
+                <DndInput
+                    name="selectCount"
+                    label="Selection Count"
+                    dataType={util.dataTypes.number.INT}
+                    onChange={this.props.onChange}
+                    value={itemGroup.selectCount.toString()}
+                    />
+            );
+        }
+        return null;
+    }
+    
+    renderItemToggle(itemGroup, picklist) {
+        if (itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.ASSIGNMENT ||
+           itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST) {
+            if (itemGroup.category && itemGroup.category.id) {
                 return (
                     <DndInput
                         name="proficiencies"
                         label={util.format.forDisplay.string.renderSingularPlural(this.props.title, 2)}
                         dataType={util.dataTypes.array.PROFICIENCIES}
-                        valueArray={this.props.itemGroup.proficiencies}
-                        onChange={this.props.onChangeItemGroup}
+                        valueArray={itemGroup[this.props.toggleFieldName]}
+                        onChange={this.props.onChange}
                         picklist={picklist} />
                 );
             }
@@ -62,30 +65,31 @@ class DndManageItemGroups extends React.Component {
         return null;
     }
     
-    renderList(groups) {
-        return groups && groups.length != 0 ? (
-                <fieldset>
-                    <legend>Existing Item Groups</legend>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Group</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {groups.map(group =>
-                                <DndAssignedItemRow
-                                    key={group.id}
-                                    item={group}
-                                    displayValue={this._formatText(group)}
-                                    onRemoveItem={this.props.onRemoveItemGroup}
-                                    />
-                            )}
-                        </tbody>
-                    </table>
-                </fieldset>
-        ) : null;
+    renderItemGroupList(itemGroups) {
+        
+        if (itemGroups && itemGroups.length != 0) {
+            return (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Group</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {itemGroups.map(function(group, idx) {
+                            return (<DndAssignedItemRow
+                                        key={idx}
+                                        item={group}
+                                        displayValue={this._formatText(group)}
+                                        onRemoveItem={this.props.onChange}
+                                        />);
+                        }.bind(this))}
+                    </tbody>
+                </table>
+            );
+        }
+        return null;
     }
     
     _formatText(group) {
@@ -97,34 +101,40 @@ class DndManageItemGroups extends React.Component {
     }
     
     render() {
-        const groups = this.props.itemGroups;
-        const categories = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.PROFICIENCY_CATEGORY);
-        let proficiencies = this.props.proficiencies;
-        if (this.props.itemGroup && this.props.itemGroup.category && this.props.itemGroup.category.id != 0) {
-            proficiencies = proficiencies.filter(item => item.category.id == this.props.itemGroup.category.id);
-        }
+        const itemGroups = this.props.itemGroups;
+        let hasCategories = (this.props.categoryTypeId && this.props.categoryTypeId.length != 0);
+        const categories = util.common.picklists.getPicklistItems(this.props.picklists, this.props.categoryTypeId);
         const selectionMechanics = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SELECTION_MECHANIC);
+        let items = this.props.items;
+        if (this.props.editItemGroup && this.props.editItemGroup.category && this.props.editItemGroup.category.id != 0) {
+            items = items.filter(item => item.category.id == this.props.editItemGroup.category.id);
+        }
+        const itemGroup = this.props.editItemGroup;
         return (
             <div>
-                <fieldset>
-                    <legend>New {this.props.title} Group</legend>
+                <div>
                     <DndInput
                         name="mechanic"
                         label="Selection Type"
                         dataType={util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC}
                         picklist={selectionMechanics}
-                        onChange={this.props.onChangeItemGroup}
-                        valueObj={this.props.itemGroup.mechanic}
+                        onChange={this.props.onChange}
+                        valueObj={itemGroup.mechanic}
                         />
-                    {this.renderSelectCount()}
-                    {this.renderCategory(categories)}
-                    {this.renderItemToggle(proficiencies)}
+                    {this.renderSelectCount(itemGroup)}
+                    {this.renderCategory(itemGroup, hasCategories, categories)}
+                    {this.renderItemToggle(itemGroup, items)}
                     <DndDataEntryButtonBar
-                        onSave={this.props.onAddItemGroup}
-                        onReset={this.props.onResetItemGroup}
+                        name={this.props.buttonClickFieldName}
+                        onCancel={this.props.onChange}
+                        onSave={this.props.onChange}
+                        cancelAction={util.dataTypes.action[this.props.actionProperty].RESET}
+                        saveAction={util.dataTypes.action[this.props.actionProperty].ADD}
                         />
-                </fieldset>
-                {this.renderList(groups)}
+                </div>
+                <div>
+                    {this.renderItemGroupList(itemGroups)}
+                </div>
             </div>
         );
     }
@@ -133,14 +143,14 @@ class DndManageItemGroups extends React.Component {
 DndManageItemGroups.propTypes = {
     itemGroups: PropTypes.array.isRequired,
     picklists: PropTypes.array.isRequired,
-    proficiencies: PropTypes.array,
-    onAddItemGroup: PropTypes.func.isRequired,
+    items: PropTypes.array.isRequired,
+    categoryTypeId: PropTypes.number,
+    editItemGroup: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    onChangeItemGroup: PropTypes.func.isRequired,
-    onRemoveItemGroup: PropTypes.func.isRequired,
-    onResetItemGroup: PropTypes.func.isRequired,
-    itemGroup: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
+    toggleFieldName: PropTypes.string.isRequired,
+    buttonClickFieldName: PropTypes.string.isRequired,
+    actionProperty: PropTypes.string.isRequired,
     groupListItemTextFormatFunction: PropTypes.func
 };
 

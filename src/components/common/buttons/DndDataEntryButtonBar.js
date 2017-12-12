@@ -6,16 +6,30 @@ import { ButtonGroup } from 'react-bootstrap';
 class DndDataEntryButtonBar extends React.Component {
     constructor(props, context) {
         super(props, context);
-        
+        this.renderButton = this.renderButton.bind(this);
+    }
+    
+    renderButton(onClickFunction, buttonType, action, name) {
+        if (onClickFunction) {
+            return (
+                <DndButton
+                    onClick={onClickFunction}
+                    buttonType={buttonType}
+                    dataType={action}
+                    name={name}
+                    />
+            );
+        }
+        return null;
     }
     
     render() {
         let wrapperClass = 'form-group';
-        const cancelButton = this.props.onCancel ? (<DndButton onClick={this.props.onCancel} buttonType="cancel" dataType={this.props.cancelAction} />) : null;
-        const deleteButton = this.props.onDelete ? (<DndButton onClick={this.props.onDelete} buttonType="delete" dataType={this.props.deleteAction} />) : null;
-        const resetButton = this.props.onReset ? (<DndButton onClick={this.props.onReset} buttonType="reset" dataType={this.props.resetAction} />) : null;
-        const saveButton = this.props.onSave ? (<DndButton onClick={this.props.onSave} buttonType="save" dataType={this.props.saveAction} />) : null;
-        const saveNewButton = this.props.onSaveNew ? (<DndButton onClick={this.props.onSaveNew} buttonType="savenew" dataType={this.props.saveAction} />) : null;
+        const cancelButton = this.renderButton(this.props.onCancel, 'cancel', this.props.cancelAction, this.props.name);
+        const deleteButton = this.renderButton(this.props.onDelete, 'delete', this.props.deleteAction, this.props.name);
+        const resetButton = this.renderButton(this.props.onReset, 'reset', this.props.resetAction, this.props.name);
+        const saveButton = this.renderButton(this.props.onSave, 'save', this.props.saveAction, this.props.name);
+        const saveNewButton = this.renderButton(this.props.onSaveNew, 'savenew', this.props.saveAction, this.props.name);
         return (
             <div className={wrapperClass}>
                 <div className="pull-right">
@@ -44,7 +58,8 @@ DndDataEntryButtonBar.propTypes = {
     cancelAction: PropTypes.string,
     deleteAction: PropTypes.string,
     resetAction: PropTypes.string,
-    saveAction: PropTypes.string
+    saveAction: PropTypes.string,
+    name: PropTypes.string
 };
 
 export default DndDataEntryButtonBar;

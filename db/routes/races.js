@@ -94,6 +94,71 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         var tmp = [req.params.id];
                         return callback(null, tmp);
                     });
+                },
+                function deleteProficiencyGroupItems(resObj) {
+                    sql = 'SELECT * FROM adm_core_item';
+                    sql += ' WHERE id IN (';
+                    sql += '    SELECT "itemGroupId" FROM adm_link_item_group';
+                    sql += '    WHERE "referenceId" = $1';
+                    sql += ')';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteProficiencyGroupItemLinks(resObj) {
+                    sql = 'DELETE FROM adm_link_item_group_assignment';
+                    sql += ' WHERE "itemGroupId" IN (';
+                    sql += '    SELECT "itemGroupId" FROM adm_link_item_group';
+                    sql += '    WHERE "referenceId" = $1';
+                    sql += ')';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteProficiencyGroup(resObj) {
+                    sql = 'DELETE FROM adm_def_item_group';
+                    sql += ' WHERE "itemGroupId" IN (';
+                    sql += '    SELECT "itemGroupId" FROM adm_link_item_group';
+                    sql += '    WHERE "referenceId" = $1';
+                    sql += ')';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteProficiencyGroupLinks(resObj) {
+                    sql = 'DELETE FROM adm_link_item_group';
+                    sql += ' WHERE "referenceId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
                 }
             ], function(error, result) {
                 if (error) {
@@ -337,9 +402,149 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         if (tmp.race.vitals && tmp.race.vital.height && tmp.race.vital.height.base != 0) {
                             tmp.race.needsDice = true;
                         }
+                        tmp.race.hasProficiencies = false;
+                        if (tmp.race.proficiencyGroups && tmp.race.proficiencyGroups.length != 0) {
+                            tmp.race.hasProficiencies = true;
+                        }
                         tmp.race.id = results[0].raceId;
                         return callback(null, tmp);
                     });
+                },
+                function insertProficiencyGroupItem(resObj, callback) {
+                    if (tmp.race.hasProficiencies) {
+                        vals = [itemtypes.TYPE.ITEM_GROUP];
+                        results = [];
+                        first = 2;
+                        second = 3;
+                        sql = 'INSERT INTO adm_core_item';
+                        sql += ' ("itemTypeId", "itemName", "resourceId")';
+                        sql += ' VALUES ';
+                        for (var e = 0; e < resObj.race.proficiencyGroups.length; e++) {
+                            if (e != 0) {
+                                sql += ', ';
+                            }
+                            sql += ' ($1, ' + first.toString() + ', $' + second.toString() + ')';
+                            first = first + 2;
+                            second = second + 2;
+                            vals.push(resObj.race.name + ' proficiency groups ' + e.toString());
+                            vals.push(resObj.race.resource.id);
+                        }
+                        sql += ' returning id AS "itemGroupId";';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var t = 0; t < results.length; t++) {
+                                resObj.race.proficiencyGroups[t].id = results[t].itemGroupId;
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertProficiencyGroups(resObj, callback) {
+                    if (tmp.race.hasProficiencies) {
+                        vals = [];
+                        results = [];
+                        sql = 'INSERT INTO adm_def_item_group';
+                        sql += ' ("itemGroupId", "mechanicTypeId", "selectCount")';
+                        sql += ' VALUES';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        for (var i = 0; i < resObj.background.proficiencyGroups.length; i++) {
+                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                            if (i < resObj.background.proficiencyGroups.length - 1) {
+                                sql += ', ';
+                            }
+                            vals.push(resObj.background.proficiencyGroups[i].id);
+                            vals.push(resObj.background.proficiencyGroups[i].mechanic.id);
+                            vals.push(resObj.background.proficiencyGroups[i].selectCount);
+                            first = first + 3;
+                            second = second + 3;
+                            third = third + 3;
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertProficiencies(resObj, callback) {
+                    if (tmp.race.hasProficiencies) {
+                        vals = [];
+                        results = [];
+                        sql = 'INSERT INTO adm_link_item_group_assignment';
+                        sql += ' ("itemGroupId", "itemId")';
+                        sql += ' VALUES';
+                        first = 1;
+                        second = 2;
+                        var addComma = false;
+                        for (var i = 0; i < resObj.background.proficiencyGroups.length; i++) {
+                            if (resObj.background.proficiencyGroups[i].proficiencies.length != 0) {
+                                for (var j = 0; j < resObj.background.proficiencyGroups[i].proficiencies.length; j++) {
+                                    if (addComma) {
+                                        sql += ', ';
+                                    }
+                                    sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
+                                    vals.push(resObj.background.proficiencyGroups[i].id);
+                                    vals.push(resObj.background.proficiencyGroups[i].proficiencies[j].id);
+                                    first = first + 2;
+                                    second = second + 2;
+                                    addComma = true;
+                                }
+                            } else {
+                                if (addComma) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
+                                vals.push(resObj.background.proficiencyGroups[i].id);
+                                vals.push(resObj.background.proficiencyGroups[i].category.id);
+                                first = first + 2;
+                                second = second + 2;
+                                addComma = true;
+                            }
+                        }
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertProficiencyGroupLinks(resObj, callback) {
+                    if (tmp.race.hasProficiencies) {
+                        vals = [resObj.race.id];
+                        results = [];
+                        sql = 'INSERT INTO adm_link_item_group';
+                        sql += ' ("referenceId", "itemGroupId")';
+                        sql += ' VALUES';
+                        first = 2;
+                        for (var e = 0; e < resObj.background.proficiencyGroups.length; e++) {
+                            sql += ' ($1, $' + first.toString() + ')';
+                            if (e < resObj.background.proficiencyGroups.length - 1) {
+                                sql += ', ';
+                            }
+                            vals.push(resObj.background.proficiencyGroups[e].id);
+                            first = first++;
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 },
                 function insertDice(resObj, callback) {
                     if (resObj.race.needsDice) {
@@ -706,7 +911,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             });
             query.on('end', function() {
                 done();
-                console.log(results.length);
                 for (var q = 0; q < results.length; q++) {
                     if (results[q].vitals == null) {
                         results[q].vitals = {
@@ -719,6 +923,9 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                                 dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
                             }
                         };
+                    }
+                    if (results[q].proficiencyGroups == null) {
+                        results[q].proficiencyGroups = [];
                     }
                 }
                 return res.json(results);

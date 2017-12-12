@@ -41,29 +41,26 @@ export function setObjectValue(obj, prop, val, action) {
 
 export const formState = {
     setFieldFromTargetName: function(event) {
-        if (event.target) {
-            if (event.target.id) {
-                return event.target.id;
-            } else {
-                if (event.target.name !== undefined) {
-                    return event.target.name;
-                } else if (event.target.parentElement.name) {
-                    return event.target.parentElement.name;
-                } else if (event.target.parentElement.parentElement.name) {
-                    return event.target.parentElement.parentElement.name;
+        if (event.target.getAttribute('name')) {
+            return event.target.getAttribute('name');
+        } else {
+            let testObject = event.target.parentElement;
+            let assigned = false;
+            while (!assigned) {
+                if (testObject && testObject.getAttribute('name')) {
+                    assigned = true;
+                    return testObject.getAttribute('name');
                 } else {
-                    return undefined;
+                    testObject = testObject.parentElement;
                 }
             }
-        } else {
-            return undefined;
         }
     },
-    setDataTypeFromTarget: function(target) {
-        if (target.getAttribute('dataType')) {
-            return target.getAttribute('dataType');
+    setDataTypeFromTarget: function(event) {
+        if (event.target.getAttribute('dataType')) {
+            return event.target.getAttribute('dataType');
         } else {
-            let testObject = target.parentElement;
+            let testObject = event.target.parentElement;
             let assigned = false;
             while (!assigned) {
                 if (testObject && testObject.getAttribute('dataType')) {
@@ -77,7 +74,7 @@ export const formState = {
     },
     chartType: function(event, obj, picklists) {
         let chartType = obj;
-        let dataType = event.target.getAttribute('dataType');
+        let dataType = formState.setDataTypeFromTarget(event);//event.target.getAttribute('dataType');
         switch (dataType) {
             case util.dataTypes.picklist.CHART_TYPE:
                 chartType = util.common.picklists.getPicklistItem(picklists, event.target.value);
@@ -88,8 +85,8 @@ export const formState = {
     },
     chart: function(event, obj, refObj, picklists) {
         let chart = util.common.formState.standard(event, obj, picklists);
-        let field = event.target.name;
-        let dataType = event.target.getAttribute('dataType');
+        let field = formState.setFieldFromTargetName(event);//event.target.name;
+        let dataType = formState.setDataTypeFromTarget(event);//event.target.getAttribute('dataType');
         let newRenderedValue = '';
         let newDiceRollValue = {};
         let changedEntryId = null;
@@ -272,7 +269,7 @@ export const formState = {
             }
         } else {
             //this controls button clicks and div.innerHTML stuff
-            let dataType = formState.setDataTypeFromTarget(event.target);
+            let dataType = formState.setDataTypeFromTarget(event);
             let recordType = event.target.id.split('_')[1];
             let recordId = parseInt(event.target.id.split('_')[0]);
             let recordField = event.target.id.split('_')[2];
@@ -344,7 +341,7 @@ export const formState = {
     },
     arrayProperty: function(event, obj, refObj) {
         let retVal = obj;
-        let dataType = formState.setDataTypeFromTarget(event.target);
+        let dataType = formState.setDataTypeFromTarget(event);
         let removeIndex = -1;
         let changedIndex = -1;
         let otherChangedIndex = -1;
@@ -395,10 +392,65 @@ export const formState = {
         }
         return retVal;
     },
+    proficiencyGroup: function(event, obj, refObj, picklists, proficiencies) {
+        let retVal = obj;
+        let field = formState.setFieldFromTargetName(event);
+        let isAssign = false;
+        if (field.split('Unassigned').length > 1) {
+            field = field.replace('Unassigned', '');
+            isAssign = true;
+        }
+        let dataType = formState.setDataTypeFromTarget(event);
+        let newSelectedValue = {};
+        let removeThisId = event.target.value;
+        let removeThisIndex = -1;
+        let referencePicklistItem = util.common.picklists.getPicklistItem(picklists, removeThisId);
+        delete retVal.resetProficiencyGroup;
+        if (retVal[field]) {
+            switch (dataType) {
+                case util.dataTypes.array.PROFICIENCIES:
+                    referencePicklistItem = util.common.picklists.getPicklistItemFromSinglePicklist(proficiencies, event.target.value);
+                    if (isAssign) {
+                        util.common.setObjectValue(retVal, field, referencePicklistItem, 'add');
+                    } else {
+                        for (let b = 0; b < retVal[field].length; b++) {
+                            if (dataType == util.dataTypes.array.PROFICIENCIES) {
+                                if (retVal[field][b].id == referencePicklistItem.id) {
+                                    removeThisIndex = b;
+                                    break;
+                                }
+                            }
+                        }
+                        util.common.setObjectValue(retVal, field, removeThisIndex, 'remove');
+                    }
+                    break;
+                case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
+                case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
+                    newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                    newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                    util.common.setObjectValue(retVal, field, newSelectedValue);
+                    break;
+                case util.dataTypes.action.PROFICIENCY_GROUP.ADD:
+                    retVal[field].push(refObj);
+                    retVal.resetProficiencyGroup = true;
+                    break;
+                case util.dataTypes.action.PROFICIENCY_GROUP.REMOVE:
+                    break;
+                case util.dataTypes.action.PROFICIENCY_GROUP.RESET:
+                    retVal.resetProficiencyGroup = true;
+                    break;
+                case util.dataTypes.action.PROFICIENCY_GROUP.SELECT:
+                    break;
+                default:
+                    util.common.setObjectValue(retVal, field, event.target.value);
+            }
+        }
+        return retVal;
+    },
     standard: function(event, obj, picklists) {
         let retVal = obj;
         let field = formState.setFieldFromTargetName(event);
-        let dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
+        let dataType = formState.setDataTypeFromTarget(event);//event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         let newSelectedValue = {};
         let newRenderedValue = '';
         let newDiceRollValue = {};

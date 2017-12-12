@@ -6,6 +6,7 @@ import DndCheckboxPicklist from '../../common/inputs/DndCheckboxPicklist';
 import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
 import DndManageTextBoxList from '../../common/objectManagement/DndManageTextBoxList';
+import DndManageItemGroups from '../../common/objectManagement/DndManageItemGroups';
 
 class RaceForm extends React.Component {
     constructor(props) {
@@ -27,13 +28,14 @@ class RaceForm extends React.Component {
             return (race.id != raceItem.id) && (raceItem.parentId == 0);
         });
         const picklists = this.props.picklists;
+        const proficiencies = this.props.proficiencies;
         const sizes = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.SIZE);
         const monsterTypes = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.MONSTER_TYPE);
         const monsterTags = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.MONSTER_TAG);
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={3} id="uncontrolled-tab-example" className="tab-pane-double-row-of-tabs">
+                    <Tabs defaultActiveKey={5} id="uncontrolled-tab-example" className="tab-pane-double-row-of-tabs">
                         <Tab eventKey={1} title="Size/Type">
                             <div>&nbsp;</div>
                             <DndUniversalInput
@@ -223,7 +225,19 @@ class RaceForm extends React.Component {
                         </Tab>
                         <Tab eventKey={5} title="Proficiencies">
                             <div>&nbsp;</div>
-                        
+                            <DndManageItemGroups
+                                itemGroups={race.proficiencyGroups}
+                                picklists={picklists}
+                                items={proficiencies}
+                                editItemGroup={this.props.editProficiencyGroup}
+                                categoryTypeId={util.itemTypes.TYPES.PROFICIENCY_CATEGORY}
+                                onChange={this.props.onChangeProficiencyGroup}
+                                title="Proficiency"
+                                toggleFieldName="proficiencies"
+                                actionProperty="PROFICIENCY_GROUP"
+                                buttonClickFieldName="proficiencyGroups"
+                                groupListItemTextFormatFunction={util.format.forDisplay.obj.proficiencyGroup}
+                                />
                         </Tab>
                         <Tab eventKey={6} title="Mechanics">
                             <div>&nbsp;</div>
@@ -233,13 +247,21 @@ class RaceForm extends React.Component {
                             <div>&nbsp;</div>
                         
                         </Tab>
+                        <Tab eventKey={8} title="Charts">
+                            <div>&nbsp;</div>
+                            NEED TO ADD SELECTION CHART TYPE (for Dragonborn species)
+                        </Tab>
+                        <Tab eventKey={9} title="Spellcasting">
+                            <div>&nbsp;</div>
+                        
+                        </Tab>
                     </Tabs>
                 </form>
             </div>
         );
     }
 }
-/**/
+
 RaceForm.propTypes = {
     race: PropTypes.object.isRequired,
     races: PropTypes.array.isRequired,
@@ -248,9 +270,12 @@ RaceForm.propTypes = {
     onEdit: PropTypes.func,
     onViewDetails: PropTypes.func,
     saving: PropTypes.bool,
-    picklists: PropTypes.array,
+    picklists: PropTypes.array.isRequired,
+    proficiencies: PropTypes.array.isRequired,
     isSubrace: PropTypes.bool.isRequired,
-    onChangeSubrace: PropTypes.func.isRequired
+    onChangeSubrace: PropTypes.func.isRequired,
+    editProficiencyGroup: PropTypes.object.isRequired,
+    onChangeProficiencyGroup: PropTypes.func.isRequired
 };
 
 export default RaceForm;

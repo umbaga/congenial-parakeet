@@ -5,7 +5,7 @@ import DndUniversalInput from '../../common/inputs/DndUniversalInput';
 import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
 import DndManageAssignedItems from '../../common/objectManagement/DndManageAssignedItems';
-import DndManageItemGroups from '../../common/objectManagement/DndManageItemGroups';
+import _DndManageItemGroups from '../../common/objectManagement/_DndManageItemGroups';
 import DndManageCharts from '../../common/objectManagement/DndManageCharts';
 import DndListItemButtonBar from '../../common/buttons/DndListItemButtonBar';
 
@@ -118,7 +118,7 @@ class BackgroundForm extends React.Component {
                         </Tab>
                         <Tab eventKey={3} title="Proficiencies">
                             <div>&nbsp;</div>
-                            <DndManageItemGroups
+                            <_DndManageItemGroups
                                 itemGroups={this.props.background.proficiencyGroups}
                                 onAddItemGroup={this.props.onAddProficiencyGroup}
                                 onChange={this.props.onChange}

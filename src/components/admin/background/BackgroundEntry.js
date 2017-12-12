@@ -22,7 +22,8 @@ class BackgroundEntry extends React.Component {
             variant: Object.assign({}, util.objectModel.BACKGROUND_VARIANT),
             selectedChartId: 0,
             saving: false,
-            selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT)
+            selectedEquipment: Object.assign({}, util.objectModel.EQUIPMENT),
+            selectedChartType: Object.assign({}, util.objectModel.CHART_TYPE)
         };
         this.cancelBackground = this.cancelBackground.bind(this);
         this.deleteBackground = this.deleteBackground.bind(this);
