@@ -137,6 +137,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ', description.description';
             sql += ', spcomp."requireDescription"';
             sql += ', itemorder."orderIndex"';
+            sql += ', ability."isPrimary"';
             sql += ') x ORDER BY i."itemName")) AS items';
             sql += ' FROM adm_core_type t';
             sql += ' LEFT OUTER JOIN adm_core_item i ON i."itemTypeId" = t.id';
@@ -148,6 +149,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ' LEFT OUTER JOIN adm_link_type_picklist lnk ON lnk."picklistId" = t.id';
             sql += ' LEFT OUTER JOIN adm_core_type typ ON typ.id = lnk."typeId"';
             sql += ' LEFT OUTER JOIN adm_def_picklist_item itemorder ON itemorder."picklistItemId" = i.id';
+            sql += ' LEFT OUTER JOIN adm_def_ability_score ability ON ability."abilityScoreId" = i.id';
             sql += ' WHERE (t."isPicklist" = true) OR (t."isChart" = false AND t."isDescription" = false) OR (t."isTypePicklist" = true)';
             sql += ' GROUP BY t.id';
             sql += ' ORDER BY t."typeName"';

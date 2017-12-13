@@ -95,7 +95,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, tmp);
                     });
                 },
-                function deleteProficiencyGroupItems(resObj) {
+                function deleteProficiencyGroupItems(resObj, callback) {
                     sql = 'SELECT * FROM adm_core_item';
                     sql += ' WHERE id IN (';
                     sql += '    SELECT "itemGroupId" FROM adm_link_item_group';
@@ -112,7 +112,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, tmp);
                     });
                 },
-                function deleteProficiencyGroupItemLinks(resObj) {
+                function deleteProficiencyGroupItemLinks(resObj, callback) {
                     sql = 'DELETE FROM adm_link_item_group_assignment';
                     sql += ' WHERE "itemGroupId" IN (';
                     sql += '    SELECT "itemGroupId" FROM adm_link_item_group';
@@ -129,7 +129,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, tmp);
                     });
                 },
-                function deleteProficiencyGroup(resObj) {
+                function deleteProficiencyGroup(resObj, callback) {
                     sql = 'DELETE FROM adm_def_item_group';
                     sql += ' WHERE "itemGroupId" IN (';
                     sql += '    SELECT "itemGroupId" FROM adm_link_item_group';
@@ -146,8 +146,22 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, tmp);
                     });
                 },
-                function deleteProficiencyGroupLinks(resObj) {
+                function deleteProficiencyGroupLinks(resObj, callback) {
                     sql = 'DELETE FROM adm_link_item_group';
+                    sql += ' WHERE "referenceId" = $1';
+                    vals = [req.params.id];
+                    var query = client.query(new pg.Query(sql, vals));
+                    query.on('row', function(row) {
+                        results.push(row);
+                    });
+                    query.on('end', function() {
+                        done();
+                        var tmp = [req.params.id];
+                        return callback(null, tmp);
+                    });
+                },
+                function deleteMechanics(resObj, callback) {
+                    sql = 'DELETE FROM adm_link_mechanic';
                     sql += ' WHERE "referenceId" = $1';
                     vals = [req.params.id];
                     var query = client.query(new pg.Query(sql, vals));
@@ -405,6 +419,10 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         tmp.race.hasProficiencies = false;
                         if (tmp.race.proficiencyGroups && tmp.race.proficiencyGroups.length != 0) {
                             tmp.race.hasProficiencies = true;
+                        }
+                        tmp.race.hasMechanics = false;
+                        if (tmp.race.mechanics && tmp.race.mechanics.base && tmp.race.mechanics.base.length != 0) {
+                            tmp.race.hasMechanics = true;
                         }
                         tmp.race.id = results[0].raceId;
                         return callback(null, tmp);
@@ -850,6 +868,47 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     } else {
                         return callback(null, resObj);
                     }
+                },
+                function insertMechanics(resObj, callback) {
+                    if (resObj.race.hasMechanics) {
+                        results = [];
+                        vals = [resObj.race.id];
+                        sql = 'INSERT INTO adm_link_mechanic';
+                        sql += ' ("referenceId", "targetId", "typeId", "value", "diceId", "valueObjectId")';
+                        sql += ' VALUES ';
+                        first = 2;
+                        second = 3;
+                        third = 4;
+                        fourth = 5;
+                        fifth = 6;
+                        for (var e = 0; e < resObj.race.mechanics.base.length; e++) {
+                            if (e != 0) {
+                                sql += ', ';
+                            }
+                            sql += ' ($1, $' + first.toString() + ', $' + second.toString() + ', $' + third.toString();
+                            sql += ', $' + fourth.toString() + ', $' + fifth.toString() + ')';
+                            first = first + 5;
+                            second = second + 5;
+                            third = third + 5;
+                            fourth = fourth + 5;
+                            fifth = fifth + 5;
+                            vals.push(resObj.race.mechanics.base[e].target.id);
+                            vals.push(resObj.race.mechanics.base[e].type.id);
+                            vals.push(resObj.race.mechanics.base[e].value);
+                            vals.push(resObj.race.mechanics.base[e].dice.id);
+                            vals.push(resObj.race.mechanics.base[e].valueObject.id);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 }
             ], function(error, result) {
                 if (error) {
@@ -891,6 +950,10 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ') AS "abilityScores"';
             sql += ', get_race_vitals(i.id) AS "vitals"';
             sql += ', get_proficiency_groups(i.id) AS "proficiencyGroups"';
+            sql += ', json_build_object(';
+            sql += '    \'base\', get_base_mechanics(i.id)';
+            sql += ') AS "mechanics"';
+            sql += ', get_race_spellcasting(i.id) AS "spellcasting"';
             sql += ' FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_race race ON race."raceId" = i.id';
             sql += ' LEFT OUTER JOIN adm_def_race_ability_score ability ON ability."raceId" = i.id';

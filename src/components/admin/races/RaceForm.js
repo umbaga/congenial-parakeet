@@ -33,10 +33,13 @@ class RaceForm extends React.Component {
         const sizes = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.SIZE);
         const monsterTypes = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.MONSTER_TYPE);
         const monsterTags = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.MONSTER_TAG);
+        const abilityScores = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.ABILITY_SCORE).filter(function(abilityScore) {
+            return abilityScore.isPrimary;
+        });
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={6} id="uncontrolled-tab-example" className="tab-pane-double-row-of-tabs">
+                    <Tabs defaultActiveKey={5} id="uncontrolled-tab-example" className="tab-pane-double-row-of-tabs">
                         <Tab eventKey={1} title="Size/Type">
                             <div>&nbsp;</div>
                             <DndUniversalInput
@@ -224,7 +227,18 @@ class RaceForm extends React.Component {
                                     />
                             </div>
                         </Tab>
-                        <Tab eventKey={5} title="Proficiencies">
+                        <Tab eventKey={5} title="Spellcasting">
+                            <div>&nbsp;</div>
+                            <DndInput
+                                label="Spellcasting Ability"
+                                name="race.spellcasting.abilityScore"
+                                valueObj={race.spellcasting.abilityScore}
+                                onChange={this.props.onChange}
+                                dataType={util.dataTypes.picklist.ABILITY_SCORE}
+                                picklist={abilityScores}
+                                />
+                        </Tab>
+                        <Tab eventKey={6} title="Proficiencies">
                             <div>&nbsp;</div>
                             <DndManageItemGroups
                                 itemGroups={race.proficiencyGroups}
@@ -240,7 +254,7 @@ class RaceForm extends React.Component {
                                 groupListItemTextFormatFunction={util.format.forDisplay.obj.proficiencyGroup}
                                 />
                         </Tab>
-                        <Tab eventKey={6} title="Mechanics">
+                        <Tab eventKey={7} title="Mechanics">
                             <div>&nbsp;</div>
                             <DndManageMechanics
                                 onChange={this.props.onChangeMechanics}
@@ -249,17 +263,13 @@ class RaceForm extends React.Component {
                                 editMechanic={this.props.editMechanic}
                                 />
                         </Tab>
-                        <Tab eventKey={7} title="Descriptions">
+                        <Tab eventKey={8} title="Descriptions">
                             <div>&nbsp;</div>
                         
                         </Tab>
-                        <Tab eventKey={8} title="Charts">
+                        <Tab eventKey={9} title="Charts">
                             <div>&nbsp;</div>
                             NEED TO ADD SELECTION CHART TYPE (for Dragonborn species)
-                        </Tab>
-                        <Tab eventKey={9} title="Spellcasting">
-                            <div>&nbsp;</div>
-                        
                         </Tab>
                     </Tabs>
                 </form>

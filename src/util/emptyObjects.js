@@ -231,6 +231,28 @@ export const RACE = {
     resource: {id: 2, name: 'Player\'s Handbook'},
     senses: [],
     size: {id: 0, name: 'Medium'},
+    spellcasting: {
+        abilityScore: {id: 0, name: ''},
+        assignment: [
+            {
+                castingCount: 0,
+                characterLevel: 0,
+                restType: {id: 0, name: ''},
+                spell: {id: 0, name: ''}
+                
+            }
+        ],
+        selection: [
+            {
+                castingCount: 0,
+                characterLevel: 0,
+                restType: {id: 0, name: ''},
+                school: {id: 0, name: ''},
+                selectCount: 0,
+                spellLevel: 0
+            }
+        ]
+    },
     tags: [],
     type: {id: 0, name: 'Humanoid'},
     vitals: {
