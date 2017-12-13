@@ -31,7 +31,7 @@ class ProficiencyForm extends React.Component {
                             name="abilityScore"
                             label="Assoicated Ability Score"
                             dataType={util.dataTypes.picklist.ABILITY_SCORE}
-                            valueObj={this.props.proficiency.abilityScore}
+                            value={this.props.proficiency.abilityScore}
                             onChange={this.props.onChange}
                             picklist={abilityScorePicklist} />
                     </div>
@@ -45,7 +45,7 @@ class ProficiencyForm extends React.Component {
                             name="language.rarity"
                             label="Rarity"
                             dataType={util.dataTypes.picklist.LANGUAGE_RARITY}
-                            valueObj={this.props.proficiency.language.rarity}
+                            value={this.props.proficiency.language.rarity}
                             onChange={this.props.onChange}
                             picklist={languageRarityPicklist} />
                     </div>
@@ -54,7 +54,7 @@ class ProficiencyForm extends React.Component {
                             name="language.script"
                             label="Script"
                             dataType={util.dataTypes.picklist.LANGUAGE_SCRIPT}
-                            valueObj={this.props.proficiency.language.script}
+                            value={this.props.proficiency.language.script}
                             onChange={this.props.onChange}
                             picklist={langaugeScriptPicklist} />
                     </div>
@@ -76,7 +76,7 @@ class ProficiencyForm extends React.Component {
                                 name="category"
                                 label="Category"
                                 dataType={util.dataTypes.picklist.PROFICIENCY_CATEGORY}
-                                valueObj={this.props.proficiency.category}
+                                value={this.props.proficiency.category}
                                 onChange={this.props.onChange}
                                 picklist={categoryPicklist} />
                         </div>

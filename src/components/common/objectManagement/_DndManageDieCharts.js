@@ -162,7 +162,7 @@ class _DndManageDieCharts extends React.Component {
                             name="dieRoll"
                             label="Die Roll"
                             dataType={util.dataTypes.special.DICE_ROLL}
-                            valueObj={chart.dieRoll}
+                            value={chart.dieRoll}
                             onChange={this.props.onChangeChart}
                             />
                     </div>

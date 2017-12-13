@@ -39,13 +39,13 @@ class DndCheckboxPicklist extends React.Component {
                         type="checkbox"
                         name={this.props.checkboxName}
                         ref={this.props.checkboxName}
-                        checked={this.props.checked}
+                        value={this.props.checked}
                         datatype={util.dataTypes.bool.BOOL}
                         onChange={this.props.onChange}
                         className="checkbox-inline" />
                 </span>
                 <select
-                    value={this.props.valueObj.id}
+                    value={this.props.value.id}
                     name={this.props.picklistName}
                     ref={this.props.picklistName}
                     className="form-control"
@@ -88,7 +88,7 @@ DndCheckboxPicklist.propTypes = {
     picklistName: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     picklist: PropTypes.array,
-    valueObj: PropTypes.object,
+    value: PropTypes.object,
     onClick: PropTypes.func,
     placeholder: PropTypes.string,
     checkboxPlaceholder: PropTypes.string

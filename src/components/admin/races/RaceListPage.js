@@ -119,10 +119,7 @@ class RaceListPage extends React.Component {
             </div>
         );
     }
-}
-/*
-                    */
-                            
+}                            
                             
 RaceListPage.propTypes = {
     races: PropTypes.array.isRequired,
@@ -130,7 +127,8 @@ RaceListPage.propTypes = {
     children: PropTypes.object,
     picklists: PropTypes.array,
     proficiencies: PropTypes.array,
-    spells: PropTypes.array
+    spells: PropTypes.array,
+    spelllists: PropTypes.array
 };
 
 function mapStateToProps(state) {

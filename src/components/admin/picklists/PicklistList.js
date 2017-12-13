@@ -2,24 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import PicklistListItem from './PicklistListItem';
 
-
 const PicklistList = ({picklists, openModal, selectedId, changeSelectedId, onEdit}) => {
     return (
         <tbody>
-            {picklists.map(picklist =>
-                           <PicklistListItem
-                                key={picklist.id}
-                                picklist={picklist}
-                                openModal={openModal}
-                                selectedId={selectedId}
-                                changeSelectedId={changeSelectedId}
-                                onEdit={onEdit}
-                               />
-                          )}
+            {picklists.map(function(picklist, idx) {
+                return (
+                    <PicklistListItem
+                        key={idx}
+                        picklist={picklist}
+                        openModal={openModal}
+                        selectedId={selectedId}
+                        changeSelectedId={changeSelectedId}
+                        onEdit={onEdit}
+                        />
+                );
+            }.bind(this))}
         </tbody>
     );
 };
-
+/*
+            {picklists.map(picklist =>
+                          )}*/
 PicklistList.propTypes = {
     picklists: PropTypes.array.isRequired,
     openModal: PropTypes.func.isRequired,

@@ -43,7 +43,7 @@ class DndInput extends React.Component {
                                     type="checkbox"
                                     name={this.props.name}
                                     ref={this.props.name}
-                                    checked={this.props.checked}
+                                    checked={this.props.value}
                                     datatype={this.props.dataType}
                                     onChange={this.props.onChange}
                                     className="form-control checkbox-inline" />);
@@ -104,7 +104,7 @@ class DndInput extends React.Component {
                                     name={this.props.name}
                                     ref={this.props.name}
                                     placeholder={this.props.placeholder}
-                                    value={this.props.valueObj.rendered}
+                                    value={this.props.value.rendered}
                                     datatype={this.props.dataType}
                                     onKeyUp={this.props.onChange}
                                     onChange={this.props.onChange}
@@ -141,7 +141,7 @@ class DndInput extends React.Component {
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
                 placeholderText = (this.props.placeholder && this.props.placeholder.length != 0) ? this.props.placeholder : 'SELECT ONE';
                 primaryInput = (<select
-                                    value={this.props.valueObj.id}
+                                    value={this.props.value.id}
                                     name={this.props.name}
                                     ref={this.props.name}
                                     className="form-control"
@@ -165,7 +165,7 @@ class DndInput extends React.Component {
                         onAddItem={this.props.onChange}
                         onRemoveItem={this.props.onChange}
                         unselectedItemArray={this.props.picklist}
-                        selectedItemArray={this.props.valueArray}
+                        selectedItemArray={this.props.value}
                         name={this.props.name}
                         selectBoxSize={size}
                         />
@@ -180,7 +180,7 @@ class DndInput extends React.Component {
                                 name={this.props.name + '.normal'}
                                 ref={this.props.name + '.normal'}
                                 placeholder={this.props.placeholder}
-                                value={this.props.valueObj.normal}
+                                value={this.props.value.normal}
                                 datatype={this.props.dataType}
                                 onChange={this.props.onChange}
                                 className="form-control"/>
@@ -191,7 +191,7 @@ class DndInput extends React.Component {
                                 name={this.props.name + '.maximum'}
                                 ref={this.props.name + '.maximum'}
                                 placeholder={this.props.placeholder}
-                                value={this.props.valueObj.maximum}
+                                value={this.props.value.maximum}
                                 datatype={this.props.dataType}
                                 onChange={this.props.onChange}
                                 className="form-control"/>
@@ -237,13 +237,13 @@ class DndInput extends React.Component {
                             type="text"
                             name={this.props.name + '.dice'}
                             ref={this.props.name + '.dice'}
-                            value={this.props.valueObj.dice.rendered}
+                            value={this.props.value.dice.rendered}
                             datatype={util.dataTypes.special.DICE_ROLL}
                             onKeyUp={this.props.onChange}
                             onChange={this.props.onChange}
                             className="form-control" />
                         <select
-                            value={this.props.valueObj.type.id}
+                            value={this.props.value.type.id}
                             name={this.props.name + '.type'}
                             ref={this.props.name + '.type'}
                             className="form-control"
@@ -296,7 +296,6 @@ DndInput.propTypes = {
     numberMinVal: PropTypes.number,
     numberMaxVal: PropTypes.number,
     numberStepVal: PropTypes.number,
-    checked: PropTypes.bool,
     dataType: PropTypes.string.isRequired,
     inputCols: PropTypes.number,
     label: PropTypes.string.isRequired,
@@ -306,14 +305,22 @@ DndInput.propTypes = {
     picklist: PropTypes.array,
     placeholder: PropTypes.string,
     isReadOnly: PropTypes.bool,
-    value: PropTypes.string,
-    valueArray: PropTypes.array,
-    valueObj: PropTypes.object,
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+        PropTypes.object,
+        PropTypes.array,
+        PropTypes.bool
+    ]).isRequired,
     buttonType: PropTypes.string,
     buttonOnClick: PropTypes.func,
     bsButtonStyle: PropTypes.string,
     hideSelectOneOption: PropTypes.bool,
     selectBoxSize: PropTypes.number
 };
-
+/*
+    checked: PropTypes.bool,
+    value: PropTypes.string,
+    valueArray: PropTypes.array,
+    valueObj: PropTypes.object,*/
 export default DndInput;

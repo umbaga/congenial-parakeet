@@ -23,7 +23,7 @@ class _DndManageItemGroups extends React.Component {
                 dataType={util.dataTypes.picklist.PROFICIENCY_CATEGORY}
                 picklist={picklist}
                 onChange={this.props.onChangeItemGroup}
-                valueObj={this.props.itemGroup.category}
+                value={this.props.itemGroup.category}
                 />
         ) : null;
     }
@@ -37,7 +37,7 @@ class _DndManageItemGroups extends React.Component {
                 label="Selection Count"
                 dataType={util.dataTypes.number.INT}
                 onChange={this.props.onChangeItemGroup}
-                value={this.props.itemGroup.selectCount.toString()}
+                value={this.props.itemGroup.selectCount}
                 />
             );
         }
@@ -53,7 +53,7 @@ class _DndManageItemGroups extends React.Component {
                         name="proficiencies"
                         label={util.format.forDisplay.string.renderSingularPlural(this.props.title, 2)}
                         dataType={util.dataTypes.array.PROFICIENCIES}
-                        valueArray={this.props.itemGroup.proficiencies}
+                        value={this.props.itemGroup.proficiencies}
                         onChange={this.props.onChangeItemGroup}
                         picklist={picklist} />
                 );
@@ -114,7 +114,7 @@ class _DndManageItemGroups extends React.Component {
                         dataType={util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC}
                         picklist={selectionMechanics}
                         onChange={this.props.onChangeItemGroup}
-                        valueObj={this.props.itemGroup.mechanic}
+                        value={this.props.itemGroup.mechanic}
                         />
                     {this.renderSelectCount()}
                     {this.renderCategory(categories)}

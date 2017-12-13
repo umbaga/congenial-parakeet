@@ -81,7 +81,7 @@ class SpellForm extends React.Component {
                             <DndInput
                                 label="Spell Level"
                                 name="level"
-                                value={spell.level.toString()}
+                                value={spell.level}
                                 onChange={this.props.onChange}
                                 dataType={util.dataTypes.number.SPELL_LEVEL}
                                 hideSelectOneOption
@@ -89,7 +89,7 @@ class SpellForm extends React.Component {
                             <DndInput
                                 label="School of Magic"
                                 name="school"
-                                valueObj={spell.school}
+                                value={spell.school}
                                 onChange={this.props.onChange}
                                 dataType={util.dataTypes.picklist.SCHOOL_OF_MAGIC}
                                 picklist={schools}
@@ -98,7 +98,7 @@ class SpellForm extends React.Component {
                                 label="Is Ritual"
                                 name="isRitual"
                                 labelCols={4}
-                                checked={spell.isRitual}
+                                value={spell.isRitual}
                                 onChange={this.props.onChange}
                                 dataType={util.dataTypes.bool.BOOL}
                                 />
@@ -108,7 +108,7 @@ class SpellForm extends React.Component {
                                 name="castingTime"
                                 onChange={this.props.onChange}
                                 picklist={castingTimes}
-                                valueObj={spell.castingTime}
+                                value={spell.castingTime}
                                 onSaveButtonClick={this.props.saveNewCastingTime}
                                 />
                             <DndPicklistAddSelect
@@ -117,14 +117,14 @@ class SpellForm extends React.Component {
                                 name="range"
                                 onChange={this.props.onChange}
                                 picklist={ranges}
-                                valueObj={spell.range}
+                                value={spell.range}
                                 onSaveButtonClick={this.props.saveNewRange}
                                 />
                             <DndCheckboxList
                                 dataType={util.dataTypes.picklist.SPELL_COMPONENT}
                                 label="Components"
                                 name="components"
-                                valueArray={spell.components}
+                                value={spell.components}
                                 onChange={this.props.onChange}
                                 picklist={components}
                                 textBoxKey="description"
@@ -135,7 +135,7 @@ class SpellForm extends React.Component {
                                 name="duration"
                                 onChange={this.props.onChange}
                                 picklist={durations}
-                                valueObj={spell.duration}
+                                value={spell.duration}
                                 onSaveButtonClick={this.props.saveNewDuration}
                                 />
                             <DndInput
@@ -159,7 +159,7 @@ class SpellForm extends React.Component {
                                 name="damage"
                                 label="Damage and Type"
                                 dataType={util.dataTypes.combo.DAMAGE_AND_DAMAGE_TYPE}
-                                valueObj={spell.damage}
+                                value={spell.damage}
                                 onChange={this.props.onChange}
                                 picklist={damageTypes}
                                 buttonOnClick={this.props.onAddDamageGrouping}
@@ -170,34 +170,34 @@ class SpellForm extends React.Component {
                                 name="damage.improvement.dice"
                                 label="Damage Gained"
                                 dataType={util.dataTypes.special.DICE_ROLL}
-                                valueObj={spell.damage.improvement.dice}
+                                value={spell.damage.improvement.dice}
                                 onChange={this.props.onChange}
                                 />
                             <DndInput
                                 name="damage.maximum.dice"
                                 label="Maximum Damage"
                                 dataType={util.dataTypes.special.DICE_ROLL}
-                                valueObj={spell.damage.maximum.dice}
+                                value={spell.damage.maximum.dice}
                                 onChange={this.props.onChange}
                                 />
                             <DndInput
                                 name="damage.improvement.levelCount"
                                 label="Improve every # levels"
                                 dataType={util.dataTypes.number.SPELL_LEVEL}
-                                value={spell.damage.improvement.levelCount.toString()}
+                                value={spell.damage.improvement.levelCount}
                                 onChange={this.props.onChange}
                                 />
                             <DndInput
                                 label="Projectile Count"
                                 name="damage.projectileCount"
-                                value={spell.damage.projectileCount.toString()}
+                                value={spell.damage.projectileCount}
                                 onChange={this.props.onChange}
                                 dataType={util.dataTypes.number.INT}
                                 />
                             <DndInput
                                 label="Projectiles gained per extra spell slot level"
                                 name="damage.improvement.projectileCount"
-                                value={spell.damage.improvement.projectileCount.toString()}
+                                value={spell.damage.improvement.projectileCount}
                                 onChange={this.props.onChange}
                                 dataType={util.dataTypes.number.INT}
                                 />
@@ -209,13 +209,13 @@ class SpellForm extends React.Component {
                                 picklistName="damage.abilityScore"
                                 onChange={this.props.onChange}
                                 picklist={abilityScores}
-                                valueObj={spell.damage.abilityScore}
+                                value={spell.damage.abilityScore}
                                 />
                             <DndInput
                                 name="damage.attackRollType"
                                 label="Attack Roll"
                                 dataType={util.dataTypes.picklist.ATTACK_ROLL_TYPE}
-                                valueObj={spell.damage.attackRollType}
+                                value={spell.damage.attackRollType}
                                 onChange={this.props.onChange}
                                 picklist={attackRollTypes}
                                 />
@@ -223,7 +223,7 @@ class SpellForm extends React.Component {
                                 name="damage.condition"
                                 label="Resulting Condition"
                                 dataType={util.dataTypes.picklist.CONDITION}
-                                valueObj={spell.damage.condition}
+                                value={spell.damage.condition}
                                 onChange={this.props.onChange}
                                 picklist={conditions}
                                 />
@@ -231,7 +231,7 @@ class SpellForm extends React.Component {
                                 name="savingThrow.abilityScore"
                                 label="Saving Throw"
                                 dataType={util.dataTypes.picklist.ABILITY_SCORE}
-                                valueObj={spell.savingThrow.abilityScore}
+                                value={spell.savingThrow.abilityScore}
                                 onChange={this.props.onChange}
                                 picklist={abilityScores}
                                 />
@@ -239,7 +239,7 @@ class SpellForm extends React.Component {
                                 name="savingThrow.effect"
                                 label="Save Effect"
                                 dataType={util.dataTypes.picklist.SAVE_EFFECT}
-                                valueObj={spell.savingThrow.effect}
+                                value={spell.savingThrow.effect}
                                 onChange={this.props.onChange}
                                 picklist={saveEffects}
                                 />
@@ -259,15 +259,6 @@ class SpellForm extends React.Component {
                         </Tab>
                         <Tab eventKey={4} title="Charts">
                             <div>&nbsp;</div>
-                            <DndManageCharts
-                                chart={this.props.chart}
-                                charts={spell.charts}
-                                picklists={this.props.picklists}
-                                selectedChartType={this.props.selectedChartType}
-                                onChange={this.props.onChangeChart}
-                                onReset={this.props.onResetChart}
-                                onSelectEdited={this.props.onSelectEditedChart}
-                                />
                         </Tab>
                         <Tab eventKey={5} title="Descriptions">
                             <div>&nbsp;</div>
@@ -289,7 +280,16 @@ class SpellForm extends React.Component {
         );
     }
 }
-
+/*
+                            <DndManageCharts
+                                chart={this.props.chart}
+                                charts={spell.charts}
+                                picklists={this.props.picklists}
+                                selectedChartType={this.props.selectedChartType}
+                                onChange={this.props.onChangeChart}
+                                onReset={this.props.onResetChart}
+                                onSelectEdited={this.props.onSelectEditedChart}
+                                />*/
 SpellForm.propTypes = {
     spell: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,

@@ -8,7 +8,7 @@ class DndCheckboxList extends React.Component {
         this.renderCheckBox = this.renderCheckBox.bind(this);
     }
     
-    renderCheckBox(valueArray, picklistItem) {
+    renderCheckBox(value, picklistItem) {
         let wrapperClass = 'form-group form-horizontal row clearfix';
         let labelDivClass = '';
         let labelClass = 'col-sm-3 control-label';
@@ -16,16 +16,16 @@ class DndCheckboxList extends React.Component {
         let textInputDivClass = 'field col-sm-7';
         let isChecked = false;
         let descriptionTextField = null;
-        for (let e = 0; e < valueArray.length; e++) {
-            if (valueArray[e].id == picklistItem.id) {
+        for (let e = 0; e < value.length; e++) {
+            if (value[e].id == picklistItem.id) {
                 isChecked = true;
                 if (picklistItem.requireDescription) {
                     descriptionTextField = (
                         <input
-                            name={this.props.name + '_' + this.props.textBoxKey + '_' + valueArray[e].id}
+                            name={this.props.name + '_' + this.props.textBoxKey + '_' + value[e].id}
                             className="form-control"
                             type="text"
-                            value={valueArray[e][this.props.textBoxKey]}
+                            value={value[e][this.props.textBoxKey]}
                             onChange={this.props.onChange}
                             datatype={this.props.dataType}
                             />
@@ -67,7 +67,7 @@ class DndCheckboxList extends React.Component {
                 <div>
                     {this.props.picklist.map(picklistItem =>
                             <div key={picklistItem.id}>
-                                 {this.renderCheckBox(this.props.valueArray, picklistItem)}
+                                 {this.renderCheckBox(this.props.value, picklistItem)}
                             </div>
                         )
                     }
@@ -85,7 +85,7 @@ DndCheckboxList.propTypes = {
     name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     picklist: PropTypes.array,
-    valueArray: PropTypes.array,
+    value: PropTypes.array,
     textBoxKey: PropTypes.string
 };
 

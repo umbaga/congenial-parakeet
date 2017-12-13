@@ -31,7 +31,7 @@ class DndManageTextBoxList extends React.Component {
                                     key={idx.toString()}
                                     name={this.props.name + '_' + arrayItem.id.toString()}
                                     label={arrayItem.name}
-                                    value={itemValue.toString()}
+                                    value={itemValue}
                                     dataType={this.props.dataType}
                                     onChange={this.props.onChange}
                                     numberStepVal={numberStepValue}

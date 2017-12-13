@@ -53,7 +53,7 @@ class DndPicklistAddSelect extends React.Component {
     renderInput() {
         return this.state.isSelectMode ? (
             <select
-                value={this.props.valueObj.id}
+                value={this.props.value.id}
                 name={this.props.name}
                 ref={this.props.name}
                 className="form-control"
@@ -74,7 +74,7 @@ class DndPicklistAddSelect extends React.Component {
                 type="text"
                 className="form-control"
                 onChange={this.props.onChange}
-                value={this.props.valueObj.name}
+                value={this.props.value.name}
                 name={this.props.name}
                 ref={this.props.name}
                 datatype={this.props.dataType}
@@ -191,7 +191,7 @@ DndPicklistAddSelect.propTypes = {
     name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     picklist: PropTypes.array.isRequired,
-    valueObj: PropTypes.object.isRequired,
+    value: PropTypes.object.isRequired,
     onAddItemClick: PropTypes.func,
     onCancelButtonClick: PropTypes.func,
     onExtraButtonClick: PropTypes.func,

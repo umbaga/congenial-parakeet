@@ -51,7 +51,7 @@ class RaceForm extends React.Component {
                                 hideDescription
                                 />
                             <DndCheckboxPicklist
-                                checked={this.props.isSubrace}
+                                value={this.props.isSubrace}
                                 dataType={util.dataTypes.number.INT}
                                 label="Subrace Parent"
                                 checkboxName="chkParentId"
@@ -66,7 +66,7 @@ class RaceForm extends React.Component {
                             <DndInput
                                 label="Size"
                                 name="size"
-                                valueObj={race.size}
+                                value={race.size}
                                 onChange={this.props.onChange}
                                 dataType={util.dataTypes.picklist.SIZE}
                                 picklist={sizes}
@@ -74,7 +74,7 @@ class RaceForm extends React.Component {
                             <DndInput
                                 label="Type"
                                 name="type"
-                                valueObj={race.type}
+                                value={race.type}
                                 onChange={this.props.onChange}
                                 dataType={util.dataTypes.picklist.MONSTER_TYPE}
                                 picklist={monsterTypes}
@@ -82,7 +82,7 @@ class RaceForm extends React.Component {
                             <DndInput
                                 label="Tags"
                                 name="tags"
-                                valueArray={race.tags}
+                                value={race.tags}
                                 onChange={this.props.onChange}
                                 dataType={util.dataTypes.array.MONSTER_TAGS}
                                 picklist={monsterTags}
@@ -95,7 +95,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Str"
                                     name="abilityScores.strength"
-                                    value={race.abilityScores.strength.toString()}
+                                    value={race.abilityScores.strength}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.number.INT}
                                     />
@@ -104,7 +104,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Dex"
                                     name="abilityScores.dexterity"
-                                    value={race.abilityScores.dexterity.toString()}
+                                    value={race.abilityScores.dexterity}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.number.INT}
                                     />
@@ -113,7 +113,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Con"
                                     name="abilityScores.constitution"
-                                    value={race.abilityScores.constitution.toString()}
+                                    value={race.abilityScores.constitution}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.number.INT}
                                     />
@@ -122,7 +122,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Int"
                                     name="abilityScores.intelligence"
-                                    value={race.abilityScores.intelligence.toString()}
+                                    value={race.abilityScores.intelligence}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.number.INT}
                                     />
@@ -131,7 +131,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Wis"
                                     name="abilityScores.wisdom"
-                                    value={race.abilityScores.wisdom.toString()}
+                                    value={race.abilityScores.wisdom}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.number.INT}
                                     />
@@ -140,7 +140,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Cha"
                                     name="abilityScores.charisma"
-                                    value={race.abilityScores.charisma.toString()}
+                                    value={race.abilityScores.charisma}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.number.INT}
                                     />
@@ -149,7 +149,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Select #"
                                     name="abilityScores.selection.count"
-                                    value={race.abilityScores.selection.count.toString()}
+                                    value={race.abilityScores.selection.count}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.number.INT}
                                     />
@@ -158,7 +158,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Select Modifier"
                                     name="abilityScores.selection.modifier"
-                                    value={race.abilityScores.selection.modifier.toString()}
+                                    value={race.abilityScores.selection.modifier}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.number.INT}
                                     />
@@ -170,7 +170,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Base Height (inches)"
                                     name="vitals.height.base"
-                                    value={race.vitals.height.base.toString()}
+                                    value={race.vitals.height.base}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.number.LENGTH}
                                     labelCols={8}
@@ -178,7 +178,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Base Weight (lbs)"
                                     name="vitals.weight.base"
-                                    value={race.vitals.weight.base.toString()}
+                                    value={race.vitals.weight.base}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.number.WEIGHT}
                                     labelCols={8}
@@ -188,7 +188,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Height Mod"
                                     name="vitals.height.dice"
-                                    valueObj={race.vitals.height.dice}
+                                    value={race.vitals.height.dice}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.special.DICE_ROLL}
                                     labelCols={6}
@@ -196,7 +196,7 @@ class RaceForm extends React.Component {
                                 <DndInput
                                     label="Weight Mod"
                                     name="vitals.weight.dice"
-                                    valueObj={race.vitals.weight.dice}
+                                    value={race.vitals.weight.dice}
                                     onChange={this.props.onChange}
                                     dataType={util.dataTypes.special.DICE_ROLL}
                                     labelCols={6}
@@ -233,7 +233,7 @@ class RaceForm extends React.Component {
                             <DndInput
                                 label="Spellcasting Ability"
                                 name="spellcasting.abilityScore"
-                                valueObj={race.spellcasting.abilityScore}
+                                value={race.spellcasting.abilityScore}
                                 onChange={this.props.onChange}
                                 dataType={util.dataTypes.picklist.ABILITY_SCORE}
                                 picklist={abilityScores}

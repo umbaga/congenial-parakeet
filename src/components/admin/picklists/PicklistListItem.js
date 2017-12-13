@@ -39,13 +39,13 @@ class PicklistListItem extends React.Component {
             let tmp = [];
             if (val) {
                 for (let x = 0; x < val.length; x++) {
-                    tmp.push(<div key={val[x].id}>{val[x].name}</div>);
+                    tmp.push(<div key={x}>{val[x].name}</div>);
                 }
             }
             return tmp;
         }
         return (
-            <tr key={this.props.picklist.id}>
+            <tr>
                 <td>{this.props.picklist.name}</td>
                 <td className="truncate">
                     <OverlayTrigger trigger={['hover', 'focus']} placement="top" overlay={itemArrayPopover}>

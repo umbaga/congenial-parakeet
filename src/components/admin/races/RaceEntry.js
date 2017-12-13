@@ -182,7 +182,8 @@ RaceEntry.propTypes = {
     isCreate: PropTypes.bool,
     picklists: PropTypes.array.isRequired,
     proficiencies: PropTypes.array.isRequired,
-    spells: PropTypes.array.isRequired
+    spells: PropTypes.array.isRequired,
+    spelllists: PropTypes.array.isRequired
 };
 
 function getRaceById(races, id) {

@@ -59,7 +59,7 @@ class DndManageSpellSelection extends React.Component {
             <DndInput
                 label="Select Spell Level"
                 name="spellLevel"
-                value={editSpellSelection.spellLevel.toString()}
+                value={editSpellSelection.spellLevel}
                 onChange={this.props.onChange}
                 dataType={util.dataTypes.number.SPELL_LEVEL}
                 />

@@ -63,7 +63,7 @@ class _DndManageMechanics extends React.Component {
                     name="assignmentType"
                     label="Assignment Type"
                     dataType={util.dataTypes.picklist.GENERAL}
-                    valueObj={this.props.newMechanic.assignmentType}
+                    value={this.props.newMechanic.assignmentType}
                     onChange={this.props.onChange}
                     picklist={baseAdvancementPicklist}
                     />
@@ -81,7 +81,7 @@ class _DndManageMechanics extends React.Component {
                     name="type"
                     label="Mechanic Type"
                     dataType={util.dataTypes.picklist.MECHANIC_TYPE}
-                    valueObj={this.props.newMechanic.type}
+                    value={this.props.newMechanic.type}
                     onChange={this.props.onChange}
                     picklist={types}
                     />
@@ -101,7 +101,7 @@ class _DndManageMechanics extends React.Component {
                 name="target"
                 label="Mechanic Target"
                 dataType={util.dataTypes.picklist.MECHANIC_TARGET}
-                valueObj={this.props.newMechanic.target}
+                value={this.props.newMechanic.target}
                 onChange={this.props.onChange}
                 picklist={targets}
                 />
@@ -118,7 +118,7 @@ class _DndManageMechanics extends React.Component {
                     name="value"
                     label="Value"
                     dataType={util.dataTypes.number.INT}
-                    value={this.props.newMechanic.value.toString()}
+                    value={this.props.newMechanic.value}
                     onChange={this.props.onChange}
                     />
             );
@@ -128,7 +128,7 @@ class _DndManageMechanics extends React.Component {
                     name="dice"
                     label="Die Value"
                     dataType={util.dataTypes.special.DICE_ROLL}
-                    valueObj={this.props.newMechanic.dice}
+                    value={this.props.newMechanic.dice}
                     onChange={this.props.onChange}
                     />
             );

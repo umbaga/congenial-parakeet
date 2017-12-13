@@ -129,7 +129,7 @@ class DndManageMechanics extends React.Component {
                     name="value"
                     label="Value"
                     dataType={util.dataTypes.number.INT}
-                    value={this.props.editMechanic.value.toString()}
+                    value={this.props.editMechanic.value}
                     onChange={this.props.onChange}
                     />
             );

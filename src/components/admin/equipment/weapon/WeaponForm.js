@@ -36,7 +36,7 @@ class WeaponForm extends React.Component {
                             name="damage.versatile.dice"
                             label="Versatile Damage"
                             dataType={util.dataTypes.special.DICE_ROLL}
-                            valueObj={this.props.weapon.damage.versatile.dice}
+                            value={this.props.weapon.damage.versatile.dice}
                             onChange={this.props.onChange} />
                     </div>);
                 }
@@ -46,7 +46,7 @@ class WeaponForm extends React.Component {
                             name="range"
                             label="Range"
                             dataType={util.dataTypes.special.WEAPON_RANGE}
-                            valueObj={this.props.weapon.range}
+                            value={this.props.weapon.range}
                             onChange={this.props.onChange} />
                         </div>);
                 }
@@ -56,7 +56,7 @@ class WeaponForm extends React.Component {
                             name="ammunition"
                             label="Ammunition Type"
                             dataType={util.dataTypes.picklist.AMMUNITION_TYPE}
-                            valueObj={this.props.weapon.ammunition}
+                            value={this.props.weapon.ammunition}
                             onChange={this.props.onChange}
                             picklist={ammunitionTypePicklist} />
                         </div>);
@@ -105,7 +105,7 @@ class WeaponForm extends React.Component {
                                 name="proficiency"
                                 label="Proficiency"
                                 dataType={util.dataTypes.picklist.WEAPON_PROFICIENCY}
-                                valueObj={this.props.weapon.proficiency}
+                                value={this.props.weapon.proficiency}
                                 onChange={this.props.onChange}
                                 picklist={proficiencyPicklist} />
                         </div>
@@ -114,7 +114,7 @@ class WeaponForm extends React.Component {
                                 name="category"
                                 label="Category"
                                 dataType={util.dataTypes.picklist.WEAPON_CATEGORY}
-                                valueObj={this.props.weapon.category}
+                                value={this.props.weapon.category}
                                 onChange={this.props.onChange}
                                 picklist={categoryPicklist} />
                         </div>
@@ -123,7 +123,7 @@ class WeaponForm extends React.Component {
                                 name="damage"
                                 label="Damage and Type"
                                 dataType={util.dataTypes.combo.DAMAGE_AND_DAMAGE_TYPE}
-                                valueObj={this.props.weapon.damage}
+                                value={this.props.weapon.damage}
                                 onChange={this.props.onChange}
                                 picklist={damageTypePicklist}
                                 />
@@ -133,7 +133,7 @@ class WeaponForm extends React.Component {
                                 name="weaponProperties"
                                 label="Properties"
                                 dataType={util.dataTypes.array.WEAPON_PROPERTIES}
-                                valueArray={this.props.weapon.weaponProperties}
+                                value={this.props.weapon.weaponProperties}
                                 onChange={this.props.onChange}
                                 picklist={weaponPropertyPicklist} />
                         </div>
@@ -147,24 +147,7 @@ class WeaponForm extends React.Component {
         );
     }
 }
-/*
-                    <div className="col-md-6">
-                        <DndInput
-                            name="damage.type"
-                            label="Damage Type"
-                            dataType={util.dataTypes.picklist.DAMAGE_TYPE}
-                            valueObj={this.props.weapon.damage.type}
-                            onChange={this.props.onChange}
-                            picklist={damageTypePicklist} />
-                    </div>
-                    <div className="col-md-6">
-                        <DndInput
-                            name="damage.dice"
-                            label="Damage"
-                            dataType={util.dataTypes.special.DICE_ROLL}
-                            valueObj={this.props.weapon.damage.dice}
-                            onChange={this.props.onChange} />
-                    </div>*/
+
 WeaponForm.propTypes = {
     weapon: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,

@@ -4,6 +4,7 @@ export const ARMOR = {
     applyDexModifier: false,
     baseArmorClass: 10,
     cost: '0',
+    description: '',
     hasMaxDexModifier: false,
     isCumulative: false,
     maxDexModifier: 0,
@@ -21,6 +22,7 @@ export const BACKGROUND = {
     name: '',
     assignedEquipment: [],
     charts: [],
+    description: '',
     feature: {
         id: 0,
         name: '',
@@ -32,6 +34,7 @@ export const BACKGROUND = {
         name: ''
     },
     startingGold: '0',
+    suggestedCharacteristics: '',
     variants: []
 };
 export const BACKGROUND_VARIANT = {
@@ -97,6 +100,7 @@ export const EQUIPMENT = {
     },
     cost: '0',
     count: 1,
+    description: '',
     improvisedWeapon: {
         damage: {id: 0, dieCount: 0, dieType: 0, rendered: ''},
         damageType: {id: 0, name: ''},

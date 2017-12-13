@@ -40,7 +40,7 @@ class DndManageItemGroups extends React.Component {
                     label="Selection Count"
                     dataType={util.dataTypes.number.INT}
                     onChange={this.props.onChange}
-                    value={itemGroup.selectCount.toString()}
+                    value={itemGroup.selectCount}
                     />
             );
         }

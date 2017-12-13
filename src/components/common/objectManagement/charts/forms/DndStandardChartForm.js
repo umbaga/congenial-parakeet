@@ -70,7 +70,7 @@ class DndStandardChartForm extends React.Component {
                         label="Rows"
                         name="rowCount"
                         onChange={this.props.onChange}
-                        value={chart.rowCount.toString()}
+                        value={chart.rowCount}
                         />
                 </div>
                 <div className="col-sm-6">
@@ -79,7 +79,7 @@ class DndStandardChartForm extends React.Component {
                         label="Columns"
                         name="columnCount"
                         onChange={this.props.onChange}
-                        value={chart.columnCount.toString()}
+                        value={chart.columnCount}
                         />
                 </div>
                 {this.renderEditChart(chart)}

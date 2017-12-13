@@ -51,7 +51,7 @@ class SpellListForm extends React.Component {
                         <DndInput
                             label="Spell Level"
                             name="school"
-                            valueObj={this.props.selectedSpellLevel}
+                            value={this.props.selectedSpellLevel}
                             onChange={this.props.onChangeSelectedSpellLevel}
                             dataType={util.dataTypes.picklist.SPELL_LEVEL}
                             picklist={spellLevels}

@@ -24,7 +24,7 @@ class DndUniversalInput extends React.Component {
                     name="resource"
                     label={resourceLabel}
                     dataType={util.dataTypes.picklist.RESOURCE}
-                    valueObj={this.props.referenceObject.resource}
+                    value={this.props.referenceObject.resource}
                     onChange={this.props.onChange}
                     picklist={resourcePicklist}
                     />

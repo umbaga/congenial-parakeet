@@ -158,7 +158,7 @@ class _DndManageCharts extends React.Component {
                             dataType={util.dataTypes.number.INT}
                             name="columnCount"
                             label="Coulmns"
-                            value={chart.columnCount.toString()}
+                            value={chart.columnCount}
                             onChange={this.props.onChange}
                             />
                     </div>
@@ -167,7 +167,7 @@ class _DndManageCharts extends React.Component {
                             dataType={util.dataTypes.number.INT}
                             name="rowCount"
                             label="Rows"
-                            value={chart.rowCount.toString()}
+                            value={chart.rowCount}
                             onChange={this.props.onChange}
                             />
                     </div>

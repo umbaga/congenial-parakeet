@@ -30,7 +30,7 @@ class EquipmentForm extends React.Component {
                             name="ammunition"
                             label="Ammunition Type"
                             dataType={util.dataTypes.picklist.AMMUNITION_TYPE}
-                            valueObj={this.props.equipment.ammunition}
+                            value={this.props.equipment.ammunition}
                             onChange={this.props.onChange}
                             picklist={ammunitionTypePicklist} />
                     </div>
@@ -49,7 +49,7 @@ class EquipmentForm extends React.Component {
                         name="improvisedWeapon.damage"
                         label="Damage"
                         dataType={util.dataTypes.special.DICE_ROLL}
-                        valueObj={this.props.equipment.improvisedWeapon.damage}
+                        value={this.props.equipment.improvisedWeapon.damage}
                         onChange={this.props.onChange} />
                 </div>
                 <div className="col-md-4">
@@ -57,7 +57,7 @@ class EquipmentForm extends React.Component {
                         name="improvisedWeapon.damageType"
                         label="Damage Type"
                         dataType={util.dataTypes.picklist.DAMAGE_TYPE}
-                        valueObj={this.props.equipment.improvisedWeapon.damageType}
+                        value={this.props.equipment.improvisedWeapon.damageType}
                         onChange={this.props.onChange}
                         picklist={damageTypePicklist} />
                 </div>
@@ -66,7 +66,7 @@ class EquipmentForm extends React.Component {
                         name="improvisedWeapon.range"
                         label="Range"
                         dataType={util.dataTypes.number.INT}
-                        value={this.props.equipment.improvisedWeapon.range.toString()}
+                        value={this.props.equipment.improvisedWeapon.range}
                         onChange={this.props.onChange} />
                 </div>
             </div>
@@ -93,7 +93,7 @@ class EquipmentForm extends React.Component {
                                 name="category"
                                 label="Category"
                                 dataType={util.dataTypes.picklist.EQUIPMENT_CATEGORY}
-                                valueObj={this.props.equipment.category}
+                                value={this.props.equipment.category}
                                 onChange={this.props.onChange}
                                 picklist={categoryPicklist} />
                         </div>
@@ -118,7 +118,7 @@ class EquipmentForm extends React.Component {
                                 name="count"
                                 label="Item Count"
                                 dataType={util.dataTypes.number.INT}
-                                value={this.props.equipment.count.toString()}
+                                value={this.props.equipment.count}
                                 onChange={this.props.onChange} />
                         </div>
                         <div className="col-md-6">
