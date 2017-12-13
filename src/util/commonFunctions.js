@@ -39,6 +39,53 @@ export function setObjectValue(obj, prop, val, action) {
     }
 }
 
+export const resetObject = {
+    mechanic: function() {
+        let editMechanic = Object.assign({}, util.objectModel.MECHANIC);
+        editMechanic.assignmentType = {id: 1};
+        editMechanic.dice = {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0};
+        editMechanic.target = {id: 0, name: ''};
+        editMechanic.type = {id: 0, name: ''};
+        editMechanic.valueObject = {id: 0, name: ''};
+        return editMechanic;
+    },
+    proficiencyGroup: function() {
+        const editProficiencyGroup = Object.assign({}, util.objectModel.PROFICIENCY_GROUP);
+        editProficiencyGroup.category = {id: 0, name: '', parentId: 0};
+        editProficiencyGroup.mechanic = {id: 0, name: ''};
+        editProficiencyGroup.proficiencies = [];
+        return editProficiencyGroup;
+    },
+    race: function() {
+        const blankRace = Object.assign({}, util.objectModel.RACE);
+        blankRace.components = [];
+        blankRace.supplementalDescriptions = [];
+        blankRace.damage = {
+            dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
+            type: {id: 0, name: ''},
+            attackRollType: {id: 0, name: ''},
+            condition: {id: 0, name: ''},
+            improvement: {
+                dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
+                levelCount: 0,
+                projectileCount: 0
+            },
+            supplemental: [],
+            applyAbilityScoreModifier: false,
+            abilityScore: {id: 0, name: ''},
+            maximum: {dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}},
+            projectileCount: 0
+        };
+        blankRace.savingThrow = {
+            abilityScore: {id: 0, name: ''},
+            effect: {id: 0, name: ''}
+        };
+        blankRace.charts = [];
+        blankRace.mechanics = {base: [], advancement: []};
+        return blankRace;
+    }
+};
+
 export const formState = {
     setFieldFromTargetName: function(event) {
         if (event.target.getAttribute('name')) {
@@ -74,7 +121,7 @@ export const formState = {
     },
     chartType: function(event, obj, picklists) {
         let chartType = obj;
-        let dataType = formState.setDataTypeFromTarget(event);//event.target.getAttribute('dataType');
+        let dataType = formState.setDataTypeFromTarget(event);
         switch (dataType) {
             case util.dataTypes.picklist.CHART_TYPE:
                 chartType = util.common.picklists.getPicklistItem(picklists, event.target.value);
@@ -85,10 +132,8 @@ export const formState = {
     },
     chart: function(event, obj, refObj, picklists) {
         let chart = util.common.formState.standard(event, obj, picklists);
-        let field = formState.setFieldFromTargetName(event);//event.target.name;
-        let dataType = formState.setDataTypeFromTarget(event);//event.target.getAttribute('dataType');
-        let newRenderedValue = '';
-        let newDiceRollValue = {};
+        let field = formState.setFieldFromTargetName(event);
+        let dataType = formState.setDataTypeFromTarget(event);
         let changedEntryId = null;
         let changedEntryIndex = -1;
         let higherIndexedEntryExists = false;
@@ -109,35 +154,7 @@ export const formState = {
                     chart[field] = event.target.value;
                     break;
                 case util.dataTypes.special.DICE_ROLL:
-                    newRenderedValue = '';
-                    if (event.target.value && event.target.value.length != 0) {
-                        for (let y = 0; y < event.target.value.length; y++) {
-                            if (event.target.value.charAt(y) == '1' || event.target.value.charAt(y) == '2' ||
-                                event.target.value.charAt(y) == '3' || event.target.value.charAt(y) == '4' ||
-                                event.target.value.charAt(y) == '5' || event.target.value.charAt(y) == '6' ||
-                                event.target.value.charAt(y) == '7' || event.target.value.charAt(y) == '8' ||
-                                event.target.value.charAt(y) == '9' || event.target.value.charAt(y) == '0' ||
-                                event.target.value.charAt(y) == 'd' || event.target.value.charAt(y) == 'D') {
-                                newRenderedValue += event.target.value.charAt(y);
-                            }
-                        }
-                    }
-                    if (util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL, [0, 1])) {
-                        newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
-                        newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
-                        chart[field] = newDiceRollValue;
-                        if (chart.entries.length == 0) {
-                            newEntry = Object.assign({}, util.objectModel.DIE_CHART_ENTRY);
-                            newEntry.id = 0;
-                            newEntry.minimum = newDiceRollValue.dieCount;
-                            newEntry.maximum = newDiceRollValue.dieCount * newDiceRollValue.dieType;
-                            chart.entries.push(newEntry);
-                        } else if (chart.entries.length != 0 && chart.entries[0].maximum == 0) {
-                            chart.entries[0].minimum = newDiceRollValue.dieCount;
-                            chart.entries[0].maximum = newDiceRollValue.dieCount * newDiceRollValue.dieType;
-                        }
-                    }
-                    chart[field].rendered = newRenderedValue;
+                    util.common.setObjectValue(chart, field, formState.dice(event));
                     break;
                 case util.dataTypes.special.CHART_ENTRY_DIE_ROLL_RANGE:
                     changedEntryId = parseInt(field.split('_')[0]);
@@ -339,6 +356,67 @@ export const formState = {
         }
         return chart;
     },
+    dice: function(event) {
+        let retVal = {};
+        let newRenderedValue = '';
+        if (event.target.value && event.target.value.length != 0) {
+            for (let y = 0; y < event.target.value.length; y++) {
+                if (event.target.value.charAt(y) == '1' || event.target.value.charAt(y) == '2' ||
+                   event.target.value.charAt(y) == '3' || event.target.value.charAt(y) == '4' ||
+                   event.target.value.charAt(y) == '5' || event.target.value.charAt(y) == '6' ||
+                   event.target.value.charAt(y) == '7' || event.target.value.charAt(y) == '8' ||
+                   event.target.value.charAt(y) == '9' || event.target.value.charAt(y) == '0' ||
+                   event.target.value.charAt(y) == 'd' || event.target.value.charAt(y) == 'D' ||
+                   event.target.value.charAt(y) == '+' || event.target.value.charAt(y) == '-' ||
+                   event.target.value.charAt(y) == 'x' || event.target.value.charAt(y) == 'X' ||
+                    event.target.value.charAt(y) == '*' || event.target.value.charAt(y) == '/') {
+                    newRenderedValue += event.target.value.charAt(y);
+                }
+            }
+        }
+        if (util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL)) {
+            if (event.target.value.indexOf('+') != -1 || event.target.value.indexOf('-') != -1) {
+                if (event.target.value.indexOf('+') != -1) {
+                    retVal.modifier = parseInt(event.target.value.split('+')[1]);
+                } else {
+                    retVal.modifier = -1 * parseInt(event.target.value.split('-')[1]);
+                }
+                retVal.multiplier = 1;
+                retVal.divisor = 1;
+            } else if (event.target.value.indexOf('x') != -1 || event.target.value.indexOf('*') != -1) {
+                if (event.target.value.indexOf('x') != -1) {
+                    retVal.multiplier = parseInt(event.target.value.toLowerCase().split('x')[1]);
+                } else {
+                    retVal.multiplier = parseInt(event.target.value.split('*')[1]);
+                }
+                retVal.modifier = 0;
+                retVal.divisor = 1;
+            } else if (event.target.value.indexOf('/') != -1) {
+                retVal.divisor = parseInt(event.target.value.split('/')[1]);
+                retVal.modifier = 0;
+                retVal.multiplier = 1;
+            } else {
+                retVal.modifier = 0;
+                retVal.multiplier = 1;
+                retVal.divisor = 1;
+            }
+            retVal.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
+            retVal.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
+        } else {
+            retVal.id = 0;
+            if (event.target.value.length != 0) {
+                retVal.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
+            } else {
+                retVal.dieCount = 0;
+            }
+            retVal.dieType = 1;
+            retVal.modifier = 0;
+            retVal.multiplier = 1;
+            retVal.divisor = 1;
+        }
+        retVal.rendered = newRenderedValue;
+        return retVal;
+    },
     arrayProperty: function(event, obj, refObj) {
         let retVal = obj;
         let dataType = formState.setDataTypeFromTarget(event);
@@ -392,6 +470,64 @@ export const formState = {
         }
         return retVal;
     },
+    mechanic: function(event, obj, refObj, picklists, removeThisMechanic) {
+        const retVal = obj;
+        let field = formState.setFieldFromTargetName(event);
+        let dataType = formState.setDataTypeFromTarget(event);
+        let newSelectedValue = {};
+        let removeThisIndex = -1;
+        let whichMechanicTypeToRemoveFrom = '';
+        delete retVal.resetMechanic;
+        if (retVal[field] != undefined || (removeThisMechanic && removeThisMechanic.assignmentType)) {
+            switch (dataType) {
+                case util.dataTypes.number.INT:
+                    util.common.setObjectValue(retVal, field, event.target.value);
+                    break;
+                case util.dataTypes.picklist.GENERAL:
+                case util.dataTypes.picklist.MECHANIC_TARGET:
+                case util.dataTypes.picklist.MECHANIC_TYPE:
+                    newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                    newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                    util.common.setObjectValue(retVal, field, newSelectedValue);
+                    break;
+                case util.dataTypes.action.MECHANIC.ADD:
+                    if (refObj.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BASE || refObj.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
+                        retVal[field].base.push(refObj);
+                    }
+                    if (refObj.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.ADVANCEMENT || refObj.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
+                        retVal[field].advancement.push(refObj);
+                    }
+                    retVal.resetMechanic = true;
+                    break;
+                case util.dataTypes.action.MECHANIC.REMOVE:
+                    whichMechanicTypeToRemoveFrom = field.split('.')[1];
+                    field = field.split('.')[0];
+                    if (retVal[field]) {
+                        if (removeThisMechanic) {
+                            for (let e = 0; e < retVal[field][whichMechanicTypeToRemoveFrom].length; e++) {
+                                if (retVal[field][whichMechanicTypeToRemoveFrom][e].id == removeThisMechanic.id) {
+                                    removeThisIndex = e;
+                                }
+                            }
+                        }
+                        if (removeThisIndex != -1) {
+                            retVal[field][whichMechanicTypeToRemoveFrom].splice(removeThisIndex, 1);
+                        }
+                    }
+                    break;
+                case util.dataTypes.action.MECHANIC.RESET:
+                    retVal.resetMechanic = true;
+                    break;
+                case util.dataTypes.action.MECHANIC.SELECT:
+                    break;
+                case util.dataTypes.special.DICE_ROLL:
+                    util.common.setObjectValue(retVal, field, formState.dice(event));
+                    break;
+                default:
+            }
+        }
+        return retVal;
+    },
     proficiencyGroup: function(event, obj, refObj, picklists, proficiencies, removeThisGroup) {
         let retVal = obj;
         let field = formState.setFieldFromTargetName(event);
@@ -406,7 +542,7 @@ export const formState = {
         let removeThisIndex = -1;
         let referencePicklistItem = util.common.picklists.getPicklistItem(picklists, removeThisId);
         delete retVal.resetProficiencyGroup;
-        if (retVal[field]) {
+        if (retVal[field] != undefined) {
             switch (dataType) {
                 case util.dataTypes.array.PROFICIENCIES:
                     referencePicklistItem = util.common.picklists.getPicklistItemFromSinglePicklist(proficiencies, event.target.value);
@@ -460,10 +596,8 @@ export const formState = {
     standard: function(event, obj, picklists) {
         let retVal = obj;
         let field = formState.setFieldFromTargetName(event);
-        let dataType = formState.setDataTypeFromTarget(event);//event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
+        let dataType = formState.setDataTypeFromTarget(event);
         let newSelectedValue = {};
-        let newRenderedValue = '';
-        let newDiceRollValue = {};
         let isAssign = (field !== undefined) ? field.split('Unassigned').length == 2 ? true : false : null;
         let removeThisId = event.target.value;
         let removeThisIndex = -1;
@@ -575,64 +709,7 @@ export const formState = {
                 util.common.setObjectValue(retVal, field, newSelectedValue);
                 break;
             case util.dataTypes.special.DICE_ROLL:
-                newRenderedValue = '';
-                if (event.target.value && event.target.value.length != 0) {
-                    for (let y = 0; y < event.target.value.length; y++) {
-                        if (event.target.value.charAt(y) == '1' || event.target.value.charAt(y) == '2' ||
-                           event.target.value.charAt(y) == '3' || event.target.value.charAt(y) == '4' ||
-                           event.target.value.charAt(y) == '5' || event.target.value.charAt(y) == '6' ||
-                           event.target.value.charAt(y) == '7' || event.target.value.charAt(y) == '8' ||
-                           event.target.value.charAt(y) == '9' || event.target.value.charAt(y) == '0' ||
-                           event.target.value.charAt(y) == 'd' || event.target.value.charAt(y) == 'D' ||
-                           event.target.value.charAt(y) == '+' || event.target.value.charAt(y) == '-' ||
-                           event.target.value.charAt(y) == 'x' || event.target.value.charAt(y) == 'X' ||
-                            event.target.value.charAt(y) == '*' || event.target.value.charAt(y) == '/') {
-                            newRenderedValue += event.target.value.charAt(y);
-                        }
-                    }
-                }
-                if (util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL)) {
-                    if (event.target.value.indexOf('+') != -1 || event.target.value.indexOf('-') != -1) {
-                        if (event.target.value.indexOf('+') != -1) {
-                            newDiceRollValue.modifier = parseInt(event.target.value.split('+')[1]);
-                        } else {
-                            newDiceRollValue.modifier = -1 * parseInt(event.target.value.split('-')[1]);
-                        }
-                        newDiceRollValue.multiplier = 1;
-                        newDiceRollValue.divisor = 1;
-                    } else if (event.target.value.indexOf('x') != -1 || event.target.value.indexOf('*') != -1) {
-                        if (event.target.value.indexOf('x') != -1) {
-                            newDiceRollValue.multiplier = parseInt(event.target.value.toLowerCase().split('x')[1]);
-                        } else {
-                            newDiceRollValue.multiplier = parseInt(event.target.value.split('*')[1]);
-                        }
-                        newDiceRollValue.modifier = 0;
-                        newDiceRollValue.divisor = 1;
-                    } else if (event.target.value.indexOf('/') != -1) {
-                        newDiceRollValue.divisor = parseInt(event.target.value.split('/')[1]);
-                        newDiceRollValue.modifier = 0;
-                        newDiceRollValue.multiplier = 1;
-                    } else {
-                        newDiceRollValue.modifier = 0;
-                        newDiceRollValue.multiplier = 1;
-                        newDiceRollValue.divisor = 1;
-                    }
-                    newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
-                    newDiceRollValue.dieType = parseInt(event.target.value.toLowerCase().split('d')[1]);
-                } else {
-                    newDiceRollValue.id = 0;
-                    if (event.target.value.length != 0) {
-                        newDiceRollValue.dieCount = parseInt(event.target.value.toLowerCase().split('d')[0]);
-                    } else {
-                        newDiceRollValue.dieCount = 0;
-                    }
-                    newDiceRollValue.dieType = 1;
-                    newDiceRollValue.modifier = 0;
-                    newDiceRollValue.multiplier = 1;
-                    newDiceRollValue.divisor = 1;
-                }
-                util.common.setObjectValue(retVal, field, newDiceRollValue);
-                util.common.setObjectValue(retVal, field + '.rendered', newRenderedValue);
+                util.common.setObjectValue(retVal, field, formState.dice(event));
                 break;
             case util.dataTypes.array.ASSIGNED_SPELLS:
             case util.dataTypes.array.MONSTER_TAGS:

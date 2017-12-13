@@ -19,11 +19,11 @@ class RaceEntry extends React.Component {
             canEdit: this.props.canEdit,
             saving: false,
             isSubrace: this.props.race.parentId != 0,
-            editProficiencyGroup: Object.assign({}, util.objectModel.PROFICIENCY_GROUP)
+            editProficiencyGroup: Object.assign({}, util.objectModel.PROFICIENCY_GROUP),
+            editMechanic: Object.assign({}, util.objectModel.MECHANIC)
         };
         this.cancelRace = this.cancelRace.bind(this);
         this.deleteRace = this.deleteRace.bind(this);
-        this.resetRace = this.resetRace.bind(this);
         this.postAction = this.postAction.bind(this);
         this.saveAndBackRace = this.saveAndBackRace.bind(this);
         this.saveAndNewRace = this.saveAndNewRace.bind(this);
@@ -31,7 +31,7 @@ class RaceEntry extends React.Component {
         this.updateFormState = this.updateFormState.bind(this);
         this.onChangeSubrace = this.onChangeSubrace.bind(this);
         this.updateProficiencyGroupFormState = this.updateProficiencyGroupFormState.bind(this);
-        this.resetProficiencyGroup = this.resetProficiencyGroup.bind(this);
+        this.updateMechanicsFormState = this.updateMechanicsFormState.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -43,7 +43,7 @@ class RaceEntry extends React.Component {
 
     cancelRace(event) {
         event.preventDefault();
-        this.resetRace();
+        this.setState({race: util.common.resetObject.race()});
         this.postAction();
     }
 
@@ -54,35 +54,6 @@ class RaceEntry extends React.Component {
             this.postAction();
         }
     }
-
-    resetRace() {
-        const blankRace = Object.assign({}, util.objectModel.RACE);
-        blankRace.components = [];
-        blankRace.supplementalDescriptions = [];
-        blankRace.damage = {
-            dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
-            type: {id: 0, name: ''},
-            attackRollType: {id: 0, name: ''},
-            condition: {id: 0, name: ''},
-            improvement: {
-                dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
-                levelCount: 0,
-                projectileCount: 0
-            },
-            supplemental: [],
-            applyAbilityScoreModifier: false,
-            abilityScore: {id: 0, name: ''},
-            maximum: {dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}},
-            projectileCount: 0
-        };
-        blankRace.savingThrow = {
-            abilityScore: {id: 0, name: ''},
-            effect: {id: 0, name: ''}
-        };
-        blankRace.charts = [];
-        blankRace.mechanics = {base: [], advancement: []};
-        this.setState({race: blankRace});
-    }
     
     postAction() {
         this.props.closeModal();
@@ -90,7 +61,7 @@ class RaceEntry extends React.Component {
 
     saveAndNewRace(event) {
         this.saveRace(event);
-        this.resetRace();
+        this.setState({race: util.common.resetObject.race()});
         this.refs.form.refs.name.setFocus();
     }
 
@@ -102,7 +73,7 @@ class RaceEntry extends React.Component {
     saveRace(event) {
         event.preventDefault();
         this.props.actions.upsertRace(this.state.race);
-        this.resetRace();
+        this.setState({race: util.common.resetObject.race()});
     }
     
     updateFormState(event) {
@@ -114,10 +85,20 @@ class RaceEntry extends React.Component {
         let editProficiencyGroup = util.common.formState.proficiencyGroup(event, this.state.editProficiencyGroup, this.state.race, this.props.picklists, this.props.proficiencies, refObj);
         const race = util.common.formState.proficiencyGroup(event, this.state.race, this.state.editProficiencyGroup, this.props.picklists, this.props.proficiencies, refObj);
         if (race.resetProficiencyGroup){
-            editProficiencyGroup = this.resetProficiencyGroup();
+            editProficiencyGroup = util.common.resetObject.proficiencyGroup();
         }
         race.proficiencyGroups = util.common.picklists.refactorUnsavedItemIds(race.proficiencyGroups);
         return this.setState({race: race, editProficiencyGroup: editProficiencyGroup});
+    }
+    
+    updateMechanicsFormState(event, refObj) {
+        let editMechanic = util.common.formState.mechanic(event, this.state.editMechanic, this.state.race, this.props.picklists, refObj);
+        let race = util.common.formState.mechanic(event, this.state.race, this.state.editMechanic, this.props.picklists, refObj);
+        if (race.resetMechanic){
+            editMechanic = util.common.resetObject.mechanic();
+        }
+        race.mechanics.base = util.common.picklists.refactorUnsavedItemIds(race.mechanics.base);
+        return this.setState({race: race, editMechanic: editMechanic});
     }
     
     onChangeSubrace(event) {
@@ -129,14 +110,6 @@ class RaceEntry extends React.Component {
             race.parentId = parseInt(event.target.value);
         }
         return this.setState({isSubrace: isSubrace, race: race});
-    }
-    
-    resetProficiencyGroup() {
-        const editProficiencyGroup = Object.assign({}, util.objectModel.PROFICIENCY_GROUP);
-        editProficiencyGroup.category = {id: 0, name: '', parentId: 0};
-        editProficiencyGroup.mechanic = {id: 0, name: ''};
-        editProficiencyGroup.proficiencies = [];
-        return editProficiencyGroup;
     }
     
     render() {
@@ -155,6 +128,8 @@ class RaceEntry extends React.Component {
                 onChangeSubrace={this.onChangeSubrace}
                 editProficiencyGroup={this.state.editProficiencyGroup}
                 onChangeProficiencyGroup={this.updateProficiencyGroupFormState}
+                editMechanic={this.state.editMechanic}
+                onChangeMechanics={this.updateMechanicsFormState}
                 />
         ) : (
             <RaceDetails

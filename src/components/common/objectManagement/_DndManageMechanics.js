@@ -5,7 +5,7 @@ import DndInput from '../inputs/DndInput';
 import DndDataEntryButtonBar from '../buttons/DndDataEntryButtonBar';
 import DndMechanicRow from '../subcomponents/DndMechanicRow';
 
-class DndManageMechanics extends React.Component {
+class _DndManageMechanics extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.renderMechanicLists = this.renderMechanicLists.bind(this);
@@ -33,34 +33,24 @@ class DndManageMechanics extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {mechanics.map(function(mechanic, idx) {
-                        return (
-                            <DndMechanicRow
-                                key={idx}
-                                mechanic={mechanic}
-                                onRemoveMechanic={this.props.onChange}
-                                deleteButtonName={'mechanics.' + title.toLowerCase()}
-                                deleteButtonAction={util.dataTypes.action.MECHANIC.REMOVE}
-                                />
-                        );
-                    }.bind(this))}
+                    {mechanics.map(mechanic =>
+                        <DndMechanicRow
+                            key={mechanic.id}
+                            mechanic={mechanic}
+                            onRemoveMechanic={this.props.onRemoveMechanic}
+                            />
+                    )}
                 </tbody>
             </table>
         ) : null;
         
-        if (title == 'Advancement') {
-            if (this.props.showAdvancement) {
-                return retVal;
-            } else {
-                return null;
-            }
-        } else {
+        if (this.props.showAdvancement) {
             return retVal;
+        } else {
+            return null;
         }
     }
-    /*
-                    {mechanics.map(mechanic =>
-                    )}*/
+    
     renderBaseAdvancementInput() {
         if (this.props.showAdvancement) {
             const baseAdvancementPicklist = [
@@ -73,7 +63,7 @@ class DndManageMechanics extends React.Component {
                     name="assignmentType"
                     label="Assignment Type"
                     dataType={util.dataTypes.picklist.GENERAL}
-                    valueObj={this.props.editMechanic.assignmentType}
+                    valueObj={this.props.newMechanic.assignmentType}
                     onChange={this.props.onChange}
                     picklist={baseAdvancementPicklist}
                     />
@@ -91,30 +81,27 @@ class DndManageMechanics extends React.Component {
                     name="type"
                     label="Mechanic Type"
                     dataType={util.dataTypes.picklist.MECHANIC_TYPE}
-                    valueObj={this.props.editMechanic.type}
+                    valueObj={this.props.newMechanic.type}
                     onChange={this.props.onChange}
                     picklist={types}
                     />
                 {this.renderTargetInput(targets)}
                 {this.renderValueInput(valueObjects)}
                 <DndDataEntryButtonBar
-                    onCancel={this.props.onChange}
-                    onSave={this.props.onChange}
-                    name="mechanics"
-                    saveAction={util.dataTypes.action.MECHANIC.ADD}
-                    cancelAction={util.dataTypes.action.MECHANIC.RESET}
+                    onReset={this.props.onResetMechanic}
+                    onSave={this.props.onAddMechanic}
                     />
             </div>
         );
     }
     
     renderTargetInput(targets) {
-        return (this.props.editMechanic && this.props.editMechanic.type && this.props.editMechanic.type.id != 0) ? (
+        return (this.props.newMechanic && this.props.newMechanic.type && this.props.newMechanic.type.id != 0) ? (
             <DndInput
                 name="target"
                 label="Mechanic Target"
                 dataType={util.dataTypes.picklist.MECHANIC_TARGET}
-                valueObj={this.props.editMechanic.target}
+                valueObj={this.props.newMechanic.target}
                 onChange={this.props.onChange}
                 picklist={targets}
                 />
@@ -122,36 +109,36 @@ class DndManageMechanics extends React.Component {
     }
     
     renderValueInput(valueObjects) {
-        if (this.props.editMechanic && this.props.editMechanic.type
-            && (this.props.editMechanic.type.id == util.itemTypes.MECHANIC_TYPE.BONUS
-                || this.props.editMechanic.type.id == util.itemTypes.MECHANIC_TYPE.DIVIDE_STAT
-                || this.props.editMechanic.type.id == util.itemTypes.MECHANIC_TYPE.MULTIPLY_STAT)) {
+        if (this.props.newMechanic && this.props.newMechanic.type
+            && (this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.BONUS
+                || this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.DIVIDE_STAT
+                || this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.MULTIPLY_STAT)) {
             return (
                 <DndInput
                     name="value"
                     label="Value"
                     dataType={util.dataTypes.number.INT}
-                    value={this.props.editMechanic.value.toString()}
+                    value={this.props.newMechanic.value.toString()}
                     onChange={this.props.onChange}
                     />
             );
-        } else if (this.props.editMechanic && this.props.editMechanic.type && this.props.editMechanic.type.id == util.itemTypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT) {
+        } else if (this.props.newMechanic && this.props.newMechanic.type && this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT) {
             return (
                 <DndInput
                     name="dice"
                     label="Die Value"
                     dataType={util.dataTypes.special.DICE_ROLL}
-                    valueObj={this.props.editMechanic.dice}
+                    valueObj={this.props.newMechanic.dice}
                     onChange={this.props.onChange}
                     />
             );
-        } else if (this.props.editMechanic && this.props.editMechanic.type && this.props.editMechanic.type.id == util.itemTypes.MECHANIC_TYPE.APPLY_ABILITY_SCORE_TO_STAT) {
+        } else if (this.props.newMechanic && this.props.newMechanic.type && this.props.newMechanic.type.id == util.itemTypes.MECHANIC_TYPE.APPLY_ABILITY_SCORE_TO_STAT) {
             return (
                 <DndInput
                     name="valueObject"
                     label="Ability Score Modifier"
                     dataType={util.dataTypes.picklist.GENERAL}
-                    valueObj={this.props.editMechanic.valueObject}
+                    valueObj={this.props.newMechanic.valueObject}
                     picklist={valueObjects}
                     onChange={this.props.onChange}
                     />
@@ -164,7 +151,8 @@ class DndManageMechanics extends React.Component {
         const mechanicTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.MECHANIC_TYPE);
         let mechanicTargets = [];
         let mechanicValueObjects = [];
-        switch (this.props.editMechanic.type.id) {
+        
+        switch (this.props.newMechanic.type.id) {
             case util.itemTypes.MECHANIC_TYPE.DIVIDE_STAT:
             case util.itemTypes.MECHANIC_TYPE.MULTIPLY_STAT:
             case util.itemTypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT:
@@ -219,12 +207,15 @@ class DndManageMechanics extends React.Component {
     }
 }
 
-DndManageMechanics.propTypes = {
+_DndManageMechanics.propTypes = {
     onChange: PropTypes.func.isRequired,
     picklists: PropTypes.array.isRequired,
-    mechanics: PropTypes.object.isRequired,
-    editMechanic: PropTypes.object.isRequired,
-    showAdvancement: PropTypes.bool
+    mechanics: PropTypes.object,
+    onRemoveMechanic: PropTypes.func.isRequired,
+    onResetMechanic: PropTypes.func.isRequired,
+    onAddMechanic: PropTypes.func.isRequired,
+    showAdvancement: PropTypes.bool,
+    newMechanic: PropTypes.object.isRequired
 };
 
-export default DndManageMechanics;
+export default _DndManageMechanics;

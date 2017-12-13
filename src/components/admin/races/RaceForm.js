@@ -7,6 +7,7 @@ import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
 import DndManageTextBoxList from '../../common/objectManagement/DndManageTextBoxList';
 import DndManageItemGroups from '../../common/objectManagement/DndManageItemGroups';
+import DndManageMechanics from '../../common/objectManagement/DndManageMechanics';
 
 class RaceForm extends React.Component {
     constructor(props) {
@@ -35,7 +36,7 @@ class RaceForm extends React.Component {
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={5} id="uncontrolled-tab-example" className="tab-pane-double-row-of-tabs">
+                    <Tabs defaultActiveKey={6} id="uncontrolled-tab-example" className="tab-pane-double-row-of-tabs">
                         <Tab eventKey={1} title="Size/Type">
                             <div>&nbsp;</div>
                             <DndUniversalInput
@@ -241,7 +242,12 @@ class RaceForm extends React.Component {
                         </Tab>
                         <Tab eventKey={6} title="Mechanics">
                             <div>&nbsp;</div>
-                        
+                            <DndManageMechanics
+                                onChange={this.props.onChangeMechanics}
+                                picklists={picklists}
+                                mechanics={race.mechanics}
+                                editMechanic={this.props.editMechanic}
+                                />
                         </Tab>
                         <Tab eventKey={7} title="Descriptions">
                             <div>&nbsp;</div>
@@ -275,7 +281,9 @@ RaceForm.propTypes = {
     isSubrace: PropTypes.bool.isRequired,
     onChangeSubrace: PropTypes.func.isRequired,
     editProficiencyGroup: PropTypes.object.isRequired,
-    onChangeProficiencyGroup: PropTypes.func.isRequired
+    onChangeProficiencyGroup: PropTypes.func.isRequired,
+    editMechanic: PropTypes.object.isRequired,
+    onChangeMechanics: PropTypes.func.isRequired
 };
 
 export default RaceForm;

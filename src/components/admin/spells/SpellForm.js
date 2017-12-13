@@ -9,7 +9,7 @@ import DndCheckboxList from '../../common/inputs/DndCheckboxList';
 import DndCheckboxPicklist from '../../common/inputs/DndCheckboxPicklist';
 import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
-import DndManageMechanics from '../../common/objectManagement/DndManageMechanics';
+import _DndManageMechanics from '../../common/objectManagement/_DndManageMechanics';
 import DndManageCharts from '../../common/objectManagement/DndManageCharts';
 import DndManageSupplementalDescriptions from '../../common/objectManagement/DndManageSupplementalDescriptions';
 
@@ -246,7 +246,7 @@ class SpellForm extends React.Component {
                         </Tab>
                         <Tab eventKey={3} title="Mechanics">
                             <div>&nbsp;</div>
-                            <DndManageMechanics
+                            <_DndManageMechanics
                                 onChange={this.props.onChangeMechanic}
                                 picklists={this.props.picklists}
                                 mechanics={spell.mechanics}

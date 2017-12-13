@@ -220,6 +220,9 @@ export const RACE = {
             modifier: 0
         }
     },
+    mechanics: {
+        base: []
+    },
     movement: [
         {id: 2275, name: 'Walking', speed: 30}
     ],
@@ -241,10 +244,6 @@ export const RACE = {
         }
     }
 };
-/*
-    size: {id: 2270, name: 'Medium'},
-    tags: [],
-    type: {id: 2263, name: 'Humanoid'}*/
 export const SCHOOL_OF_MAGIC = {id: 0, name: ''};
 export const SPELL = {
     id: 0,

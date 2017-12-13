@@ -11,7 +11,7 @@ class DndMechanicRow extends React.Component {
     
     _onRemove(event) {
         event.preventDefault();
-        this.props.onRemoveMechanic(this.props.mechanic);
+        this.props.onRemoveMechanic(event, this.props.mechanic);
     }
     
     render() {
@@ -23,6 +23,8 @@ class DndMechanicRow extends React.Component {
                     <DndButton
                         buttonType="removeitem"
                         onClick={this._onRemove}
+                        name={this.props.deleteButtonName}
+                        dataType={this.props.deleteButtonAction}
                         />
                 </td>
             </tr>
@@ -32,7 +34,9 @@ class DndMechanicRow extends React.Component {
 
 DndMechanicRow.propTypes = {
     mechanic: PropTypes.object.isRequired,
-    onRemoveMechanic: PropTypes.func.isRequired
+    onRemoveMechanic: PropTypes.func.isRequired,
+    deleteButtonName: PropTypes.string,
+    deleteButtonAction: PropTypes.string
 };
 
 export default DndMechanicRow;
