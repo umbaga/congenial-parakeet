@@ -8,6 +8,7 @@ import { Tabs, Tab } from 'react-bootstrap';
 import DndManageTextBoxList from '../../common/objectManagement/DndManageTextBoxList';
 import DndManageItemGroups from '../../common/objectManagement/DndManageItemGroups';
 import DndManageMechanics from '../../common/objectManagement/DndManageMechanics';
+import DndManageSpellSelection from '../../common/objectManagement/DndManageSpellSelection';
 
 class RaceForm extends React.Component {
     constructor(props) {
@@ -231,11 +232,19 @@ class RaceForm extends React.Component {
                             <div>&nbsp;</div>
                             <DndInput
                                 label="Spellcasting Ability"
-                                name="race.spellcasting.abilityScore"
+                                name="spellcasting.abilityScore"
                                 valueObj={race.spellcasting.abilityScore}
                                 onChange={this.props.onChange}
                                 dataType={util.dataTypes.picklist.ABILITY_SCORE}
                                 picklist={abilityScores}
+                                />
+                            <DndManageSpellSelection
+                                spellSelections={race.spellcasting.spellSelections}
+                                picklists={picklists}
+                                editSpellSelection={this.props.editSpellSelection}
+                                onChange={this.props.onChangeSpellSelection}
+                                spells={this.props.spells}
+                                spelllists={this.props.spelllists}
                                 />
                         </Tab>
                         <Tab eventKey={6} title="Proficiencies">
@@ -293,7 +302,11 @@ RaceForm.propTypes = {
     editProficiencyGroup: PropTypes.object.isRequired,
     onChangeProficiencyGroup: PropTypes.func.isRequired,
     editMechanic: PropTypes.object.isRequired,
-    onChangeMechanics: PropTypes.func.isRequired
+    onChangeMechanics: PropTypes.func.isRequired,
+    editSpellSelection: PropTypes.object.isRequired,
+    onChangeSpellSelection: PropTypes.func.isRequired,
+    spells: PropTypes.array.isRequired,
+    spelllists: PropTypes.array.isRequired
 };
 
 export default RaceForm;

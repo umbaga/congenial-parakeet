@@ -136,6 +136,7 @@ class DndInput extends React.Component {
             case util.dataTypes.picklist.SPELL_DURATION:
             case util.dataTypes.picklist.SPELL_LEVEL:
             case util.dataTypes.picklist.SPELL_RANGE:
+            case util.dataTypes.picklist.SPELL_SELECTION:
             case util.dataTypes.picklist.WEAPON_CATEGORY:
             case util.dataTypes.picklist.WEAPON_PROFICIENCY:
                 placeholderText = (this.props.placeholder && this.props.placeholder.length != 0) ? this.props.placeholder : 'SELECT ONE';

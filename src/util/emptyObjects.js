@@ -233,23 +233,17 @@ export const RACE = {
     size: {id: 0, name: 'Medium'},
     spellcasting: {
         abilityScore: {id: 0, name: ''},
-        assignment: [
-            {
-                castingCount: 0,
-                characterLevel: 0,
-                restType: {id: 0, name: ''},
-                spell: {id: 0, name: ''}
-                
-            }
-        ],
-        selection: [
+        spellSelections: [
             {
                 castingCount: 0,
                 characterLevel: 0,
                 restType: {id: 0, name: ''},
                 school: {id: 0, name: ''},
                 selectCount: 0,
-                spellLevel: 0
+                selectionType: {id: 0, name: ''},
+                spell: {id: 0, name: ''},
+                spellLevel: 0,
+                type: {id: 0, name: ''}
             }
         ]
     },
@@ -317,6 +311,18 @@ export const SPELL_LIST = {
     spells: []
 };
 export const SPELL_RANGE = {id: 0, name: ''};
+export const SPELL_SELECTION = {
+    castingCount: 0,
+    characterLevel: 0,
+    restType: {id: 0, name: ''},
+    school: {id: 0, name: ''},
+    selectCount: 0,
+    selectionType: {id: 0, name: ''},
+    spell: {id: 0, name: ''},
+    spellLevel: 0,
+    type: {id: 0, name: ''}
+
+};
 export const SUPPLEMENTAL_DESCRIPTION = {id: 0, title: '', description: ''};
 export const TYPE = {id: 0, name: ''};
 export const WEAPON = {

@@ -38,6 +38,7 @@ export const TYPES = {
     SPELL_DURATION: 73,
     SPELL_LIST: 488,
     SPELL_RANGE: 74,
+    SPELL_SELECTION: 2290,
     STAT: 844,
     VEHCILE: 395,
     WEAPON: 455,
@@ -175,6 +176,13 @@ export const SPELL_COMPONENT = {
     MATERIAL: 103,
     SOMATIC: 105,
     VERBAL: 104
+};
+
+export const SPELL_SELECTION = {
+    BY_LEVEL: 2292,
+    BY_SCHOOL: 2293,
+    BY_SPELL: 2291,
+    BY_SPELL_LIST: 2294
 };
 
 export const WEAPON_CATEGORY = {

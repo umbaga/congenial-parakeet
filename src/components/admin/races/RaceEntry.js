@@ -20,7 +20,8 @@ class RaceEntry extends React.Component {
             saving: false,
             isSubrace: this.props.race.parentId != 0,
             editProficiencyGroup: Object.assign({}, util.objectModel.PROFICIENCY_GROUP),
-            editMechanic: Object.assign({}, util.objectModel.MECHANIC)
+            editMechanic: Object.assign({}, util.objectModel.MECHANIC),
+            editSpellSelection: Object.assign({}, util.objectModel.SPELL_SELECTION)
         };
         this.cancelRace = this.cancelRace.bind(this);
         this.deleteRace = this.deleteRace.bind(this);
@@ -32,6 +33,7 @@ class RaceEntry extends React.Component {
         this.onChangeSubrace = this.onChangeSubrace.bind(this);
         this.updateProficiencyGroupFormState = this.updateProficiencyGroupFormState.bind(this);
         this.updateMechanicsFormState = this.updateMechanicsFormState.bind(this);
+        this.updateSpellSelectionFormState = this.updateSpellSelectionFormState.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -101,6 +103,16 @@ class RaceEntry extends React.Component {
         return this.setState({race: race, editMechanic: editMechanic});
     }
     
+    updateSpellSelectionFormState(event, refObj) {
+        let editSpellSelection = util.common.formState.spellSelection(event, this.state.editSpellSelection, this.state.race, this.props.picklists, refObj);
+        let race = util.common.formState.spellSelection(event, this.state.race, this.state.editSpellSelection, this.props.picklists, refObj);
+        if (race.resetSpellSelections){
+            editSpellSelection = util.common.resetObject.spellSelections();
+        }
+        race.spellcasting.spellSelections = util.common.picklists.refactorUnsavedItemIds(race.spellcasting.spellSelections);
+        return this.setState({race: race, editSpellSelection: editSpellSelection});
+    }
+    
     onChangeSubrace(event) {
         let isSubrace = this.state.isSubrace;
         const race = this.state.race;
@@ -130,6 +142,10 @@ class RaceEntry extends React.Component {
                 onChangeProficiencyGroup={this.updateProficiencyGroupFormState}
                 editMechanic={this.state.editMechanic}
                 onChangeMechanics={this.updateMechanicsFormState}
+                editSpellSelection={this.state.editSpellSelection}
+                onChangeSpellSelection={this.updateSpellSelectionFormState}
+                spells={this.props.spells}
+                spelllists={this.props.spelllists}
                 />
         ) : (
             <RaceDetails

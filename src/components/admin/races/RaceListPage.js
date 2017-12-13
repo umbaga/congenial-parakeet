@@ -69,6 +69,7 @@ class RaceListPage extends React.Component {
         const picklists = this.props.picklists;
         const proficiencies = this.props.proficiencies;
         const spells = this.props.spells;
+        const spelllists = this.props.spelllists;
         return (
             <div className="col-md-12">
                 <div>
@@ -113,6 +114,7 @@ class RaceListPage extends React.Component {
                     onViewDetails={this.onViewDetails}
                     proficiencies={proficiencies}
                     spells={spells}
+                    spelllists={spelllists}
                     />
             </div>
         );
@@ -144,19 +146,25 @@ function mapStateToProps(state) {
     if (state.spells.length > 0) {
         spells = Object.assign([{}], state.spells);
     }
+    let spelllists = Object.assign([{}], [util.objectModel.SPELL_LIST]);
+    if (state.spelllists.length > 0) {
+        spelllists = Object.assign([{}], state.spelllists);
+    }
     if (state.races.length > 0) {
         return {
             races: state.races,
             picklists: picklists,
             proficiencies: proficiencies,
-            spells: spells
+            spells: spells,
+            spelllists: spelllists
         };
     } else {
         return {
             races: [util.objectModel.RACE],
             picklists: picklists,
             proficiencies: proficiencies,
-            spells: spells
+            spells: spells,
+            spelllists: spelllists
         };
     }
 }

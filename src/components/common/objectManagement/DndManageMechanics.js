@@ -58,9 +58,7 @@ class DndManageMechanics extends React.Component {
             return retVal;
         }
     }
-    /*
-                    {mechanics.map(mechanic =>
-                    )}*/
+    
     renderBaseAdvancementInput() {
         if (this.props.showAdvancement) {
             const baseAdvancementPicklist = [

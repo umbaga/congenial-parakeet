@@ -83,41 +83,67 @@ export const resetObject = {
         blankRace.charts = [];
         blankRace.mechanics = {base: [], advancement: []};
         return blankRace;
+    },
+    spellSelections: function () {
+        const editSpellSelection = Object.assign({}, util.objectModel.SPELL_SELECTION);
+        
+        return editSpellSelection;
     }
 };
 
 export const formState = {
-    setFieldFromTargetName: function(event) {
-        if (event.target.getAttribute('name')) {
-            return event.target.getAttribute('name');
-        } else {
-            let testObject = event.target.parentElement;
-            let assigned = false;
-            while (!assigned) {
-                if (testObject && testObject.getAttribute('name')) {
-                    assigned = true;
-                    return testObject.getAttribute('name');
+    arrayProperty: function(event, obj, refObj) {
+        let retVal = obj;
+        let dataType = formState.setDataTypeFromTarget(event);
+        let removeIndex = -1;
+        let changedIndex = -1;
+        let otherChangedIndex = -1;
+        let referenceOrderIndex = -1;
+        let referenceOtherOrderIndex = -1;
+        let isUp = false;
+        switch (dataType) {
+            case util.dataTypes.action.CHART.ADD:
+                if (retVal.charts.filter(function(c) {
+                    return c.id == refObj.id;
+                }).length == 0) {
+                    retVal.charts.push(refObj);
                 } else {
-                    testObject = testObject.parentElement;
+                    retVal.charts[util.common.picklists.getIndexById(retVal.charts, refObj.id)] = refObj;
                 }
-            }
-        }
-    },
-    setDataTypeFromTarget: function(event) {
-        if (event.target.getAttribute('dataType')) {
-            return event.target.getAttribute('dataType');
-        } else {
-            let testObject = event.target.parentElement;
-            let assigned = false;
-            while (!assigned) {
-                if (testObject && testObject.getAttribute('dataType')) {
-                    assigned = true;
-                    return testObject.getAttribute('dataType');
-                } else {
-                    testObject = testObject.parentElement;
+                break;
+            case util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.UP:
+            case util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.DOWN:
+                isUp = (dataType == util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.UP);
+                if ((isUp && refObj.orderIndex != 0) || (!isUp && refObj.orderIndex != retVal.charts.length - 1)) {
+                    for (let r = 0; r < retVal.charts.length; r++) {
+                        if (retVal.charts[r].id == refObj.id) {
+                            changedIndex = r;
+                            otherChangedIndex = isUp ? r - 1 : r + 1;
+                            referenceOrderIndex = retVal.charts[r].orderIndex;
+                            referenceOtherOrderIndex = isUp ? referenceOrderIndex - 1 : referenceOrderIndex + 1;
+                            break;
+                        }
+                    }
+                    if (changedIndex != -1 && otherChangedIndex != -1) {
+                        retVal.charts[changedIndex].orderIndex = referenceOtherOrderIndex;
+                        retVal.charts[otherChangedIndex].orderIndex = referenceOrderIndex;
+                    }
+                    retVal.charts = retVal.charts.sort(function(a, b) {
+                        return a.orderIndex - b.orderIndex;
+                    });
                 }
-            }
+                break;
+            case util.dataTypes.action.CHART.REMOVE:
+                removeIndex = util.common.picklists.getIndexById(retVal.charts, refObj.id);
+                if (removeIndex != -1) {
+                    retVal.charts.splice(removeIndex, 1);
+                }
+                break;
+            case util.dataTypes.action.CHART.SELECT:
+                break;
+            default:
         }
+        return retVal;
     },
     chartType: function(event, obj, picklists) {
         let chartType = obj;
@@ -417,59 +443,6 @@ export const formState = {
         retVal.rendered = newRenderedValue;
         return retVal;
     },
-    arrayProperty: function(event, obj, refObj) {
-        let retVal = obj;
-        let dataType = formState.setDataTypeFromTarget(event);
-        let removeIndex = -1;
-        let changedIndex = -1;
-        let otherChangedIndex = -1;
-        let referenceOrderIndex = -1;
-        let referenceOtherOrderIndex = -1;
-        let isUp = false;
-        switch (dataType) {
-            case util.dataTypes.action.CHART.ADD:
-                if (retVal.charts.filter(function(c) {
-                    return c.id == refObj.id;
-                }).length == 0) {
-                    retVal.charts.push(refObj);
-                } else {
-                    retVal.charts[util.common.picklists.getIndexById(retVal.charts, refObj.id)] = refObj;
-                }
-                break;
-            case util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.UP:
-            case util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.DOWN:
-                isUp = (dataType == util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.UP);
-                if ((isUp && refObj.orderIndex != 0) || (!isUp && refObj.orderIndex != retVal.charts.length - 1)) {
-                    for (let r = 0; r < retVal.charts.length; r++) {
-                        if (retVal.charts[r].id == refObj.id) {
-                            changedIndex = r;
-                            otherChangedIndex = isUp ? r - 1 : r + 1;
-                            referenceOrderIndex = retVal.charts[r].orderIndex;
-                            referenceOtherOrderIndex = isUp ? referenceOrderIndex - 1 : referenceOrderIndex + 1;
-                            break;
-                        }
-                    }
-                    if (changedIndex != -1 && otherChangedIndex != -1) {
-                        retVal.charts[changedIndex].orderIndex = referenceOtherOrderIndex;
-                        retVal.charts[otherChangedIndex].orderIndex = referenceOrderIndex;
-                    }
-                    retVal.charts = retVal.charts.sort(function(a, b) {
-                        return a.orderIndex - b.orderIndex;
-                    });
-                }
-                break;
-            case util.dataTypes.action.CHART.REMOVE:
-                removeIndex = util.common.picklists.getIndexById(retVal.charts, refObj.id);
-                if (removeIndex != -1) {
-                    retVal.charts.splice(removeIndex, 1);
-                }
-                break;
-            case util.dataTypes.action.CHART.SELECT:
-                break;
-            default:
-        }
-        return retVal;
-    },
     mechanic: function(event, obj, refObj, picklists, removeThisMechanic) {
         const retVal = obj;
         let field = formState.setFieldFromTargetName(event);
@@ -591,6 +564,30 @@ export const formState = {
                     util.common.setObjectValue(retVal, field, event.target.value);
             }
         }
+        return retVal;
+    },
+    spellSelection: function(event, obj, refObj) {
+        let retVal = obj;
+        let field = formState.setFieldFromTargetName(event);
+        let dataType = formState.setDataTypeFromTarget(event);
+        let newSelectedValue = {};
+        let removeThisIndex = -1;
+        delete retVal.resetSpellSelection;
+        if (retVal[field] != undefined) {
+            switch (dataType) {
+                case util.dataTypes.number.SPELL_LEVEL:
+                    util.common.setObjectValue(retVal, field, event.target.value);
+                    break;
+                case util.dataTypes.picklist.GENERIC:
+                case util.dataTypes.picklist.SPELL_SELECTION:
+                    newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                    newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                    util.common.setObjectValue(retVal, field, newSelectedValue);
+                    break;
+                default:
+            }
+        }
+        
         return retVal;
     },
     standard: function(event, obj, picklists) {
@@ -793,5 +790,37 @@ export const formState = {
             default:
         }
         return retVal;
+    },
+    setFieldFromTargetName: function(event) {
+        if (event.target.getAttribute('name')) {
+            return event.target.getAttribute('name');
+        } else {
+            let testObject = event.target.parentElement;
+            let assigned = false;
+            while (!assigned) {
+                if (testObject && testObject.getAttribute('name')) {
+                    assigned = true;
+                    return testObject.getAttribute('name');
+                } else {
+                    testObject = testObject.parentElement;
+                }
+            }
+        }
+    },
+    setDataTypeFromTarget: function(event) {
+        if (event.target.getAttribute('dataType')) {
+            return event.target.getAttribute('dataType');
+        } else {
+            let testObject = event.target.parentElement;
+            let assigned = false;
+            while (!assigned) {
+                if (testObject && testObject.getAttribute('dataType')) {
+                    assigned = true;
+                    return testObject.getAttribute('dataType');
+                } else {
+                    testObject = testObject.parentElement;
+                }
+            }
+        }
     }
 };
