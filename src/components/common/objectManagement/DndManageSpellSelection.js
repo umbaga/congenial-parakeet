@@ -29,7 +29,7 @@ class DndManageSpellSelection extends React.Component {
             <DndInput
                 label="Select Spell"
                 name="spell"
-                valueObj={editSpellSelection.spell}
+                value={editSpellSelection.spell}
                 onChange={this.props.onChange}
                 dataType={util.dataTypes.picklist.GENERAL}
                 picklist={spells}
@@ -39,7 +39,7 @@ class DndManageSpellSelection extends React.Component {
             <DndInput
                 label="Select School"
                 name="school"
-                valueObj={editSpellSelection.school}
+                value={editSpellSelection.school}
                 onChange={this.props.onChange}
                 dataType={util.dataTypes.picklist.SCHOOL_OF_MAGIC}
                 picklist={schools}
@@ -49,7 +49,7 @@ class DndManageSpellSelection extends React.Component {
             <DndInput
                 label="Select Spell List"
                 name="spelllist"
-                valueObj={editSpellSelection.spelllist}
+                value={editSpellSelection.spelllist}
                 onChange={this.props.onChange}
                 dataType={util.dataTypes.picklist.GENERAL}
                 picklist={spelllists}
@@ -69,7 +69,7 @@ class DndManageSpellSelection extends React.Component {
                 <DndInput
                     label="Selection Type"
                     name="type"
-                    valueObj={editSpellSelection.type}
+                    value={editSpellSelection.type}
                     onChange={this.props.onChange}
                     dataType={util.dataTypes.picklist.SPELL_SELECTION}
                     picklist={selectionTypes}

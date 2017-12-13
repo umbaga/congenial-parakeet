@@ -293,34 +293,30 @@ class DndInput extends React.Component {
 }
 
 DndInput.propTypes = {
-    numberMinVal: PropTypes.number,
-    numberMaxVal: PropTypes.number,
-    numberStepVal: PropTypes.number,
+    bsButtonStyle: PropTypes.string,
+    buttonOnClick: PropTypes.func,
+    buttonType: PropTypes.string,
     dataType: PropTypes.string.isRequired,
+    hideSelectOneOption: PropTypes.bool,
     inputCols: PropTypes.number,
+    isReadOnly: PropTypes.bool,
     label: PropTypes.string.isRequired,
     labelCols: PropTypes.number,
     name: PropTypes.string.isRequired,
+    numberMaxVal: PropTypes.number,
+    numberMinVal: PropTypes.number,
+    numberStepVal: PropTypes.number,
     onChange: PropTypes.func.isRequired,
     picklist: PropTypes.array,
     placeholder: PropTypes.string,
-    isReadOnly: PropTypes.bool,
+    selectBoxSize: PropTypes.number,
     value: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
         PropTypes.object,
         PropTypes.array,
         PropTypes.bool
-    ]).isRequired,
-    buttonType: PropTypes.string,
-    buttonOnClick: PropTypes.func,
-    bsButtonStyle: PropTypes.string,
-    hideSelectOneOption: PropTypes.bool,
-    selectBoxSize: PropTypes.number
+    ]).isRequired
 };
-/*
-    checked: PropTypes.bool,
-    value: PropTypes.string,
-    valueArray: PropTypes.array,
-    valueObj: PropTypes.object,*/
+
 export default DndInput;

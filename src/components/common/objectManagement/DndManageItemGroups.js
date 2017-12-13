@@ -24,7 +24,7 @@ class DndManageItemGroups extends React.Component {
                     dataType={util.dataTypes.picklist.PROFICIENCY_CATEGORY}
                     picklist={picklist}
                     onChange={this.props.onChange}
-                    valueObj={itemGroup.category}
+                    value={itemGroup.category}
                     />
             );
         }
@@ -56,7 +56,7 @@ class DndManageItemGroups extends React.Component {
                         name="proficiencies"
                         label={util.format.forDisplay.string.renderSingularPlural(this.props.title, 2)}
                         dataType={util.dataTypes.array.PROFICIENCIES}
-                        valueArray={itemGroup[this.props.toggleFieldName]}
+                        value={itemGroup[this.props.toggleFieldName]}
                         onChange={this.props.onChange}
                         picklist={picklist} />
                 );
@@ -121,7 +121,7 @@ class DndManageItemGroups extends React.Component {
                         dataType={util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC}
                         picklist={selectionMechanics}
                         onChange={this.props.onChange}
-                        valueObj={itemGroup.mechanic}
+                        value={itemGroup.mechanic}
                         />
                     {this.renderSelectCount(itemGroup)}
                     {this.renderCategory(itemGroup, hasCategories, categories)}

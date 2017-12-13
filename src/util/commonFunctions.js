@@ -40,27 +40,43 @@ export function setObjectValue(obj, prop, val, action) {
 }
 
 export const resetObject = {
+    background: function() {
+        let retVal = Object.assign({}, util.objectModel.BACKGROUND);
+        retVal.assignedEquipment = [];
+        retVal.charts = [];
+        retVal.feature = {
+            id: 0,
+            name: '',
+            description: ''
+        };
+        retVal.proficiencyGroups = [];
+        return retVal;
+    },
+    chart: function() {
+        let retVal = Object.assign({}, util.objectModel.CHART);
+        return retVal;
+    },
     mechanic: function() {
-        let editMechanic = Object.assign({}, util.objectModel.MECHANIC);
-        editMechanic.assignmentType = {id: 1};
-        editMechanic.dice = {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0};
-        editMechanic.target = {id: 0, name: ''};
-        editMechanic.type = {id: 0, name: ''};
-        editMechanic.valueObject = {id: 0, name: ''};
-        return editMechanic;
+        let retVal = Object.assign({}, util.objectModel.MECHANIC);
+        retVal.assignmentType = {id: 1};
+        retVal.dice = {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0};
+        retVal.target = {id: 0, name: ''};
+        retVal.type = {id: 0, name: ''};
+        retVal.valueObject = {id: 0, name: ''};
+        return retVal;
     },
     proficiencyGroup: function() {
-        const editProficiencyGroup = Object.assign({}, util.objectModel.PROFICIENCY_GROUP);
-        editProficiencyGroup.category = {id: 0, name: '', parentId: 0};
-        editProficiencyGroup.mechanic = {id: 0, name: ''};
-        editProficiencyGroup.proficiencies = [];
-        return editProficiencyGroup;
+        const retVal = Object.assign({}, util.objectModel.PROFICIENCY_GROUP);
+        retVal.category = {id: 0, name: '', parentId: 0};
+        retVal.mechanic = {id: 0, name: ''};
+        retVal.proficiencies = [];
+        return retVal;
     },
     race: function() {
-        const blankRace = Object.assign({}, util.objectModel.RACE);
-        blankRace.components = [];
-        blankRace.supplementalDescriptions = [];
-        blankRace.damage = {
+        const retVal = Object.assign({}, util.objectModel.RACE);
+        retVal.components = [];
+        retVal.supplementalDescriptions = [];
+        retVal.damage = {
             dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
             type: {id: 0, name: ''},
             attackRollType: {id: 0, name: ''},
@@ -76,18 +92,18 @@ export const resetObject = {
             maximum: {dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}},
             projectileCount: 0
         };
-        blankRace.savingThrow = {
+        retVal.savingThrow = {
             abilityScore: {id: 0, name: ''},
             effect: {id: 0, name: ''}
         };
-        blankRace.charts = [];
-        blankRace.mechanics = {base: [], advancement: []};
-        return blankRace;
+        retVal.charts = [];
+        retVal.mechanics = {base: [], advancement: []};
+        return retVal;
     },
     spellSelections: function () {
-        const editSpellSelection = Object.assign({}, util.objectModel.SPELL_SELECTION);
+        const retVal = Object.assign({}, util.objectModel.SPELL_SELECTION);
         
-        return editSpellSelection;
+        return retVal;
     }
 };
 
@@ -143,6 +159,11 @@ export const formState = {
                 break;
             default:
         }
+        return retVal;
+    },
+    assignedEquipment: function(event, obj, refObj) {
+        let retVal = obj;
+        
         return retVal;
     },
     chartType: function(event, obj, picklists) {
@@ -381,6 +402,11 @@ export const formState = {
             }
         }
         return chart;
+    },
+    descriptions: function(event, obj, refObj) {
+        let retVal = obj;
+        
+        return retVal;
     },
     dice: function(event) {
         let retVal = {};

@@ -51,14 +51,14 @@ class RaceForm extends React.Component {
                                 hideDescription
                                 />
                             <DndCheckboxPicklist
-                                value={this.props.isSubrace}
+                                checked={this.props.isSubrace}
                                 dataType={util.dataTypes.number.INT}
                                 label="Subrace Parent"
                                 checkboxName="chkParentId"
                                 picklistName="parentId"
                                 onChange={this.props.onChangeSubrace}
                                 picklist={races}
-                                valueObj={{id: race.parentId}}
+                                value={{id: race.parentId}}
                                 onClick={this.props.onChangeSubrace}
                                 placeholder="Select Parent Race"
                                 checkboxPlaceholder="Is a Subrace"

@@ -71,7 +71,7 @@ class DndManageMechanics extends React.Component {
                     name="assignmentType"
                     label="Assignment Type"
                     dataType={util.dataTypes.picklist.GENERAL}
-                    valueObj={this.props.editMechanic.assignmentType}
+                    value={this.props.editMechanic.assignmentType}
                     onChange={this.props.onChange}
                     picklist={baseAdvancementPicklist}
                     />
@@ -89,7 +89,7 @@ class DndManageMechanics extends React.Component {
                     name="type"
                     label="Mechanic Type"
                     dataType={util.dataTypes.picklist.MECHANIC_TYPE}
-                    valueObj={this.props.editMechanic.type}
+                    value={this.props.editMechanic.type}
                     onChange={this.props.onChange}
                     picklist={types}
                     />
@@ -112,7 +112,7 @@ class DndManageMechanics extends React.Component {
                 name="target"
                 label="Mechanic Target"
                 dataType={util.dataTypes.picklist.MECHANIC_TARGET}
-                valueObj={this.props.editMechanic.target}
+                value={this.props.editMechanic.target}
                 onChange={this.props.onChange}
                 picklist={targets}
                 />
@@ -139,7 +139,7 @@ class DndManageMechanics extends React.Component {
                     name="dice"
                     label="Die Value"
                     dataType={util.dataTypes.special.DICE_ROLL}
-                    valueObj={this.props.editMechanic.dice}
+                    value={this.props.editMechanic.dice}
                     onChange={this.props.onChange}
                     />
             );
@@ -149,7 +149,7 @@ class DndManageMechanics extends React.Component {
                     name="valueObject"
                     label="Ability Score Modifier"
                     dataType={util.dataTypes.picklist.GENERAL}
-                    valueObj={this.props.editMechanic.valueObject}
+                    value={this.props.editMechanic.valueObject}
                     picklist={valueObjects}
                     onChange={this.props.onChange}
                     />
