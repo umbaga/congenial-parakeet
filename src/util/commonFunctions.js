@@ -52,8 +52,19 @@ export const resetObject = {
         retVal.proficiencyGroups = [];
         return retVal;
     },
-    chart: function() {
+    chart: function(emptyChartType, chartsLength) {
         let retVal = Object.assign({}, util.objectModel.CHART);
+        retVal.id = (chartsLength + 1) * -1;
+        retVal.orderIndex = this.state.spell.charts.length;
+        retVal.rows = [];
+        retVal.columns = [];
+        retVal.entries = [];
+        retVal.dice = util.objectModel.DICE;
+        retVal.type = emptyChartType;
+        return retVal;
+    },
+    chartType: function() {
+        let retVal = Object.assign({}, util.objectModel.CHART_TYPE);
         return retVal;
     },
     mechanic: function() {
@@ -194,6 +205,7 @@ export const formState = {
         let newEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
         let newEntryId = 0;
         let entry = refObj;
+        let emptyEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
         if (event.target.type !== undefined) {
             //this controls standard form elements
             switch (dataType) {
@@ -202,6 +214,14 @@ export const formState = {
                     break;
                 case util.dataTypes.special.DICE_ROLL:
                     util.common.setObjectValue(chart, field, formState.dice(event));
+                    console.log(chart[field].rendered);
+                    if (util.dataTypes.compareDataType(chart[field].rendered, util.dataTypes.special.DICE_ROLL)) {
+                        if (chart.entries.length == 0) {
+                            emptyEntry.minimum = chart[field].dieCount;
+                            emptyEntry.maximum = (chart[field].dieCount * chart[field].dieType);
+                            chart.entries.push(emptyEntry);
+                        }
+                    }
                     break;
                 case util.dataTypes.special.CHART_ENTRY_DIE_ROLL_RANGE:
                     changedEntryId = parseInt(field.split('_')[0]);
@@ -540,7 +560,9 @@ export const formState = {
         let removeThisId = event.target.value;
         let removeThisIndex = -1;
         let referencePicklistItem = util.common.picklists.getPicklistItem(picklists, removeThisId);
-        delete retVal.resetProficiencyGroup;
+        if (retVal) {
+            delete retVal.resetProficiencyGroup;
+        }
         if (retVal[field] != undefined) {
             switch (dataType) {
                 case util.dataTypes.array.PROFICIENCIES:

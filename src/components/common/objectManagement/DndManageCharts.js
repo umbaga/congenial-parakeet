@@ -19,7 +19,6 @@ class DndManageCharts extends React.Component {
         this.renderTypeSpecificForm = this.renderTypeSpecificForm.bind(this);
         this.renderFormButtons = this.renderFormButtons.bind(this);
         this.renderChartList = this.renderChartList.bind(this);
-        this.validateChart = this.validateChart.bind(this);
         this._onSaveClick = this._onSaveClick.bind(this);
     }
     
@@ -52,43 +51,6 @@ class DndManageCharts extends React.Component {
     _onSaveClick(event) {
         this.props.onChange(event);
         this.props.onReset();
-    }
-    
-    validateChart() {
-        const chart = this.props.chart;
-        let isValid = true;
-        if (!chart.title || (chart.title && chart.title.length == 0)) {
-            isValid = false;
-        }
-        switch (this.props.selectedChartType.id) {
-            case util.itemTypes.CHARTS.DIE_ROLL:
-                if (!util.dataTypes.compareDataType(chart.dice.rendered, util.dataTypes.special.DICE_ROLL)) {
-                    isValid = false;
-                }
-                for (let q = 0; q < chart.entries.length; q++) {
-                    if (!chart.entries[q].description || (chart.entries[q].description && chart.entries[q].description.length == 0)) {
-                        isValid = false;
-                    }
-                }
-                break;
-            case util.itemTypes.CHARTS.STANDARD:
-                if (chart.rowCount == 0 || chart.columnCount == 0) {
-                    isValid = false;
-                }
-                for (let c = 0; c < chart.columns.length; c++) {
-                    if (chart.columns[c].title.length == 0) {
-                        isValid = false;
-                    }
-                }
-                for (let e = 0; e < chart.entries.length; e++) {
-                    if (chart.entries[e].description.length == 0) {
-                        isValid = false;
-                    }
-                }
-                break;
-            default:
-        }
-        return isValid;
     }
     
     renderChartForm(chart) {
@@ -128,14 +90,14 @@ class DndManageCharts extends React.Component {
     }
     
     renderFormButtons() {
-        return this.validateChart() ? (
+        return (
             <DndDataEntryButtonBar
                 onSave={this._onSaveClick}
                 onReset={this.props.onReset}
                 saveAction={util.dataTypes.action.CHART.ADD}
                 resetAction={util.dataTypes.action.CHART.RESET}
                 />
-        ) : null;
+        );
     }
     
     render() {
@@ -150,7 +112,7 @@ class DndManageCharts extends React.Component {
                     name="charType"
                     onChange={this.props.onChange}
                     picklist={chartTypes}
-                    valueObj={this.props.selectedChartType}
+                    value={this.props.selectedChartType}
                     />
                 {this.renderChartForm(chart)}
                 {this.renderFormButtons()}

@@ -54,7 +54,7 @@ export const CHART = {
     id: -1,
     title: '',
     description: '',
-    dice: {dieCount: 0, dieType: 0, rendered: ''},
+    dice: {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
     columnCount: 0,
     rowCount: 0,
     columns: [],

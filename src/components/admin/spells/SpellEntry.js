@@ -318,15 +318,8 @@ class SpellEntry extends React.Component {
     }
     
     onResetChart() {
-        const emptyChartType = util.objectModel.CHART_TYPE;
-        const emptyChart = Object.assign({}, util.objectModel.CHART);
-        emptyChart.id = (this.state.spell.charts.length + 1) * -1;
-        emptyChart.orderIndex = this.state.spell.charts.length;
-        emptyChart.rows = [];
-        emptyChart.columns = [];
-        emptyChart.entries = [];
-        emptyChart.dice = util.objectModel.DICE;
-        emptyChart.type = emptyChartType;
+        const emptyChartType = util.common.resetObject.chartType();
+        const emptyChart = util.common.resetObject.chartType(emptyChartType);
         this.setState({editChart: emptyChart, selectedChartType: emptyChartType});
     }
     

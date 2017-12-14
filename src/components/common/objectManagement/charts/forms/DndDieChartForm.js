@@ -43,7 +43,7 @@ class DndDieChartForm extends React.Component {
                     label="Dice"
                     name="dice"
                     onChange={this.props.onChange}
-                    valueObj={chart.dice}
+                    value={chart.dice}
                     />
                 {this.renderEditChart(chart)}
             </div>
