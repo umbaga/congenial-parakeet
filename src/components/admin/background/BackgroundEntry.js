@@ -36,7 +36,6 @@ class BackgroundEntry extends React.Component {
         this.updateChartFormState = this.updateChartFormState.bind(this);
         this.onResetChart = this.onResetChart.bind(this);
         this.onSelectEditedChart = this.onSelectEditedChart.bind(this);
-        this.updateAssignedEquipmentFormState = this.updateAssignedEquipmentFormState.bind(this);
         
         this.addEquipment = this.addEquipment.bind(this);
         this.removeEquipment = this.removeEquipment.bind(this);
@@ -115,14 +114,14 @@ class BackgroundEntry extends React.Component {
         newChart.type = newChartType;
         newChart.orderIndex = this.state.background.charts.length;
         newChart.id = (this.state.background.charts.length + 1) * -1;
-        let newSpell = null;
+        let newBackground = null;
         if (isOrderChange) {
-            newSpell = util.common.formState.arrayProperty(event, this.state.background, refObj);
+            newBackground = util.common.formState.arrayProperty(event, this.state.background, refObj);
         } else {
-            newSpell = util.common.formState.arrayProperty(event, this.state.background, newChart);
+            newBackground = util.common.formState.arrayProperty(event, this.state.background, newChart);
         }
-        newSpell.charts = util.common.picklists.refactorUnsavedItemIds(newSpell.charts);
-        this.setState({background: newSpell, editChart: newChart, selectedChartType: newChartType});
+        newBackground.charts = util.common.picklists.refactorUnsavedItemIds(newBackground.charts);
+        this.setState({background: newBackground, editChart: newChart, selectedChartType: newChartType});
     }
     
     onResetChart() {
@@ -132,10 +131,6 @@ class BackgroundEntry extends React.Component {
     }
     
     onSelectEditedChart() {
-        
-    }
-    
-    updateAssignedEquipmentFormState(event) {
         
     }
     

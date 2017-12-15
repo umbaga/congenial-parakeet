@@ -5,7 +5,7 @@ import DndInput from '../inputs/DndInput';
 import DndDataEntryButtonBar from '../buttons/DndDataEntryButtonBar';
 import DndCollapsibleTableRow from '../subcomponents/DndCollapsibleTableRow';
 
-class DndManageSupplementalDescriptions extends React.Component {
+class _DndManageSupplementalDescriptions extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -14,7 +14,6 @@ class DndManageSupplementalDescriptions extends React.Component {
         this.renderEditDescription = this.renderEditDescription.bind(this);
         this.renderDescriptionList = this.renderDescriptionList.bind(this);
         this.setShowThisId = this.setShowThisId.bind(this);
-        this._onSaveClick = this._onSaveClick.bind(this);
     }
     
     renderEditDescription(description) {
@@ -46,11 +45,6 @@ class DndManageSupplementalDescriptions extends React.Component {
         this.setState({showThisId: newId});
     }
     
-    _onSaveClick(event) {
-        this.props.onChange(event);
-        this.props.onResetDescription();
-    }
-    
     renderDescriptionList(descriptions) {
         if (descriptions && descriptions.length) {
             return (
@@ -65,16 +59,11 @@ class DndManageSupplementalDescriptions extends React.Component {
                                         key={c.id}
                                         item={c}
                                         items={descriptions}
-                                        onChangeOrder={this.props.onChange}
-                                        onSelectItem={this.props.onChange}
-                                        onRemoveItem={this.props.onChange}
+                                        onChangeOrder={this.props.onChangeDescriptionOrder}
+                                        onSelectItem={this.props.onSelectDescription}
+                                        onRemoveItem={this.props.onRemoveDescription}
                                         boundClick={boundClick}
                                         showThisId={this.state.showThisId}
-                                        removeItemAction={util.dataTypes.action.DESCRIPTION.REMOVE}
-                                        selectItemAction={util.dataTypes.action.DESCRIPTION.SELECT}
-                                        moveItemDownAction={util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.DOWN}
-                                        moveItemUpAction={util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.UP}
-                                        name="supplementalDescriptions"
                                         >
                                         <div>{c.description}</div>
                                     </DndCollapsibleTableRow>
@@ -96,10 +85,7 @@ class DndManageSupplementalDescriptions extends React.Component {
                 {this.renderEditDescription(description)}
                 <DndDataEntryButtonBar
                     onCancel={this.props.onResetDescription}
-                    onSave={this._onSaveClick}
-                    saveAction={util.dataTypes.action.DESCRIPTION.ADD}
-                    resetAction={util.dataTypes.action.DESCRIPTION.RESET}
-                    name="supplementalDescriptions"
+                    onSave={this.props.onAddDescription}
                     />
                 {this.renderDescriptionList(descriptions)}
             </div>
@@ -107,12 +93,16 @@ class DndManageSupplementalDescriptions extends React.Component {
     }
 }
 
-DndManageSupplementalDescriptions.propTypes = {
+_DndManageSupplementalDescriptions.propTypes = {
     descriptions: PropTypes.array.isRequired,
     description: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
+    onChangeDescriptionOrder: PropTypes.func.isRequired,
+    onAddDescription: PropTypes.func.isRequired,
+    onCreateDescription: PropTypes.func.isRequired,
+    onRemoveDescription: PropTypes.func.isRequired,
     onSelectDescription: PropTypes.func.isRequired,
     onResetDescription: PropTypes.func.isRequired
 };
 
-export default DndManageSupplementalDescriptions;
+export default _DndManageSupplementalDescriptions;

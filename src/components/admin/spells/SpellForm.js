@@ -9,7 +9,7 @@ import DndCheckboxList from '../../common/inputs/DndCheckboxList';
 import DndCheckboxPicklist from '../../common/inputs/DndCheckboxPicklist';
 import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
-import _DndManageMechanics from '../../common/objectManagement/_DndManageMechanics';
+import DndManageMechanics from '../../common/objectManagement/DndManageMechanics';
 import DndManageCharts from '../../common/objectManagement/DndManageCharts';
 import DndManageSupplementalDescriptions from '../../common/objectManagement/DndManageSupplementalDescriptions';
 
@@ -68,7 +68,7 @@ class SpellForm extends React.Component {
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+                    <Tabs defaultActiveKey={5} id="uncontrolled-tab-example">
                         <Tab eventKey={1} title="General">
                             <div>&nbsp;</div>
                             <DndUniversalInput
@@ -244,34 +244,37 @@ class SpellForm extends React.Component {
                                 picklist={saveEffects}
                                 />
                         </Tab>
-                        <Tab eventKey={3} title="Mechanics">
+                        <Tab eventKey={3} title="Charts">
                             <div>&nbsp;</div>
-                            <_DndManageMechanics
+                            <DndManageCharts
+                                chart={this.props.editChart}
+                                charts={spell.charts}
+                                picklists={this.props.picklists}
+                                selectedChartType={this.props.selectedChartType}
+                                onChange={this.props.onChangeChart}
+                                onReset={this.props.onResetChart}
+                                onSelectEdited={this.props.onSelectEditedChart}
+                                />
+                        </Tab>
+                        <Tab eventKey={4} title="Mechanics">
+                            <div>&nbsp;</div>
+                            <DndManageMechanics
                                 onChange={this.props.onChangeMechanic}
                                 picklists={this.props.picklists}
                                 mechanics={spell.mechanics}
-                                onRemoveMechanic={this.props.onRemoveMechanic}
-                                onAddMechanic={this.props.onAddMechanic}
                                 onResetMechanic={this.props.onResetMechanic}
-                                newMechanic={this.props.newMechanic}
+                                editMechanic={this.props.editMechanic}
                                 showAdvancement
                                 />
-                        </Tab>
-                        <Tab eventKey={4} title="Charts">
-                            <div>&nbsp;</div>
                         </Tab>
                         <Tab eventKey={5} title="Descriptions">
                             <div>&nbsp;</div>
                             <DndManageSupplementalDescriptions
                                 descriptions={spell.supplementalDescriptions}
-                                description={this.props.description}
+                                description={this.props.editDescription}
                                 onChange={this.props.onChangeDescriptions}
-                                onChangeDescriptionOrder={this.props.onChangeDescriptionOrder}
-                                onCreateDescription={this.props.onCreateDescription}
-                                onRemoveDescription={this.props.onRemoveDescription}
                                 onSelectDescription={this.props.onSelectDescription}
                                 onResetDescription={this.props.onResetDescription}
-                                onAddDescription={this.props.onAddDescription}
                                 />
                         </Tab>
                     </Tabs>
@@ -280,16 +283,7 @@ class SpellForm extends React.Component {
         );
     }
 }
-/*
-                            <DndManageCharts
-                                chart={this.props.chart}
-                                charts={spell.charts}
-                                picklists={this.props.picklists}
-                                selectedChartType={this.props.selectedChartType}
-                                onChange={this.props.onChangeChart}
-                                onReset={this.props.onResetChart}
-                                onSelectEdited={this.props.onSelectEditedChart}
-                                />*/
+
 SpellForm.propTypes = {
     spell: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
@@ -301,24 +295,22 @@ SpellForm.propTypes = {
     saveNewCastingTime: PropTypes.func.isRequired,
     saveNewDuration: PropTypes.func.isRequired,
     saveNewRange: PropTypes.func.isRequired,
+    
     onChangeMechanic: PropTypes.func.isRequired,
-    onRemoveMechanic: PropTypes.func.isRequired,
     onResetMechanic: PropTypes.func,
-    onAddMechanic: PropTypes.func.isRequired,
-    newMechanic: PropTypes.object.isRequired,
-    description: PropTypes.object.isRequired,
+    editMechanic: PropTypes.object.isRequired,
+    
+    editDescription: PropTypes.object.isRequired,
     onChangeDescriptions: PropTypes.func.isRequired,
-    onChangeDescriptionOrder: PropTypes.func.isRequired,
-    onAddDescription: PropTypes.func.isRequired,
-    onCreateDescription: PropTypes.func.isRequired,
-    onRemoveDescription: PropTypes.func.isRequired,
     onSelectDescription: PropTypes.func.isRequired,
     onResetDescription: PropTypes.func.isRequired,
-    chart: PropTypes.object.isRequired,
+    
+    editChart: PropTypes.object.isRequired,
     selectedChartType: PropTypes.object.isRequired,
     onChangeChart: PropTypes.func.isRequired,
     onResetChart: PropTypes.func.isRequired,
     onSelectEditedChart: PropTypes.func.isRequired,
+    
     onAddDamageGrouping: PropTypes.func.isRequired,
     onRemoveDamageGrouping: PropTypes.func.isRequired
 };

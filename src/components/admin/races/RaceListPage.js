@@ -119,7 +119,7 @@ class RaceListPage extends React.Component {
             </div>
         );
     }
-}                            
+}
                             
 RaceListPage.propTypes = {
     races: PropTypes.array.isRequired,

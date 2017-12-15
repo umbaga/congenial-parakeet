@@ -21,7 +21,10 @@ class RaceEntry extends React.Component {
             isSubrace: this.props.race.parentId != 0,
             editProficiencyGroup: Object.assign({}, util.objectModel.PROFICIENCY_GROUP),
             editMechanic: Object.assign({}, util.objectModel.MECHANIC),
-            editSpellSelection: Object.assign({}, util.objectModel.SPELL_SELECTION)
+            editDescription: Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION),
+            editSpellSelection: Object.assign({}, util.objectModel.SPELL_SELECTION),
+            editChart: Object.assign({}, util.objectModel.CHART),
+            selectedChartType: Object.assign({}, util.objectModel.CHART_TYPE)
         };
         this.cancelRace = this.cancelRace.bind(this);
         this.deleteRace = this.deleteRace.bind(this);
@@ -33,7 +36,13 @@ class RaceEntry extends React.Component {
         this.onChangeSubrace = this.onChangeSubrace.bind(this);
         this.updateProficiencyGroupFormState = this.updateProficiencyGroupFormState.bind(this);
         this.updateMechanicsFormState = this.updateMechanicsFormState.bind(this);
+        this.updateDescriptionsFormState = this.updateDescriptionsFormState.bind(this);
+        this.onResetDescriptions = this.onResetDescriptions.bind(this);
+        this.onSelectDescriptions = this.onSelectDescriptions.bind(this);
         this.updateSpellSelectionFormState = this.updateSpellSelectionFormState.bind(this);
+        this.updateChartFormState = this.updateChartFormState.bind(this);
+        this.onResetChart = this.onResetChart.bind(this);
+        this.onSelectChart = this.onSelectChart.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -103,6 +112,20 @@ class RaceEntry extends React.Component {
         return this.setState({race: race, editMechanic: editMechanic});
     }
     
+    updateDescriptionsFormState(event, refObj, isOrderChange) {
+        console.log('x');
+        let editDescription = util.common.formState.description(event, this.state.editDescription, this.state.race);
+        editDescription.orderIndex = this.state.race.supplementalDescriptions.length;
+        editDescription.id = (this.state.race.supplementalDescriptions.length + 1) * -1;
+        let arrayPropertyRefObj = (isOrderChange) ? refObj : editDescription;
+        let race = util.common.formState.arrayProperty(event, this.state.race, arrayPropertyRefObj);
+        race.supplementalDescriptions = util.common.picklists.refactorUnsavedItemIds(race.supplementalDescriptions);
+        if (race.resetDescription){
+            editDescription = util.common.resetObject.description();
+        }
+        this.setState({race: race, editDescription: editDescription});
+    }
+    
     updateSpellSelectionFormState(event, refObj) {
         let editSpellSelection = util.common.formState.spellSelection(event, this.state.editSpellSelection, this.state.race, this.props.picklists, refObj);
         let race = util.common.formState.spellSelection(event, this.state.race, this.state.editSpellSelection, this.props.picklists, refObj);
@@ -111,6 +134,36 @@ class RaceEntry extends React.Component {
         }
         race.spellcasting.spellSelections = util.common.picklists.refactorUnsavedItemIds(race.spellcasting.spellSelections);
         return this.setState({race: race, editSpellSelection: editSpellSelection});
+    }
+    
+    onResetDescriptions() {
+        this.setState({editDescription: util.common.resetObject.description});
+    }
+    
+    onSelectDescriptions() {
+        
+    }
+    
+    updateChartFormState(event, refObj, isOrderChange) {
+        const newChartType = util.common.formState.chartType(event, this.state.selectedChartType, this.props.picklists);
+        const editChart = util.common.formState.chart(event, this.state.editChart, refObj, this.props.picklists);
+        editChart.type = newChartType;
+        editChart.orderIndex = this.state.race.charts.length;
+        editChart.id = (this.state.race.charts.length + 1) * -1;
+        let arrayPropertyRefObj = (isOrderChange) ? refObj : editChart;
+        let race = util.common.formState.arrayProperty(event, this.state.race, arrayPropertyRefObj);
+        race.charts = util.common.picklists.refactorUnsavedItemIds(race.charts);
+        this.setState({race: race, editChart: editChart, selectedChartType: newChartType});
+    }
+    
+    onResetChart() {
+        const emptyChartType = util.common.resetObject.chartType();
+        const emptyChart = util.common.resetObject.chart(emptyChartType);
+        this.setState({editChart: emptyChart, selectedChartType: emptyChartType});
+    }
+    
+    onSelectChart() {
+        
     }
     
     onChangeSubrace(event) {
@@ -142,6 +195,18 @@ class RaceEntry extends React.Component {
                 onChangeProficiencyGroup={this.updateProficiencyGroupFormState}
                 editMechanic={this.state.editMechanic}
                 onChangeMechanics={this.updateMechanicsFormState}
+                
+                editDescription={this.state.editDescription}
+                onChangeDescriptions={this.updateDescriptionsFormState}
+                onResetDescriptions={this.onResetDescriptions}
+                onSelectDescriptions={this.onSelectDescriptions}
+                
+                editChart={this.state.editChart}
+                selectedChartType={this.state.selectedChartType}
+                onChangeChart={this.updateChartFormState}
+                onResetChart={this.onResetChart}
+                onSelectChart={this.onSelectChart}
+                
                 editSpellSelection={this.state.editSpellSelection}
                 onChangeSpellSelection={this.updateSpellSelectionFormState}
                 spells={this.props.spells}

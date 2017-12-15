@@ -25,7 +25,7 @@ class DndManageSpellSelection extends React.Component {
         const schools = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC);
         const selectionTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_SELECTION);
         
-        const spellInput = (
+        /*const spellInput = (
             <DndInput
                 label="Select Spell"
                 name="spell"
@@ -75,7 +75,8 @@ class DndManageSpellSelection extends React.Component {
                     picklist={selectionTypes}
                     />
             </div>
-        );
+        );*/
+        return (<div>x</div>);
     }
     
     render() {

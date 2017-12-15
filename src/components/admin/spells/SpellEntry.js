@@ -19,11 +19,11 @@ class SpellEntry extends React.Component {
             canEdit: this.props.canEdit,
             selectedChartId: 0,
             saving: false,
-            newMechanic: Object.assign({}, util.objectModel.MECHANIC),
+            editMechanic: Object.assign({}, util.objectModel.MECHANIC),
             editDescription: Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION),
             selectedChartType: Object.assign({}, util.objectModel.CHART_TYPE),
             editChart: Object.assign({}, util.objectModel.CHART),
-            editDamageGroupinf: Object.assign({}, util.objectModel.DAMAGE)
+            editDamageGrouping: Object.assign({}, util.objectModel.DAMAGE)
         };
         this.cancelSpell = this.cancelSpell.bind(this);
         this.deleteSpell = this.deleteSpell.bind(this);
@@ -36,20 +36,17 @@ class SpellEntry extends React.Component {
         this.saveNewCastingTime = this.saveNewCastingTime.bind(this);
         this.saveNewDuration = this.saveNewDuration.bind(this);
         this.saveNewRange = this.saveNewRange.bind(this);
-        this.onChangeMechanic = this.onChangeMechanic.bind(this);
-        this.onRemoveMechanic = this.onRemoveMechanic.bind(this);
-        this.onResetMechanic = this.onResetMechanic.bind(this);
-        this.onAddMechanic = this.onAddMechanic.bind(this);
-        this.onAddDescription = this.onAddDescription.bind(this);
-        this.onRemoveDescription = this.onRemoveDescription.bind(this);
-        this.onSelectDescription = this.onSelectDescription.bind(this);
-        this.onResetDescription = this.onResetDescription.bind(this);
-        this.onCreateDescription = this.onCreateDescription.bind(this);
-        this.onChangeDescriptions = this.onChangeDescriptions.bind(this);
-        this.onChangeDescriptionOrder = this.onChangeDescriptionOrder.bind(this);
-        this.onChangeChart = this.onChangeChart.bind(this);
+        this.updateChartFormState = this.updateChartFormState.bind(this);
         this.onResetChart = this.onResetChart.bind(this);
         this.onSelectEditedChart = this.onSelectEditedChart.bind(this);
+        this.updateMechanicFormState = this.updateMechanicFormState.bind(this);
+        this.onResetMechanic = this.onResetMechanic.bind(this);
+        
+        
+        this.updateDescriptionFormState = this.updateDescriptionFormState.bind(this);
+        this.onSelectDescription = this.onSelectDescription.bind(this);
+        this.onResetDescription = this.onResetDescription.bind(this);
+        
         this.onAddDamageGrouping = this.onAddDamageGrouping.bind(this);
         this.onRemoveDamageGrouping = this.onRemoveDamageGrouping.bind(this);
         this.onResetDamageGrouping = this.onResetDamageGrouping.bind(this);
@@ -101,7 +98,7 @@ class SpellEntry extends React.Component {
             effect: {id: 0, name: ''}
         };
         blankSpell.charts = [];
-        blankSpell.mechanics = {base: [], advancement: []};
+        blankSpell.spells = {base: [], advancement: []};
         this.setState({spell: blankSpell});
     }
     
@@ -182,56 +179,62 @@ class SpellEntry extends React.Component {
         return this.setState({spell: spell});
     }
     
-    onChangeMechanic(event) {
-        const mechanic = util.common.formState.standard(event, this.state.newMechanic, this.props.picklists);
-        return this.setState({newMechanic: mechanic});
+    updateChartFormState(event, refObj, isOrderChange) {
+        const newChartType = util.common.formState.chartType(event, this.state.selectedChartType, this.props.picklists);
+        const editChart = util.common.formState.chart(event, this.state.editChart, refObj, this.props.picklists);
+        editChart.type = newChartType;
+        editChart.orderIndex = this.state.spell.charts.length;
+        editChart.id = (this.state.spell.charts.length + 1) * -1;
+        let arrayPropertyRefObj = (isOrderChange) ? refObj : editChart;
+        let spell = util.common.formState.arrayProperty(event, this.state.spell, arrayPropertyRefObj);
+        spell.charts = util.common.picklists.refactorUnsavedItemIds(spell.charts);
+        this.setState({spell: spell, editChart: editChart, selectedChartType: newChartType});
     }
     
-    onAddMechanic() {
-        const spell = this.state.spell;
-        const mechanic = this.state.newMechanic;
-        const newMechanic = Object.assign({}, util.objectModel.MECHANIC);
-        mechanic.id = (spell.mechanics.base.length + spell.mechanics.advancement.length) * -1;
-        if (this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BASE || this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
-            spell.mechanics.base.push(mechanic);
-        }
-        if (this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.ADVANCEMENT || this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
-            spell.mechanics.advancement.push(mechanic);
-        }
-        return this.setState({spell: spell, newMechanic: newMechanic});
+    onResetChart() {
+        const emptyChartType = util.common.resetObject.chartType();
+        const emptyChart = util.common.resetObject.chart(emptyChartType);
+        this.setState({editChart: emptyChart, selectedChartType: emptyChartType});
     }
     
-    onRemoveMechanic(mechanic) {
-        const spell = this.state.spell;
-        let removeIndex = -1;
-        let removeFromBase = false;
-        let removeFromAdvancement = false;
-        for (let e = 0; e < spell.mechanics.advancement.length; e++) {
-            if (mechanic.id == spell.mechanics.advancement[e].id) {
-                removeIndex = e;
-                removeFromAdvancement = true;
-            }
+    onSelectEditedChart() {
+        
+    }
+    
+    updateMechanicFormState(event, refObj) {
+        let editMechanic = util.common.formState.mechanic(event, this.state.editMechanic, this.state.spell, this.props.picklists, refObj);
+        let spell = util.common.formState.mechanic(event, this.state.spell, this.state.editMechanic, this.props.picklists, refObj);
+        if (spell.resetMechanic){
+            editMechanic = util.common.resetObject.mechanic();
         }
-        for (let e = 0; e < spell.mechanics.base.length; e++) {
-            if (mechanic.id == spell.mechanics.base[e].id) {
-                removeIndex = e;
-                removeFromBase = true;
-            }
-        }
-        if (removeIndex != -1) {
-            if (removeFromAdvancement) {
-                spell.mechanics.advancement.splice(removeIndex, 1);
-            }
-            if (removeFromBase) {
-                spell.mechanics.base.splice(removeIndex, 1);
-            }
-            return this.setState({spell: spell});
-        }
+        spell.mechanics.base = util.common.picklists.refactorUnsavedItemIds(spell.mechanics.base);
+        return this.setState({spell: spell, editMechanic: editMechanic});
     }
     
     onResetMechanic() {
-        const newMechanic = Object.assign({}, util.objectModel.MECHANIC);
-        this.setState({newMechanic: newMechanic});
+        const editMechanic = util.common.resetObject.mechanic();
+        this.setState({editMechanic: editMechanic});
+    }
+    
+    updateDescriptionFormState(event, refObj, isOrderChange) {
+        let editDescription = util.common.formState.description(event, this.state.editDescription, this.state.spell);
+        editDescription.orderIndex = this.state.spell.supplementalDescriptions.length;
+        editDescription.id = (this.state.spell.supplementalDescriptions.length + 1) * -1;
+        let arrayPropertyRefObj = (isOrderChange) ? refObj : editDescription;
+        let spell = util.common.formState.arrayProperty(event, this.state.spell, arrayPropertyRefObj);
+        spell.supplementalDescriptions = util.common.picklists.refactorUnsavedItemIds(spell.supplementalDescriptions);
+        if (spell.resetDescription){
+            editDescription = util.common.resetObject.description();
+        }
+        this.setState({spell: spell, editDescription: editDescription});
+    }
+    
+    onResetDescription() {
+        this.setState({editDescription: util.common.resetObject.description()});
+    }
+    
+    onSelectDescription() {
+        
     }
     
     onAddDescription() {
@@ -251,15 +254,6 @@ class SpellEntry extends React.Component {
             spell.supplementalDescriptions.splice(removeIndex, 1);
         }
         this.setState({spell: spell});
-    }
-    
-    onSelectDescription() {
-        
-    }
-    
-    onResetDescription() {
-        const newDescription = Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION);
-        this.setState({editDescription: newDescription});
     }
     
     onCreateDescription() {
@@ -299,32 +293,6 @@ class SpellEntry extends React.Component {
             });
             this.setState({spell: spell});
         }
-    }
-    
-    onChangeChart(event, refObj, isOrderChange) {
-        const newChartType = util.common.formState.chartType(event, this.state.selectedChartType, this.props.picklists);
-        const newChart = util.common.formState.chart(event, this.state.editChart, refObj, this.props.picklists);
-        newChart.type = newChartType;
-        newChart.orderIndex = this.state.spell.charts.length;
-        newChart.id = (this.state.spell.charts.length + 1) * -1;
-        let newSpell = null;
-        if (isOrderChange) {
-            newSpell = util.common.formState.arrayProperty(event, this.state.spell, refObj);
-        } else {
-            newSpell = util.common.formState.arrayProperty(event, this.state.spell, newChart);
-        }
-        newSpell.charts = util.common.picklists.refactorUnsavedItemIds(newSpell.charts);
-        this.setState({spell: newSpell, editChart: newChart, selectedChartType: newChartType});
-    }
-    
-    onResetChart() {
-        const emptyChartType = util.common.resetObject.chartType();
-        const emptyChart = util.common.resetObject.chartType(emptyChartType);
-        this.setState({editChart: emptyChart, selectedChartType: emptyChartType});
-    }
-    
-    onSelectEditedChart() {
-        
     }
     
     onAddDamageGrouping() {
@@ -367,24 +335,22 @@ class SpellEntry extends React.Component {
                 saveNewCastingTime={this.saveNewCastingTime}
                 saveNewDuration={this.saveNewDuration}
                 saveNewRange={this.saveNewRange}
-                onChangeMechanic={this.onChangeMechanic}
-                onAddMechanic={this.onAddMechanic}
-                onRemoveMechanic={this.onRemoveMechanic}
+                
+                editChart={this.state.editChart}
+                selectedChartType={this.state.selectedChartType}
+                onChangeChart={this.updateChartFormState}
+                onResetChart={this.onResetChart}
+                onSelectEditedChart={this.updateChartFormState}
+                
+                onChangeMechanic={this.updateMechanicFormState}
                 onResetMechanic={this.onResetMechanic}
-                newMechanic={this.state.newMechanic}
-                description={this.state.editDescription}
-                onChangeDescriptions={this.onChangeDescriptions}
-                onChangeDescriptionOrder={this.onChangeDescriptionOrder}
-                onAddDescription={this.onAddDescription}
-                onCreateDescription={this.onCreateDescription}
-                onRemoveDescription={this.onRemoveDescription}
+                editMechanic={this.state.editMechanic}
+                
+                editDescription={this.state.editDescription}
+                onChangeDescriptions={this.updateDescriptionFormState}
                 onSelectDescription={this.onSelectDescription}
                 onResetDescription={this.onResetDescription}
-                chart={this.state.editChart}
-                selectedChartType={this.state.selectedChartType}
-                onChangeChart={this.onChangeChart}
-                onResetChart={this.onResetChart}
-                onSelectEditedChart={this.onChangeChart}
+                
                 onAddDamageGrouping={this.onAddDamageGrouping}
                 onRemoveDamageGrouping={this.onRemoveDamageGrouping}
                 />

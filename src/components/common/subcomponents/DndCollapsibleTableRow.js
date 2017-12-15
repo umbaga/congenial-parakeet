@@ -44,6 +44,7 @@ class DndCollapsibleTableRow extends React.Component {
                         onMoveItem={this.props.onChangeOrder}
                         moveItemDownAction={this.props.moveItemDownAction}
                         moveItemUpAction={this.props.moveItemUpAction}
+                        name={this.props.name}
                         />
                 </td>
                 <td>
@@ -54,6 +55,7 @@ class DndCollapsibleTableRow extends React.Component {
                         editAction={this.props.selectItemAction}
                         deleteAction={this.props.removeItemAction}
                         returnCompleteObject
+                        name={this.props.name}
                         />
                 </td>
             </tr>
@@ -70,11 +72,11 @@ DndCollapsibleTableRow.propTypes = {
     onRemoveItem: PropTypes.func.isRequired,
     boundClick: PropTypes.func,
     showThisId: PropTypes.number,
-    changeOrderAction: PropTypes.string,
     removeItemAction: PropTypes.string,
     selectItemAction: PropTypes.string,
     moveItemDownAction: PropTypes.string,
-    moveItemUpAction: PropTypes.string
+    moveItemUpAction: PropTypes.string,
+    name: PropTypes.string
 };
 
 export default DndCollapsibleTableRow;

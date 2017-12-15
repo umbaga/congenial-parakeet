@@ -55,7 +55,7 @@ export const resetObject = {
     chart: function(emptyChartType, chartsLength) {
         let retVal = Object.assign({}, util.objectModel.CHART);
         retVal.id = (chartsLength + 1) * -1;
-        retVal.orderIndex = this.state.spell.charts.length;
+        retVal.orderIndex = chartsLength;
         retVal.rows = [];
         retVal.columns = [];
         retVal.entries = [];
@@ -65,6 +65,10 @@ export const resetObject = {
     },
     chartType: function() {
         let retVal = Object.assign({}, util.objectModel.CHART_TYPE);
+        return retVal;
+    },
+    description: function() {
+        let retVal = Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION);
         return retVal;
     },
     mechanic: function() {
@@ -84,6 +88,13 @@ export const resetObject = {
         return retVal;
     },
     race: function() {
+        const retVal = Object.assign({}, util.objectModel.RACE);
+        retVal.charts = [];
+        retVal.supplementalDescriptions = [];
+        retVal.mechanics = [];
+        return retVal;
+    },
+    spell: function() {
         const retVal = Object.assign({}, util.objectModel.RACE);
         retVal.components = [];
         retVal.supplementalDescriptions = [];
@@ -121,6 +132,7 @@ export const resetObject = {
 export const formState = {
     arrayProperty: function(event, obj, refObj) {
         let retVal = obj;
+        let field = formState.setFieldFromTargetName(event);
         let dataType = formState.setDataTypeFromTarget(event);
         let removeIndex = -1;
         let changedIndex = -1;
@@ -130,43 +142,51 @@ export const formState = {
         let isUp = false;
         switch (dataType) {
             case util.dataTypes.action.CHART.ADD:
-                if (retVal.charts.filter(function(c) {
+            case util.dataTypes.action.DESCRIPTION.ADD:
+                if (retVal[field].filter(function(c) {
                     return c.id == refObj.id;
                 }).length == 0) {
-                    retVal.charts.push(refObj);
+                    retVal[field].push(refObj);
                 } else {
-                    retVal.charts[util.common.picklists.getIndexById(retVal.charts, refObj.id)] = refObj;
+                    retVal[field][util.common.picklists.getIndexById(retVal[field], refObj.id)] = refObj;
                 }
                 break;
-            case util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.UP:
-            case util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.DOWN:
-                isUp = (dataType == util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.UP);
-                if ((isUp && refObj.orderIndex != 0) || (!isUp && refObj.orderIndex != retVal.charts.length - 1)) {
-                    for (let r = 0; r < retVal.charts.length; r++) {
-                        if (retVal.charts[r].id == refObj.id) {
+            case util.dataTypes.action.CHART.CHANGE_INDEX.UP:
+            case util.dataTypes.action.CHART.CHANGE_INDEX.DOWN:
+            case util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.UP:
+            case util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.DOWN:
+                if (dataType == util.dataTypes.action.CHART.CHANGE_INDEX.UP ||
+                   dataType == util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.UP) {
+                    isUp = true;
+                }
+                if ((isUp && refObj.orderIndex != 0) || (!isUp && refObj.orderIndex != retVal[field].length - 1)) {
+                    for (let r = 0; r < retVal[field].length; r++) {
+                        if (retVal[field][r].id == refObj.id) {
                             changedIndex = r;
                             otherChangedIndex = isUp ? r - 1 : r + 1;
-                            referenceOrderIndex = retVal.charts[r].orderIndex;
+                            referenceOrderIndex = retVal[field][r].orderIndex;
                             referenceOtherOrderIndex = isUp ? referenceOrderIndex - 1 : referenceOrderIndex + 1;
                             break;
                         }
                     }
                     if (changedIndex != -1 && otherChangedIndex != -1) {
-                        retVal.charts[changedIndex].orderIndex = referenceOtherOrderIndex;
-                        retVal.charts[otherChangedIndex].orderIndex = referenceOrderIndex;
+                        retVal[field][changedIndex].orderIndex = referenceOtherOrderIndex;
+                        retVal[field][otherChangedIndex].orderIndex = referenceOrderIndex;
                     }
-                    retVal.charts = retVal.charts.sort(function(a, b) {
+                    retVal[field] = retVal[field].sort(function(a, b) {
                         return a.orderIndex - b.orderIndex;
                     });
                 }
                 break;
             case util.dataTypes.action.CHART.REMOVE:
-                removeIndex = util.common.picklists.getIndexById(retVal.charts, refObj.id);
+            case util.dataTypes.action.DESCRIPTION.REMOVE:
+                removeIndex = util.common.picklists.getIndexById(retVal[field], refObj.id);
                 if (removeIndex != -1) {
-                    retVal.charts.splice(removeIndex, 1);
+                    retVal[field].splice(removeIndex, 1);
                 }
                 break;
             case util.dataTypes.action.CHART.SELECT:
+            case util.dataTypes.action.DESCRIPTION.SELECT:
                 break;
             default:
         }
@@ -189,7 +209,7 @@ export const formState = {
         return chartType;
     },
     chart: function(event, obj, refObj, picklists) {
-        let chart = util.common.formState.standard(event, obj, picklists);
+        let retVal = util.common.formState.standard(event, obj, picklists);
         let field = formState.setFieldFromTargetName(event);
         let dataType = formState.setDataTypeFromTarget(event);
         let changedEntryId = null;
@@ -210,125 +230,124 @@ export const formState = {
             //this controls standard form elements
             switch (dataType) {
                 case util.dataTypes.string.STRING:
-                    chart[field] = event.target.value;
+                    retVal[field] = event.target.value;
                     break;
                 case util.dataTypes.special.DICE_ROLL:
-                    util.common.setObjectValue(chart, field, formState.dice(event));
-                    console.log(chart[field].rendered);
-                    if (util.dataTypes.compareDataType(chart[field].rendered, util.dataTypes.special.DICE_ROLL)) {
-                        if (chart.entries.length == 0) {
-                            emptyEntry.minimum = chart[field].dieCount;
-                            emptyEntry.maximum = (chart[field].dieCount * chart[field].dieType);
-                            chart.entries.push(emptyEntry);
+                    util.common.setObjectValue(retVal, field, formState.dice(event));
+                    if (util.dataTypes.compareDataType(retVal[field].rendered, util.dataTypes.special.DICE_ROLL)) {
+                        if (retVal.entries.length == 0) {
+                            emptyEntry.minimum = retVal[field].dieCount;
+                            emptyEntry.maximum = (retVal[field].dieCount * retVal[field].dieType);
+                            retVal.entries.push(emptyEntry);
                         }
                     }
                     break;
                 case util.dataTypes.special.CHART_ENTRY_DIE_ROLL_RANGE:
                     changedEntryId = parseInt(field.split('_')[0]);
                     //get index of changed entry
-                    chartMaximumValue = chart.dice.dieCount * chart.dice.dieType;
-                    for (let x = 0; x < chart.entries.length; x++) {
-                        if (chart.entries[x].id == changedEntryId) {
+                    chartMaximumValue = retVal.dice.dieCount * retVal.dice.dieType;
+                    for (let x = 0; x < retVal.entries.length; x++) {
+                        if (retVal.entries[x].id == changedEntryId) {
                             changedEntryIndex = x;
                             break;
                         }
                     }
                     //change maximum value of changedEntry
-                    chart.entries[changedEntryIndex].maximum = parseInt(event.target.options[event.target.selectedIndex].value);
+                    retVal.entries[changedEntryIndex].maximum = parseInt(event.target.options[event.target.selectedIndex].value);
                     //check for existence of higher valued entry
-                    if (changedEntryIndex < chart.entries.length - 1) {
+                    if (changedEntryIndex < retVal.entries.length - 1) {
                         higherIndexedEntryExists = true;
                     }
                     if (higherIndexedEntryExists) {
                         //if exists, change minimum value of next record
-                        chart.entries[changedEntryIndex + 1].minimum = parseInt(event.target.options[event.target.selectedIndex].value) + 1;
-                        if (chart.entries[changedEntryIndex + 1].maximum < chart.entries[changedEntryIndex + 1].minimum) {
-                            chart.entries[changedEntryIndex + 1].maximum = chart.entries[changedEntryIndex + 1].minimum;
+                        retVal.entries[changedEntryIndex + 1].minimum = parseInt(event.target.options[event.target.selectedIndex].value) + 1;
+                        if (retVal.entries[changedEntryIndex + 1].maximum < retVal.entries[changedEntryIndex + 1].minimum) {
+                            retVal.entries[changedEntryIndex + 1].maximum = retVal.entries[changedEntryIndex + 1].minimum;
                         }
                         //remove entries with a minimum and maximum < current maximum
-                        for (let p = changedEntryIndex + 1; p < chart.entries.length; p++) {
-                            if (chart.entries[p].minimum <= parseInt(event.target.options[event.target.selectedIndex].value) && chart.entries[p].maximum <= parseInt(event.target.options[event.target.selectedIndex].value)) {
+                        for (let p = changedEntryIndex + 1; p < retVal.entries.length; p++) {
+                            if (retVal.entries[p].minimum <= parseInt(event.target.options[event.target.selectedIndex].value) && retVal.entries[p].maximum <= parseInt(event.target.options[event.target.selectedIndex].value)) {
                                 if (removeEntryIndex == -1) {
                                     removeEntryIndex = p;
                                 }
                                 removeEntryCount++;
                             }
-                            if (finalEntryIndex == -1 && chart.entries[p].maximum == chartMaximumValue) {
+                            if (finalEntryIndex == -1 && retVal.entries[p].maximum == chartMaximumValue) {
                                 finalEntryIndex = p;
                             }
                         }
-                        chart.entries.splice(removeEntryIndex, removeEntryCount);
-                        chart.entries.splice(finalEntryIndex + 1, chart.entries.length - 1);
-                        //final check on chart entry
-                        for (let h = 0; h < chart.entries.length; h++) {
+                        retVal.entries.splice(removeEntryIndex, removeEntryCount);
+                        retVal.entries.splice(finalEntryIndex + 1, retVal.entries.length - 1);
+                        //final check on retVal entry
+                        for (let h = 0; h < retVal.entries.length; h++) {
                             if (referenceEntry.minimum) {
-                                if (chart.entries[h].maximum >= referenceEntry.maximum) {
-                                    chart.entries[h].minimum = referenceEntry.maximum + 1;
-                                    chart.entries[h].maximum = referenceEntry.maximum + 1;
-                                    if (h == chart.entries.length - 1) {
-                                        chart.entries[h].maximum = chartMaximumValue;
+                                if (retVal.entries[h].maximum >= referenceEntry.maximum) {
+                                    retVal.entries[h].minimum = referenceEntry.maximum + 1;
+                                    retVal.entries[h].maximum = referenceEntry.maximum + 1;
+                                    if (h == retVal.entries.length - 1) {
+                                        retVal.entries[h].maximum = chartMaximumValue;
                                     }
                                 }
                             }
-                            referenceEntry.minimum = chart.entries[h].minimum;
-                            referenceEntry.maximum = chart.entries[h].maximum;
+                            referenceEntry.minimum = retVal.entries[h].minimum;
+                            referenceEntry.maximum = retVal.entries[h].maximum;
                         }
                     } else {
                         //if not exists, create new entry
                         newEntry = Object.assign({}, util.objectModel.DIE_CHART_ENTRY);
-                        newEntry.id = -1 * chart.entries.length;
+                        newEntry.id = -1 * retVal.entries.length;
                         newEntry.minimum = parseInt(event.target.options[event.target.selectedIndex].value) + 1;
                         newEntry.maximum = chartMaximumValue;
-                        chart.entries.push(newEntry);
+                        retVal.entries.push(newEntry);
                     }
                     break;
                 case util.dataTypes.special.CHART_ENTRY_DESCRIPTION:
                     changedEntryId = parseInt(field.split('_')[0]);
-                    for (let x = 0; x < chart.entries.length; x++) {
-                        if (chart.entries[x].id == changedEntryId) {
+                    for (let x = 0; x < retVal.entries.length; x++) {
+                        if (retVal.entries[x].id == changedEntryId) {
                             changedEntryIndex = x;
                             break;
                         }
                     }
-                    chart.entries[changedEntryIndex].description = event.target.value;
+                    retVal.entries[changedEntryIndex].description = event.target.value;
                     break;
                 case util.dataTypes.special.CHART_COLUMN_COUNT:
                 case util.dataTypes.special.CHART_ROW_COUNT:
-                    chart[field] = event.target.value;
+                    retVal[field] = event.target.value;
                     if (dataType == util.dataTypes.special.CHART_COLUMN_COUNT) {
                         for (let c = 0; c < event.target.value; c++) {
-                            if (c > chart.columns.length - 1) {
+                            if (c > retVal.columns.length - 1) {
                                 newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
                                 newColumn.id = (c + 1) * -1;
                                 newColumn.columnIndex = c;
-                                chart.columns.push(newColumn);
+                                retVal.columns.push(newColumn);
                             }
                         }
-                        if (chart.columns.length > event.target.value) {
-                            chart.columns.splice(event.target.value);
+                        if (retVal.columns.length > event.target.value) {
+                            retVal.columns.splice(event.target.value);
                         }
                     }
                     if (dataType == util.dataTypes.special.CHART_ROW_COUNT) {
                         for (let r = 0; r < event.target.value; r++) {
-                            if (r > chart.rows.length - 1) {
+                            if (r > retVal.rows.length - 1) {
                                 newRow = Object.assign({}, util.objectModel.CHART_ROW);
                                 newRow.id = (r + 1) * -1;
                                 newRow.rowIndex = r;
-                                chart.rows.push(newRow);
+                                retVal.rows.push(newRow);
                             }
                         }
-                        if (chart.rows.length > event.target.value) {
-                            chart.rows.splice(event.target.value);
+                        if (retVal.rows.length > event.target.value) {
+                            retVal.rows.splice(event.target.value);
                         }
                     }
-                    //add new chart.entries
-                    for (let c = 0; c < chart.columnCount; c++) {
-                        for (let r = 0; r < chart.rowCount; r++) {
-                            //newEntryId = -1 * ((c * (chart.rowCount)) + r + 1);
-                            newEntryId = -1 * (chart.entries.length + 1);
+                    //add new retVal.entries
+                    for (let c = 0; c < retVal.columnCount; c++) {
+                        for (let r = 0; r < retVal.rowCount; r++) {
+                            //newEntryId = -1 * ((c * (retVal.rowCount)) + r + 1);
+                            newEntryId = -1 * (retVal.entries.length + 1);
                             let entryExists = false;
-                            for (let e = 0; e < chart.entries.length; e++) {
-                                if (chart.entries[e].columnIndex == c && chart.entries[e].rowIndex == r) {
+                            for (let e = 0; e < retVal.entries.length; e++) {
+                                if (retVal.entries[e].columnIndex == c && retVal.entries[e].rowIndex == r) {
                                     entryExists = true;
                                 }
                             }
@@ -337,14 +356,14 @@ export const formState = {
                                 newEntry.id = newEntryId;
                                 newEntry.columnIndex = c;
                                 newEntry.rowIndex = r;
-                                chart.entries.push(newEntry);
+                                retVal.entries.push(newEntry);
                             }
                         }
                     }
                     //remove unneeded entries
-                    for (let e = 0; e < chart.entries.length; e++) {
-                        if (chart.columnCount <= chart.entries[e].columnIndex || chart.rowCount <= chart.entries[e].rowIndex) {
-                            chart.entries.splice(e, 1);
+                    for (let e = 0; e < retVal.entries.length; e++) {
+                        if (retVal.columnCount <= retVal.entries[e].columnIndex || retVal.rowCount <= retVal.entries[e].rowIndex) {
+                            retVal.entries.splice(e, 1);
                             e--;
                         }
                     }
@@ -366,65 +385,93 @@ export const formState = {
                 refId = entry.id;
             }
             let isFirst = removeIndex == 0;
-            let isLast = removeIndex == chart.entries.length - 1;
+            let isLast = removeIndex == retVal.entries.length - 1;
             switch (dataType) {
                 case util.dataTypes.action.CHART.ADD:
-                case util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.UP:
-                case util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.DOWN:
+                case util.dataTypes.action.CHART.CHANGE_INDEX.UP:
+                case util.dataTypes.action.CHART.CHANGE_INDEX.DOWN:
                     //DO NOTHING
                     break;
                 case util.dataTypes.action.CHART.REMOVE:
                 case util.dataTypes.action.CHART.SELECT:
-                    chart = refObj;
+                    retVal = refObj;
                     break;
                 case util.dataTypes.action.CHART.EXPAND_DIE:
-                    chart = expandChart(chart);
+                    retVal = expandChart(retVal);
                     break;
                 case util.dataTypes.action.CHART.REMOVE_ENTRY:
-                    for (let r = 0; r < chart.entries.length; r++) {
-                        if (entry.id == chart.entries[r].id) {
+                    for (let r = 0; r < retVal.entries.length; r++) {
+                        if (entry.id == retVal.entries[r].id) {
                             removeIndex = r;
-                            refMin = chart.entries[r].minimum;
+                            refMin = retVal.entries[r].minimum;
                         }
                     }
                     if (removeIndex != -1) {
-                        chart.entries.splice(removeIndex, 1);
+                        retVal.entries.splice(removeIndex, 1);
                         if (isFirst) {
-                            chart.entries[0].minimum = chart.dice.dieCount;
-                            chart.entries[0].id = refId;
+                            retVal.entries[0].minimum = retVal.dice.dieCount;
+                            retVal.entries[0].id = refId;
                         } else if (isLast) {
-                            chart.entries[chart.entries.length - 1].maximum = chart.dice.dieCount * chart.dice.dieType;
-                            chart.entries[chart.entries.length - 1].id = refId;
+                            retVal.entries[retVal.entries.length - 1].maximum = retVal.dice.dieCount * retVal.dice.dieType;
+                            retVal.entries[retVal.entries.length - 1].id = refId;
                         } else {
-                            chart.entries[removeIndex].minimum = refMin;
-                            chart.entries[removeIndex].id = refId;
+                            retVal.entries[removeIndex].minimum = refMin;
+                            retVal.entries[removeIndex].id = refId;
                         }
                     }
                     break;
                 case util.dataTypes.action.CHART.RESET:
-                    chart = Object.assign({}, util.objectModel.CHART);
-                    chart.entries = [];
-                    chart.dice = {dieCount: 0, dieType: 0, rendered: ''};
+                    retVal = Object.assign({}, util.objectModel.CHART);
+                    retVal.entries = [];
+                    retVal.dice = {dieCount: 0, dieType: 0, rendered: ''};
                     break;
                 case util.dataTypes.string.DESCRIPTION:
-                    chart[field] = event.target.innerHTML;
+                    retVal[field] = event.target.innerHTML;
                     break;
                 case util.dataTypes.special.CHART_ENTRY_DESCRIPTION:
                 case util.dataTypes.special.CHART_ROW_TITLE:
                 case util.dataTypes.special.CHART_COLUMN_TITLE:
-                    for (let q = 0; q < chart[recordType].length; q++) {
-                        if (recordId == chart[recordType][q].id) {
-                            chart[recordType][q][recordField] = recordValue;
+                    for (let q = 0; q < retVal[recordType].length; q++) {
+                        if (recordId == retVal[recordType][q].id) {
+                            retVal[recordType][q][recordField] = recordValue;
                         }
                     }
                     break;
                 default:
             }
         }
-        return chart;
+        return retVal;
     },
-    descriptions: function(event, obj, refObj) {
+    description: function(event, obj, refObj) {
         let retVal = obj;
+        let field = formState.setFieldFromTargetName(event);
+        let dataType = formState.setDataTypeFromTarget(event);
+        if (retVal[field] != undefined) {
+            if (event.target.type !== undefined) {
+                switch (dataType) {
+                    case util.dataTypes.string.STRING:
+                        retVal[field] = event.target.value;
+                        break;
+                    default:
+                }
+            } else {
+                switch (dataType) {
+                    case util.dataTypes.string.DESCRIPTION:
+                        retVal[field] = event.target.innerHTML;
+                        break;
+                    case util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.DOWN:
+                    case util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.UP:
+                        break;
+                    case util.dataTypes.action.DESCRIPTION.ADD:
+                        break;
+                    case util.dataTypes.action.DESCRIPTION.REMOVE:
+                        break;
+                    case util.dataTypes.action.DESCRIPTION.SELECT:
+                        break;
+                    default:
+                }
+            }
+        }
         
         return retVal;
     },
@@ -619,7 +666,6 @@ export const formState = {
         let field = formState.setFieldFromTargetName(event);
         let dataType = formState.setDataTypeFromTarget(event);
         let newSelectedValue = {};
-        let removeThisIndex = -1;
         delete retVal.resetSpellSelection;
         if (retVal[field] != undefined) {
             switch (dataType) {
@@ -840,17 +886,21 @@ export const formState = {
         return retVal;
     },
     setFieldFromTargetName: function(event) {
-        if (event.target.getAttribute('name')) {
-            return event.target.getAttribute('name');
+        if (event.target.getAttribute('id')) {
+            return event.target.getAttribute('id');
         } else {
-            let testObject = event.target.parentElement;
-            let assigned = false;
-            while (!assigned) {
-                if (testObject && testObject.getAttribute('name')) {
-                    assigned = true;
-                    return testObject.getAttribute('name');
-                } else {
-                    testObject = testObject.parentElement;
+            if (event.target.getAttribute('name')) {
+                return event.target.getAttribute('name');
+            } else {
+                let testObject = event.target.parentElement;
+                let assigned = false;
+                while (!assigned) {
+                    if (testObject && testObject.getAttribute('name')) {
+                        assigned = true;
+                        return testObject.getAttribute('name');
+                    } else {
+                        testObject = testObject.parentElement;
+                    }
                 }
             }
         }

@@ -7,7 +7,6 @@ import { Tabs, Tab } from 'react-bootstrap';
 import DndManageAssignedItems from '../../common/objectManagement/DndManageAssignedItems';
 import DndManageItemGroups from '../../common/objectManagement/DndManageItemGroups';
 import DndManageCharts from '../../common/objectManagement/DndManageCharts';
-import DndListItemButtonBar from '../../common/buttons/DndListItemButtonBar';
 
 class BackgroundForm extends React.Component {
     constructor(props) {
@@ -165,7 +164,8 @@ BackgroundForm.propTypes = {
     addEquipment: PropTypes.func.isRequired,
     removeEquipment: PropTypes.func.isRequired,
     changeEquipmentCount: PropTypes.func.isRequired,
-    onChangeEquipment: PropTypes.func.isRequired
+    onChangeEquipment: PropTypes.func.isRequired,
+    equipmentItem: PropTypes.object.isRequired
 };
 
 export default BackgroundForm;

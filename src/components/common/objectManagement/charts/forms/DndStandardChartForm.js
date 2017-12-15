@@ -21,6 +21,7 @@ class DndStandardChartForm extends React.Component {
                         <th></th>
                         {chart.columns.map(column =>
                             <th
+                                name={util.dataTypes.special.CHART_COLUMN_TITLE}
                                 datatype={util.dataTypes.special.CHART_COLUMN_TITLE}
                                 contentEditable
                                 onBlur={this.props.onChange}
@@ -36,6 +37,7 @@ class DndStandardChartForm extends React.Component {
                     <tr
                         key={row.id}>
                         <th
+                            name={util.dataTypes.special.CHART_ROW_TITLE}
                             datatype={util.dataTypes.special.CHART_ROW_TITLE}
                             contentEditable
                             onBlur={this.props.onChange}
@@ -46,6 +48,7 @@ class DndStandardChartForm extends React.Component {
                             return row.id == -1 * (entry.rowIndex + 1);
                         }).map(entry =>
                             <td
+                                name={util.dataTypes.special.CHART_ENTRY_DESCRIPTION}
                                 datatype={util.dataTypes.special.CHART_ENTRY_DESCRIPTION}
                                 contentEditable
                                 onBlur={this.props.onChange}

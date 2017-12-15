@@ -40,8 +40,8 @@ class DndManageCharts extends React.Component {
                     removeItemAction={util.dataTypes.action.CHART.REMOVE}
                     selectItemAction={util.dataTypes.action.CHART.SELECT}
                     onReset={this.props.onReset}
-                    moveItemDownAction={util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.DOWN}
-                    moveItemUpAction={util.dataTypes.action.CHART.CHANGE_ENTRY_INDEX.UP}
+                    moveItemDownAction={util.dataTypes.action.CHART.CHANGE_INDEX.DOWN}
+                    moveItemUpAction={util.dataTypes.action.CHART.CHANGE_INDEX.UP}
                     />
             );
         }
@@ -96,6 +96,7 @@ class DndManageCharts extends React.Component {
                 onReset={this.props.onReset}
                 saveAction={util.dataTypes.action.CHART.ADD}
                 resetAction={util.dataTypes.action.CHART.RESET}
+                name="charts"
                 />
         );
     }

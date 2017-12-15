@@ -224,6 +224,7 @@ export const RACE = {
             modifier: 0
         }
     },
+    charts: [],
     mechanics: {
         base: []
     },
@@ -251,6 +252,7 @@ export const RACE = {
             }
         ]
     },
+    supplementalDescriptions: [],
     tags: [],
     type: {id: 0, name: 'Humanoid'},
     vitals: {
@@ -327,7 +329,12 @@ export const SPELL_SELECTION = {
     type: {id: 0, name: ''}
 
 };
-export const SUPPLEMENTAL_DESCRIPTION = {id: 0, title: '', description: ''};
+export const SUPPLEMENTAL_DESCRIPTION = {
+    id: 0,
+    title: '',
+    description: '',
+    orderIndex: 0
+};
 export const TYPE = {id: 0, name: ''};
 export const WEAPON = {
     id: 0,

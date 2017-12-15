@@ -20,20 +20,24 @@ class DndDieChartForm extends React.Component {
                         dataType={util.dataTypes.action.CHART.EXPAND_DIE}
                         onClick={this.props.onChange}
                         />
-                    {chart.entries.map(entry =>
-                                       <DndManageDieChartEntry
-                                           key={entry.id}
-                                           chart={chart}
-                                           entry={entry}
-                                           onChange={this.props.onChange}
-                                           />
-                                      )}
+                    {chart.entries.map(function(entry, idx) {
+                        return (
+                           <DndManageDieChartEntry
+                               key={idx}
+                               chart={chart}
+                               entry={entry}
+                               onChange={this.props.onChange}
+                               />
+                        );
+                    }.bind(this))}
                 </div>
             );
         }
         return null;
     }
-    
+    /*
+                    {chart.entries.map(entry =>
+                                      )}*/
     render() {
         const chart = this.props.chart;
         return (

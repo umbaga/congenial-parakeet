@@ -20,9 +20,7 @@ const PicklistList = ({picklists, openModal, selectedId, changeSelectedId, onEdi
         </tbody>
     );
 };
-/*
-            {picklists.map(picklist =>
-                          )}*/
+
 PicklistList.propTypes = {
     picklists: PropTypes.array.isRequired,
     openModal: PropTypes.func.isRequired,

@@ -46,10 +46,11 @@ class DndListItemButtonBar extends React.Component {
     render() {
         let wrapperClass = 'form-group';
         let deleteButton = null;
+        let name = (this.props.name && this.props.name.length != 0) ? this.props.name : this.props.dataType;
         if (this.props.hideDeleteButton) {
             deleteButton = null;
         } else {
-            deleteButton = (<DndButton onClick={this._onDelete} buttonType="delete" dataType={this.props.deleteAction}/>);
+            deleteButton = (<DndButton onClick={this._onDelete} buttonType="delete" dataType={this.props.deleteAction} name={name}/>);
         }
         let detailsButton = null;
         if (this.props.showDetailsButton) {
@@ -62,7 +63,7 @@ class DndListItemButtonBar extends React.Component {
                 <ButtonGroup>
                     {deleteButton}
                     {detailsButton}
-                    <DndButton onClick={this._onEdit} buttonType="edit" dataType={this.props.editAction}/>
+                    <DndButton onClick={this._onEdit} buttonType="edit" dataType={this.props.editAction} name={name}/>
                 </ButtonGroup>
             </Popover>
         );
@@ -87,7 +88,9 @@ DndListItemButtonBar.propTypes = {
     showDetailsButton: PropTypes.bool,
     deleteAction: PropTypes.string,
     editAction: PropTypes.string,
-    returnCompleteObject: PropTypes.bool
+    returnCompleteObject: PropTypes.bool,
+    dataType: PropTypes.string,
+    name: PropTypes.string
 };
 
 export default DndListItemButtonBar;

@@ -9,6 +9,8 @@ import DndManageTextBoxList from '../../common/objectManagement/DndManageTextBox
 import DndManageItemGroups from '../../common/objectManagement/DndManageItemGroups';
 import DndManageMechanics from '../../common/objectManagement/DndManageMechanics';
 import DndManageSpellSelection from '../../common/objectManagement/DndManageSpellSelection';
+import DndManageSupplementalDescriptions from '../../common/objectManagement/DndManageSupplementalDescriptions';
+import DndManageCharts from '../../common/objectManagement/DndManageCharts';
 
 class RaceForm extends React.Component {
     constructor(props) {
@@ -228,25 +230,6 @@ class RaceForm extends React.Component {
                                     />
                             </div>
                         </Tab>
-                        <Tab eventKey={5} title="Spellcasting">
-                            <div>&nbsp;</div>
-                            <DndInput
-                                label="Spellcasting Ability"
-                                name="spellcasting.abilityScore"
-                                value={race.spellcasting.abilityScore}
-                                onChange={this.props.onChange}
-                                dataType={util.dataTypes.picklist.ABILITY_SCORE}
-                                picklist={abilityScores}
-                                />
-                            <DndManageSpellSelection
-                                spellSelections={race.spellcasting.spellSelections}
-                                picklists={picklists}
-                                editSpellSelection={this.props.editSpellSelection}
-                                onChange={this.props.onChangeSpellSelection}
-                                spells={this.props.spells}
-                                spelllists={this.props.spelllists}
-                                />
-                        </Tab>
                         <Tab eventKey={6} title="Proficiencies">
                             <div>&nbsp;</div>
                             <DndManageItemGroups
@@ -272,13 +255,48 @@ class RaceForm extends React.Component {
                                 editMechanic={this.props.editMechanic}
                                 />
                         </Tab>
+                        <Tab eventKey={5} title="Spellcasting">
+                            <div>&nbsp;</div>
+                            <DndInput
+                                label="Spellcasting Ability"
+                                name="spellcasting.abilityScore"
+                                value={race.spellcasting.abilityScore}
+                                onChange={this.props.onChange}
+                                dataType={util.dataTypes.picklist.ABILITY_SCORE}
+                                picklist={abilityScores}
+                                />
+                            <DndManageSpellSelection
+                                spellSelections={race.spellcasting.spellSelections}
+                                picklists={picklists}
+                                editSpellSelection={this.props.editSpellSelection}
+                                onChange={this.props.onChangeSpellSelection}
+                                spells={this.props.spells}
+                                spelllists={this.props.spelllists}
+                                />
+                        </Tab>
                         <Tab eventKey={8} title="Descriptions">
                             <div>&nbsp;</div>
+                            <DndManageSupplementalDescriptions
+                                descriptions={race.supplementalDescriptions}
+                                description={this.props.editDescription}
+                                onChange={this.props.onChangeDescriptions}
+                                onSelectDescription={this.props.onSelectDescriptions}
+                                onResetDescription={this.props.onResetDescriptions}
+                                />
                         
                         </Tab>
                         <Tab eventKey={9} title="Charts">
                             <div>&nbsp;</div>
                             NEED TO ADD SELECTION CHART TYPE (for Dragonborn species)
+                            <DndManageCharts
+                                chart={this.props.editChart}
+                                charts={race.charts}
+                                picklists={this.props.picklists}
+                                selectedChartType={this.props.selectedChartType}
+                                onChange={this.props.onChangeChart}
+                                onReset={this.props.onResetChart}
+                                onSelectEdited={this.props.onSelectChart}
+                                />
                         </Tab>
                     </Tabs>
                 </form>
@@ -303,6 +321,18 @@ RaceForm.propTypes = {
     onChangeProficiencyGroup: PropTypes.func.isRequired,
     editMechanic: PropTypes.object.isRequired,
     onChangeMechanics: PropTypes.func.isRequired,
+    
+    editDescription: PropTypes.object.isRequired,
+    onChangeDescriptions: PropTypes.func.isRequired,
+    onResetDescriptions: PropTypes.func.isRequired,
+    onSelectDescriptions: PropTypes.func.isRequired,
+    
+    editChart: PropTypes.object.isRequired,
+    selectedChartType: PropTypes.object.isRequired,
+    onChangeChart: PropTypes.func.isRequired,
+    onResetChart: PropTypes.func.isRequired,
+    onSelectChart: PropTypes.func.isRequired,
+    
     editSpellSelection: PropTypes.object.isRequired,
     onChangeSpellSelection: PropTypes.func.isRequired,
     spells: PropTypes.array.isRequired,
