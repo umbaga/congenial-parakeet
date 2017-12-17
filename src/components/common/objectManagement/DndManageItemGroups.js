@@ -13,6 +13,8 @@ class DndManageItemGroups extends React.Component {
         this.renderItemToggle = this.renderItemToggle.bind(this);
         this.renderItemGroupList = this.renderItemGroupList.bind(this);
         this._formatText = this._formatText.bind(this);
+        this.renderConditionalPicklistInputs = this.renderConditionalPicklistInputs.bind(this);
+        this.renderConditionalTextInput = this.renderConditionalTextInput.bind(this);
     }
 
     renderCategory(itemGroup, hasCategories, picklist) {
@@ -58,7 +60,8 @@ class DndManageItemGroups extends React.Component {
                         dataType={util.dataTypes.array.PROFICIENCIES}
                         value={itemGroup[this.props.toggleFieldName]}
                         onChange={this.props.onChange}
-                        picklist={picklist} />
+                        picklist={picklist}
+                        />
                 );
             }
         }
@@ -102,6 +105,44 @@ class DndManageItemGroups extends React.Component {
         }
     }
     
+    renderConditionalPicklistInputs(itemGroup, hasCategories, items) {
+        if (itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.CONDITIONAL) {
+            if (!hasCategories || (hasCategories && itemGroup.category.id != 0)) {
+                return (
+                    <div>
+                        <DndInput
+                            name="proficiencies"
+                            label={util.format.forDisplay.string.renderSingularPlural(this.props.title, 2)}
+                            dataType={util.dataTypes.picklist.PROFICIENCY}
+                            value={itemGroup[this.props.toggleFieldName]}
+                            onChange={this.props.onChange}
+                            picklist={items}
+                            />
+                        {this.renderConditionalTextInput(itemGroup, hasCategories)}
+                    </div>
+                );
+            }
+        }
+        return null;
+    }
+    
+    renderConditionalTextInput(itemGroup) {
+        if (itemGroup.proficiencies && itemGroup.proficiencies.length != 0) {
+            return (
+                <div>
+                    <DndInput
+                        name="conditionalText"
+                        label="Conditional Text"
+                        dataType={util.dataTypes.string.STRING}
+                        value={itemGroup.conditionalText}
+                        onChange={this.props.onChange}
+                        />
+                </div>
+            );
+        }
+        return null;
+    }
+    
     render() {
         const itemGroups = this.props.itemGroups;
         let hasCategories = (this.props.categoryTypeId && this.props.categoryTypeId.length != 0);
@@ -126,6 +167,7 @@ class DndManageItemGroups extends React.Component {
                     {this.renderSelectCount(itemGroup)}
                     {this.renderCategory(itemGroup, hasCategories, categories)}
                     {this.renderItemToggle(itemGroup, items)}
+                    {this.renderConditionalPicklistInputs(itemGroup, hasCategories, items)}
                     <DndDataEntryButtonBar
                         name={this.props.buttonClickFieldName}
                         onCancel={this.props.onChange}

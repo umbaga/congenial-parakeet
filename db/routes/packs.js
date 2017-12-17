@@ -1,4 +1,3 @@
-
 module.exports = function(app, pg, async, pool, itemtypes, modules) {
     app.delete('/api/adm/equipment/pack/:id', function(req, res) {
         var results = [];

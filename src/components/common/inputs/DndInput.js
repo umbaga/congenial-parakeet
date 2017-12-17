@@ -35,6 +35,7 @@ class DndInput extends React.Component {
             size = this.props.selectBoxSize;
         }
         let placeholderText = '';
+        
         switch (this.props.dataType) {
             case util.dataTypes.bool.BOOL:
             case util.dataTypes.bool.HAS_DISADVANTAGE:
@@ -63,6 +64,7 @@ class DndInput extends React.Component {
                 break;
             case util.dataTypes.array.ADVANCED_SENSE:
             case util.dataTypes.array.MOVEMENT:
+            case util.dataTypes.number.CHARACTER_LEVEL:
             case util.dataTypes.number.COIN:
             case util.dataTypes.number.INT:
             case util.dataTypes.number.SPELL_LEVEL:
@@ -82,6 +84,20 @@ class DndInput extends React.Component {
                                         step={numberStepVal}
                                         min="0"
                                         max="9"
+                                        readOnly={isReadOnly} />);
+                } else if (this.props.dataType == util.dataTypes.number.SPELL_LEVEL) {
+                    primaryInput = (<input
+                                        type="number"
+                                        name={this.props.name}
+                                        ref={this.props.name}
+                                        placeholder={this.props.placeholder}
+                                        value={this.props.value}
+                                        datatype={this.props.dataType}
+                                        onChange={this.props.onChange}
+                                        className="form-control"
+                                        step={numberStepVal}
+                                        min="1"
+                                        max="20"
                                         readOnly={isReadOnly} />);
                 } else {
                     primaryInput = (<input
@@ -125,8 +141,10 @@ class DndInput extends React.Component {
             case util.dataTypes.picklist.MECHANIC_TARGET:
             case util.dataTypes.picklist.MECHANIC_TYPE:
             case util.dataTypes.picklist.MONSTER_TYPE:
+            case util.dataTypes.picklist.PROFICIENCY:
             case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
             case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
+            case util.dataTypes.picklist.RECHARGE_TYPE:
             case util.dataTypes.picklist.RESOURCE:
             case util.dataTypes.picklist.SAVE_EFFECT:
             case util.dataTypes.picklist.SCHOOL_OF_MAGIC:
@@ -283,6 +301,7 @@ class DndInput extends React.Component {
                 dataType={this.props.dataType}
                 inputCols={this.props.inputCols}
                 labelCols={this.props.labelCols}
+                stackLabel={this.props.stackLabel}
                 >
                 <div>
                     {finalInput}
@@ -310,6 +329,7 @@ DndInput.propTypes = {
     picklist: PropTypes.array,
     placeholder: PropTypes.string,
     selectBoxSize: PropTypes.number,
+    stackLabel: PropTypes.bool,
     value: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,

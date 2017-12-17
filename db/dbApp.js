@@ -1,7 +1,7 @@
 var express = require('express');
 
 var itemtypes = require('./modules/itemtypeDefinition');
-var modules = require('./modules/manageObjects');
+var modules = require('./modules/common');
 
 var runArmors = require('./routes/armors');
 var runBackgrounds = require('./routes/backgrounds');

@@ -403,7 +403,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, resObj);
                     });
                 },
-                function insertEqupmentLink(resObj, callback) {
+                function insertEquipmentLink(resObj, callback) {
                     results = [];
                     vals = [];
                     if (resObj.background.assignedEquipment && resObj.background.assignedEquipment.length != 0) {
@@ -633,22 +633,25 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     vals = [];
                     if (resObj.background.proficiencyGroups && resObj.background.proficiencyGroups.length != 0) {
                         sql = 'INSERT INTO adm_def_item_group';
-                        sql += ' ("itemGroupId", "mechanicTypeId", "selectCount")';
+                        sql += ' ("itemGroupId", "mechanicTypeId", "selectCount", "conditionalText")';
                         sql += ' VALUES';
                         var first = 1;
                         var second = 2;
                         var third = 3;
+                        var fourth = 4;
                         for (var i = 0; i < resObj.background.proficiencyGroups.length; i++) {
-                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
                             if (i < resObj.background.proficiencyGroups.length - 1) {
                                 sql += ', ';
                             }
                             vals.push(resObj.background.proficiencyGroups[i].id);
                             vals.push(resObj.background.proficiencyGroups[i].mechanic.id);
                             vals.push(resObj.background.proficiencyGroups[i].selectCount);
-                            first = first + 3;
-                            second = second + 3;
-                            third = third + 3;
+                            vals.push(resObj.background.proficiencyGroups[i].conditionalText);
+                            first = first + 4;
+                            second = second + 4;
+                            third = third + 4;
+                            fourth = fourth + 4;
                         }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {

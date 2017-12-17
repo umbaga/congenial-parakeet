@@ -161,6 +161,7 @@ export const MECHANIC = {
     id: 0,
     assignmentType: {id: 1},
     dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
+    specialText: '',
     target: {id: 0, name: ''},
     type: {id: 0, name: ''},
     value: 0,
@@ -202,6 +203,7 @@ export const PROFICIENCY_GROUP = {
         name: '',
         parentId: 0
     },
+    conditionalText: '',
     mechanic: {
         id: 0,
         name: ''
@@ -225,36 +227,25 @@ export const RACE = {
         }
     },
     charts: [],
+    descriptions: [],
     mechanics: {
         base: []
     },
     movement: [
         {id: 2275, name: 'Walking', speed: 30}
     ],
-    parentId: 0,
+    parent: {id: 0},
     proficiencyGroups: [],
     resource: {id: 2, name: 'Player\'s Handbook'},
     senses: [],
-    size: {id: 0, name: 'Medium'},
+    size: {id: 2270, name: 'Medium'},
     spellcasting: {
         abilityScore: {id: 0, name: ''},
-        spellSelections: [
-            {
-                castingCount: 0,
-                characterLevel: 0,
-                restType: {id: 0, name: ''},
-                school: {id: 0, name: ''},
-                selectCount: 0,
-                selectionType: {id: 0, name: ''},
-                spell: {id: 0, name: ''},
-                spellLevel: 0,
-                type: {id: 0, name: ''}
-            }
-        ]
+        spellSelections: []
     },
     supplementalDescriptions: [],
     tags: [],
-    type: {id: 0, name: 'Humanoid'},
+    type: {id: 2263, name: 'Humanoid'},
     vitals: {
         height: {
             base: 0,
@@ -318,16 +309,15 @@ export const SPELL_LIST = {
 };
 export const SPELL_RANGE = {id: 0, name: ''};
 export const SPELL_SELECTION = {
-    castingCount: 0,
-    characterLevel: 0,
-    restType: {id: 0, name: ''},
+    castingCount: 1,
+    characterLevel: 1,
+    rechargeType: {id: 0, name: ''},
     school: {id: 0, name: ''},
-    selectCount: 0,
+    selectCount: 1,
     selectionType: {id: 0, name: ''},
     spell: {id: 0, name: ''},
     spellLevel: 0,
-    type: {id: 0, name: ''}
-
+    spelllist: {id: 0, name: ''}
 };
 export const SUPPLEMENTAL_DESCRIPTION = {
     id: 0,

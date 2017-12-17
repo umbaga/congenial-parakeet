@@ -314,6 +314,9 @@ obj.itemGroup = function(val) {
                 }
             }
             break;
+        case util.itemTypes.SELECTION_MECHANIC.CONDITIONAL:
+            retVal = 'You gain proficiency with ' + val.proficiencies[0].name + ' checks ' + val.conditionalText;
+            break;
         default:
     }
     return retVal;
@@ -360,6 +363,16 @@ obj.mechanic = function(val) {
             break;
         case util.itemTypes.MECHANIC_TYPE.APPLY_ABILITY_SCORE_TO_STAT:
             retVal = '+' + val.valueObject.name + ' modifier to ' + val.target.name;
+            break;
+        case util.itemTypes.MECHANIC_TYPE.SPECIAL_TEXT:
+            retVal = val.specialText;
+            break;
+        case util.itemTypes.MECHANIC_TYPE.DOUBLE_PROFICIENCY_BONUS:
+            retVal = 'Double proficiency bonus with ' + val.target.name + ' checks';
+            if (val.specialText && val.specialText.length != 0) {
+                retVal += ' ' + val.specialText;
+            }
+            retVal += '.';
             break;
         default:
             retVal = 'need to add to switch in format.forDisplay.obj.mechanic';
@@ -441,6 +454,77 @@ obj.spellLevelAndSchool = function(val) {
         return util.format.forDisplay.number.ordinal(val.level) + '-level ' + val.school.name + isRitualText;
     }
 };
+obj.spellSelection = function(val) {
+    let retVal = '';
+    switch (val.type.id) {
+        case util.itemTypes.SPELL_SELECTION.BY_LEVEL:
+            if (val.characterLevel != 1) {
+                retVal += ' At ' + util.format.forDisplay.number.ordinal(val.characterLevel) + ' level, select';
+            } else {
+                retVal += 'Select';
+            }
+            retVal += ' ' + val.selectCount.toString();
+            retVal += 'Select ' + val.selectCount.toString();
+            retVal += ' ' + (val.spellLevel != 0) ? util.format.forDisplay.number.ordinal(val.spellLevel) + ' level ' + util.format.forDisplay.string.renderSingularPlural('spell', val.selectCount) : ' cantrips';
+            if (val.spellLevel != 0) {
+                retVal += ' You can cast ' + util.format.forDisplay.string.renderSingularPlural('this', val.selectCount) + ' ' + util.format.forDisplay.string.renderSingularPlural('spell', val.selectCount);
+                retVal += ' ' + val.castingCount.toString() + ' ' + util.format.forDisplay.string.renderSingularPlural('time', val.castingCount);
+                retVal += ' per ' + val.rechargeType.name + '.';
+            }
+            break;
+        case util.itemTypes.SPELL_SELECTION.BY_SCHOOL:
+            if (val.characterLevel != 1) {
+                retVal += ' At ' + util.format.forDisplay.number.ordinal(val.characterLevel) + ' level, select';
+            } else {
+                retVal += 'Select';
+            }
+            retVal += ' ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' ';
+            if (val.spellLevel != 0) {
+                retVal += util.format.forDisplay.number.ordinal(val.spellLevel) + ' level ' + util.format.forDisplay.string.renderSingularPlural('spell', val.selectCount);
+            } else {
+                retVal += util.format.forDisplay.string.renderSingularPlural('cantrip', val.selectCount);
+            }
+            //retVal += ' ' + (val.spellLevel != 0) ? util.format.forDisplay.number.ordinal(val.spellLevel) + ' level ' + util.format.forDisplay.string.renderSingularPlural('spell', val.selectCount) : ' cantrips';
+            retVal += ' from the school of ' + val.school.name + '.';
+            if (val.spellLevel != 0) {
+                retVal += ' You can cast ' + util.format.forDisplay.string.renderSingularPlural('this', val.selectCount) + ' ' + util.format.forDisplay.string.renderSingularPlural('spell', val.selectCount);
+                retVal += ' ' + val.castingCount.toString() + ' ' + util.format.forDisplay.string.renderSingularPlural('time', val.castingCount);
+                retVal += ' per ' + val.rechargeType.name + '.';
+            }
+            break;
+        case util.itemTypes.SPELL_SELECTION.BY_SPELL:
+            if (val.characterLevel != 1) {
+                retVal += ' At ' + util.format.forDisplay.number.ordinal(val.characterLevel) + ' level, you';
+            } else {
+                retVal += 'You';
+            }
+            retVal += ' can cast the ' + ((val.spellLevel == 0) ? 'cantrip' : 'spell');
+            retVal += ' ' + val.spell.name + '.';
+            if (val.spellLevel != 0) {
+                retVal += ' You can cast this spell';
+                retVal += ' ' + val.castingCount.toString() + ' ' + util.format.forDisplay.string.renderSingularPlural('time', val.castingCount);
+                retVal += ' per ' + val.rechargeType.name + '.';
+            }
+            break;
+        case util.itemTypes.SPELL_SELECTION.BY_SPELL_LIST:
+            if (val.characterLevel != 1) {
+                retVal += ' At ' + util.format.forDisplay.number.ordinal(val.characterLevel) + ' level, select';
+            } else {
+                retVal += 'Select';
+            }
+            retVal += ' ' + val.selectCount.toString() + ' ';
+            retVal += ' ' + (val.spellLevel != 0) ? util.format.forDisplay.number.ordinal(val.spellLevel) + ' level ' + util.format.forDisplay.string.renderSingularPlural('spell', val.selectCount) : ' cantrips';
+            retVal += ' from the ' + val.spelllist.name + ' Spell List.';
+            if (val.spellLevel != 0) {
+                retVal += ' You can cast ' + util.format.forDisplay.string.renderSingularPlural('this', val.selectCount) + ' ' + util.format.forDisplay.string.renderSingularPlural('spell', val.selectCount);
+                retVal += ' ' + val.castingCount.toString() + ' ' + util.format.forDisplay.string.renderSingularPlural('time', val.castingCount);
+                retVal += ' per ' + val.rechargeType.name + '.';
+            }
+            break;
+        default:
+    }
+    return retVal;
+};
 
 let string = {};
 string.dieRoll = function(val, omitOnes) {
@@ -492,10 +576,14 @@ string.renderSingularPlural = function(val, count) {
     if (count == 1) {
         return val;
     } else {
-        if (val.charAt(val.length - 1).toLowerCase() == 'y') {
-            return val.toString().substring(0, val.length - 1) + 'ies';
+        if (val == 'this') {
+            return 'these';
         } else {
-            return val + 's';
+            if (val.charAt(val.length - 1).toLowerCase() == 'y') {
+                return val.toString().substring(0, val.length - 1) + 'ies';
+            } else {
+                return val + 's';
+            }
         }
     }
 };

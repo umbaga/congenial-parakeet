@@ -89,6 +89,8 @@ class RaceEntry extends React.Component {
     
     updateFormState(event) {
         const race = util.common.formState.standard(event, this.state.race, this.props.picklists);
+        console.log(race);
+        //TODO: Need to check if parent is being edited, then populate size, monster type & tags, movement, and senses with parental values
         return this.setState({race: race});
     }
     
@@ -113,7 +115,6 @@ class RaceEntry extends React.Component {
     }
     
     updateDescriptionsFormState(event, refObj, isOrderChange) {
-        console.log('x');
         let editDescription = util.common.formState.description(event, this.state.editDescription, this.state.race);
         editDescription.orderIndex = this.state.race.supplementalDescriptions.length;
         editDescription.id = (this.state.race.supplementalDescriptions.length + 1) * -1;
@@ -129,7 +130,7 @@ class RaceEntry extends React.Component {
     updateSpellSelectionFormState(event, refObj) {
         let editSpellSelection = util.common.formState.spellSelection(event, this.state.editSpellSelection, this.state.race, this.props.picklists, refObj);
         let race = util.common.formState.spellSelection(event, this.state.race, this.state.editSpellSelection, this.props.picklists, refObj);
-        if (race.resetSpellSelections){
+        if (race.resetSpellSelection){
             editSpellSelection = util.common.resetObject.spellSelections();
         }
         race.spellcasting.spellSelections = util.common.picklists.refactorUnsavedItemIds(race.spellcasting.spellSelections);
@@ -137,7 +138,7 @@ class RaceEntry extends React.Component {
     }
     
     onResetDescriptions() {
-        this.setState({editDescription: util.common.resetObject.description});
+        this.setState({editDescription: util.common.resetObject.description()});
     }
     
     onSelectDescriptions() {

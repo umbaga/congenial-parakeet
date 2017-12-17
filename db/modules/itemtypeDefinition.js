@@ -32,6 +32,7 @@ module.exports = {
         SELECTION_MECHANIC: 66,
         SIZE: 2251,
         SKILL: 396,
+        SPECIAL_MECHANIC: 2322,
         SPELL: 119,
         SPELLCASTING_FOCUS: 483,
         SPELL_CASTING_TIME: 71,
@@ -104,9 +105,11 @@ module.exports = {
         DISADVANTAGE: 867,
         DISADVANTAGE_SAVING_THROW: 871,
         DIVIDE_STAT: 2003,
+        DOUBLE_PROFICIENCY_BONUS: 2355,
         IMMUNITY: 872,
         MULTIPLY_STAT: 1617,
         RESISTANCE: 868,
+        SPECIAL_TEXT: 2321,
         VULNERABILITY: 869
     },
     MOVEMENT_TYPE: {
@@ -132,6 +135,7 @@ module.exports = {
     },
     SELECTION_MECHANIC: {
         ASSIGNMENT: 79,
+        CONDITIONAL: 2343,
         SELECT_FROM: {
             CATEGORY: 80,
             LIST: 81

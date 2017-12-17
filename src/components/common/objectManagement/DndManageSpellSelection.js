@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import util from '../../../util/util';
 import DndInput from '../inputs/DndInput';
 import DndDataEntryButtonBar from '../buttons/DndDataEntryButtonBar';
-import DndAssignedItemRow from '../subcomponents/DndAssignedItemRow';
+import DndSpellSelectionRow from '../subcomponents/DndSpellSelectionRow';
 
 class DndManageSpellSelection extends React.Component {
     constructor(props, context) {
@@ -15,17 +15,45 @@ class DndManageSpellSelection extends React.Component {
     
     renderList() {
         const spellSelections = this.props.spellSelections;
-        
+        if (spellSelections && spellSelections.length != 0) {
+            return (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Assigned Spells</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {spellSelections.map(function(spellSelection, idx) {
+                            return (
+                                <DndSpellSelectionRow
+                                    key={idx}
+                                    spellSelection={spellSelection}
+                                    onRemove={this.props.onChange}
+                                    name="spellcasting.spellSelections"
+                                    dataType={util.dataTypes.action.SPELL_SELECTION.REMOVE}
+                                    />
+                            );
+                        }.bind(this))}
+                    </tbody>
+                </table>
+            );
+        }
+        return null;
     }
     
     renderForm(){
         const editSpellSelection = this.props.editSpellSelection;
+        const rechargeTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.RECHARGE_TYPE);
         const spells = this.props.spells;
         const spelllists = this.props.spelllists;
         const schools = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC);
         const selectionTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_SELECTION);
+        let selectionCriteriaInputs = null;
+        let castingInformationInputs = null;
+        let selectedSpell = util.common.picklists.getPicklistItemFromSinglePicklist(spells, editSpellSelection.spell.id);
         
-        /*const spellInput = (
+        const spellInput = (
             <DndInput
                 label="Select Spell"
                 name="spell"
@@ -33,8 +61,10 @@ class DndManageSpellSelection extends React.Component {
                 onChange={this.props.onChange}
                 dataType={util.dataTypes.picklist.GENERAL}
                 picklist={spells}
+                stackLabel
                 />
         );
+        
         const schoolInput = (
             <DndInput
                 label="Select School"
@@ -43,8 +73,10 @@ class DndManageSpellSelection extends React.Component {
                 onChange={this.props.onChange}
                 dataType={util.dataTypes.picklist.SCHOOL_OF_MAGIC}
                 picklist={schools}
+                stackLabel
                 />
         );
+        
         const spelllistInput = (
             <DndInput
                 label="Select Spell List"
@@ -53,8 +85,10 @@ class DndManageSpellSelection extends React.Component {
                 onChange={this.props.onChange}
                 dataType={util.dataTypes.picklist.GENERAL}
                 picklist={spelllists}
+                stackLabel
                 />
         );
+        
         const spellLevelInput = (
             <DndInput
                 label="Select Spell Level"
@@ -62,21 +96,198 @@ class DndManageSpellSelection extends React.Component {
                 value={editSpellSelection.spellLevel}
                 onChange={this.props.onChange}
                 dataType={util.dataTypes.number.SPELL_LEVEL}
+                stackLabel
                 />
         );
+        
+        const selectCountInput = (
+            <DndInput
+                label="Select Count"
+                name="selectCount"
+                value={editSpellSelection.selectCount}
+                onChange={this.props.onChange}
+                dataType={util.dataTypes.number.INT}
+                stackLabel
+                />
+        );
+        
+        const castingCountInput = (
+            <DndInput
+                label="Casting Count"
+                name="castingCount"
+                value={editSpellSelection.castingCount}
+                onChange={this.props.onChange}
+                dataType={util.dataTypes.number.INT}
+                stackLabel
+                />
+        );
+        
+        const rechargeTypeInput = (
+            <DndInput
+                label="Regain Uses"
+                name="rechargeType"
+                value={editSpellSelection.rechargeType}
+                onChange={this.props.onChange}
+                dataType={util.dataTypes.picklist.RECHARGE_TYPE}
+                picklist={rechargeTypes}
+                stackLabel
+                />
+        );
+        
+        const characterLevelInput = (
+            <DndInput
+                label="Character Level"
+                name="characterLevel"
+                value={editSpellSelection.characterLevel}
+                onChange={this.props.onChange}
+                dataType={util.dataTypes.number.CHARACTER_LEVEL}
+                stackLabel
+                />
+        );
+        
+        switch (editSpellSelection.selectionType.id) {
+            case util.itemTypes.SPELL_SELECTION.BY_LEVEL:
+                selectionCriteriaInputs = (
+                    <div>
+                        <div className="col-sm-6">
+                            {selectCountInput}
+                        </div>
+                        <div className="col-sm-6">
+                            {spellLevelInput}
+                        </div>
+                    </div>
+                );
+                if (editSpellSelection.spellLevel != 0 && editSpellSelection.selectCount != 0) {
+                    castingInformationInputs = (
+                        <div>
+                            <div className="col-sm-6">
+                                {castingCountInput}
+                            </div>
+                            <div className="col-sm-6">
+                                {rechargeTypeInput}
+                            </div>
+                            <div className="col-sm-6">
+                                {characterLevelInput}
+                            </div>
+                        </div>
+                    );
+                }
+                break;
+            case util.itemTypes.SPELL_SELECTION.BY_SCHOOL:
+                selectionCriteriaInputs = (
+                    <div>
+                        <div className="col-sm-6">
+                            {selectCountInput}
+                        </div>
+                        <div className="col-sm-6">
+                            {spellLevelInput}
+                        </div>
+                        <div className="col-sm-6">
+                            {schoolInput}
+                        </div>
+                    </div>
+                );
+                if (editSpellSelection.spellLevel != 0 && editSpellSelection.selectCount != 0 && editSpellSelection.school.id != 0) {
+                    castingInformationInputs = (
+                        <div>
+                            <div className="col-sm-6">
+                                {castingCountInput}
+                            </div>
+                            <div className="col-sm-6">
+                                {rechargeTypeInput}
+                            </div>
+                            <div className="col-sm-6">
+                                {characterLevelInput}
+                            </div>
+                        </div>
+                    );
+                }
+                break;
+            case util.itemTypes.SPELL_SELECTION.BY_SPELL_LIST:
+                selectionCriteriaInputs = (
+                    <div>
+                        <div className="col-sm-6">
+                            {selectCountInput}
+                        </div>
+                        <div className="col-sm-6">
+                            {spellLevelInput}
+                        </div>
+                        <div className="col-sm-6">
+                            {spelllistInput}
+                        </div>
+                    </div>
+                );
+                if (editSpellSelection.spellLevel != 0 && editSpellSelection.selectCount != 0 && editSpellSelection.spelllist.id != 0) {
+                    castingInformationInputs = (
+                        <div>
+                            <div className="col-sm-6">
+                                {castingCountInput}
+                            </div>
+                            <div className="col-sm-6">
+                                {rechargeTypeInput}
+                            </div>
+                            <div className="col-sm-6">
+                                {characterLevelInput}
+                            </div>
+                        </div>
+                    );
+                }
+                break;
+            case util.itemTypes.SPELL_SELECTION.BY_SPELL:
+                selectionCriteriaInputs = (
+                    <div>
+                        <div className="col-sm-6">
+                            {spellInput}
+                        </div>
+                    </div>
+                );
+                if (selectedSpell && selectedSpell.level != 0) {
+                    castingInformationInputs = (
+                        <div>
+                            <div className="col-sm-6">
+                                {castingCountInput}
+                            </div>
+                            <div className="col-sm-6">
+                                {rechargeTypeInput}
+                            </div>
+                            <div className="col-sm-6">
+                                {characterLevelInput}
+                            </div>
+                        </div>
+                    );
+                } else if (selectedSpell && selectedSpell.id != 0) {
+                    castingInformationInputs = (
+                        <div>
+                            <div className="col-sm-6">
+                                {characterLevelInput}
+                            </div>
+                        </div>
+                    );
+                }
+                break;
+            default:
+        }
         return (
             <div>
                 <DndInput
                     label="Selection Type"
-                    name="type"
-                    value={editSpellSelection.type}
+                    name="selectionType"
+                    value={editSpellSelection.selectionType}
                     onChange={this.props.onChange}
                     dataType={util.dataTypes.picklist.SPELL_SELECTION}
                     picklist={selectionTypes}
                     />
+                {selectionCriteriaInputs}
+                {castingInformationInputs}
+                <DndDataEntryButtonBar
+                    onCancel={this.props.onChange}
+                    onSave={this.props.onChange}
+                    name="spellcasting.spellSelections"
+                    saveAction={util.dataTypes.action.SPELL_SELECTION.ADD}
+                    cancelAction={util.dataTypes.action.SPELL_SELECTION.RESET}
+                    />
             </div>
-        );*/
-        return (<div>x</div>);
+        );
     }
     
     render() {

@@ -29,7 +29,7 @@ class RaceForm extends React.Component {
     render() {
         const race = this.props.race;
         const races = this.props.races.filter(function(raceItem) {
-            return (race.id != raceItem.id) && (raceItem.parentId == 0);
+            return (race.id != raceItem.id) && (raceItem.parent.id == 0);
         });
         const picklists = this.props.picklists;
         const proficiencies = this.props.proficiencies;
@@ -42,7 +42,7 @@ class RaceForm extends React.Component {
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={5} id="uncontrolled-tab-example" className="tab-pane-double-row-of-tabs">
+                    <Tabs defaultActiveKey={7} id="uncontrolled-tab-example" className="tab-pane-double-row-of-tabs">
                         <Tab eventKey={1} title="Size/Type">
                             <div>&nbsp;</div>
                             <DndUniversalInput
@@ -54,13 +54,13 @@ class RaceForm extends React.Component {
                                 />
                             <DndCheckboxPicklist
                                 checked={this.props.isSubrace}
-                                dataType={util.dataTypes.number.INT}
+                                dataType={util.dataTypes.picklist.GENERAL}
                                 label="Subrace Parent"
                                 checkboxName="chkParentId"
-                                picklistName="parentId"
-                                onChange={this.props.onChangeSubrace}
+                                picklistName="parent"
+                                onChange={this.props.onChange}
                                 picklist={races}
-                                value={{id: race.parentId}}
+                                value={race.parent}
                                 onClick={this.props.onChangeSubrace}
                                 placeholder="Select Parent Race"
                                 checkboxPlaceholder="Is a Subrace"

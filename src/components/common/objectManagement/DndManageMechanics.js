@@ -107,16 +107,21 @@ class DndManageMechanics extends React.Component {
     }
     
     renderTargetInput(targets) {
-        return (this.props.editMechanic && this.props.editMechanic.type && this.props.editMechanic.type.id != 0) ? (
-            <DndInput
-                name="target"
-                label="Mechanic Target"
-                dataType={util.dataTypes.picklist.MECHANIC_TARGET}
-                value={this.props.editMechanic.target}
-                onChange={this.props.onChange}
-                picklist={targets}
-                />
-        ) : null;
+        if (this.props.editMechanic && this.props.editMechanic.type && this.props.editMechanic.type.id != 0) {
+            if (this.props.editMechanic.type.id != util.itemTypes.MECHANIC_TYPE.SPECIAL_TEXT) {
+                return (
+                    <DndInput
+                        name="target"
+                        label="Mechanic Target"
+                        dataType={util.dataTypes.picklist.MECHANIC_TARGET}
+                        value={this.props.editMechanic.target}
+                        onChange={this.props.onChange}
+                        picklist={targets}
+                        />
+                );
+            }
+        }
+        return null;
     }
     
     renderValueInput(valueObjects) {
@@ -151,6 +156,19 @@ class DndManageMechanics extends React.Component {
                     dataType={util.dataTypes.picklist.GENERAL}
                     value={this.props.editMechanic.valueObject}
                     picklist={valueObjects}
+                    onChange={this.props.onChange}
+                    />
+            );
+        } else if (this.props.editMechanic && this.props.editMechanic.type &&
+                  (this.props.editMechanic.type.id == util.itemTypes.MECHANIC_TYPE.SPECIAL_TEXT ||
+                   this.props.editMechanic.type.id == util.itemTypes.MECHANIC_TYPE.DOUBLE_PROFICIENCY_BONUS)) {
+            let specialTextLabel = (this.props.editMechanic.type.id == util.itemTypes.MECHANIC_TYPE.SPECIAL_TEXT) ? 'Special Text' : 'Conditional Text';
+            return (
+                <DndInput
+                    name="specialText"
+                    label={specialTextLabel}
+                    dataType={util.dataTypes.string.STRING}
+                    value={this.props.editMechanic.specialText}
                     onChange={this.props.onChange}
                     />
             );
@@ -193,6 +211,9 @@ class DndManageMechanics extends React.Component {
                 mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE)
                     .concat(util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.CONDITION))
                     .concat(util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC));
+                break;
+            case util.itemTypes.MECHANIC_TYPE.DOUBLE_PROFICIENCY_BONUS:
+                mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SKILL);
                 break;
             default:
         }

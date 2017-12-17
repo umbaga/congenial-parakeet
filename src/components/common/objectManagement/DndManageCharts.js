@@ -110,7 +110,7 @@ class DndManageCharts extends React.Component {
                 <DndInput
                     dataType={util.dataTypes.picklist.CHART_TYPE}
                     label="Type of Chart"
-                    name="charType"
+                    name="chartType"
                     onChange={this.props.onChange}
                     picklist={chartTypes}
                     value={this.props.selectedChartType}

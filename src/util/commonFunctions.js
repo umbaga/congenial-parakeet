@@ -92,6 +92,28 @@ export const resetObject = {
         retVal.charts = [];
         retVal.supplementalDescriptions = [];
         retVal.mechanics = [];
+        retVal.vitals = {
+            height: {
+                base: 0,
+                dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+            },
+            weight: {
+                base: 0,
+                dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+            }
+        };
+        retVal.abilityScores = {
+            strength: 0,
+            dexterity: 0,
+            constitution: 0,
+            intelligence: 0,
+            wisdom: 0,
+            charisma: 0,
+            selection: {
+                count: 0,
+                modifier: 0
+            }
+        };
         return retVal;
     },
     spell: function() {
@@ -192,7 +214,7 @@ export const formState = {
         }
         return retVal;
     },
-    assignedEquipment: function(event, obj, refObj) {
+    assignedEquipment: function(event, obj) {
         let retVal = obj;
         
         return retVal;
@@ -442,7 +464,7 @@ export const formState = {
         }
         return retVal;
     },
-    description: function(event, obj, refObj) {
+    description: function(event, obj) {
         let retVal = obj;
         let field = formState.setFieldFromTargetName(event);
         let dataType = formState.setDataTypeFromTarget(event);
@@ -547,6 +569,7 @@ export const formState = {
         if (retVal[field] != undefined || (removeThisMechanic && removeThisMechanic.assignmentType)) {
             switch (dataType) {
                 case util.dataTypes.number.INT:
+                case util.dataTypes.string.STRING:
                     util.common.setObjectValue(retVal, field, event.target.value);
                     break;
                 case util.dataTypes.picklist.GENERAL:
@@ -612,6 +635,18 @@ export const formState = {
         }
         if (retVal[field] != undefined) {
             switch (dataType) {
+                case util.dataTypes.string.STRING:
+                    util.common.setObjectValue(retVal, field, event.target.value);
+                    break;
+                case util.dataTypes.picklist.PROFICIENCY:
+                    newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                    newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                    if (retVal[field] && retVal[field].length == 0) {
+                        retVal[field].push(newSelectedValue);
+                    } else {
+                        retVal[field][0] = newSelectedValue;
+                    }
+                    break;
                 case util.dataTypes.array.PROFICIENCIES:
                     referencePicklistItem = util.common.picklists.getPicklistItemFromSinglePicklist(proficiencies, event.target.value);
                     if (isAssign) {
@@ -661,22 +696,67 @@ export const formState = {
         }
         return retVal;
     },
-    spellSelection: function(event, obj, refObj) {
+    spellSelection: function(event, obj, refObj, picklists, removeThisSpellSelection) {
         let retVal = obj;
         let field = formState.setFieldFromTargetName(event);
+        let field2 = '';
+        if (field.split('.').length > 1) {
+            field2 = field.split('.')[1];
+            field = field.split('.')[0];
+        }
         let dataType = formState.setDataTypeFromTarget(event);
         let newSelectedValue = {};
+        let removeThisIndex = -1;
+        let isValidField = false;
+        if (field2.length != 0) {
+            if (retVal[field] != undefined) {
+                if (retVal[field][field2] != undefined) {
+                    isValidField = true;
+                }
+            }
+        } else {
+            if (retVal[field] != undefined) {
+                isValidField = true;
+            }
+        }
         delete retVal.resetSpellSelection;
-        if (retVal[field] != undefined) {
+        if (isValidField) {
             switch (dataType) {
+                case util.dataTypes.number.CHARACTER_LEVEL:
+                case util.dataTypes.number.INT:
                 case util.dataTypes.number.SPELL_LEVEL:
                     util.common.setObjectValue(retVal, field, event.target.value);
                     break;
-                case util.dataTypes.picklist.GENERIC:
+                case util.dataTypes.picklist.GENERAL:
+                case util.dataTypes.picklist.RECHARGE_TYPE:
                 case util.dataTypes.picklist.SPELL_SELECTION:
                     newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                     newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                     util.common.setObjectValue(retVal, field, newSelectedValue);
+                    break;
+                case util.dataTypes.action.SPELL_SELECTION.ADD:
+                    retVal[field][field2].push(refObj);
+                    retVal.resetSpellSelection = true;
+                    break;
+                case util.dataTypes.action.SPELL_SELECTION.REMOVE:
+                    field = field.split('.')[0];
+                    if (retVal[field][field2]) {
+                        if (removeThisSpellSelection) {
+                            for (let e = 0; e < retVal[field].length; e++) {
+                                if (retVal[field][field2][e].id == removeThisSpellSelection.id) {
+                                    removeThisIndex = e;
+                                }
+                            }
+                        }
+                        if (removeThisIndex != -1) {
+                            retVal[field][field2].splice(removeThisIndex, 1);
+                        }
+                    }
+                    break;
+                case util.dataTypes.action.SPELL_SELECTION.RESET:
+                    retVal.resetSpellSelection = true;
+                    break;
+                case util.dataTypes.action.SPELL_SELECTION.SELECT:
                     break;
                 default:
             }
@@ -753,6 +833,7 @@ export const formState = {
                 break;
             case util.dataTypes.string.STRING:
             case util.dataTypes.string.LONG_STRING:
+            case util.dataTypes.number.CHARACTER_LEVEL:
             case util.dataTypes.number.INT:
             case util.dataTypes.number.LENGTH:
             case util.dataTypes.number.DEC:
@@ -781,6 +862,7 @@ export const formState = {
             case util.dataTypes.picklist.MONSTER_TYPE:
             case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
             case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
+            case util.dataTypes.picklist.RECHARGE_TYPE:
             case util.dataTypes.picklist.RESOURCE:
             case util.dataTypes.picklist.SAVE_EFFECT:
             case util.dataTypes.picklist.SCHOOL_OF_MAGIC:

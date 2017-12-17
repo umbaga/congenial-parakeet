@@ -10,7 +10,6 @@ class DndInputWrapper extends React.Component {
 
     render() {
         let wrapperClass = 'form-group form-horizontal row';
-
         let finalLabelCols = 4;
         if (this.props.dataType == util.dataTypes.bool.BOOL
           || this.props.dataType == util.dataTypes.bool.HAS_DISADVANTAGE
@@ -33,6 +32,10 @@ class DndInputWrapper extends React.Component {
         let labelClass = 'col-sm-' + finalLabelCols + ' control-label';
         let labelDivClass = 'align-middle';
         let inputDivClass = 'field col-sm-' + finalInputCols + '';
+        if (this.props.stackLabel) {
+            labelClass = 'col-lg-' + finalLabelCols + ' control-label';
+            inputDivClass = 'field col-lg-' + finalInputCols + '';
+        }
         return (
             <div className={wrapperClass}>
                 <div className={labelDivClass}>
@@ -52,7 +55,8 @@ DndInputWrapper.propTypes = {
     inputCols: PropTypes.number,
     labelCols: PropTypes.number,
     label: PropTypes.string,
-    name: PropTypes.string
+    name: PropTypes.string,
+    stackLabel: PropTypes.bool
 };
 
 export default DndInputWrapper;
