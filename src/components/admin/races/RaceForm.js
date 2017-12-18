@@ -39,11 +39,12 @@ class RaceForm extends React.Component {
         const abilityScores = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.ABILITY_SCORE).filter(function(abilityScore) {
             return abilityScore.isPrimary;
         });
+        const tabPaneStyle = 'tab-pane-triple-row-of-tabs';
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={7} id="uncontrolled-tab-example" className="tab-pane-double-row-of-tabs">
-                        <Tab eventKey={1} title="Size/Type">
+                    <Tabs defaultActiveKey={9} id="uncontrolled-tab-example">
+                        <Tab eventKey={1} title="Size/Type" className={tabPaneStyle}>
                             <div>&nbsp;</div>
                             <DndUniversalInput
                                 ref="name"
@@ -91,7 +92,7 @@ class RaceForm extends React.Component {
                                 selectBoxSize={4}
                                 />
                         </Tab>
-                        <Tab eventKey={2} title="Ability Scores">
+                        <Tab eventKey={2} title="Ability Scores" className={tabPaneStyle}>
                             <div>&nbsp;</div>
                             <div className="col-sm-4">
                                 <DndInput
@@ -166,7 +167,7 @@ class RaceForm extends React.Component {
                                     />
                             </div>
                         </Tab>
-                        <Tab eventKey={3} title="Height/Weight">
+                        <Tab eventKey={3} title="Height/Weight" className={tabPaneStyle}>
                             <div>&nbsp;</div>
                             <div className="col-sm-7">
                                 <DndInput
@@ -205,7 +206,7 @@ class RaceForm extends React.Component {
                                     />
                             </div>
                         </Tab>
-                        <Tab eventKey={4} title="Movement & Senses">
+                        <Tab eventKey={4} title="Movement & Senses" className={tabPaneStyle}>
                             <div>&nbsp;</div>
                             <div className="col-md-12">
                                 <DndManageTextBoxList
@@ -230,7 +231,7 @@ class RaceForm extends React.Component {
                                     />
                             </div>
                         </Tab>
-                        <Tab eventKey={6} title="Proficiencies">
+                        <Tab eventKey={6} title="Proficiencies" className={tabPaneStyle}>
                             <div>&nbsp;</div>
                             <DndManageItemGroups
                                 itemGroups={race.proficiencyGroups}
@@ -246,7 +247,7 @@ class RaceForm extends React.Component {
                                 groupListItemTextFormatFunction={util.format.forDisplay.obj.proficiencyGroup}
                                 />
                         </Tab>
-                        <Tab eventKey={7} title="Mechanics">
+                        <Tab eventKey={7} title="Mechanics" className={tabPaneStyle}>
                             <div>&nbsp;</div>
                             <DndManageMechanics
                                 onChange={this.props.onChangeMechanics}
@@ -255,7 +256,7 @@ class RaceForm extends React.Component {
                                 editMechanic={this.props.editMechanic}
                                 />
                         </Tab>
-                        <Tab eventKey={5} title="Spellcasting">
+                        <Tab eventKey={5} title="Spellcasting" className={tabPaneStyle}>
                             <div>&nbsp;</div>
                             <DndInput
                                 label="Spellcasting Ability"
@@ -274,7 +275,7 @@ class RaceForm extends React.Component {
                                 spelllists={this.props.spelllists}
                                 />
                         </Tab>
-                        <Tab eventKey={8} title="Descriptions">
+                        <Tab eventKey={8} title="Descriptions" className={tabPaneStyle}>
                             <div>&nbsp;</div>
                             <DndManageSupplementalDescriptions
                                 descriptions={race.supplementalDescriptions}
@@ -285,7 +286,7 @@ class RaceForm extends React.Component {
                                 />
                         
                         </Tab>
-                        <Tab eventKey={9} title="Charts">
+                        <Tab eventKey={9} title="Charts" className={tabPaneStyle}>
                             <div>&nbsp;</div>
                             NEED TO ADD SELECTION CHART TYPE (for Dragonborn species)
                             <DndManageCharts
@@ -297,6 +298,10 @@ class RaceForm extends React.Component {
                                 onReset={this.props.onResetChart}
                                 onSelectEdited={this.props.onSelectChart}
                                 />
+                        </Tab>
+                        <Tab eventKey={10} title="Natural/Breath Weapons" className={tabPaneStyle}>
+                            <div>&nbsp;</div>
+                            Natural &amp; Breath weapon info here.
                         </Tab>
                     </Tabs>
                 </form>

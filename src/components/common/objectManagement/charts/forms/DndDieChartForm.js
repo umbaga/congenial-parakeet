@@ -35,9 +35,7 @@ class DndDieChartForm extends React.Component {
         }
         return null;
     }
-    /*
-                    {chart.entries.map(entry =>
-                                      )}*/
+    
     render() {
         const chart = this.props.chart;
         return (
