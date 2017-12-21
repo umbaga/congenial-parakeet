@@ -128,7 +128,7 @@ class SpellEntry extends React.Component {
             name: this.state.spell.castingTime.name
         };
         const picklist = {
-            id: util.itemTypes.TYPES.SPELL_CASTING_TIME
+            id: util.itemtypes.TYPES.SPELL_CASTING_TIME
         };
         this.props.actions.addPicklistItem(picklist, picklistItem).then(function(response) {
             const spell = self.state.spell;
@@ -145,7 +145,7 @@ class SpellEntry extends React.Component {
             name: this.state.spell.duration.name
         };
         const picklist = {
-            id: util.itemTypes.TYPES.SPELL_DURATION
+            id: util.itemtypes.TYPES.SPELL_DURATION
         };
         this.props.actions.addPicklistItem(picklist, picklistItem).then(function(response) {
             const spell = self.state.spell;
@@ -162,7 +162,7 @@ class SpellEntry extends React.Component {
             name: this.state.spell.range.name
         };
         const picklist = {
-            id: util.itemTypes.TYPES.SPELL_RANGE
+            id: util.itemtypes.TYPES.SPELL_RANGE
         };
         this.props.actions.addPicklistItem(picklist, picklistItem).then(function(response) {
             const spell = self.state.spell;
@@ -188,10 +188,10 @@ class SpellEntry extends React.Component {
         const mechanic = this.state.newMechanic;
         const newMechanic = Object.assign({}, util.objectModel.MECHANIC);
         mechanic.id = (spell.mechanics.base.length + spell.mechanics.advancement.length) * -1;
-        if (this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BASE || this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
+        if (this.state.newMechanic.assignmentType.id == util.itemtypes.MECHANIC_ASSIGNMENT.BASE || this.state.newMechanic.assignmentType.id == util.itemtypes.MECHANIC_ASSIGNMENT.BOTH) {
             spell.mechanics.base.push(mechanic);
         }
-        if (this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.ADVANCEMENT || this.state.newMechanic.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
+        if (this.state.newMechanic.assignmentType.id == util.itemtypes.MECHANIC_ASSIGNMENT.ADVANCEMENT || this.state.newMechanic.assignmentType.id == util.itemtypes.MECHANIC_ASSIGNMENT.BOTH) {
             spell.mechanics.advancement.push(mechanic);
         }
         return this.setState({spell: spell, newMechanic: newMechanic});

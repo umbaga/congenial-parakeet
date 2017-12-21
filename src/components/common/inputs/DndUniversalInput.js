@@ -14,7 +14,7 @@ class DndUniversalInput extends React.Component {
     }
     
     render() {
-        const resourcePicklist = this.props.picklists ? util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.RESOURCE) : null;
+        const resourcePicklist = this.props.picklists ? util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.RESOURCE) : null;
         const resourceLabel = this.props.labelPrefix && this.props.labelPrefix.length != 0 ? this.props.labelPrefix + ' Resource' : 'Resource';
         const nameLabel = this.props.labelPrefix && this.props.labelPrefix.length != 0 ? this.props.labelPrefix + ' Name' : 'Name';
         const descriptionLabel = this.props.labelPrefix && this.props.labelPrefix.length != 0 ? this.props.labelPrefix + ' Description' : 'Description';
@@ -23,7 +23,7 @@ class DndUniversalInput extends React.Component {
                 <DndInput
                     name="resource"
                     label={resourceLabel}
-                    dataType={util.dataTypes.picklist.RESOURCE}
+                    dataType={util.datatypes.picklist.RESOURCE}
                     value={this.props.referenceObject.resource}
                     onChange={this.props.onChange}
                     picklist={resourcePicklist}
@@ -35,7 +35,7 @@ class DndUniversalInput extends React.Component {
                 <DndInput
                     name="description"
                     label={descriptionLabel}
-                    dataType={util.dataTypes.string.DESCRIPTION}
+                    dataType={util.datatypes.string.DESCRIPTION}
                     value={this.props.referenceObject.description}
                     onChange={this.props.onChange}
                     />
@@ -48,7 +48,7 @@ class DndUniversalInput extends React.Component {
                         name="name"
                         ref="name"
                         label={nameLabel}
-                        dataType={util.dataTypes.string.STRING}
+                        dataType={util.datatypes.string.STRING}
                         value={this.props.referenceObject.name}
                         onChange={this.props.onChange}
                         />

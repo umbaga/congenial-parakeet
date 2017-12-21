@@ -129,7 +129,7 @@ class SpellEntry extends React.Component {
             name: this.state.spell.castingTime.name
         };
         const picklist = {
-            id: util.itemTypes.TYPES.SPELL_CASTING_TIME
+            id: util.itemtypes.TYPES.SPELL_CASTING_TIME
         };
         this.props.actions.addPicklistItem(picklist, picklistItem).then(function(response) {
             const spell = self.state.spell;
@@ -146,7 +146,7 @@ class SpellEntry extends React.Component {
             name: this.state.spell.duration.name
         };
         const picklist = {
-            id: util.itemTypes.TYPES.SPELL_DURATION
+            id: util.itemtypes.TYPES.SPELL_DURATION
         };
         this.props.actions.addPicklistItem(picklist, picklistItem).then(function(response) {
             const spell = self.state.spell;
@@ -163,7 +163,7 @@ class SpellEntry extends React.Component {
             name: this.state.spell.range.name
         };
         const picklist = {
-            id: util.itemTypes.TYPES.SPELL_RANGE
+            id: util.itemtypes.TYPES.SPELL_RANGE
         };
         this.props.actions.addPicklistItem(picklist, picklistItem).then(function(response) {
             const spell = self.state.spell;

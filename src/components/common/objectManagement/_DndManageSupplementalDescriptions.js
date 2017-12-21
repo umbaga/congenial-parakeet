@@ -23,14 +23,14 @@ class _DndManageSupplementalDescriptions extends React.Component {
                     name="title"
                     label="Title"
                     value={description.title}
-                    dataType={util.dataTypes.string.STRING}
+                    dataType={util.datatypes.string.STRING}
                     onChange={this.props.onChange}
                     />
                 <DndInput
                     name="description"
                     label="Description"
                     value={description.description}
-                    dataType={util.dataTypes.string.DESCRIPTION}
+                    dataType={util.datatypes.string.DESCRIPTION}
                     onChange={this.props.onChange}
                     />
             </div>

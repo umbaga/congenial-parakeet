@@ -127,7 +127,7 @@ function mapStateToProps(state) {
         picklists = Object.assign([{}], state.picklists);
     }
     let equipments = Object.assign([{}], [util.objectModel.EQUIPMENT]);
-    const equipmentCategories = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.EQUIPMENT_CATEGORY);
+    const equipmentCategories = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.EQUIPMENT_CATEGORY);
     if (state.equipments.length > 0) {
         equipments = Object.assign([{}], state.equipments).concat(equipmentCategories).sort(function(a, b) {
             if (a.name < b.name) {

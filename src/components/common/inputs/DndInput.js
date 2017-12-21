@@ -37,9 +37,9 @@ class DndInput extends React.Component {
         let placeholderText = '';
         
         switch (this.props.dataType) {
-            case util.dataTypes.bool.BOOL:
-            case util.dataTypes.bool.HAS_DISADVANTAGE:
-            case util.dataTypes.bool.YES_NO:
+            case util.datatypes.bool.BOOL:
+            case util.datatypes.bool.HAS_DISADVANTAGE:
+            case util.datatypes.bool.YES_NO:
                 primaryInput = (<input
                                     type="checkbox"
                                     name={this.props.name}
@@ -49,8 +49,9 @@ class DndInput extends React.Component {
                                     onChange={this.props.onChange}
                                     className="form-control checkbox-inline" />);
                 break;
-            case util.dataTypes.string.STRING:
-            case util.dataTypes.number.LENGTH:
+            case util.datatypes.string.STRING:
+            case util.datatypes.number.LENGTH:
+            case util.datatypes.string.EMPTY_PICKLIST_ITEM:
                 primaryInput = (<input
                                     type="text"
                                     name={this.props.name}
@@ -62,16 +63,17 @@ class DndInput extends React.Component {
                                     className="form-control"
                                     readOnly={isReadOnly} />);
                 break;
-            case util.dataTypes.array.ADVANCED_SENSE:
-            case util.dataTypes.array.MOVEMENT:
-            case util.dataTypes.number.CHARACTER_LEVEL:
-            case util.dataTypes.number.COIN:
-            case util.dataTypes.number.INT:
-            case util.dataTypes.number.SPELL_LEVEL:
-            case util.dataTypes.number.WEIGHT:
-            case util.dataTypes.special.CHART_COLUMN_COUNT:
-            case util.dataTypes.special.CHART_ROW_COUNT:
-                if (this.props.dataType == util.dataTypes.number.SPELL_LEVEL) {
+            case util.datatypes.array.ADVANCED_SENSE:
+            case util.datatypes.array.MOVEMENT:
+            case util.datatypes.number.CHARACTER_LEVEL:
+            case util.datatypes.number.COIN:
+            case util.datatypes.number.INT:
+            case util.datatypes.number.NUMBER:
+            case util.datatypes.number.SPELL_LEVEL:
+            case util.datatypes.number.WEIGHT:
+            case util.datatypes.special.CHART_COLUMN_COUNT:
+            case util.datatypes.special.CHART_ROW_COUNT:
+                if (this.props.dataType == util.datatypes.number.SPELL_LEVEL) {
                     primaryInput = (<input
                                         type="number"
                                         name={this.props.name}
@@ -85,7 +87,7 @@ class DndInput extends React.Component {
                                         min="0"
                                         max="9"
                                         readOnly={isReadOnly} />);
-                } else if (this.props.dataType == util.dataTypes.number.SPELL_LEVEL) {
+                } else if (this.props.dataType == util.datatypes.number.SPELL_LEVEL) {
                     primaryInput = (<input
                                         type="number"
                                         name={this.props.name}
@@ -114,7 +116,7 @@ class DndInput extends React.Component {
                                         readOnly={isReadOnly} />);
                 }
                 break;
-            case util.dataTypes.special.DICE_ROLL:
+            case util.datatypes.special.DICE_ROLL:
                 primaryInput = (<input
                                     type="text"
                                     name={this.props.name}
@@ -126,37 +128,39 @@ class DndInput extends React.Component {
                                     onChange={this.props.onChange}
                                     className="form-control" />);
                 break;
-            case util.dataTypes.picklist.ABILITY_SCORE:
-            case util.dataTypes.picklist.AMMUNITION_TYPE:
-            case util.dataTypes.picklist.ARMOR_PROFICIENCY:
-            case util.dataTypes.picklist.ATTACK_ROLL_TYPE:
-            case util.dataTypes.picklist.CHART_TYPE:
-            case util.dataTypes.picklist.CONDITION:
-            case util.dataTypes.picklist.DAMAGE_TYPE:
-            case util.dataTypes.picklist.DESCRIPTION_TYPE:
-            case util.dataTypes.picklist.EQUIPMENT_CATEGORY:
-            case util.dataTypes.picklist.GENERAL:
-            case util.dataTypes.picklist.LANGUAGE_RARITY:
-            case util.dataTypes.picklist.LANGUAGE_SCRIPT:
-            case util.dataTypes.picklist.MECHANIC_TARGET:
-            case util.dataTypes.picklist.MECHANIC_TYPE:
-            case util.dataTypes.picklist.MONSTER_TYPE:
-            case util.dataTypes.picklist.PROFICIENCY:
-            case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
-            case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
-            case util.dataTypes.picklist.RECHARGE_TYPE:
-            case util.dataTypes.picklist.RESOURCE:
-            case util.dataTypes.picklist.SAVE_EFFECT:
-            case util.dataTypes.picklist.SCHOOL_OF_MAGIC:
-            case util.dataTypes.picklist.SIZE:
-            case util.dataTypes.picklist.SPELL_CASTING_TIME:
-            case util.dataTypes.picklist.SPELL_COMPONENT:
-            case util.dataTypes.picklist.SPELL_DURATION:
-            case util.dataTypes.picklist.SPELL_LEVEL:
-            case util.dataTypes.picklist.SPELL_RANGE:
-            case util.dataTypes.picklist.SPELL_SELECTION:
-            case util.dataTypes.picklist.WEAPON_CATEGORY:
-            case util.dataTypes.picklist.WEAPON_PROFICIENCY:
+            case util.datatypes.picklist.ABILITY_SCORE:
+            case util.datatypes.picklist.AMMUNITION_TYPE:
+            case util.datatypes.picklist.ARMOR_PROFICIENCY:
+            case util.datatypes.picklist.ATTACK_ROLL_TYPE:
+            case util.datatypes.picklist.CHART_TYPE:
+            case util.datatypes.picklist.CONDITION:
+            case util.datatypes.picklist.DAMAGE_TYPE:
+            case util.datatypes.picklist.DATA_TYPE:
+            case util.datatypes.picklist.DESCRIPTION_TYPE:
+            case util.datatypes.picklist.EQUIPMENT_CATEGORY:
+            case util.datatypes.picklist.GENERAL:
+            case util.datatypes.picklist.LANGUAGE_RARITY:
+            case util.datatypes.picklist.LANGUAGE_SCRIPT:
+            case util.datatypes.picklist.MECHANIC_TARGET:
+            case util.datatypes.picklist.MECHANIC_TYPE:
+            case util.datatypes.picklist.MONSTER_TYPE:
+            case util.datatypes.picklist.PROFICIENCY:
+            case util.datatypes.picklist.PROFICIENCY_CATEGORY:
+            case util.datatypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
+            case util.datatypes.picklist.RECHARGE_TYPE:
+            case util.datatypes.picklist.RESOURCE:
+            case util.datatypes.picklist.SAVE_EFFECT:
+            case util.datatypes.picklist.SCHOOL_OF_MAGIC:
+            case util.datatypes.picklist.SELECTION_CHART_ROW:
+            case util.datatypes.picklist.SIZE:
+            case util.datatypes.picklist.SPELL_CASTING_TIME:
+            case util.datatypes.picklist.SPELL_COMPONENT:
+            case util.datatypes.picklist.SPELL_DURATION:
+            case util.datatypes.picklist.SPELL_LEVEL:
+            case util.datatypes.picklist.SPELL_RANGE:
+            case util.datatypes.picklist.SPELL_SELECTION:
+            case util.datatypes.picklist.WEAPON_CATEGORY:
+            case util.datatypes.picklist.WEAPON_PROFICIENCY:
                 placeholderText = (this.props.placeholder && this.props.placeholder.length != 0) ? this.props.placeholder : 'SELECT ONE';
                 primaryInput = (<select
                                     value={this.props.value.id}
@@ -174,9 +178,9 @@ class DndInput extends React.Component {
                                                  </option>)}
                     </select>);
                 break;
-            case util.dataTypes.array.MONSTER_TAGS:
-            case util.dataTypes.array.PROFICIENCIES:
-            case util.dataTypes.array.WEAPON_PROPERTIES:
+            case util.datatypes.array.MONSTER_TAGS:
+            case util.datatypes.array.PROFICIENCIES:
+            case util.datatypes.array.WEAPON_PROPERTIES:
                 primaryInput = (
                     <DndToggleBoxes
                         dataType={this.props.dataType}
@@ -189,7 +193,7 @@ class DndInput extends React.Component {
                         />
                 );
                 break;
-            case util.dataTypes.special.WEAPON_RANGE:
+            case util.datatypes.special.WEAPON_RANGE:
                 primaryInput = (
                     <div name={this.props.name}>
                         <div className="col-sm-6">
@@ -217,7 +221,7 @@ class DndInput extends React.Component {
                     </div>
                 );
                 break;
-            case util.dataTypes.string.LONG_STRING:
+            case util.datatypes.string.LONG_STRING:
                 if (this.props.value) {
                     longValue = this.props.value;
                 }
@@ -232,7 +236,7 @@ class DndInput extends React.Component {
                         className="form-control" />
                 );
                 break;
-            case util.dataTypes.string.DESCRIPTION:
+            case util.datatypes.string.DESCRIPTION:
                 if (this.props.value) {
                     longValue = this.props.value;
                 }
@@ -248,7 +252,7 @@ class DndInput extends React.Component {
                         />
                 );
                 break;
-            case util.dataTypes.combo.DAMAGE_AND_DAMAGE_TYPE:
+            case util.datatypes.combo.DAMAGE_AND_DAMAGE_TYPE:
                 primaryInput = (
                     <div className=" input-group input-inline">
                         <input
@@ -256,7 +260,7 @@ class DndInput extends React.Component {
                             name={this.props.name + '.dice'}
                             ref={this.props.name + '.dice'}
                             value={this.props.value.dice.rendered}
-                            datatype={util.dataTypes.special.DICE_ROLL}
+                            datatype={util.datatypes.special.DICE_ROLL}
                             onKeyUp={this.props.onChange}
                             onChange={this.props.onChange}
                             className="form-control" />
@@ -266,7 +270,7 @@ class DndInput extends React.Component {
                             ref={this.props.name + '.type'}
                             className="form-control"
                             onChange={this.props.onChange}
-                            datatype={util.dataTypes.picklist.DAMAGE_TYPE}>
+                            datatype={util.datatypes.picklist.DAMAGE_TYPE}>
                             <option value="0">SELECT ONE</option>
                             {this.props.picklist.map(picklistItem =>
                                  <option
@@ -295,19 +299,27 @@ class DndInput extends React.Component {
             </div>
         ) : primaryInput;
         
-        return (
-            <DndInputWrapper
-                label={this.props.label}
-                dataType={this.props.dataType}
-                inputCols={this.props.inputCols}
-                labelCols={this.props.labelCols}
-                stackLabel={this.props.stackLabel}
-                >
+        if (this.props.hideLabel) {
+            return (
                 <div>
                     {finalInput}
                 </div>
-            </DndInputWrapper>
-        );
+            );
+        } else {
+            return (
+                <DndInputWrapper
+                    label={this.props.label}
+                    dataType={this.props.dataType}
+                    inputCols={this.props.inputCols}
+                    labelCols={this.props.labelCols}
+                    stackLabel={this.props.stackLabel}
+                    >
+                    <div>
+                        {finalInput}
+                    </div>
+                </DndInputWrapper>
+            );
+        }
     }
 }
 
@@ -316,10 +328,11 @@ DndInput.propTypes = {
     buttonOnClick: PropTypes.func,
     buttonType: PropTypes.string,
     dataType: PropTypes.string.isRequired,
+    hideLabel: PropTypes.bool,
     hideSelectOneOption: PropTypes.bool,
     inputCols: PropTypes.number,
     isReadOnly: PropTypes.bool,
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     labelCols: PropTypes.number,
     name: PropTypes.string.isRequired,
     numberMaxVal: PropTypes.number,

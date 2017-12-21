@@ -11,17 +11,17 @@ class DndInputWrapper extends React.Component {
     render() {
         let wrapperClass = 'form-group form-horizontal row';
         let finalLabelCols = 4;
-        if (this.props.dataType == util.dataTypes.bool.BOOL
-          || this.props.dataType == util.dataTypes.bool.HAS_DISADVANTAGE
-          || this.props.dataType == util.dataTypes.bool.YES_NO) {
+        if (this.props.dataType == util.datatypes.bool.BOOL
+          || this.props.dataType == util.datatypes.bool.HAS_DISADVANTAGE
+          || this.props.dataType == util.datatypes.bool.YES_NO) {
             finalLabelCols = 8;
         }
         if (this.props.labelCols) {
             finalLabelCols = this.props.labelCols;
         }
-        if (this.props.dataType == util.dataTypes.bool.BOOL
-          || this.props.dataType == util.dataTypes.bool.HAS_DISADVANTAGE
-          || this.props.dataType == util.dataTypes.bool.YES_NO) {
+        if (this.props.dataType == util.datatypes.bool.BOOL
+          || this.props.dataType == util.datatypes.bool.HAS_DISADVANTAGE
+          || this.props.dataType == util.datatypes.bool.YES_NO) {
             finalInputCols = 1;
         }
         let finalInputCols = 12 - finalLabelCols;

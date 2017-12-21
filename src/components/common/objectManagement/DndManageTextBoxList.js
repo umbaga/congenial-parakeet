@@ -15,7 +15,7 @@ class DndManageTextBoxList extends React.Component {
         return (
             <DndInputWrapper
                 label="Movement"
-                dataType={util.dataTypes.array.MOVEMENTS}
+                dataType={util.datatypes.array.MOVEMENTS}
                 inputCols={9}
                 labelCols={3}
                 >

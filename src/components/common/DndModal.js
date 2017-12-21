@@ -19,26 +19,49 @@ class DndModal extends React.Component {
         } else {
             actionText = 'View';
         }
-        return (
-            <Modal show={this.props.showModal} onHide={this.props.closeModal}>
-                <Modal.Header closeButton>
-                    <h4>{actionText} {this.props.headingCaption}</h4>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="clearfix">
-                        {this.props.children}
-                    </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <DndDataEntryButtonBar
-                        onSave={this.props.onSave}
-                        onSaveNew={this.props.onSaveNew}
-                        onCancel={this.props.onCancel}
-                        onDelete={this.props.onDelete}
-                        isCreate={this.props.isCreate} />
-                </Modal.Footer>
-            </Modal>
-        );
+        if (this.props.size && this.props.size.length != 0) {
+            return (
+                <Modal show={this.props.showModal} onHide={this.props.closeModal} bsSize={this.props.size}>
+                    <Modal.Header closeButton>
+                        <h4>{actionText} {this.props.headingCaption}</h4>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="clearfix">
+                            {this.props.children}
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <DndDataEntryButtonBar
+                            onSave={this.props.onSave}
+                            onSaveNew={this.props.onSaveNew}
+                            onCancel={this.props.onCancel}
+                            onDelete={this.props.onDelete}
+                            isCreate={this.props.isCreate} />
+                    </Modal.Footer>
+                </Modal>
+            );
+        } else {
+            return (
+                <Modal show={this.props.showModal} onHide={this.props.closeModal}>
+                    <Modal.Header closeButton>
+                        <h4>{actionText} {this.props.headingCaption}</h4>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="clearfix">
+                            {this.props.children}
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <DndDataEntryButtonBar
+                            onSave={this.props.onSave}
+                            onSaveNew={this.props.onSaveNew}
+                            onCancel={this.props.onCancel}
+                            onDelete={this.props.onDelete}
+                            isCreate={this.props.isCreate} />
+                    </Modal.Footer>
+                </Modal>
+            );
+        }
     }
 }
 
@@ -52,7 +75,8 @@ DndModal.propTypes = {
     onCancel: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    onSaveNew: PropTypes.func.isRequired
+    onSaveNew: PropTypes.func.isRequired,
+    size: PropTypes.string
 };
 
 export default DndModal;

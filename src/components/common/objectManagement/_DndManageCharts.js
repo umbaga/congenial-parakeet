@@ -28,7 +28,7 @@ class _DndManageCharts extends React.Component {
                     name="title"
                     label="Title"
                     value={chart.title}
-                    dataType={util.dataTypes.string.STRING}
+                    dataType={util.datatypes.string.STRING}
                     onChange={this.props.onChange}
                     />
                 <table className="table table-sm table-striped table-hover table-bordered">
@@ -74,7 +74,7 @@ class _DndManageCharts extends React.Component {
                     name="description"
                     label="Description"
                     value={chart.description}
-                    dataType={util.dataTypes.string.DESCRIPTION}
+                    dataType={util.datatypes.string.DESCRIPTION}
                     onChange={this.props.onChange}
                     />
             </div>
@@ -155,7 +155,7 @@ class _DndManageCharts extends React.Component {
                 <div>
                     <div className="col-sm-6">
                         <DndInput
-                            dataType={util.dataTypes.number.INT}
+                            dataType={util.datatypes.number.INT}
                             name="columnCount"
                             label="Coulmns"
                             value={chart.columnCount}
@@ -164,7 +164,7 @@ class _DndManageCharts extends React.Component {
                     </div>
                     <div className="col-sm-6">
                         <DndInput
-                            dataType={util.dataTypes.number.INT}
+                            dataType={util.datatypes.number.INT}
                             name="rowCount"
                             label="Rows"
                             value={chart.rowCount}

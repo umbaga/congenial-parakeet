@@ -19,7 +19,7 @@ class ArmorForm extends React.Component {
     }
     
     render() {
-        let proficiencyPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ARMOR_PROFICIENCY);
+        let proficiencyPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.ARMOR_PROFICIENCY);
 
         let hasMaxDexInput = null;
         let maximumDexInput = null;
@@ -29,7 +29,7 @@ class ArmorForm extends React.Component {
                     <DndInput
                         name="maxDexModifier"
                         label="Max Dex Mod"
-                        dataType={util.dataTypes.number.INT}
+                        dataType={util.datatypes.number.INT}
                         value={this.props.armor.maxDexModifier}
                         onChange={this.props.onChange} />
                 );
@@ -40,7 +40,7 @@ class ArmorForm extends React.Component {
                         <DndInput
                             name="hasMaxDexModifier"
                             label="Has Max Dex Mod"
-                            dataType={util.dataTypes.bool.BOOL}
+                            dataType={util.datatypes.bool.BOOL}
                             value={this.props.armor.hasMaxDexModifier}
                             onChange={this.props.onChange} />
                     </div>
@@ -65,7 +65,7 @@ class ArmorForm extends React.Component {
                             <DndInput
                                 name="cost"
                                 label="Cost"
-                                dataType={util.dataTypes.number.COIN}
+                                dataType={util.datatypes.number.COIN}
                                 value={this.props.armor.cost}
                                 onChange={this.props.onChange} />
                         </div>
@@ -73,7 +73,7 @@ class ArmorForm extends React.Component {
                             <DndInput
                                 name="weight"
                                 label="Weight"
-                                dataType={util.dataTypes.number.WEIGHT}
+                                dataType={util.datatypes.number.WEIGHT}
                                 value={this.props.armor.weight}
                                 onChange={this.props.onChange} />
                         </div>
@@ -81,7 +81,7 @@ class ArmorForm extends React.Component {
                             <DndInput
                                 name="proficiency"
                                 label="Proficiency"
-                                dataType={util.dataTypes.picklist.ARMOR_PROFICIENCY}
+                                dataType={util.datatypes.picklist.ARMOR_PROFICIENCY}
                                 value={this.props.armor.proficiency}
                                 onChange={this.props.onChange}
                                 picklist={proficiencyPicklist} />
@@ -90,7 +90,7 @@ class ArmorForm extends React.Component {
                             <DndInput
                                 name="baseArmorClass"
                                 label="Armor Class"
-                                dataType={util.dataTypes.number.INT}
+                                dataType={util.datatypes.number.INT}
                                 value={this.props.armor.baseArmorClass}
                                 onChange={this.props.onChange} />
                         </div>
@@ -98,7 +98,7 @@ class ArmorForm extends React.Component {
                             <DndInput
                                 name="isCumulative"
                                 label="AC stacks (i.e. Shields)"
-                                dataType={util.dataTypes.bool.BOOL}
+                                dataType={util.datatypes.bool.BOOL}
                                 value={this.props.armor.isCumulative}
                                 onChange={this.props.onChange} />
                         </div>
@@ -106,7 +106,7 @@ class ArmorForm extends React.Component {
                             <DndInput
                                 name="applyDexModifier"
                                 label="Apply Dex Mod"
-                                dataType={util.dataTypes.bool.BOOL}
+                                dataType={util.datatypes.bool.BOOL}
                                 value={this.props.armor.applyDexModifier}
                                 onChange={this.props.onChange} />
                         </div>
@@ -115,7 +115,7 @@ class ArmorForm extends React.Component {
                             <DndInput
                                 name="stealthDisadvantage"
                                 label="Stealth Disadvantage"
-                                dataType={util.dataTypes.bool.BOOL}
+                                dataType={util.datatypes.bool.BOOL}
                                 value={this.props.armor.stealthDisadvantage}
                                 onChange={this.props.onChange} />
                         </div>
@@ -123,7 +123,7 @@ class ArmorForm extends React.Component {
                             <DndInput
                                 name="minimumStrength"
                                 label="Minimum Strength"
-                                dataType={util.dataTypes.number.INT}
+                                dataType={util.datatypes.number.INT}
                                 value={this.props.armor.minimumStrength}
                                 onChange={this.props.onChange} />
                         </div>

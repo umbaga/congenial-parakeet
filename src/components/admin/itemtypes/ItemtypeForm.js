@@ -26,26 +26,26 @@ class ItemtypeForm extends React.Component {
                             name="name"
                             ref="name"
                             label="Name"
-                            dataType={util.dataTypes.string.STRING}
+                            dataType={util.datatypes.string.STRING}
                             value={this.props.itemtype.name}
                             onChange={this.props.onChange}
                             />
                         <DndInput
                             name="isPicklist"
                             label="Is Picklist"
-                            dataType={util.dataTypes.bool.YES_NO}
+                            dataType={util.datatypes.bool.YES_NO}
                             value={this.props.itemtype.isPicklist}
                             onChange={this.props.onChange} />
                         <DndInput
                             name="isDescription"
                             label="Is Description"
-                            dataType={util.dataTypes.bool.YES_NO}
+                            dataType={util.datatypes.bool.YES_NO}
                             value={this.props.itemtype.isDescription}
                             onChange={this.props.onChange} />
                         <DndInput
                             name="isChart"
                             label="Is Chart"
-                            dataType={util.dataTypes.bool.YES_NO}
+                            dataType={util.datatypes.bool.YES_NO}
                             value={this.props.itemtype.isChart}
                             onChange={this.props.onChange} />
                     </div>

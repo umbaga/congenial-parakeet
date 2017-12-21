@@ -33,10 +33,10 @@ class RaceForm extends React.Component {
         });
         const picklists = this.props.picklists;
         const proficiencies = this.props.proficiencies;
-        const sizes = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.SIZE);
-        const monsterTypes = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.MONSTER_TYPE);
-        const monsterTags = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.MONSTER_TAG);
-        const abilityScores = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.ABILITY_SCORE).filter(function(abilityScore) {
+        const sizes = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.SIZE);
+        const monsterTypes = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.MONSTER_TYPE);
+        const monsterTags = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.MONSTER_TAG);
+        const abilityScores = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.ABILITY_SCORE).filter(function(abilityScore) {
             return abilityScore.isPrimary;
         });
         const tabPaneStyle = 'tab-pane-triple-row-of-tabs';
@@ -55,7 +55,7 @@ class RaceForm extends React.Component {
                                 />
                             <DndCheckboxPicklist
                                 checked={this.props.isSubrace}
-                                dataType={util.dataTypes.picklist.GENERAL}
+                                dataType={util.datatypes.picklist.GENERAL}
                                 label="Subrace Parent"
                                 checkboxName="chkParentId"
                                 picklistName="parent"
@@ -71,7 +71,7 @@ class RaceForm extends React.Component {
                                 name="size"
                                 value={race.size}
                                 onChange={this.props.onChange}
-                                dataType={util.dataTypes.picklist.SIZE}
+                                dataType={util.datatypes.picklist.SIZE}
                                 picklist={sizes}
                                 />
                             <DndInput
@@ -79,7 +79,7 @@ class RaceForm extends React.Component {
                                 name="type"
                                 value={race.type}
                                 onChange={this.props.onChange}
-                                dataType={util.dataTypes.picklist.MONSTER_TYPE}
+                                dataType={util.datatypes.picklist.MONSTER_TYPE}
                                 picklist={monsterTypes}
                                 />
                             <DndInput
@@ -87,7 +87,7 @@ class RaceForm extends React.Component {
                                 name="tags"
                                 value={race.tags}
                                 onChange={this.props.onChange}
-                                dataType={util.dataTypes.array.MONSTER_TAGS}
+                                dataType={util.datatypes.array.MONSTER_TAGS}
                                 picklist={monsterTags}
                                 selectBoxSize={4}
                                 />
@@ -100,7 +100,7 @@ class RaceForm extends React.Component {
                                     name="abilityScores.strength"
                                     value={race.abilityScores.strength}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.number.INT}
+                                    dataType={util.datatypes.number.INT}
                                     />
                             </div>
                             <div className="col-sm-4">
@@ -109,7 +109,7 @@ class RaceForm extends React.Component {
                                     name="abilityScores.dexterity"
                                     value={race.abilityScores.dexterity}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.number.INT}
+                                    dataType={util.datatypes.number.INT}
                                     />
                             </div>
                             <div className="col-sm-4">
@@ -118,7 +118,7 @@ class RaceForm extends React.Component {
                                     name="abilityScores.constitution"
                                     value={race.abilityScores.constitution}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.number.INT}
+                                    dataType={util.datatypes.number.INT}
                                     />
                             </div>
                             <div className="col-sm-4">
@@ -127,7 +127,7 @@ class RaceForm extends React.Component {
                                     name="abilityScores.intelligence"
                                     value={race.abilityScores.intelligence}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.number.INT}
+                                    dataType={util.datatypes.number.INT}
                                     />
                             </div>
                             <div className="col-sm-4">
@@ -136,7 +136,7 @@ class RaceForm extends React.Component {
                                     name="abilityScores.wisdom"
                                     value={race.abilityScores.wisdom}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.number.INT}
+                                    dataType={util.datatypes.number.INT}
                                     />
                             </div>
                             <div className="col-sm-4">
@@ -145,7 +145,7 @@ class RaceForm extends React.Component {
                                     name="abilityScores.charisma"
                                     value={race.abilityScores.charisma}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.number.INT}
+                                    dataType={util.datatypes.number.INT}
                                     />
                             </div>
                             <div className="col-sm-6">
@@ -154,7 +154,7 @@ class RaceForm extends React.Component {
                                     name="abilityScores.selection.count"
                                     value={race.abilityScores.selection.count}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.number.INT}
+                                    dataType={util.datatypes.number.INT}
                                     />
                             </div>
                             <div className="col-sm-6">
@@ -163,7 +163,7 @@ class RaceForm extends React.Component {
                                     name="abilityScores.selection.modifier"
                                     value={race.abilityScores.selection.modifier}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.number.INT}
+                                    dataType={util.datatypes.number.INT}
                                     />
                             </div>
                         </Tab>
@@ -175,7 +175,7 @@ class RaceForm extends React.Component {
                                     name="vitals.height.base"
                                     value={race.vitals.height.base}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.number.LENGTH}
+                                    dataType={util.datatypes.number.LENGTH}
                                     labelCols={8}
                                     />
                                 <DndInput
@@ -183,7 +183,7 @@ class RaceForm extends React.Component {
                                     name="vitals.weight.base"
                                     value={race.vitals.weight.base}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.number.WEIGHT}
+                                    dataType={util.datatypes.number.WEIGHT}
                                     labelCols={8}
                                     />
                             </div>
@@ -193,7 +193,7 @@ class RaceForm extends React.Component {
                                     name="vitals.height.dice"
                                     value={race.vitals.height.dice}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.special.DICE_ROLL}
+                                    dataType={util.datatypes.special.DICE_ROLL}
                                     labelCols={6}
                                     />
                                 <DndInput
@@ -201,7 +201,7 @@ class RaceForm extends React.Component {
                                     name="vitals.weight.dice"
                                     value={race.vitals.weight.dice}
                                     onChange={this.props.onChange}
-                                    dataType={util.dataTypes.special.DICE_ROLL}
+                                    dataType={util.datatypes.special.DICE_ROLL}
                                     labelCols={6}
                                     />
                             </div>
@@ -214,9 +214,9 @@ class RaceForm extends React.Component {
                                     onChange={this.props.onChange}
                                     picklists={picklists}
                                     primaryArray={race.movement}
-                                    arrayType={util.itemTypes.TYPES.MOVEMENT_TYPE}
+                                    arrayType={util.itemtypes.TYPES.MOVEMENT_TYPE}
                                     textValueFieldName="speed"
-                                    dataType={util.dataTypes.array.MOVEMENT}
+                                    dataType={util.datatypes.array.MOVEMENT}
                                     />
                             </div>
                             <div className="col-md-12">
@@ -225,9 +225,9 @@ class RaceForm extends React.Component {
                                     onChange={this.props.onChange}
                                     picklists={picklists}
                                     primaryArray={race.senses}
-                                    arrayType={util.itemTypes.TYPES.ADVANCED_SENSE}
+                                    arrayType={util.itemtypes.TYPES.ADVANCED_SENSE}
                                     textValueFieldName="range"
-                                    dataType={util.dataTypes.array.ADVANCED_SENSE}
+                                    dataType={util.datatypes.array.ADVANCED_SENSE}
                                     />
                             </div>
                         </Tab>
@@ -238,7 +238,7 @@ class RaceForm extends React.Component {
                                 picklists={picklists}
                                 items={proficiencies}
                                 editItemGroup={this.props.editProficiencyGroup}
-                                categoryTypeId={util.itemTypes.TYPES.PROFICIENCY_CATEGORY}
+                                categoryTypeId={util.itemtypes.TYPES.PROFICIENCY_CATEGORY}
                                 onChange={this.props.onChangeProficiencyGroup}
                                 title="Proficiency"
                                 toggleFieldName="proficiencies"
@@ -263,7 +263,7 @@ class RaceForm extends React.Component {
                                 name="spellcasting.abilityScore"
                                 value={race.spellcasting.abilityScore}
                                 onChange={this.props.onChange}
-                                dataType={util.dataTypes.picklist.ABILITY_SCORE}
+                                dataType={util.datatypes.picklist.ABILITY_SCORE}
                                 picklist={abilityScores}
                                 />
                             <DndManageSpellSelection

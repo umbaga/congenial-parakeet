@@ -55,23 +55,36 @@ export const CHART = {
     title: '',
     description: '',
     dice: {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
-    columnCount: 0,
+    columnCount: 1,
     rowCount: 0,
-    columns: [],
+    columns: [
+        {
+            id: 0,
+            title: '',
+            orderIndex: 0,
+            selectionItemType: {id: 0, name: ''},
+            selectionItemDataType: {id: 1, name: ''}
+        }
+    ],
     rows: [],
     entries: [],
     orderIndex: -1,
+    isCreateNewItemType: false,
+    selectionItemType: {id: 0, name: ''},
     type: {id: 0, name: ''}
 };
 export const CHART_COLUMN = {
     id: 0,
     title: '',
-    orderIndex: -1
+    orderIndex: -1,
+    selectionItemDataType: {id: 1, name: ''},
+    selectionItemType: {id: 0, name: ''}
 };
 export const CHART_ROW = {
     id: 0,
     title: '',
-    orderIndex: -1
+    orderIndex: -1,
+    selectionItem: {id: 0, name: ''}
 };
 export const CHART_ENTRY = {
     id: 0,
@@ -79,7 +92,8 @@ export const CHART_ENTRY = {
     rowIndex: -1,
     description: '',
     minimum: 0,
-    maximum: 0
+    maximum: 0,
+    selectionItem: {id: 0, name: ''}
 };
 export const CHART_TYPE = {id: 0, name: ''};
 export const DAMAGE = {

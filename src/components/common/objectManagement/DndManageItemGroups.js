@@ -23,7 +23,7 @@ class DndManageItemGroups extends React.Component {
                 <DndInput
                     name="category"
                     label="Category"
-                    dataType={util.dataTypes.picklist.PROFICIENCY_CATEGORY}
+                    dataType={util.datatypes.picklist.PROFICIENCY_CATEGORY}
                     picklist={picklist}
                     onChange={this.props.onChange}
                     value={itemGroup.category}
@@ -34,13 +34,13 @@ class DndManageItemGroups extends React.Component {
     }
     
     renderSelectCount(itemGroup) {
-        if (itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY ||
-           itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST) {
+        if (itemGroup.mechanic.id == util.itemtypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY ||
+           itemGroup.mechanic.id == util.itemtypes.SELECTION_MECHANIC.SELECT_FROM.LIST) {
             return (
                 <DndInput
                     name="selectCount"
                     label="Selection Count"
-                    dataType={util.dataTypes.number.INT}
+                    dataType={util.datatypes.number.INT}
                     onChange={this.props.onChange}
                     value={itemGroup.selectCount}
                     />
@@ -50,14 +50,14 @@ class DndManageItemGroups extends React.Component {
     }
     
     renderItemToggle(itemGroup, picklist) {
-        if (itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.ASSIGNMENT ||
-           itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST) {
+        if (itemGroup.mechanic.id == util.itemtypes.SELECTION_MECHANIC.ASSIGNMENT ||
+           itemGroup.mechanic.id == util.itemtypes.SELECTION_MECHANIC.SELECT_FROM.LIST) {
             if (itemGroup.category && itemGroup.category.id) {
                 return (
                     <DndInput
                         name="proficiencies"
                         label={util.format.forDisplay.string.renderSingularPlural(this.props.title, 2)}
-                        dataType={util.dataTypes.array.PROFICIENCIES}
+                        dataType={util.datatypes.array.PROFICIENCIES}
                         value={itemGroup[this.props.toggleFieldName]}
                         onChange={this.props.onChange}
                         picklist={picklist}
@@ -87,7 +87,7 @@ class DndManageItemGroups extends React.Component {
                                         displayValue={this._formatText(group)}
                                         onRemoveItem={this.props.onChange}
                                         deleteButtonName={this.props.buttonClickFieldName}
-                                        deleteButtonAction={util.dataTypes.action[this.props.actionProperty].REMOVE}
+                                        deleteButtonAction={util.datatypes.action[this.props.actionProperty].REMOVE}
                                         />);
                         }.bind(this))}
                     </tbody>
@@ -106,14 +106,14 @@ class DndManageItemGroups extends React.Component {
     }
     
     renderConditionalPicklistInputs(itemGroup, hasCategories, items) {
-        if (itemGroup.mechanic.id == util.itemTypes.SELECTION_MECHANIC.CONDITIONAL) {
+        if (itemGroup.mechanic.id == util.itemtypes.SELECTION_MECHANIC.CONDITIONAL) {
             if (!hasCategories || (hasCategories && itemGroup.category.id != 0)) {
                 return (
                     <div>
                         <DndInput
                             name="proficiencies"
                             label={util.format.forDisplay.string.renderSingularPlural(this.props.title, 2)}
-                            dataType={util.dataTypes.picklist.PROFICIENCY}
+                            dataType={util.datatypes.picklist.PROFICIENCY}
                             value={itemGroup[this.props.toggleFieldName]}
                             onChange={this.props.onChange}
                             picklist={items}
@@ -133,7 +133,7 @@ class DndManageItemGroups extends React.Component {
                     <DndInput
                         name="conditionalText"
                         label="Conditional Text"
-                        dataType={util.dataTypes.string.STRING}
+                        dataType={util.datatypes.string.STRING}
                         value={itemGroup.conditionalText}
                         onChange={this.props.onChange}
                         />
@@ -147,7 +147,7 @@ class DndManageItemGroups extends React.Component {
         const itemGroups = this.props.itemGroups;
         let hasCategories = (this.props.categoryTypeId && this.props.categoryTypeId.length != 0);
         const categories = util.common.picklists.getPicklistItems(this.props.picklists, this.props.categoryTypeId);
-        const selectionMechanics = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SELECTION_MECHANIC);
+        const selectionMechanics = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.SELECTION_MECHANIC);
         let items = this.props.items;
         if (this.props.editItemGroup && this.props.editItemGroup.category && this.props.editItemGroup.category.id != 0) {
             items = items.filter(item => item.category.id == this.props.editItemGroup.category.id);
@@ -159,7 +159,7 @@ class DndManageItemGroups extends React.Component {
                     <DndInput
                         name="mechanic"
                         label="Selection Type"
-                        dataType={util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC}
+                        dataType={util.datatypes.picklist.PROFICIENCY_SELECTION_MECHANIC}
                         picklist={selectionMechanics}
                         onChange={this.props.onChange}
                         value={itemGroup.mechanic}
@@ -172,8 +172,8 @@ class DndManageItemGroups extends React.Component {
                         name={this.props.buttonClickFieldName}
                         onCancel={this.props.onChange}
                         onSave={this.props.onChange}
-                        cancelAction={util.dataTypes.action[this.props.actionProperty].RESET}
-                        saveAction={util.dataTypes.action[this.props.actionProperty].ADD}
+                        cancelAction={util.datatypes.action[this.props.actionProperty].RESET}
+                        saveAction={util.datatypes.action[this.props.actionProperty].ADD}
                         />
                 </div>
                 <div>

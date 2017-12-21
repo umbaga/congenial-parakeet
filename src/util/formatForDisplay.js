@@ -294,7 +294,7 @@ obj.equipmentName = function(val) {
 obj.itemGroup = function(val) {
     let retVal = '';
     switch (val.mechanic.id) {
-        case util.itemTypes.SELECTION_MECHANIC.ASSIGNMENT:
+        case util.itemtypes.SELECTION_MECHANIC.ASSIGNMENT:
             for (let x = 0; x < val.proficiencies.length; x++) {
                 retVal += val.proficiencies[x].name;
                 if (x < val.proficiencies.length - 1) {
@@ -302,10 +302,10 @@ obj.itemGroup = function(val) {
                 }
             }
             break;
-        case util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY:
+        case util.itemtypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY:
             retVal = util.format.forDisplay.number.renderAsWord(val.selectCount) + ' ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount);
             break;
-        case util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST:
+        case util.itemtypes.SELECTION_MECHANIC.SELECT_FROM.LIST:
             retVal = 'Select ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' from the following: ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount) + ': ';
             for (let x = 0; x < val.proficiencies.length; x++) {
                 retVal += val.proficiencies[x].name;
@@ -314,7 +314,7 @@ obj.itemGroup = function(val) {
                 }
             }
             break;
-        case util.itemTypes.SELECTION_MECHANIC.CONDITIONAL:
+        case util.itemtypes.SELECTION_MECHANIC.CONDITIONAL:
             retVal = 'You gain proficiency with ' + val.proficiencies[0].name + ' checks ' + val.conditionalText;
             break;
         default:
@@ -324,50 +324,50 @@ obj.itemGroup = function(val) {
 obj.mechanic = function(val) {
     let retVal = '';
     switch (val.type.id) {
-        case util.itemTypes.MECHANIC_TYPE.ADVANTAGE:
+        case util.itemtypes.MECHANIC_TYPE.ADVANTAGE:
             retVal = 'Advantage to ' + val.target.name;
             break;
-        case util.itemTypes.MECHANIC_TYPE.ADVANTAGE_SAVING_THROW:
+        case util.itemtypes.MECHANIC_TYPE.ADVANTAGE_SAVING_THROW:
             retVal = 'Advantage to Saving Throws vs ' + val.target.name;
             break;
-        case util.itemTypes.MECHANIC_TYPE.BONUS:
+        case util.itemtypes.MECHANIC_TYPE.BONUS:
             if (val.value >= 0) {
                 retVal = '+' + val.value.toString() + ' to ' + val.target.name;
             } else {
                 retVal = val.value.toString() + ' to ' + val.target.name;
             }
             break;
-        case util.itemTypes.MECHANIC_TYPE.DISADVANTAGE:
+        case util.itemtypes.MECHANIC_TYPE.DISADVANTAGE:
             retVal = 'Disadvantage to ' + val.target.name;
             break;
-        case util.itemTypes.MECHANIC_TYPE.DISADVANTAGE_SAVING_THROW:
+        case util.itemtypes.MECHANIC_TYPE.DISADVANTAGE_SAVING_THROW:
             retVal = 'Disadvantage to Saving Throws vs ' + val.target.name;
             break;
-        case util.itemTypes.MECHANIC_TYPE.RESISTANCE:
+        case util.itemtypes.MECHANIC_TYPE.RESISTANCE:
             retVal = 'Resistance to ' + val.target.name;
             break;
-        case util.itemTypes.MECHANIC_TYPE.VULNERABILITY:
+        case util.itemtypes.MECHANIC_TYPE.VULNERABILITY:
             retVal = 'Vulnerability to ' + val.target.name;
             break;
-        case util.itemTypes.MECHANIC_TYPE.IMMUNITY:
+        case util.itemtypes.MECHANIC_TYPE.IMMUNITY:
             retVal = 'Immune to ' + val.target.name;
             break;
-        case util.itemTypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT:
+        case util.itemtypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT:
             retVal = '+' + util.format.forDisplay.string.dieRoll(val.dice) + ' to ' + val.target.name;
             break;
-        case util.itemTypes.MECHANIC_TYPE.MULTIPLY_STAT:
+        case util.itemtypes.MECHANIC_TYPE.MULTIPLY_STAT:
             retVal = 'x' + val.value.toString() + ' to ' + val.target.name;
             break;
-        case util.itemTypes.MECHANIC_TYPE.DIVIDE_STAT:
+        case util.itemtypes.MECHANIC_TYPE.DIVIDE_STAT:
             retVal = 'divide ' + val.target.name + ' by ' + val.value.toString();
             break;
-        case util.itemTypes.MECHANIC_TYPE.APPLY_ABILITY_SCORE_TO_STAT:
+        case util.itemtypes.MECHANIC_TYPE.APPLY_ABILITY_SCORE_TO_STAT:
             retVal = '+' + val.valueObject.name + ' modifier to ' + val.target.name;
             break;
-        case util.itemTypes.MECHANIC_TYPE.SPECIAL_TEXT:
+        case util.itemtypes.MECHANIC_TYPE.SPECIAL_TEXT:
             retVal = val.specialText;
             break;
-        case util.itemTypes.MECHANIC_TYPE.DOUBLE_PROFICIENCY_BONUS:
+        case util.itemtypes.MECHANIC_TYPE.DOUBLE_PROFICIENCY_BONUS:
             retVal = 'Double proficiency bonus with ' + val.target.name + ' checks';
             if (val.specialText && val.specialText.length != 0) {
                 retVal += ' ' + val.specialText;
@@ -405,7 +405,7 @@ obj.monsterTypeSizeBlock = function(val) {
 obj.proficiencyGroup = function(val) {
     let retVal = '';
     switch (val.mechanic.id) {
-        case util.itemTypes.SELECTION_MECHANIC.ASSIGNMENT:
+        case util.itemtypes.SELECTION_MECHANIC.ASSIGNMENT:
             for (let x = 0; x < val.proficiencies.length; x++) {
                 retVal += val.proficiencies[x].name;
                 if (x < val.proficiencies.length - 1) {
@@ -413,10 +413,10 @@ obj.proficiencyGroup = function(val) {
                 }
             }
             break;
-        case util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY:
+        case util.itemtypes.SELECTION_MECHANIC.SELECT_FROM.CATEGORY:
             retVal = 'You gain proficiency with ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount);
             break;
-        case util.itemTypes.SELECTION_MECHANIC.SELECT_FROM.LIST:
+        case util.itemtypes.SELECTION_MECHANIC.SELECT_FROM.LIST:
             retVal = 'Select ' + util.format.forDisplay.number.renderAsWord(val.selectCount) + ' from the following: ' + util.format.forDisplay.string.renderSingularPlural(val.category.name, val.selectCount) + ': ';
             for (let x = 0; x < val.proficiencies.length; x++) {
                 retVal += val.proficiencies[x].name;
@@ -438,7 +438,7 @@ obj.spellComponents = function(val) {
                     retVal += ', ';
                 }
                 retVal += val.components[e].name.substring(0, 1).toUpperCase();
-                if (val.components[e].id == util.itemTypes.SPELL_COMPONENT.MATERIAL) {
+                if (val.components[e].id == util.itemtypes.SPELL_COMPONENT.MATERIAL) {
                     retVal += ' (' + val.components[e].description + ')';
                 }
             }
@@ -457,7 +457,7 @@ obj.spellLevelAndSchool = function(val) {
 obj.spellSelection = function(val) {
     let retVal = '';
     switch (val.type.id) {
-        case util.itemTypes.SPELL_SELECTION.BY_LEVEL:
+        case util.itemtypes.SPELL_SELECTION.BY_LEVEL:
             if (val.characterLevel != 1) {
                 retVal += ' At ' + util.format.forDisplay.number.ordinal(val.characterLevel) + ' level, select';
             } else {
@@ -472,7 +472,7 @@ obj.spellSelection = function(val) {
                 retVal += ' per ' + val.rechargeType.name + '.';
             }
             break;
-        case util.itemTypes.SPELL_SELECTION.BY_SCHOOL:
+        case util.itemtypes.SPELL_SELECTION.BY_SCHOOL:
             if (val.characterLevel != 1) {
                 retVal += ' At ' + util.format.forDisplay.number.ordinal(val.characterLevel) + ' level, select';
             } else {
@@ -492,7 +492,7 @@ obj.spellSelection = function(val) {
                 retVal += ' per ' + val.rechargeType.name + '.';
             }
             break;
-        case util.itemTypes.SPELL_SELECTION.BY_SPELL:
+        case util.itemtypes.SPELL_SELECTION.BY_SPELL:
             if (val.characterLevel != 1) {
                 retVal += ' At ' + util.format.forDisplay.number.ordinal(val.characterLevel) + ' level, you';
             } else {
@@ -506,7 +506,7 @@ obj.spellSelection = function(val) {
                 retVal += ' per ' + val.rechargeType.name + '.';
             }
             break;
-        case util.itemTypes.SPELL_SELECTION.BY_SPELL_LIST:
+        case util.itemtypes.SPELL_SELECTION.BY_SPELL_LIST:
             if (val.characterLevel != 1) {
                 retVal += ' At ' + util.format.forDisplay.number.ordinal(val.characterLevel) + ' level, select';
             } else {

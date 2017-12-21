@@ -31,7 +31,7 @@ class DndManageSpellSelection extends React.Component {
                                     spellSelection={spellSelection}
                                     onRemove={this.props.onChange}
                                     name="spellcasting.spellSelections"
-                                    dataType={util.dataTypes.action.SPELL_SELECTION.REMOVE}
+                                    dataType={util.datatypes.action.SPELL_SELECTION.REMOVE}
                                     />
                             );
                         }.bind(this))}
@@ -44,11 +44,11 @@ class DndManageSpellSelection extends React.Component {
     
     renderForm(){
         const editSpellSelection = this.props.editSpellSelection;
-        const rechargeTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.RECHARGE_TYPE);
+        const rechargeTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.RECHARGE_TYPE);
         const spells = this.props.spells;
         const spelllists = this.props.spelllists;
-        const schools = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC);
-        const selectionTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_SELECTION);
+        const schools = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.SCHOOL_OF_MAGIC);
+        const selectionTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.SPELL_SELECTION);
         let selectionCriteriaInputs = null;
         let castingInformationInputs = null;
         let selectedSpell = util.common.picklists.getPicklistItemFromSinglePicklist(spells, editSpellSelection.spell.id);
@@ -59,7 +59,7 @@ class DndManageSpellSelection extends React.Component {
                 name="spell"
                 value={editSpellSelection.spell}
                 onChange={this.props.onChange}
-                dataType={util.dataTypes.picklist.GENERAL}
+                dataType={util.datatypes.picklist.GENERAL}
                 picklist={spells}
                 stackLabel
                 />
@@ -71,7 +71,7 @@ class DndManageSpellSelection extends React.Component {
                 name="school"
                 value={editSpellSelection.school}
                 onChange={this.props.onChange}
-                dataType={util.dataTypes.picklist.SCHOOL_OF_MAGIC}
+                dataType={util.datatypes.picklist.SCHOOL_OF_MAGIC}
                 picklist={schools}
                 stackLabel
                 />
@@ -83,7 +83,7 @@ class DndManageSpellSelection extends React.Component {
                 name="spelllist"
                 value={editSpellSelection.spelllist}
                 onChange={this.props.onChange}
-                dataType={util.dataTypes.picklist.GENERAL}
+                dataType={util.datatypes.picklist.GENERAL}
                 picklist={spelllists}
                 stackLabel
                 />
@@ -95,7 +95,7 @@ class DndManageSpellSelection extends React.Component {
                 name="spellLevel"
                 value={editSpellSelection.spellLevel}
                 onChange={this.props.onChange}
-                dataType={util.dataTypes.number.SPELL_LEVEL}
+                dataType={util.datatypes.number.SPELL_LEVEL}
                 stackLabel
                 />
         );
@@ -106,7 +106,7 @@ class DndManageSpellSelection extends React.Component {
                 name="selectCount"
                 value={editSpellSelection.selectCount}
                 onChange={this.props.onChange}
-                dataType={util.dataTypes.number.INT}
+                dataType={util.datatypes.number.INT}
                 stackLabel
                 />
         );
@@ -117,7 +117,7 @@ class DndManageSpellSelection extends React.Component {
                 name="castingCount"
                 value={editSpellSelection.castingCount}
                 onChange={this.props.onChange}
-                dataType={util.dataTypes.number.INT}
+                dataType={util.datatypes.number.INT}
                 stackLabel
                 />
         );
@@ -128,7 +128,7 @@ class DndManageSpellSelection extends React.Component {
                 name="rechargeType"
                 value={editSpellSelection.rechargeType}
                 onChange={this.props.onChange}
-                dataType={util.dataTypes.picklist.RECHARGE_TYPE}
+                dataType={util.datatypes.picklist.RECHARGE_TYPE}
                 picklist={rechargeTypes}
                 stackLabel
                 />
@@ -140,13 +140,13 @@ class DndManageSpellSelection extends React.Component {
                 name="characterLevel"
                 value={editSpellSelection.characterLevel}
                 onChange={this.props.onChange}
-                dataType={util.dataTypes.number.CHARACTER_LEVEL}
+                dataType={util.datatypes.number.CHARACTER_LEVEL}
                 stackLabel
                 />
         );
         
         switch (editSpellSelection.selectionType.id) {
-            case util.itemTypes.SPELL_SELECTION.BY_LEVEL:
+            case util.itemtypes.SPELL_SELECTION.BY_LEVEL:
                 selectionCriteriaInputs = (
                     <div>
                         <div className="col-sm-6">
@@ -173,7 +173,7 @@ class DndManageSpellSelection extends React.Component {
                     );
                 }
                 break;
-            case util.itemTypes.SPELL_SELECTION.BY_SCHOOL:
+            case util.itemtypes.SPELL_SELECTION.BY_SCHOOL:
                 selectionCriteriaInputs = (
                     <div>
                         <div className="col-sm-6">
@@ -203,7 +203,7 @@ class DndManageSpellSelection extends React.Component {
                     );
                 }
                 break;
-            case util.itemTypes.SPELL_SELECTION.BY_SPELL_LIST:
+            case util.itemtypes.SPELL_SELECTION.BY_SPELL_LIST:
                 selectionCriteriaInputs = (
                     <div>
                         <div className="col-sm-6">
@@ -233,7 +233,7 @@ class DndManageSpellSelection extends React.Component {
                     );
                 }
                 break;
-            case util.itemTypes.SPELL_SELECTION.BY_SPELL:
+            case util.itemtypes.SPELL_SELECTION.BY_SPELL:
                 selectionCriteriaInputs = (
                     <div>
                         <div className="col-sm-6">
@@ -274,7 +274,7 @@ class DndManageSpellSelection extends React.Component {
                     name="selectionType"
                     value={editSpellSelection.selectionType}
                     onChange={this.props.onChange}
-                    dataType={util.dataTypes.picklist.SPELL_SELECTION}
+                    dataType={util.datatypes.picklist.SPELL_SELECTION}
                     picklist={selectionTypes}
                     />
                 {selectionCriteriaInputs}
@@ -283,8 +283,8 @@ class DndManageSpellSelection extends React.Component {
                     onCancel={this.props.onChange}
                     onSave={this.props.onChange}
                     name="spellcasting.spellSelections"
-                    saveAction={util.dataTypes.action.SPELL_SELECTION.ADD}
-                    cancelAction={util.dataTypes.action.SPELL_SELECTION.RESET}
+                    saveAction={util.datatypes.action.SPELL_SELECTION.ADD}
+                    cancelAction={util.datatypes.action.SPELL_SELECTION.RESET}
                     />
             </div>
         );

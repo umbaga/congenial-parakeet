@@ -22,14 +22,14 @@ class EquipmentForm extends React.Component {
     
     renderAmmunitionTypePicklist() {
         let ammunitionTypePicklistField = null;
-        if (this.props.equipment.category.id == util.itemTypes.EQUIPMENT_CATEGORY.AMMUNTION) {
-            let ammunitionTypePicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.AMMUNITION_TYPE);
+        if (this.props.equipment.category.id == util.itemtypes.EQUIPMENT_CATEGORY.AMMUNTION) {
+            let ammunitionTypePicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.AMMUNITION_TYPE);
             ammunitionTypePicklistField = (
                     <div className="col-md-6">
                         <DndInput
                             name="ammunition"
                             label="Ammunition Type"
-                            dataType={util.dataTypes.picklist.AMMUNITION_TYPE}
+                            dataType={util.datatypes.picklist.AMMUNITION_TYPE}
                             value={this.props.equipment.ammunition}
                             onChange={this.props.onChange}
                             picklist={ammunitionTypePicklist} />
@@ -41,14 +41,14 @@ class EquipmentForm extends React.Component {
     }
     
     renderImprovisedWeaponFields() {
-        let damageTypePicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE);
+        let damageTypePicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.DAMAGE_TYPE);
         return this.props.hasImprovisedWeapon ? (
             <div>
                 <div className="col-md-4">
                     <DndInput
                         name="improvisedWeapon.damage"
                         label="Damage"
-                        dataType={util.dataTypes.special.DICE_ROLL}
+                        dataType={util.datatypes.special.DICE_ROLL}
                         value={this.props.equipment.improvisedWeapon.damage}
                         onChange={this.props.onChange} />
                 </div>
@@ -56,7 +56,7 @@ class EquipmentForm extends React.Component {
                     <DndInput
                         name="improvisedWeapon.damageType"
                         label="Damage Type"
-                        dataType={util.dataTypes.picklist.DAMAGE_TYPE}
+                        dataType={util.datatypes.picklist.DAMAGE_TYPE}
                         value={this.props.equipment.improvisedWeapon.damageType}
                         onChange={this.props.onChange}
                         picklist={damageTypePicklist} />
@@ -65,7 +65,7 @@ class EquipmentForm extends React.Component {
                     <DndInput
                         name="improvisedWeapon.range"
                         label="Range"
-                        dataType={util.dataTypes.number.INT}
+                        dataType={util.datatypes.number.INT}
                         value={this.props.equipment.improvisedWeapon.range}
                         onChange={this.props.onChange} />
                 </div>
@@ -74,7 +74,7 @@ class EquipmentForm extends React.Component {
     }
     
     render() {
-        let categoryPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.EQUIPMENT_CATEGORY);
+        let categoryPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.EQUIPMENT_CATEGORY);
         return (
             <div>
                 <form>
@@ -92,7 +92,7 @@ class EquipmentForm extends React.Component {
                             <DndInput
                                 name="category"
                                 label="Category"
-                                dataType={util.dataTypes.picklist.EQUIPMENT_CATEGORY}
+                                dataType={util.datatypes.picklist.EQUIPMENT_CATEGORY}
                                 value={this.props.equipment.category}
                                 onChange={this.props.onChange}
                                 picklist={categoryPicklist} />
@@ -101,7 +101,7 @@ class EquipmentForm extends React.Component {
                             <DndInput
                                 name="cost"
                                 label="Cost"
-                                dataType={util.dataTypes.number.COIN}
+                                dataType={util.datatypes.number.COIN}
                                 value={this.props.equipment.cost}
                                 onChange={this.props.onChange} />
                         </div>
@@ -109,7 +109,7 @@ class EquipmentForm extends React.Component {
                             <DndInput
                                 name="weight"
                                 label="Weight"
-                                dataType={util.dataTypes.number.WEIGHT}
+                                dataType={util.datatypes.number.WEIGHT}
                                 value={this.props.equipment.weight}
                                 onChange={this.props.onChange} />
                         </div>
@@ -117,7 +117,7 @@ class EquipmentForm extends React.Component {
                             <DndInput
                                 name="count"
                                 label="Item Count"
-                                dataType={util.dataTypes.number.INT}
+                                dataType={util.datatypes.number.INT}
                                 value={this.props.equipment.count}
                                 onChange={this.props.onChange} />
                         </div>
@@ -125,7 +125,7 @@ class EquipmentForm extends React.Component {
                             <DndInput
                                 name="unit"
                                 label="Item Unit"
-                                dataType={util.dataTypes.string.STRING}
+                                dataType={util.datatypes.string.STRING}
                                 value={this.props.equipment.unit}
                                 onChange={this.props.onChange} />
                         </div>
@@ -133,7 +133,7 @@ class EquipmentForm extends React.Component {
                             <DndInput
                                 name="showImprovisedWeapon"
                                 label="Is Improvised Weapon"
-                                dataType={util.dataTypes.bool.BOOL}
+                                dataType={util.datatypes.bool.BOOL}
                                 onChange={this.props.onChangeImprovisedWeapon}
                                 labelCols={4}
                                 />

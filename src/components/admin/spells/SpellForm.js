@@ -41,7 +41,7 @@ class SpellForm extends React.Component {
                                 <DndButton
                                     buttonType="removeitem"
                                     onClick={this.props.onRemoveDamageGrouping}
-                                    dataType={util.dataTypes.action.DAMAGE_GROUPING.REMOVE}
+                                    dataType={util.datatypes.action.DAMAGE_GROUPING.REMOVE}
                                     name={idx + '_removeDamageGroupButton'}
                                     />
                             </div>
@@ -54,16 +54,16 @@ class SpellForm extends React.Component {
     
     render() {
         const spell = this.props.spell;
-        const castingTimes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_CASTING_TIME);
-        const components = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_COMPONENT);
-        const durations = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_DURATION);
-        const ranges = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SPELL_RANGE);
-        const schools = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SCHOOL_OF_MAGIC);
-        const damageTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.DAMAGE_TYPE);
-        const abilityScores = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE);
-        const attackRollTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ATTACK_ROLL_TYPE);
-        const conditions = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.CONDITION);
-        const saveEffects = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.SAVE_EFFECT);
+        const castingTimes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.SPELL_CASTING_TIME);
+        const components = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.SPELL_COMPONENT);
+        const durations = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.SPELL_DURATION);
+        const ranges = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.SPELL_RANGE);
+        const schools = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.SCHOOL_OF_MAGIC);
+        const damageTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.DAMAGE_TYPE);
+        const abilityScores = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.ABILITY_SCORE);
+        const attackRollTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.ATTACK_ROLL_TYPE);
+        const conditions = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.CONDITION);
+        const saveEffects = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.SAVE_EFFECT);
         
         return (
             <div>
@@ -83,7 +83,7 @@ class SpellForm extends React.Component {
                                 name="level"
                                 value={spell.level}
                                 onChange={this.props.onChange}
-                                dataType={util.dataTypes.number.SPELL_LEVEL}
+                                dataType={util.datatypes.number.SPELL_LEVEL}
                                 hideSelectOneOption
                                 />
                             <DndInput
@@ -91,7 +91,7 @@ class SpellForm extends React.Component {
                                 name="school"
                                 value={spell.school}
                                 onChange={this.props.onChange}
-                                dataType={util.dataTypes.picklist.SCHOOL_OF_MAGIC}
+                                dataType={util.datatypes.picklist.SCHOOL_OF_MAGIC}
                                 picklist={schools}
                                 />
                             <DndInput
@@ -100,10 +100,10 @@ class SpellForm extends React.Component {
                                 labelCols={4}
                                 value={spell.isRitual}
                                 onChange={this.props.onChange}
-                                dataType={util.dataTypes.bool.BOOL}
+                                dataType={util.datatypes.bool.BOOL}
                                 />
                             <DndPicklistAddSelect
-                                dataType={util.dataTypes.picklist.SPELL_CASTING_TIME}
+                                dataType={util.datatypes.picklist.SPELL_CASTING_TIME}
                                 label="Casting Time"
                                 name="castingTime"
                                 onChange={this.props.onChange}
@@ -112,7 +112,7 @@ class SpellForm extends React.Component {
                                 onSaveButtonClick={this.props.saveNewCastingTime}
                                 />
                             <DndPicklistAddSelect
-                                dataType={util.dataTypes.picklist.SPELL_RANGE}
+                                dataType={util.datatypes.picklist.SPELL_RANGE}
                                 label="Range"
                                 name="range"
                                 onChange={this.props.onChange}
@@ -121,7 +121,7 @@ class SpellForm extends React.Component {
                                 onSaveButtonClick={this.props.saveNewRange}
                                 />
                             <DndCheckboxList
-                                dataType={util.dataTypes.picklist.SPELL_COMPONENT}
+                                dataType={util.datatypes.picklist.SPELL_COMPONENT}
                                 label="Components"
                                 name="components"
                                 value={spell.components}
@@ -130,7 +130,7 @@ class SpellForm extends React.Component {
                                 textBoxKey="description"
                                 />
                             <DndPicklistAddSelect
-                                dataType={util.dataTypes.picklist.SPELL_DURATION}
+                                dataType={util.datatypes.picklist.SPELL_DURATION}
                                 label="Duration"
                                 name="duration"
                                 onChange={this.props.onChange}
@@ -143,14 +143,14 @@ class SpellForm extends React.Component {
                                 name="description"
                                 value={spell.description}
                                 onChange={this.props.onChange}
-                                dataType={util.dataTypes.string.DESCRIPTION}
+                                dataType={util.datatypes.string.DESCRIPTION}
                                 />
                             <DndInput
                                 label="At Higher Levels"
                                 name="atHigherLevels"
                                 value={spell.atHigherLevels}
                                 onChange={this.props.onChange}
-                                dataType={util.dataTypes.string.DESCRIPTION}
+                                dataType={util.datatypes.string.DESCRIPTION}
                                 />
                         </Tab>
                         <Tab eventKey={2} title="Damage/Save">
@@ -158,7 +158,7 @@ class SpellForm extends React.Component {
                             <DndInput
                                 name="damage"
                                 label="Damage and Type"
-                                dataType={util.dataTypes.combo.DAMAGE_AND_DAMAGE_TYPE}
+                                dataType={util.datatypes.combo.DAMAGE_AND_DAMAGE_TYPE}
                                 value={spell.damage}
                                 onChange={this.props.onChange}
                                 picklist={damageTypes}
@@ -169,21 +169,21 @@ class SpellForm extends React.Component {
                             <DndInput
                                 name="damage.improvement.dice"
                                 label="Damage Gained"
-                                dataType={util.dataTypes.special.DICE_ROLL}
+                                dataType={util.datatypes.special.DICE_ROLL}
                                 value={spell.damage.improvement.dice}
                                 onChange={this.props.onChange}
                                 />
                             <DndInput
                                 name="damage.maximum.dice"
                                 label="Maximum Damage"
-                                dataType={util.dataTypes.special.DICE_ROLL}
+                                dataType={util.datatypes.special.DICE_ROLL}
                                 value={spell.damage.maximum.dice}
                                 onChange={this.props.onChange}
                                 />
                             <DndInput
                                 name="damage.improvement.levelCount"
                                 label="Improve every # levels"
-                                dataType={util.dataTypes.number.SPELL_LEVEL}
+                                dataType={util.datatypes.number.SPELL_LEVEL}
                                 value={spell.damage.improvement.levelCount}
                                 onChange={this.props.onChange}
                                 />
@@ -192,18 +192,18 @@ class SpellForm extends React.Component {
                                 name="damage.projectileCount"
                                 value={spell.damage.projectileCount}
                                 onChange={this.props.onChange}
-                                dataType={util.dataTypes.number.INT}
+                                dataType={util.datatypes.number.INT}
                                 />
                             <DndInput
                                 label="Projectiles gained per extra spell slot level"
                                 name="damage.improvement.projectileCount"
                                 value={spell.damage.improvement.projectileCount}
                                 onChange={this.props.onChange}
-                                dataType={util.dataTypes.number.INT}
+                                dataType={util.datatypes.number.INT}
                                 />
                             <DndCheckboxPicklist
                                 checked={spell.damage.applyAbilityScoreModifier}
-                                dataType={util.dataTypes.picklist.ABILITY_SCORE}
+                                dataType={util.datatypes.picklist.ABILITY_SCORE}
                                 label="Apply Ability Score Modifier to Damage"
                                 checkboxName="damage.applyAbilityScoreModifier"
                                 picklistName="damage.abilityScore"
@@ -214,7 +214,7 @@ class SpellForm extends React.Component {
                             <DndInput
                                 name="damage.attackRollType"
                                 label="Attack Roll"
-                                dataType={util.dataTypes.picklist.ATTACK_ROLL_TYPE}
+                                dataType={util.datatypes.picklist.ATTACK_ROLL_TYPE}
                                 value={spell.damage.attackRollType}
                                 onChange={this.props.onChange}
                                 picklist={attackRollTypes}
@@ -222,7 +222,7 @@ class SpellForm extends React.Component {
                             <DndInput
                                 name="damage.condition"
                                 label="Resulting Condition"
-                                dataType={util.dataTypes.picklist.CONDITION}
+                                dataType={util.datatypes.picklist.CONDITION}
                                 value={spell.damage.condition}
                                 onChange={this.props.onChange}
                                 picklist={conditions}
@@ -230,7 +230,7 @@ class SpellForm extends React.Component {
                             <DndInput
                                 name="savingThrow.abilityScore"
                                 label="Saving Throw"
-                                dataType={util.dataTypes.picklist.ABILITY_SCORE}
+                                dataType={util.datatypes.picklist.ABILITY_SCORE}
                                 value={spell.savingThrow.abilityScore}
                                 onChange={this.props.onChange}
                                 picklist={abilityScores}
@@ -238,7 +238,7 @@ class SpellForm extends React.Component {
                             <DndInput
                                 name="savingThrow.effect"
                                 label="Save Effect"
-                                dataType={util.dataTypes.picklist.SAVE_EFFECT}
+                                dataType={util.datatypes.picklist.SAVE_EFFECT}
                                 value={spell.savingThrow.effect}
                                 onChange={this.props.onChange}
                                 picklist={saveEffects}

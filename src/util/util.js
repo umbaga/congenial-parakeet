@@ -15,12 +15,12 @@ let format = {};
 format.forDisplay = forDisplay;
 format.forDb = forDb;
 util.format = format;
-util.dataTypes = dataTypes;
+util.datatypes = dataTypes;
 //util.picklists = picklistInfo;
 //util.common.picklists.hardCodedPicklists = hardCodedPicklists;
 util.unicode = unicode;
 util.common = common;
-util.itemTypes = itemTypeDefinition;
+util.itemtypes = itemTypeDefinition;
 util.hardCoded = hardCoded;
 
 export default util;

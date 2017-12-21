@@ -53,12 +53,12 @@ class SpellListForm extends React.Component {
                             name="school"
                             value={this.props.selectedSpellLevel}
                             onChange={this.props.onChangeSelectedSpellLevel}
-                            dataType={util.dataTypes.picklist.SPELL_LEVEL}
+                            dataType={util.datatypes.picklist.SPELL_LEVEL}
                             picklist={spellLevels}
                             hideSelectOneOption
                             />
                         <DndToggleBoxes
-                            dataType={util.dataTypes.array.ASSIGNED_SPELLS}
+                            dataType={util.datatypes.array.ASSIGNED_SPELLS}
                             name="spells"
                             selectedItemArray={displaySpells}
                             unselectedItemArray={spells}

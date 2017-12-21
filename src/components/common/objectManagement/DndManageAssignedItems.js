@@ -80,7 +80,7 @@ class DndManageAssignedItems extends React.Component {
     
     renderSelectDisplayText(item, dataType) {
         switch (dataType) {
-            case util.dataTypes.array.ASSIGNED_EQUIPMENT:
+            case util.datatypes.array.ASSIGNED_EQUIPMENT:
                 return util.format.forDisplay.obj.equipmentName(item);
             default:
                 return item.name;

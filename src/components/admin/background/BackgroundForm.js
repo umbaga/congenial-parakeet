@@ -62,7 +62,7 @@ class BackgroundForm extends React.Component {
                             <DndInput
                                 name="suggestedCharacteristics"
                                 label="Suggested Characteristics"
-                                dataType={util.dataTypes.string.DESCRIPTION}
+                                dataType={util.datatypes.string.DESCRIPTION}
                                 value={background.suggestedCharacteristics}
                                 onChange={this.props.onChange}
                                 />
@@ -72,14 +72,14 @@ class BackgroundForm extends React.Component {
                             <DndInput
                                 name="feature.name"
                                 label="Feature Name"
-                                dataType={util.dataTypes.string.STRING}
+                                dataType={util.datatypes.string.STRING}
                                 value={background.feature.name}
                                 onChange={this.props.onChange}
                                 />
                             <DndInput
                                 name="feature.description"
                                 label="Feature Description"
-                                dataType={util.dataTypes.string.DESCRIPTION}
+                                dataType={util.datatypes.string.DESCRIPTION}
                                 value={background.feature.description}
                                 onChange={this.props.onChange}
                                 />
@@ -91,7 +91,7 @@ class BackgroundForm extends React.Component {
                                 picklists={picklists}
                                 items={proficiencies}
                                 editItemGroup={this.props.editProficiencyGroup}
-                                categoryTypeId={util.itemTypes.TYPES.PROFICIENCY_CATEGORY}
+                                categoryTypeId={util.itemtypes.TYPES.PROFICIENCY_CATEGORY}
                                 onChange={this.props.onChangeProficiencyGroup}
                                 title="Proficiency"
                                 toggleFieldName="proficiencies"
@@ -105,14 +105,14 @@ class BackgroundForm extends React.Component {
                             <DndInput
                                 name="startingGold"
                                 label="Starting Gold"
-                                dataType={util.dataTypes.number.COIN}
+                                dataType={util.datatypes.number.COIN}
                                 value={background.startingGold}
                                 onChange={this.props.onChange} />
                             <div className="col-md-12">
                                 <DndManageAssignedItems
                                     name="selectedEquipment.name"
-                                    dataTypeArray={util.dataTypes.array.ASSIGNED_EQUIPMENT}
-                                    dataType={util.dataTypes.obj.EQUIPMENT}
+                                    dataTypeArray={util.datatypes.array.ASSIGNED_EQUIPMENT}
+                                    dataType={util.datatypes.obj.EQUIPMENT}
                                     label="Assigned Equipment"
                                     picklist={this.props.equipments}
                                     valueArray={background.assignedEquipment}

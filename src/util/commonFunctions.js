@@ -3,16 +3,44 @@ import * as picklistInfo from './picklistInfo';
 
 export const picklists = picklistInfo;
 
-export function expandChart(chart) {
+export function expandChart(chart, picklist) {
     let retVal = chart;
     chart.entries = [];
-    for (let e = chart.dice.dieCount; e <= chart.dice.dieCount * chart.dice.dieType; e++) {
-        let newEntry = {};
-        newEntry.id = -1 * e;
-        newEntry.description = '';
-        newEntry.minimum = e;
-        newEntry.maximum = e;
-        chart.entries.push(newEntry);
+    let newRow = {};
+    let newEntry = {};
+    switch (chart.type.id) {
+        case util.itemtypes.CHARTS.DIE_ROLL:
+            for (let e = chart.dice.dieCount; e <= chart.dice.dieCount * chart.dice.dieType; e++) {
+                newEntry = {};
+                newEntry.id = -1 * (e + 1);
+                newEntry.description = '';
+                newEntry.minimum = e;
+                newEntry.maximum = e;
+                chart.entries.push(newEntry);
+            }
+            break;
+        case util.itemtypes.CHARTS.SELECTION:
+            if (picklist && picklist.length != 0) {
+                chart.rows = [];
+                chart.entries = [];
+                for (let e = 0; e < picklist.length; e++) {
+                    newRow = {};
+                    newRow.id = -1 * e;
+                    newRow.orderIndex = e;
+                    newRow.selectionItem = picklist[e];
+                    chart.rows.push(newRow);
+                    newEntry = {};
+                    newEntry.id = -1 * (e + 1);
+                    newEntry.rowIndex = e;
+                    newEntry.columnIndex = 0;
+                    newEntry.description = '';
+                    newEntry.selectionItem = {id: 0};
+                    chart.entries.push(newEntry);
+                }
+            }
+            retVal.rowCount = picklist.length;
+            break;
+        default:
     }
     return retVal;
 }
@@ -163,8 +191,8 @@ export const formState = {
         let referenceOtherOrderIndex = -1;
         let isUp = false;
         switch (dataType) {
-            case util.dataTypes.action.CHART.ADD:
-            case util.dataTypes.action.DESCRIPTION.ADD:
+            case util.datatypes.action.CHART.ADD:
+            case util.datatypes.action.DESCRIPTION.ADD:
                 if (retVal[field].filter(function(c) {
                     return c.id == refObj.id;
                 }).length == 0) {
@@ -173,12 +201,12 @@ export const formState = {
                     retVal[field][util.common.picklists.getIndexById(retVal[field], refObj.id)] = refObj;
                 }
                 break;
-            case util.dataTypes.action.CHART.CHANGE_INDEX.UP:
-            case util.dataTypes.action.CHART.CHANGE_INDEX.DOWN:
-            case util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.UP:
-            case util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.DOWN:
-                if (dataType == util.dataTypes.action.CHART.CHANGE_INDEX.UP ||
-                   dataType == util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.UP) {
+            case util.datatypes.action.CHART.CHANGE_INDEX.UP:
+            case util.datatypes.action.CHART.CHANGE_INDEX.DOWN:
+            case util.datatypes.action.DESCRIPTION.CHANGE_INDEX.UP:
+            case util.datatypes.action.DESCRIPTION.CHANGE_INDEX.DOWN:
+                if (dataType == util.datatypes.action.CHART.CHANGE_INDEX.UP ||
+                   dataType == util.datatypes.action.DESCRIPTION.CHANGE_INDEX.UP) {
                     isUp = true;
                 }
                 if ((isUp && refObj.orderIndex != 0) || (!isUp && refObj.orderIndex != retVal[field].length - 1)) {
@@ -200,15 +228,15 @@ export const formState = {
                     });
                 }
                 break;
-            case util.dataTypes.action.CHART.REMOVE:
-            case util.dataTypes.action.DESCRIPTION.REMOVE:
+            case util.datatypes.action.CHART.REMOVE:
+            case util.datatypes.action.DESCRIPTION.REMOVE:
                 removeIndex = util.common.picklists.getIndexById(retVal[field], refObj.id);
                 if (removeIndex != -1) {
                     retVal[field].splice(removeIndex, 1);
                 }
                 break;
-            case util.dataTypes.action.CHART.SELECT:
-            case util.dataTypes.action.DESCRIPTION.SELECT:
+            case util.datatypes.action.CHART.SELECT:
+            case util.datatypes.action.DESCRIPTION.SELECT:
                 break;
             default:
         }
@@ -223,7 +251,7 @@ export const formState = {
         let chartType = obj;
         let dataType = formState.setDataTypeFromTarget(event);
         switch (dataType) {
-            case util.dataTypes.picklist.CHART_TYPE:
+            case util.datatypes.picklist.CHART_TYPE:
                 chartType = util.common.picklists.getPicklistItem(picklists, event.target.value);
                 return chartType;
             default:
@@ -233,10 +261,14 @@ export const formState = {
     chart: function(event, obj, refObj, picklists) {
         let retVal = util.common.formState.standard(event, obj, picklists);
         let field = formState.setFieldFromTargetName(event);
+        let subfield = '';
         let dataType = formState.setDataTypeFromTarget(event);
         let changedEntryId = null;
         let changedEntryIndex = -1;
+        let rowIndex = -1;
+        let columnIndex = -1;
         let higherIndexedEntryExists = false;
+        let newSelectedValue = {};
         let removeEntryCount = 0;
         let removeEntryIndex = -1;
         let finalEntryIndex = -1;
@@ -248,15 +280,49 @@ export const formState = {
         let newEntryId = 0;
         let entry = refObj;
         let emptyEntry = Object.assign({}, util.objectModel.CHART_ENTRY);
-        if (event.target.type !== undefined) {
+        if ((event.target.type !== undefined) && (event.target.type !== 'button')) {
             //this controls standard form elements
             switch (dataType) {
-                case util.dataTypes.string.STRING:
+                case util.datatypes.picklist.SELECTION_CHART_ROW:
+                case util.datatypes.picklist.DATA_TYPE:
+                case util.datatypes.picklist.GENERAL:
+                case util.datatypes.string.EMPTY_PICKLIST_ITEM:
+                    if (dataType == util.datatypes.string.EMPTY_PICKLIST_ITEM) {
+                        newSelectedValue = event.target.value;
+                    } else {
+                        newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                        newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                    }
+                    if (field.split('_').length == 4) {
+                        rowIndex = parseInt(field.split('_')[1]);
+                        columnIndex = parseInt(field.split('_')[2]);
+                        subfield = field.split('_')[3];
+                        field = field.split('_')[0];
+                        for (let e = 0; e < retVal[field].length; e++) {
+                            if (retVal[field][e].rowIndex == rowIndex && retVal[field][e].columnIndex == columnIndex) {
+                                changedEntryIndex = e;
+                                break;
+                            }
+                        }
+                        if (changedEntryIndex != -1) {
+                            retVal[field][changedEntryIndex][subfield] = newSelectedValue;
+                        }
+                    } else if (field.split('_').length == 3) {
+                        changedEntryIndex = parseInt(field.split('_')[1]);
+                        subfield = field.split('_')[2];
+                        field = field.split('_')[0];
+                        retVal[field][changedEntryIndex][subfield] = newSelectedValue;
+                    }
+                    break;
+                case util.datatypes.bool.BOOL:
+                    util.common.setObjectValue(retVal, field, event.target.checked);
+                    break;
+                case util.datatypes.string.STRING:
                     retVal[field] = event.target.value;
                     break;
-                case util.dataTypes.special.DICE_ROLL:
+                case util.datatypes.special.DICE_ROLL:
                     util.common.setObjectValue(retVal, field, formState.dice(event));
-                    if (util.dataTypes.compareDataType(retVal[field].rendered, util.dataTypes.special.DICE_ROLL)) {
+                    if (util.datatypes.compareDataType(retVal[field].rendered, util.datatypes.special.DICE_ROLL)) {
                         if (retVal.entries.length == 0) {
                             emptyEntry.minimum = retVal[field].dieCount;
                             emptyEntry.maximum = (retVal[field].dieCount * retVal[field].dieType);
@@ -264,7 +330,7 @@ export const formState = {
                         }
                     }
                     break;
-                case util.dataTypes.special.CHART_ENTRY_DIE_ROLL_RANGE:
+                case util.datatypes.special.CHART_ENTRY_DIE_ROLL_RANGE:
                     changedEntryId = parseInt(field.split('_')[0]);
                     //get index of changed entry
                     chartMaximumValue = retVal.dice.dieCount * retVal.dice.dieType;
@@ -323,7 +389,7 @@ export const formState = {
                         retVal.entries.push(newEntry);
                     }
                     break;
-                case util.dataTypes.special.CHART_ENTRY_DESCRIPTION:
+                case util.datatypes.special.CHART_ENTRY_DESCRIPTION:
                     changedEntryId = parseInt(field.split('_')[0]);
                     for (let x = 0; x < retVal.entries.length; x++) {
                         if (retVal.entries[x].id == changedEntryId) {
@@ -333,15 +399,15 @@ export const formState = {
                     }
                     retVal.entries[changedEntryIndex].description = event.target.value;
                     break;
-                case util.dataTypes.special.CHART_COLUMN_COUNT:
-                case util.dataTypes.special.CHART_ROW_COUNT:
+                case util.datatypes.special.CHART_COLUMN_COUNT:
+                case util.datatypes.special.CHART_ROW_COUNT:
                     retVal[field] = event.target.value;
-                    if (dataType == util.dataTypes.special.CHART_COLUMN_COUNT) {
+                    if (dataType == util.datatypes.special.CHART_COLUMN_COUNT) {
                         for (let c = 0; c < event.target.value; c++) {
                             if (c > retVal.columns.length - 1) {
                                 newColumn = Object.assign({}, util.objectModel.CHART_COLUMN);
                                 newColumn.id = (c + 1) * -1;
-                                newColumn.columnIndex = c;
+                                newColumn.orderIndex = c;
                                 retVal.columns.push(newColumn);
                             }
                         }
@@ -349,12 +415,13 @@ export const formState = {
                             retVal.columns.splice(event.target.value);
                         }
                     }
-                    if (dataType == util.dataTypes.special.CHART_ROW_COUNT) {
+                    if (dataType == util.datatypes.special.CHART_ROW_COUNT) {
                         for (let r = 0; r < event.target.value; r++) {
                             if (r > retVal.rows.length - 1) {
                                 newRow = Object.assign({}, util.objectModel.CHART_ROW);
                                 newRow.id = (r + 1) * -1;
-                                newRow.rowIndex = r;
+                                newRow.orderIndex = r;
+                                newRow.selectionItem = {id: 0, name: ''};
                                 retVal.rows.push(newRow);
                             }
                         }
@@ -409,19 +476,22 @@ export const formState = {
             let isFirst = removeIndex == 0;
             let isLast = removeIndex == retVal.entries.length - 1;
             switch (dataType) {
-                case util.dataTypes.action.CHART.ADD:
-                case util.dataTypes.action.CHART.CHANGE_INDEX.UP:
-                case util.dataTypes.action.CHART.CHANGE_INDEX.DOWN:
+                case util.datatypes.action.CHART.ADD:
+                case util.datatypes.action.CHART.CHANGE_INDEX.UP:
+                case util.datatypes.action.CHART.CHANGE_INDEX.DOWN:
                     //DO NOTHING
                     break;
-                case util.dataTypes.action.CHART.REMOVE:
-                case util.dataTypes.action.CHART.SELECT:
+                case util.datatypes.action.CHART.REMOVE:
+                case util.datatypes.action.CHART.SELECT:
                     retVal = refObj;
                     break;
-                case util.dataTypes.action.CHART.EXPAND_DIE:
+                case util.datatypes.action.CHART.EXPAND_DIE:
                     retVal = expandChart(retVal);
                     break;
-                case util.dataTypes.action.CHART.REMOVE_ENTRY:
+                case util.datatypes.action.CHART.EXPAND_SELECTION:
+                    retVal = expandChart(retVal, util.common.picklists.getPicklistItems(picklists, retVal.selectionItemType.id));
+                    break;
+                case util.datatypes.action.CHART.REMOVE_ENTRY:
                     for (let r = 0; r < retVal.entries.length; r++) {
                         if (entry.id == retVal.entries[r].id) {
                             removeIndex = r;
@@ -442,17 +512,17 @@ export const formState = {
                         }
                     }
                     break;
-                case util.dataTypes.action.CHART.RESET:
+                case util.datatypes.action.CHART.RESET:
                     retVal = Object.assign({}, util.objectModel.CHART);
                     retVal.entries = [];
                     retVal.dice = {dieCount: 0, dieType: 0, rendered: ''};
                     break;
-                case util.dataTypes.string.DESCRIPTION:
+                case util.datatypes.string.DESCRIPTION:
                     retVal[field] = event.target.innerHTML;
                     break;
-                case util.dataTypes.special.CHART_ENTRY_DESCRIPTION:
-                case util.dataTypes.special.CHART_ROW_TITLE:
-                case util.dataTypes.special.CHART_COLUMN_TITLE:
+                case util.datatypes.special.CHART_ENTRY_DESCRIPTION:
+                case util.datatypes.special.CHART_ROW_TITLE:
+                case util.datatypes.special.CHART_COLUMN_TITLE:
                     for (let q = 0; q < retVal[recordType].length; q++) {
                         if (recordId == retVal[recordType][q].id) {
                             retVal[recordType][q][recordField] = recordValue;
@@ -469,26 +539,26 @@ export const formState = {
         let field = formState.setFieldFromTargetName(event);
         let dataType = formState.setDataTypeFromTarget(event);
         if (retVal[field] != undefined) {
-            if (event.target.type !== undefined) {
+            if ((event.target.type !== undefined) && (event.target.type !== 'button')) {
                 switch (dataType) {
-                    case util.dataTypes.string.STRING:
+                    case util.datatypes.string.STRING:
                         retVal[field] = event.target.value;
                         break;
                     default:
                 }
             } else {
                 switch (dataType) {
-                    case util.dataTypes.string.DESCRIPTION:
+                    case util.datatypes.string.DESCRIPTION:
                         retVal[field] = event.target.innerHTML;
                         break;
-                    case util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.DOWN:
-                    case util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.UP:
+                    case util.datatypes.action.DESCRIPTION.CHANGE_INDEX.DOWN:
+                    case util.datatypes.action.DESCRIPTION.CHANGE_INDEX.UP:
                         break;
-                    case util.dataTypes.action.DESCRIPTION.ADD:
+                    case util.datatypes.action.DESCRIPTION.ADD:
                         break;
-                    case util.dataTypes.action.DESCRIPTION.REMOVE:
+                    case util.datatypes.action.DESCRIPTION.REMOVE:
                         break;
-                    case util.dataTypes.action.DESCRIPTION.SELECT:
+                    case util.datatypes.action.DESCRIPTION.SELECT:
                         break;
                     default:
                 }
@@ -515,7 +585,7 @@ export const formState = {
                 }
             }
         }
-        if (util.dataTypes.compareDataType(newRenderedValue, util.dataTypes.special.DICE_ROLL)) {
+        if (util.datatypes.compareDataType(newRenderedValue, util.datatypes.special.DICE_ROLL)) {
             if (event.target.value.indexOf('+') != -1 || event.target.value.indexOf('-') != -1) {
                 if (event.target.value.indexOf('+') != -1) {
                     retVal.modifier = parseInt(event.target.value.split('+')[1]);
@@ -568,27 +638,27 @@ export const formState = {
         delete retVal.resetMechanic;
         if (retVal[field] != undefined || (removeThisMechanic && removeThisMechanic.assignmentType)) {
             switch (dataType) {
-                case util.dataTypes.number.INT:
-                case util.dataTypes.string.STRING:
+                case util.datatypes.number.INT:
+                case util.datatypes.string.STRING:
                     util.common.setObjectValue(retVal, field, event.target.value);
                     break;
-                case util.dataTypes.picklist.GENERAL:
-                case util.dataTypes.picklist.MECHANIC_TARGET:
-                case util.dataTypes.picklist.MECHANIC_TYPE:
+                case util.datatypes.picklist.GENERAL:
+                case util.datatypes.picklist.MECHANIC_TARGET:
+                case util.datatypes.picklist.MECHANIC_TYPE:
                     newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                     newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                     util.common.setObjectValue(retVal, field, newSelectedValue);
                     break;
-                case util.dataTypes.action.MECHANIC.ADD:
-                    if (refObj.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BASE || refObj.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
+                case util.datatypes.action.MECHANIC.ADD:
+                    if (refObj.assignmentType.id == util.itemtypes.MECHANIC_ASSIGNMENT.BASE || refObj.assignmentType.id == util.itemtypes.MECHANIC_ASSIGNMENT.BOTH) {
                         retVal[field].base.push(refObj);
                     }
-                    if (refObj.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.ADVANCEMENT || refObj.assignmentType.id == util.itemTypes.MECHANIC_ASSIGNMENT.BOTH) {
+                    if (refObj.assignmentType.id == util.itemtypes.MECHANIC_ASSIGNMENT.ADVANCEMENT || refObj.assignmentType.id == util.itemtypes.MECHANIC_ASSIGNMENT.BOTH) {
                         retVal[field].advancement.push(refObj);
                     }
                     retVal.resetMechanic = true;
                     break;
-                case util.dataTypes.action.MECHANIC.REMOVE:
+                case util.datatypes.action.MECHANIC.REMOVE:
                     whichMechanicTypeToRemoveFrom = field.split('.')[1];
                     field = field.split('.')[0];
                     if (retVal[field]) {
@@ -604,12 +674,12 @@ export const formState = {
                         }
                     }
                     break;
-                case util.dataTypes.action.MECHANIC.RESET:
+                case util.datatypes.action.MECHANIC.RESET:
                     retVal.resetMechanic = true;
                     break;
-                case util.dataTypes.action.MECHANIC.SELECT:
+                case util.datatypes.action.MECHANIC.SELECT:
                     break;
-                case util.dataTypes.special.DICE_ROLL:
+                case util.datatypes.special.DICE_ROLL:
                     util.common.setObjectValue(retVal, field, formState.dice(event));
                     break;
                 default:
@@ -635,10 +705,10 @@ export const formState = {
         }
         if (retVal[field] != undefined) {
             switch (dataType) {
-                case util.dataTypes.string.STRING:
+                case util.datatypes.string.STRING:
                     util.common.setObjectValue(retVal, field, event.target.value);
                     break;
-                case util.dataTypes.picklist.PROFICIENCY:
+                case util.datatypes.picklist.PROFICIENCY:
                     newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                     newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                     if (retVal[field] && retVal[field].length == 0) {
@@ -647,13 +717,13 @@ export const formState = {
                         retVal[field][0] = newSelectedValue;
                     }
                     break;
-                case util.dataTypes.array.PROFICIENCIES:
+                case util.datatypes.array.PROFICIENCIES:
                     referencePicklistItem = util.common.picklists.getPicklistItemFromSinglePicklist(proficiencies, event.target.value);
                     if (isAssign) {
                         util.common.setObjectValue(retVal, field, referencePicklistItem, 'add');
                     } else {
                         for (let b = 0; b < retVal[field].length; b++) {
-                            if (dataType == util.dataTypes.array.PROFICIENCIES) {
+                            if (dataType == util.datatypes.array.PROFICIENCIES) {
                                 if (retVal[field][b].id == referencePicklistItem.id) {
                                     removeThisIndex = b;
                                     break;
@@ -663,17 +733,17 @@ export const formState = {
                         util.common.setObjectValue(retVal, field, removeThisIndex, 'remove');
                     }
                     break;
-                case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
-                case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
+                case util.datatypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
+                case util.datatypes.picklist.PROFICIENCY_CATEGORY:
                     newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                     newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                     util.common.setObjectValue(retVal, field, newSelectedValue);
                     break;
-                case util.dataTypes.action.PROFICIENCY_GROUP.ADD:
+                case util.datatypes.action.PROFICIENCY_GROUP.ADD:
                     retVal[field].push(refObj);
                     retVal.resetProficiencyGroup = true;
                     break;
-                case util.dataTypes.action.PROFICIENCY_GROUP.REMOVE:
+                case util.datatypes.action.PROFICIENCY_GROUP.REMOVE:
                     if (removeThisGroup) {
                         for (let e = 0; e < retVal[field].length; e++) {
                             if (retVal[field][e].id == removeThisGroup.id) {
@@ -685,10 +755,10 @@ export const formState = {
                         retVal[field].splice(removeThisIndex, 1);
                     }
                     break;
-                case util.dataTypes.action.PROFICIENCY_GROUP.RESET:
+                case util.datatypes.action.PROFICIENCY_GROUP.RESET:
                     retVal.resetProficiencyGroup = true;
                     break;
-                case util.dataTypes.action.PROFICIENCY_GROUP.SELECT:
+                case util.datatypes.action.PROFICIENCY_GROUP.SELECT:
                     break;
                 default:
                     util.common.setObjectValue(retVal, field, event.target.value);
@@ -722,23 +792,23 @@ export const formState = {
         delete retVal.resetSpellSelection;
         if (isValidField) {
             switch (dataType) {
-                case util.dataTypes.number.CHARACTER_LEVEL:
-                case util.dataTypes.number.INT:
-                case util.dataTypes.number.SPELL_LEVEL:
+                case util.datatypes.number.CHARACTER_LEVEL:
+                case util.datatypes.number.INT:
+                case util.datatypes.number.SPELL_LEVEL:
                     util.common.setObjectValue(retVal, field, event.target.value);
                     break;
-                case util.dataTypes.picklist.GENERAL:
-                case util.dataTypes.picklist.RECHARGE_TYPE:
-                case util.dataTypes.picklist.SPELL_SELECTION:
+                case util.datatypes.picklist.GENERAL:
+                case util.datatypes.picklist.RECHARGE_TYPE:
+                case util.datatypes.picklist.SPELL_SELECTION:
                     newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                     newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                     util.common.setObjectValue(retVal, field, newSelectedValue);
                     break;
-                case util.dataTypes.action.SPELL_SELECTION.ADD:
+                case util.datatypes.action.SPELL_SELECTION.ADD:
                     retVal[field][field2].push(refObj);
                     retVal.resetSpellSelection = true;
                     break;
-                case util.dataTypes.action.SPELL_SELECTION.REMOVE:
+                case util.datatypes.action.SPELL_SELECTION.REMOVE:
                     field = field.split('.')[0];
                     if (retVal[field][field2]) {
                         if (removeThisSpellSelection) {
@@ -753,10 +823,10 @@ export const formState = {
                         }
                     }
                     break;
-                case util.dataTypes.action.SPELL_SELECTION.RESET:
+                case util.datatypes.action.SPELL_SELECTION.RESET:
                     retVal.resetSpellSelection = true;
                     break;
-                case util.dataTypes.action.SPELL_SELECTION.SELECT:
+                case util.datatypes.action.SPELL_SELECTION.SELECT:
                     break;
                 default:
             }
@@ -784,13 +854,20 @@ export const formState = {
         let newObject = {};
         let textboxArrayField = '';
         switch (dataType) {
-            case util.dataTypes.array.ADVANCED_SENSE:
-            case util.dataTypes.array.MOVEMENT:
-                if (dataType == util.dataTypes.array.ADVANCED_SENSE) {
-                    refArray = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.ADVANCED_SENSE);
+            case util.datatypes.string.EMPTY_PICKLIST_ITEM:
+                if (field.split('_').length == 1) {
+                    newSelectedValue.id = 0;
+                    newSelectedValue.name = event.target.value;
+                    util.common.setObjectValue(retVal, field, newSelectedValue);
+                }
+                break;
+            case util.datatypes.array.ADVANCED_SENSE:
+            case util.datatypes.array.MOVEMENT:
+                if (dataType == util.datatypes.array.ADVANCED_SENSE) {
+                    refArray = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.ADVANCED_SENSE);
                     textboxArrayField = 'range';
-                } else if (dataType == util.dataTypes.array.MOVEMENT) {
-                    refArray = util.common.picklists.getPicklistItems(picklists, util.itemTypes.TYPES.MOVEMENT_TYPE);
+                } else if (dataType == util.datatypes.array.MOVEMENT) {
+                    refArray = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.MOVEMENT_TYPE);
                     textboxArrayField = 'speed';
                 }
                 if (refArray && refArray.length != 0) {
@@ -827,78 +904,80 @@ export const formState = {
                     }
                 }
                 break;
-            case util.dataTypes.string.DESCRIPTION:
+            case util.datatypes.string.DESCRIPTION:
                 tmpText = event.target.innerHTML;
                 util.common.setObjectValue(retVal, field, tmpText.trim());
                 break;
-            case util.dataTypes.string.STRING:
-            case util.dataTypes.string.LONG_STRING:
-            case util.dataTypes.number.CHARACTER_LEVEL:
-            case util.dataTypes.number.INT:
-            case util.dataTypes.number.LENGTH:
-            case util.dataTypes.number.DEC:
-            case util.dataTypes.number.COIN:
-            case util.dataTypes.number.SPELL_LEVEL:
-            case util.dataTypes.number.WEIGHT:
+            case util.datatypes.string.STRING:
+            case util.datatypes.string.LONG_STRING:
+            case util.datatypes.number.CHARACTER_LEVEL:
+            case util.datatypes.number.INT:
+            case util.datatypes.number.LENGTH:
+            case util.datatypes.number.DEC:
+            case util.datatypes.number.COIN:
+            case util.datatypes.number.SPELL_LEVEL:
+            case util.datatypes.number.WEIGHT:
                 util.common.setObjectValue(retVal, field, event.target.value);
                 break;
-            case util.dataTypes.bool.BOOL:
-            case util.dataTypes.HAS_DISADVANTAGE:
-            case util.dataTypes.bool.YES_NO:
-                util.common.setObjectValue(retVal, field, !util.common.setObjectValue(retVal, field));
+            case util.datatypes.bool.BOOL:
+            case util.datatypes.HAS_DISADVANTAGE:
+            case util.datatypes.bool.YES_NO:
+                util.common.setObjectValue(retVal, field, event.target.checked);
                 break;
-            case util.dataTypes.picklist.ABILITY_SCORE:
-            case util.dataTypes.picklist.AMMUNITION_TYPE:
-            case util.dataTypes.picklist.ARMOR_PROFICIENCY:
-            case util.dataTypes.picklist.ATTACK_ROLL_TYPE:
-            case util.dataTypes.picklist.CONDITION:
-            case util.dataTypes.picklist.DAMAGE_TYPE:
-            case util.dataTypes.picklist.EQUIPMENT_CATEGORY:
-            case util.dataTypes.picklist.GENERAL:
-            case util.dataTypes.picklist.LANGUAGE_RARITY:
-            case util.dataTypes.picklist.LANGUAGE_SCRIPT:
-            case util.dataTypes.picklist.MECHANIC_TARGET:
-            case util.dataTypes.picklist.MECHANIC_TYPE:
-            case util.dataTypes.picklist.MONSTER_TYPE:
-            case util.dataTypes.picklist.PROFICIENCY_CATEGORY:
-            case util.dataTypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
-            case util.dataTypes.picklist.RECHARGE_TYPE:
-            case util.dataTypes.picklist.RESOURCE:
-            case util.dataTypes.picklist.SAVE_EFFECT:
-            case util.dataTypes.picklist.SCHOOL_OF_MAGIC:
-            case util.dataTypes.picklist.SIZE:
-            case util.dataTypes.picklist.SPELL_CASTING_TIME:
-            case util.dataTypes.picklist.SPELL_DURATION:
-            case util.dataTypes.picklist.SPELL_RANGE:
-            case util.dataTypes.picklist.WEAPON_CATEGORY:
-            case util.dataTypes.picklist.WEAPON_PROFICIENCY:
-                if (inputType == 'text') {
-                    newSelectedValue.id = 0;
-                    newSelectedValue.name = event.target.value;
-                } else {
-                    newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
-                    newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+            case util.datatypes.picklist.ABILITY_SCORE:
+            case util.datatypes.picklist.AMMUNITION_TYPE:
+            case util.datatypes.picklist.ARMOR_PROFICIENCY:
+            case util.datatypes.picklist.ATTACK_ROLL_TYPE:
+            case util.datatypes.picklist.CONDITION:
+            case util.datatypes.picklist.DAMAGE_TYPE:
+            case util.datatypes.picklist.EQUIPMENT_CATEGORY:
+            case util.datatypes.picklist.GENERAL:
+            case util.datatypes.picklist.LANGUAGE_RARITY:
+            case util.datatypes.picklist.LANGUAGE_SCRIPT:
+            case util.datatypes.picklist.MECHANIC_TARGET:
+            case util.datatypes.picklist.MECHANIC_TYPE:
+            case util.datatypes.picklist.MONSTER_TYPE:
+            case util.datatypes.picklist.PROFICIENCY_CATEGORY:
+            case util.datatypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
+            case util.datatypes.picklist.RECHARGE_TYPE:
+            case util.datatypes.picklist.RESOURCE:
+            case util.datatypes.picklist.SAVE_EFFECT:
+            case util.datatypes.picklist.SCHOOL_OF_MAGIC:
+            case util.datatypes.picklist.SIZE:
+            case util.datatypes.picklist.SPELL_CASTING_TIME:
+            case util.datatypes.picklist.SPELL_DURATION:
+            case util.datatypes.picklist.SPELL_RANGE:
+            case util.datatypes.picklist.WEAPON_CATEGORY:
+            case util.datatypes.picklist.WEAPON_PROFICIENCY:
+                if (field.split('_').length == 1) {
+                    if (inputType == 'text') {
+                        newSelectedValue.id = 0;
+                        newSelectedValue.name = event.target.value;
+                    } else {
+                        newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                        newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                    }
+                    util.common.setObjectValue(retVal, field, newSelectedValue);
                 }
-                util.common.setObjectValue(retVal, field, newSelectedValue);
                 break;
-            case util.dataTypes.special.DICE_ROLL:
+            case util.datatypes.special.DICE_ROLL:
                 util.common.setObjectValue(retVal, field, formState.dice(event));
                 break;
-            case util.dataTypes.array.ASSIGNED_SPELLS:
-            case util.dataTypes.array.MONSTER_TAGS:
-            case util.dataTypes.array.PROFICIENCIES:
-            case util.dataTypes.array.WEAPON_PROPERTIES:
+            case util.datatypes.array.ASSIGNED_SPELLS:
+            case util.datatypes.array.MONSTER_TAGS:
+            case util.datatypes.array.PROFICIENCIES:
+            case util.datatypes.array.WEAPON_PROPERTIES:
                 if (isAssign) {
                     field = field.replace('Unassigned', '');
                     util.common.setObjectValue(retVal, field, referencePicklistItem, 'add');
                 } else {
                     for (let b = 0; b < retVal[field].length; b++) {
-                        if (dataType == util.dataTypes.array.PROFICIENCIES) {
+                        if (dataType == util.datatypes.array.PROFICIENCIES) {
                             if (retVal.proficiencies[b].id == referencePicklistItem.id) {
                                 removeThisIndex = b;
                                 break;
                             }
-                        } else if (dataType == util.dataTypes.array.WEAPON_PROPERTIES) {
+                        } else if (dataType == util.datatypes.array.WEAPON_PROPERTIES) {
                             if (retVal[field][b].requireDamage) {
                                 retVal.damage.versatile.dice = Object.assign({}, {rendered: ''});
                             }
@@ -913,7 +992,7 @@ export const formState = {
                             }
                             removeThisIndex = b;
                             break;
-                        } else if (dataType == util.dataTypes.array.ASSIGNED_SPELLS) {
+                        } else if (dataType == util.datatypes.array.ASSIGNED_SPELLS) {
                             if (retVal.spells[b].id == referencePicklistItem.id) {
                                 removeThisIndex = b;
                                 break;
@@ -923,10 +1002,10 @@ export const formState = {
                     util.common.setObjectValue(retVal, field, removeThisIndex, 'remove');
                 }
                 break;
-            case util.dataTypes.special.WEAPON_RANGE:
+            case util.datatypes.special.WEAPON_RANGE:
                 util.common.setObjectValue(retVal, field, parseInt(event.target.value));
                 break;
-            case util.dataTypes.picklist.SPELL_COMPONENT:
+            case util.datatypes.picklist.SPELL_COMPONENT:
                 newComponentsArray = retVal[field.split('_')[0]];
                 if (inputType == 'text') {
                     let tmp = field.split('_');

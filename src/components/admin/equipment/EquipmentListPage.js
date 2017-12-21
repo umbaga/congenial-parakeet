@@ -123,7 +123,7 @@ function mapStateToProps(state) {
     if (state.picklists.length > 0) {
         picklists = Object.assign([{}], state.picklists);
         equipmentCategories = state.picklists.filter(function(picklist) {
-            return picklist.id == util.itemTypes.TYPES.EQUIPMENT_CATEGORY;
+            return picklist.id == util.itemtypes.TYPES.EQUIPMENT_CATEGORY;
         })[0];
     }
     if (state.equipments.length > 0) {

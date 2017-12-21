@@ -13,9 +13,9 @@ class DndCollapsibleTableRowContents extends React.Component {
     renderContents(item) {
         if (item && item.type && item.type.id != 0) {
             switch (item.type.id) {
-                case util.itemTypes.CHARTS.DIE_ROLL:
+                case util.itemtypes.CHARTS.DIE_ROLL:
                     return (<DndDieChartDisplay chart={item}/>);
-                case util.itemTypes.CHARTS.STANDARD:
+                case util.itemtypes.CHARTS.STANDARD:
                     return (<DndChartDisplay chart={item}/>);
                 default:
                     return null;

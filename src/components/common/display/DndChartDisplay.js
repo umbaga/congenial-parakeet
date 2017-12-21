@@ -45,7 +45,7 @@ class DndChartDisplay extends React.Component {
                 hasRowTitles = true;
             }
         }
-        if (chart.type.id == util.itemTypes.CHARTS.STANDARD) {
+        if (chart.type.id == util.itemtypes.CHARTS.STANDARD) {
             return (
                 <table className="table table-sm table-striped table-hover">
                     <thead>
@@ -73,7 +73,7 @@ class DndChartDisplay extends React.Component {
                     </tbody>
                 </table>
             );
-        } else if (chart.type.id == util.itemTypes.CHARTS.DIE_ROLL) {
+        } else if (chart.type.id == util.itemtypes.CHARTS.DIE_ROLL) {
             return (
                 <table className="table table-sm table-striped table-hover">
                     <thead>

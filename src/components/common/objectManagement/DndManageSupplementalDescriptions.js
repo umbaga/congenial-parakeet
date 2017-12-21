@@ -24,14 +24,14 @@ class DndManageSupplementalDescriptions extends React.Component {
                     name="title"
                     label="Title"
                     value={description.title}
-                    dataType={util.dataTypes.string.STRING}
+                    dataType={util.datatypes.string.STRING}
                     onChange={this.props.onChange}
                     />
                 <DndInput
                     name="description"
                     label="Description"
                     value={description.description}
-                    dataType={util.dataTypes.string.DESCRIPTION}
+                    dataType={util.datatypes.string.DESCRIPTION}
                     onChange={this.props.onChange}
                     />
             </div>
@@ -70,10 +70,10 @@ class DndManageSupplementalDescriptions extends React.Component {
                                         onRemoveItem={this.props.onChange}
                                         boundClick={boundClick}
                                         showThisId={this.state.showThisId}
-                                        removeItemAction={util.dataTypes.action.DESCRIPTION.REMOVE}
-                                        selectItemAction={util.dataTypes.action.DESCRIPTION.SELECT}
-                                        moveItemDownAction={util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.DOWN}
-                                        moveItemUpAction={util.dataTypes.action.DESCRIPTION.CHANGE_INDEX.UP}
+                                        removeItemAction={util.datatypes.action.DESCRIPTION.REMOVE}
+                                        selectItemAction={util.datatypes.action.DESCRIPTION.SELECT}
+                                        moveItemDownAction={util.datatypes.action.DESCRIPTION.CHANGE_INDEX.DOWN}
+                                        moveItemUpAction={util.datatypes.action.DESCRIPTION.CHANGE_INDEX.UP}
                                         name="supplementalDescriptions"
                                         >
                                         <div>{c.description}</div>
@@ -97,8 +97,8 @@ class DndManageSupplementalDescriptions extends React.Component {
                 <DndDataEntryButtonBar
                     onCancel={this.props.onResetDescription}
                     onSave={this._onSaveClick}
-                    saveAction={util.dataTypes.action.DESCRIPTION.ADD}
-                    resetAction={util.dataTypes.action.DESCRIPTION.RESET}
+                    saveAction={util.datatypes.action.DESCRIPTION.ADD}
+                    resetAction={util.datatypes.action.DESCRIPTION.RESET}
                     name="supplementalDescriptions"
                     />
                 {this.renderDescriptionList(descriptions)}

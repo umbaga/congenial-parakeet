@@ -14,12 +14,12 @@ class ProficiencyForm extends React.Component {
     }
     
     render() {
-        const categoryPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.PROFICIENCY_CATEGORY).filter(function(category) {
+        const categoryPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.PROFICIENCY_CATEGORY).filter(function(category) {
             return !category.isEquipmentBased;
         });
-        const abilityScorePicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.ABILITY_SCORE);
-        const languageRarityPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.LANGUAGE_RARITY);
-        const langaugeScriptPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.LANGUAGE_SCRIPT);
+        const abilityScorePicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.ABILITY_SCORE);
+        const languageRarityPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.LANGUAGE_RARITY);
+        const langaugeScriptPicklist = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.LANGUAGE_SCRIPT);
         
         let selectedCategory = util.common.picklists.getPicklistItem(this.props.picklists, this.props.proficiency.category.id);
         let languageForm = null;
@@ -30,7 +30,7 @@ class ProficiencyForm extends React.Component {
                         <DndInput
                             name="abilityScore"
                             label="Assoicated Ability Score"
-                            dataType={util.dataTypes.picklist.ABILITY_SCORE}
+                            dataType={util.datatypes.picklist.ABILITY_SCORE}
                             value={this.props.proficiency.abilityScore}
                             onChange={this.props.onChange}
                             picklist={abilityScorePicklist} />
@@ -44,7 +44,7 @@ class ProficiencyForm extends React.Component {
                         <DndInput
                             name="language.rarity"
                             label="Rarity"
-                            dataType={util.dataTypes.picklist.LANGUAGE_RARITY}
+                            dataType={util.datatypes.picklist.LANGUAGE_RARITY}
                             value={this.props.proficiency.language.rarity}
                             onChange={this.props.onChange}
                             picklist={languageRarityPicklist} />
@@ -53,7 +53,7 @@ class ProficiencyForm extends React.Component {
                         <DndInput
                             name="language.script"
                             label="Script"
-                            dataType={util.dataTypes.picklist.LANGUAGE_SCRIPT}
+                            dataType={util.datatypes.picklist.LANGUAGE_SCRIPT}
                             value={this.props.proficiency.language.script}
                             onChange={this.props.onChange}
                             picklist={langaugeScriptPicklist} />
@@ -75,7 +75,7 @@ class ProficiencyForm extends React.Component {
                             <DndInput
                                 name="category"
                                 label="Category"
-                                dataType={util.dataTypes.picklist.PROFICIENCY_CATEGORY}
+                                dataType={util.datatypes.picklist.PROFICIENCY_CATEGORY}
                                 value={this.props.proficiency.category}
                                 onChange={this.props.onChange}
                                 picklist={categoryPicklist} />

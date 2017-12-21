@@ -165,7 +165,7 @@ class BackgroundEntry extends React.Component {
         const selectedEquipment = this.state.selectedEquipment;
         const background = this.state.background;
         selectedEquipment.resource = this.state.background.resource;
-        selectedEquipment.category.id = util.itemTypes.EQUIPMENT_CATEGORY.MINOR_ITEM;
+        selectedEquipment.category.id = util.itemtypes.EQUIPMENT_CATEGORY.MINOR_ITEM;
         selectedEquipment.assignedCount = 1;
         let self = this;
         this.props.actions.upsertEquipment(selectedEquipment).then(function(newEquipmentItem) {
@@ -179,10 +179,10 @@ class BackgroundEntry extends React.Component {
         const selectedEquipment = this.state.selectedEquipment;
         const dataType = event.target.getAttribute('dataType') !== null ? event.target.getAttribute('dataType') : event.target.parentElement.getAttribute('dataType');
         switch (dataType) {
-            case util.dataTypes.string.STRING:
+            case util.datatypes.string.STRING:
                 selectedEquipment[field] = event.target.value;
                 break;
-            case util.dataTypes.obj.EQUIPMENT:
+            case util.datatypes.obj.EQUIPMENT:
                 if (event.target.value != 0) {
                     return this.setState({selectedEquipment: this.props.equipments.filter((equipment) => equipment.id == event.target.value)[0]});
                 }

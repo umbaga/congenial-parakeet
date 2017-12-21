@@ -85,17 +85,17 @@ class PackForm extends React.Component {
                             <DndInput
                                 name="cost"
                                 label="Cost"
-                                dataType={util.dataTypes.number.COIN}
+                                dataType={util.datatypes.number.COIN}
                                 value={this.props.pack.cost}
                                 onChange={this.props.onChange}
-                                numberStepVal={util.dataTypes.number.getStepIncrement(this.props.pack.cost)}
+                                numberStepVal={util.datatypes.number.getStepIncrement(this.props.pack.cost)}
                                  />
                         </div>
                         <div className="col-md-6">
                             <DndInput
                                 name="weight"
                                 label="Weight"
-                                dataType={util.dataTypes.number.WEIGHT}
+                                dataType={util.datatypes.number.WEIGHT}
                                 value={this.props.pack.weight}
                                 onChange={this.props.onChange}
                                 isReadOnly
@@ -104,7 +104,7 @@ class PackForm extends React.Component {
                         <div className="col-md-12">
                             <DndManageAssignedItems
                                 name="selectedEquipment"
-                                dataType={util.dataTypes.array.ASSIGNED_EQUIPMENT}
+                                dataType={util.datatypes.array.ASSIGNED_EQUIPMENT}
                                 label="Assigned Equipment"
                                 picklist={this.props.equipments}
                                 valueArray={this.props.pack.assignedEquipment}

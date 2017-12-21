@@ -4,7 +4,7 @@ import util from '../../../util/util';
 import DndButton from '../buttons/DndButton';
 import DndInput from '../inputs/DndInput';
 import DndDataEntryButtonBar from '../buttons/DndDataEntryButtonBar';
-import DndManageDieChartEntry from '../subcomponents/DndManageDieChartEntry';
+import DndManageDieChartEntry from '../subcomponents/charts/DndManageDieChartEntry';
 import DndListItemButtonBar from '../buttons/DndListItemButtonBar';
 import DndIncrementButtons from '../buttons/DndIncrementButtons';
 import { Panel } from 'react-bootstrap';
@@ -105,7 +105,7 @@ class _DndManageDieCharts extends React.Component {
     }
     
     renderManageChartEntries(chart) {
-        return chart && chart.title && chart.title.length && chart.dieRoll && util.dataTypes.compareDataType(chart.dieRoll.rendered, util.dataTypes.special.DICE_ROLL) ? (
+        return chart && chart.title && chart.title.length && chart.dieRoll && util.datatypes.compareDataType(chart.dieRoll.rendered, util.datatypes.special.DICE_ROLL) ? (
             <div>
                 <div>
                     <DndButton
@@ -152,7 +152,7 @@ class _DndManageDieCharts extends React.Component {
                         <DndInput
                             name="title"
                             label="Title"
-                            dataType={util.dataTypes.string.STRING}
+                            dataType={util.datatypes.string.STRING}
                             value={chart.title}
                             onChange={this.props.onChangeChart}
                             />
@@ -161,7 +161,7 @@ class _DndManageDieCharts extends React.Component {
                         <DndInput
                             name="dieRoll"
                             label="Die Roll"
-                            dataType={util.dataTypes.special.DICE_ROLL}
+                            dataType={util.datatypes.special.DICE_ROLL}
                             value={chart.dieRoll}
                             onChange={this.props.onChangeChart}
                             />
@@ -170,7 +170,7 @@ class _DndManageDieCharts extends React.Component {
                         <DndInput
                             name="description"
                             label="Description"
-                            dataType={util.dataTypes.string.DESCRIPTION}
+                            dataType={util.datatypes.string.DESCRIPTION}
                             value={chart.description}
                             onChange={this.props.onChangeChart}
                             />
