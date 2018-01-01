@@ -24,7 +24,9 @@ class RaceEntry extends React.Component {
             editDescription: Object.assign({}, util.objectModel.SUPPLEMENTAL_DESCRIPTION),
             editSpellSelection: Object.assign({}, util.objectModel.SPELL_SELECTION),
             editChart: Object.assign({}, util.objectModel.CHART),
-            selectedChartType: Object.assign({}, util.objectModel.CHART_TYPE)
+            selectedChartType: Object.assign({}, util.objectModel.CHART_TYPE),
+            editNaturalWeapon: Object.assign({}, util.objectModel.NATURAL_WEAPON),
+            editBreathWeapon: Object.assign({}, util.objectModel.BREATH_WEAPON)
         };
         this.cancelRace = this.cancelRace.bind(this);
         this.deleteRace = this.deleteRace.bind(this);
@@ -43,6 +45,10 @@ class RaceEntry extends React.Component {
         this.updateChartFormState = this.updateChartFormState.bind(this);
         this.onResetChart = this.onResetChart.bind(this);
         this.onSelectChart = this.onSelectChart.bind(this);
+        this.updateNaturalWeaponsFormState = this.updateNaturalWeaponsFormState.bind(this);
+        this.onResetNaturalWeapon = this.onResetNaturalWeapon.bind(this);
+        this.updateBreathWeaponsFormState = this.updateBreathWeaponsFormState.bind(this);
+        this.onResetBreathWeapon = this.onResetBreathWeapon.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -89,7 +95,6 @@ class RaceEntry extends React.Component {
     
     updateFormState(event) {
         const race = util.common.formState.standard(event, this.state.race, this.props.picklists);
-        console.log(race);
         //TODO: Need to check if parent is being edited, then populate size, monster type & tags, movement, and senses with parental values
         return this.setState({race: race});
     }
@@ -178,6 +183,32 @@ class RaceEntry extends React.Component {
         return this.setState({isSubrace: isSubrace, race: race});
     }
     
+    updateNaturalWeaponsFormState(event) {
+        let editNaturalWeapon = util.common.formState.naturalWeapon(event, this.state.editNaturalWeapon, this.state.race);
+        let race = util.common.formState.standard(event, this.state.race, this.props.picklists, this.state.editNaturalWeapon);
+        if (race.resetNaturalWeapons) {
+            editNaturalWeapon = util.common.resetObject.naturalWeapon();
+        }
+        return this.setState({race: race, editNaturalWeapon: editNaturalWeapon});
+    }
+    
+    onResetNaturalWeapon() {
+        this.setState({editNaturalWeapon: util.common.resetObject.naturalWeapon()});
+    }
+    
+    updateBreathWeaponsFormState(event) {
+        let editBreathWeapon = util.common.formState.breathWeapon(event, this.state.editBreathWeapon, this.state.race);
+        let race = util.common.formState.standard(event, this.state.race, this.props.picklists, this.state.editBreathWeapon);
+        if (race.resetBreathWeapons) {
+            editBreathWeapon = util.common.resetObject.breathWeapon();
+        }
+        return this.setState({race: race, editBreathWeapon: editBreathWeapon});
+    }
+    
+    onResetBreathWeapon() {
+        this.setState({editBreathWeapon: util.common.resetObject.breathWeapon()});
+    }
+    
     render() {
         const race = this.state.race;
         const contents = this.props.canEdit ? (
@@ -212,6 +243,11 @@ class RaceEntry extends React.Component {
                 onChangeSpellSelection={this.updateSpellSelectionFormState}
                 spells={this.props.spells}
                 spelllists={this.props.spelllists}
+                
+                editNaturalWeapon={this.state.editNaturalWeapon}
+                onChangeNaturalWeapon={this.updateNaturalWeaponsFormState}
+                editBreathWeapon={this.state.editBreathWeapon}
+                onChangeBreathWeapon={this.updateBreathWeaponsFormState}
                 />
         ) : (
             <RaceDetails
@@ -221,6 +257,7 @@ class RaceEntry extends React.Component {
         );
         return (
             <DndModal
+                size="large"
                 headingCaption="Race"
                 closeModal={this.props.closeModal}
                 isCreate={this.props.isCreate}

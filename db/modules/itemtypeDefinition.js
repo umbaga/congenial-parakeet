@@ -24,6 +24,7 @@ module.exports = {
         MONSTER_TAG: 2253,
         MONSTER_TYPE: 2252,
         MOVEMENT_TYPE: 2274,
+        NATURAL_WEAPON_TYPE: 2372,
         PROFICIENCY_CATEGORY: 65,
         RACE: 117,
         RESOURCE: 1,
@@ -68,6 +69,7 @@ module.exports = {
     },
     CHART: {
         DIE_ROLL: 806,
+        SELECTION: 2371,
         STANDARD: 904
     },
     ARMOR_PROFICIENCY: {

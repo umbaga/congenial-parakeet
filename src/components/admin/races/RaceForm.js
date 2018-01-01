@@ -11,6 +11,8 @@ import DndManageMechanics from '../../common/objectManagement/DndManageMechanics
 import DndManageSpellSelection from '../../common/objectManagement/DndManageSpellSelection';
 import DndManageSupplementalDescriptions from '../../common/objectManagement/DndManageSupplementalDescriptions';
 import DndManageCharts from '../../common/objectManagement/DndManageCharts';
+import DndManageNaturalWeapons from '../../common/objectManagement/DndManageNaturalWeapons';
+import DndManageBreathWeapons from '../../common/objectManagement/DndManageBreathWeapons';
 
 class RaceForm extends React.Component {
     constructor(props) {
@@ -43,7 +45,7 @@ class RaceForm extends React.Component {
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={9} id="uncontrolled-tab-example">
+                    <Tabs defaultActiveKey={6} id="uncontrolled-tab-example">
                         <Tab eventKey={1} title="Size/Type" className={tabPaneStyle}>
                             <div>&nbsp;</div>
                             <DndUniversalInput
@@ -288,7 +290,6 @@ class RaceForm extends React.Component {
                         </Tab>
                         <Tab eventKey={9} title="Charts" className={tabPaneStyle}>
                             <div>&nbsp;</div>
-                            NEED TO ADD SELECTION CHART TYPE (for Dragonborn species)
                             <DndManageCharts
                                 chart={this.props.editChart}
                                 charts={race.charts}
@@ -299,9 +300,23 @@ class RaceForm extends React.Component {
                                 onSelectEdited={this.props.onSelectChart}
                                 />
                         </Tab>
-                        <Tab eventKey={10} title="Natural/Breath Weapons" className={tabPaneStyle}>
+                        <Tab eventKey={10} title="Natural Weapons" className={tabPaneStyle}>
                             <div>&nbsp;</div>
-                            Natural &amp; Breath weapon info here.
+                            <DndManageNaturalWeapons
+                                naturalWeapons={race.naturalWeapons}
+                                editNaturalWeapon={this.props.editNaturalWeapon}
+                                onChange={this.props.onChangeNaturalWeapon}
+                                picklists={this.props.picklists}
+                                />
+                        </Tab>
+                        <Tab eventKey={11} title="Breath Weapons" className={tabPaneStyle}>
+                            <div>&nbsp;</div>
+                            <DndManageBreathWeapons
+                                breathWeapons={race.breathWeapons}
+                                editBreathWeapon={this.props.editBreathWeapon}
+                                onChange={this.props.onChangeBreathWeapon}
+                                picklists={this.props.picklists}
+                                />
                         </Tab>
                     </Tabs>
                 </form>
@@ -341,7 +356,12 @@ RaceForm.propTypes = {
     editSpellSelection: PropTypes.object.isRequired,
     onChangeSpellSelection: PropTypes.func.isRequired,
     spells: PropTypes.array.isRequired,
-    spelllists: PropTypes.array.isRequired
+    spelllists: PropTypes.array.isRequired,
+    
+    editNaturalWeapon: PropTypes.object.isRequired,
+    onChangeNaturalWeapon: PropTypes.func.isRequired,
+    editBreathWeapon: PropTypes.object.isRequired,
+    onChangeBreathWeapon: PropTypes.func.isRequired
 };
 
 export default RaceForm;

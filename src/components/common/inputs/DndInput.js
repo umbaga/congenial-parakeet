@@ -51,7 +51,7 @@ class DndInput extends React.Component {
                 break;
             case util.datatypes.string.STRING:
             case util.datatypes.number.LENGTH:
-            case util.datatypes.string.EMPTY_PICKLIST_ITEM:
+            case util.datatypes.special.CHART_COLUMN_TITLE:
                 primaryInput = (<input
                                     type="text"
                                     name={this.props.name}
@@ -144,6 +144,7 @@ class DndInput extends React.Component {
             case util.datatypes.picklist.MECHANIC_TARGET:
             case util.datatypes.picklist.MECHANIC_TYPE:
             case util.datatypes.picklist.MONSTER_TYPE:
+            case util.datatypes.picklist.NATURAL_WEAPON_TYPE:
             case util.datatypes.picklist.PROFICIENCY:
             case util.datatypes.picklist.PROFICIENCY_CATEGORY:
             case util.datatypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
@@ -151,7 +152,6 @@ class DndInput extends React.Component {
             case util.datatypes.picklist.RESOURCE:
             case util.datatypes.picklist.SAVE_EFFECT:
             case util.datatypes.picklist.SCHOOL_OF_MAGIC:
-            case util.datatypes.picklist.SELECTION_CHART_ROW:
             case util.datatypes.picklist.SIZE:
             case util.datatypes.picklist.SPELL_CASTING_TIME:
             case util.datatypes.picklist.SPELL_COMPONENT:
@@ -177,6 +177,37 @@ class DndInput extends React.Component {
                                                      {picklistItem.name}
                                                  </option>)}
                     </select>);
+                break;
+            case util.datatypes.string.EMPTY_PICKLIST_ITEM:
+                primaryInput = (
+                    <input
+                        name={this.props.name}
+                        ref={this.props.name}
+                        placeholder={this.props.placeholder}
+                        value={this.props.value.name}
+                        datatype={this.props.dataType}
+                        onChange={this.props.onChange}
+                        className="form-control"
+                        />
+                );
+                break;
+            case util.datatypes.picklist.SELECTION_CHART_ROW:
+                placeholderText = (this.props.placeholder && this.props.placeholder.length != 0) ? this.props.placeholder : 'SELECT ONE';
+                primaryInput = (<select
+                                value={this.props.value.id}
+                                name={this.props.name}
+                                ref={this.props.name}
+                                className="form-control"
+                                onChange={this.props.onChange}
+                                datatype={this.props.dataType}>
+                    {this.renderSelectOneOption(placeholderText)}
+                    {this.props.picklist.map(picklistItem =>
+                                             <option
+                                                 key={picklistItem.id}
+                                                 value={picklistItem.id}>
+                                                 {picklistItem.name}
+                                             </option>)}
+                </select>);
                 break;
             case util.datatypes.array.MONSTER_TAGS:
             case util.datatypes.array.PROFICIENCIES:

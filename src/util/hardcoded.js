@@ -1,4 +1,9 @@
+
 export const picklist = {
+    datatypes: [
+        {id: 1, name: 'Picklist', value: 'DATA_PICKLIST_GENERAL'},
+        {id: 2, name: 'String', value: 'DATA_STRING_EMPTY_PICKLIST_ITEM'}
+    ],
     spellLevels: [
         {id: -1, name: 'All'},
         {id: 0, name: 'Cantrip'},

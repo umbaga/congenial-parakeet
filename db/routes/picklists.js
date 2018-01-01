@@ -184,6 +184,12 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             });
             query.on('end', function() {
                 done();
+                var typePicklist = {};
+                var tmpItem = {};
+                typePicklist.id = 0;
+                typePicklist.name = 'Types';
+                typePicklist.isPicklist = true;
+                typePicklist.items = [];
                 for (var r = 0; r < results.length; r++) {
                     if (results[r].id == 72) {
                         results[r].items = results[r].items.sort(function (a, b) {
@@ -192,7 +198,12 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             return 0;
                         });
                     }
+                    tmpItem = {};
+                    tmpItem.id = results[r].id;
+                    tmpItem.name = results[r].name;
+                    typePicklist.items.push(tmpItem);
                 }
+                results.push(typePicklist);
                 return res.json(results);
             });
         });

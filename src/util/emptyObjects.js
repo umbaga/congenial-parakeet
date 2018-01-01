@@ -50,6 +50,37 @@ export const BACKGROUND_VARIANT = {
         name: ''
     }
 };
+export const BREATH_WEAPON = {
+    areaOfEffect: {
+        shape: {id: 0, name: ''}
+    },
+    charges: {
+        count: 1,
+        improvement: [],
+        rechargeType: {id: 0, name: ''}
+    },
+    damage: {
+        dice: {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
+        improvement: [],
+        type: {id: 0, name: ''}
+    },
+    savingThrow: {
+        abilityScore: {id: 0, name: ''},
+        dc: {
+            abilityScore: {id: 0, name: ''},
+            applyProficiencyBonus: true,
+            base: 8
+        }
+    }
+};
+export const BREATH_WEAPON_DAMAGE_IMPROVEMENT = {
+    characterLevel: 0,
+    count: 1
+};
+export const BREATH_WEAPON_CHARGES_IMPROVEMENT = {
+    characterLevel: 0,
+    dice: {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+};
 export const CHART = {
     id: -1,
     title: '',
@@ -181,6 +212,18 @@ export const MECHANIC = {
     value: 0,
     valueObject: {id: 0, name: ''}
 };
+export const NATURAL_WEAPON = {
+    attack: {
+        abilityScore: {id: 0, name: ''},
+        count: 1
+    },
+    damage: {
+        abilityScore: {id: 0, name: ''},
+        dice: {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
+        type: {id: 0, name: ''}
+    },
+    type: {id: 0, name: ''}
+};
 export const PICKLIST = {id: 0, name: '', items: []};
 export const PICKLISTITEM = {id: 0, name: '', picklistId: 0, defaultSelected: false};
 export const PROFICIENCY = {
@@ -240,6 +283,7 @@ export const RACE = {
             modifier: 0
         }
     },
+    breathWeapons: [],
     charts: [],
     descriptions: [],
     mechanics: {
@@ -248,6 +292,7 @@ export const RACE = {
     movement: [
         {id: 2275, name: 'Walking', speed: 30}
     ],
+    naturalWeapons: [],
     parent: {id: 0},
     proficiencyGroups: [],
     resource: {id: 2, name: 'Player\'s Handbook'},

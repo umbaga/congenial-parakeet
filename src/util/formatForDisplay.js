@@ -261,6 +261,17 @@ obj.armorClass = function(val) {
     }
     return retVal;
 };
+obj.breathWeapon = function(val) {
+    let retVal = '';
+    retVal += util.format.forDisplay.string.dieRoll(val.damage.dice);
+    retVal += ' ' + val.damage.type.name + ' damage';
+    return retVal;
+};
+obj.breathWeaponDescription = function(val) {
+    let retVal = val;
+    
+    return retVal;
+};
 obj.damage = function(val) {
     let retVal = '';
     //<td>{util.format.forDisplay.string.dieRoll(this.props.weapon.damage.dice) + ' ' + (this.props.weapon.damage.dice.dieCount == 0 ? '' : this.props.weapon.damage.type.name)}</td>
@@ -400,6 +411,14 @@ obj.monsterTypeSizeBlock = function(val) {
         }
         retVal += ')';
     }
+    return retVal;
+};
+obj.naturalWeapon = function(val) {
+    let retVal = '';
+    retVal += '(' + val.attack.count.toString() + ')';
+    retVal += ' ' + val.type.name + ': ';
+    retVal += util.format.forDisplay.string.dieRoll(val.damage.dice);
+    retVal += ' ' + val.damage.type.name + ' damage.';
     return retVal;
 };
 obj.proficiencyGroup = function(val) {

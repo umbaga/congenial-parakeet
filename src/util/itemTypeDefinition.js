@@ -23,6 +23,7 @@ export const TYPES = {
     MONSTER_TAG: 2253,
     MONSTER_TYPE: 2252,
     MOVEMENT_TYPE: 2274,
+    NATURAL_WEAPON_TYPE: 2372,
     PROFICIENCY_CATEGORY: 65,
     RACE: 117,
     RECHARGE_TYPE: 2287,
@@ -42,6 +43,7 @@ export const TYPES = {
     SPELL_RANGE: 74,
     SPELL_SELECTION: 2290,
     STAT: 844,
+    TYPE: 0,
     VEHCILE: 395,
     WEAPON: 455,
     WEAPON_CATEGORY: 22,
@@ -63,6 +65,12 @@ export const ATTACK_ROLL = {
     RANGED_SPELL: 1384
 };
 
+export const DATA_TYPE = {
+    PICKLIST: 1,
+    STRING: 2,
+    NUMBER: 3
+};
+
 export const DESCRIPTIONS = {
     CHART: 907,
     GENERAL: 171,
@@ -73,6 +81,7 @@ export const DESCRIPTIONS = {
 
 export const CHARTS = {
     DIE_ROLL: 806,
+    SELECTION: 2371,
     STANDARD: 904
 };
 

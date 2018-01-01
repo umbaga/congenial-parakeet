@@ -492,14 +492,22 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         tmp.spell.hasAnyTypeOfChart = false;
                         tmp.spell.hasDieChart = false;
                         tmp.spell.hasStandardCharts = false;
+                        tmp.spell.hasSelectionChart = false;
+                        tmp.spell.needsNewItemTypeFromChart = false;
                         if (tmp.spell.charts && tmp.spell.charts.length != 0) {
                             tmp.spell.hasAnyTypeOfChart = true;
                             for (var c = 0; c < tmp.spell.charts.length; c++) {
-                                if (tmp.spell.charts[c].type.id == 904) {
+                                if (tmp.spell.charts[c].type.id == itemtypes.CHART.STANDARD) {
                                     tmp.spell.hasStandardCharts = true;
                                 }
-                                if (tmp.spell.charts[c].type.id == 806) {
+                                if (tmp.spell.charts[c].type.id == itemtypes.CHART.DIE_ROLL) {
                                     tmp.spell.hasDieChart = true;
+                                }
+                                if (tmp.spell.charts[c].type.id == itemtypes.CHART.SELECTION) {
+                                    tmp.spell.hasSelectionChart = true;
+                                    if (tmp.spell.charts[c].selectionItemType.id <= 0) {
+                                        tmp.spell.needsNewItemTypeFromChart = true;
+                                    }
                                 }
                             }
                         }
@@ -1149,7 +1157,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, resObj);
                     }
                 },
-                function insertCharts_both(resObj, callback) {
+                function insertChartsCore(resObj, callback) {
                     if (resObj.spell.hasAnyTypeOfChart) {
                         sql = 'INSERT INTO adm_core_chart';
                         sql += ' ("title", "typeId")';
@@ -1173,6 +1181,145 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             }
                         }
                         sql += ' returning id AS "chartId", title;';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var d = 0; d < resObj.spell.charts.length; d++) {
+                                    if (results[e].title == resObj.spell.charts[d].title) {
+                                        resObj.spell.charts[d].id = results[e].chartId;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartSelectionMissingType(resObj, callback) {
+                    if (resObj.spell.hasSelectionChart && resObj.spell.needsNewItemTypeFromChart) {
+                        results = [];
+                        vals = [];
+                        addComma = false;
+                        first = 1;
+                        sql = 'INSERT INTO adm_core_type';
+                        sql += ' ("typeName")';
+                        sql += ' VALUES ';
+                        for (var e = 0; e < resObj.spell.charts.length; e++) {
+                            if (resObj.spell.charts[e].type.id == itemtypes.CHART.SELECTION) {
+                                if (resObj.spell.charts[e].selectionItemType.id <= 0) {
+                                    if (addComma) {
+                                        sql += ', ';
+                                    }
+                                }
+                                sql += ' ($' + first.toString() + ')';
+                                first++;
+                                addComma = true;
+                            }
+                        }
+                        sql += ' returning "typeName" AS "name", "id" AS "typeId"';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var f = 0; f < resObj.spell.charts.length; f++) {
+                                    if (resObj.spell.charts[f].type.id == itemtypes.CHART.SELECTION) {
+                                        if (resObj.spell.charts[f].selectionItemType.name == results[e].name) {
+                                            resObj.spell.charts[f].selectionItemType.id = results[e].typeId;
+                                        }
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartSelectionMissingTypeItems(resObj, callback) {
+                    if (resObj.spell.hasSelectionChart && resObj.spell.needsNewItemTypeFromChart) {
+                        results = [];
+                        vals = [];
+                        sql = 'INSERT INTO adm_core_item';
+                        sql += ' ("itemName", "itemTypeId", "resourceId")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        addComma = false;
+                        for (var c = 0; c < resObj.spell.charts.length; c++) {
+                            if (resObj.spell.charts[c].type.id == itemtypes.CHART.SELECTION) {
+                                for (var r = 0; r < resObj.spell.charts[c].rows.length; r++) {
+                                    if (resObj.spell.charts[c].rows[r].selectionItem && resObj.spell.charts[c].rows[r].selectionItem.id && resObj.spell.charts[c].rows[r].selectionItem.id == 0) {
+                                        if (addComma) {
+                                            sql += ', ';
+                                        }
+                                        sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                                        vals.push(resObj.spell.charts[c].rows[r].selectionItem.name);
+                                        vals.push(resObj.spell.charts[c].selectionItemType.id);
+                                        vals.push(resObj.spell.resource.id);
+                                        first = first + 3;
+                                        second = second + 3;
+                                        third = third + 3;
+                                        addComma = true;
+                                    }
+                                }
+                            }
+                        }
+                        sql += ' returning "itemName", "id" AS "itemId"';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var f = 0; f < resObj.spell.charts.length; f++) {
+                                    if (resObj.spell.charts[f].type.id == itemtypes.CHART.SELECTION) {
+                                        for (var r = 0; r < resObj.spell.charts[f].rows.length; r++) {
+                                            if (results[e].itemName == resObj.spell.charts[f].rows[r].selectionItem.name) {
+                                                resObj.spell.charts[f].rows[r].selectionItem.id = results[e].itemId;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartDefinitions_selection(resObj, callback) {
+                    if (resObj.spell.hasSelectionChart) {
+                        results = [];
+                        vals = [];
+                        first = 1;
+                        second = 2;
+                        addComma = false;
+                        sql = 'INSERT INTO adm_def_chart_selection';
+                        sql += ' ("chartId", "selectionTypeId")';
+                        sql += ' VALUES ';
+                        for (var e = 0; e < resObj.spell.charts.length; e++) {
+                            if (resObj.spell.charts[e].type.id == itemtypes.CHART.SELECTION) {
+                                if (addComma) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
+                                first = first + 2;
+                                second = second + 2;
+                                vals.push(resObj.spell.charts[e].id);
+                                vals.push(resObj.spell.charts[e].selectionItemType.id);
+                                addComma = true;
+                            }
+                        }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
@@ -1393,27 +1540,30 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertChartColumns_standard(resObj, callback) {
-                    if (resObj.spell.hasStandardCharts) {
+                    if (resObj.spell.hasStandardCharts || resObj.spell.hasSelectionChart) {
                         vals = [];
                         results = [];
                         sql = 'INSERT INTO adm_def_chart_column';
-                        sql += ' ("chartId", "columnIndex", "title")';
+                        sql += ' ("chartId", "columnIndex", "title", "selectionItemId")';
                         sql += ' VALUES ';
                         first = 1;
                         second = 2;
                         third = 3;
+                        fourth = 4;
                         for (var c = 0; c < resObj.spell.charts.length; c++) {
                             for (var e = 0; e < resObj.spell.charts[c].columns.length; e ++) {
                                 if (!(c == 0 && e == 0)) {
                                     sql += ', ';
                                 }
                                 sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
-                                first = first + 3;
-                                second = second + 3;
-                                third = third + 3;
+                                first = first + 4;
+                                second = second + 4;
+                                third = third + 4;
+                                fourth = fourth + 4;
                                 vals.push(resObj.spell.charts[c].id);
                                 vals.push(resObj.spell.charts[c].columns[e].columnIndex);
                                 vals.push(resObj.spell.charts[c].columns[e].title);
+                                vals.push(resObj.spell.charts[c].columns[e].selectionItemId.id);
                             }
                         }
                         sql += ' returning "chartId", "columnIndex", id AS "columnId";';
@@ -1441,7 +1591,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertChartRows_standard(resObj, callback) {
-                    if (resObj.spell.hasStandardCharts) {
+                    if (resObj.spell.hasStandardCharts || resObj.spell.hasSelectionChart) {
                         vals = [];
                         results = [];
                         var hasRowTitles = false;
@@ -1449,16 +1599,19 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             for (var r = 0; r < resObj.spell.charts[c].rows.length; r++) {
                                 if (resObj.spell.charts[c].rows[r].title && resObj.spell.charts[c].rows[r].title.length != 0) {
                                     hasRowTitles = true;
+                                } else if (resObj.spell.charts[c].rows[r].selectionItemId && resObj.spell.charts[c].rows[r].selectionItemId != 0) {
+                                    hasRowTitles = true;
                                 }
                             }
                         }
                         if (hasRowTitles) {
                             sql = 'INSERT INTO adm_def_chart_row';
-                            sql += ' ("chartId", "rowIndex", "title")';
+                            sql += ' ("chartId", "rowIndex", "title", "selectionItemId")';
                             sql += ' VALUES ';
                             first = 1;
                             second = 2;
                             third = 3;
+                            fourth = 4;
                             var addComma = false;
                             for (var c = 0; c < resObj.spell.charts.length; c++) {
                                 for (var r = 0; r < resObj.spell.charts[c].rows.length; r++) {
@@ -1467,13 +1620,14 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                                             sql += ', ';
                                         }
                                         sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
-                                        first = first + 3;
-                                        second = second + 3;
-                                        third = third + 3;
+                                        first = first + 4;
+                                        second = second + 4;
+                                        third = third + 4;
+                                        fourth = fourth + 4;
                                         vals.push(resObj.spell.charts[c].id);
                                         vals.push(resObj.spell.charts[c].rows[r].rowIndex);
                                         vals.push(resObj.spell.charts[c].rows[r].title);
-                                        
+                                        vals.push(resObj.spell.charts[c].rows[e].selectionItemId.id);
                                         addComma = true;
                                     }
                                 }
@@ -1506,30 +1660,33 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertChartEntries_standard(resObj, callback) {
-                    if (resObj.spell.hasStandardCharts) {
+                    if (resObj.spell.hasStandardCharts || resObj.spell.hasSelectionChart) {
                         vals = [];
                         results = [];
                         sql = 'INSERT INTO adm_def_chart_entry';
-                        sql += ' ("chartId", "columnIndex", "rowIndex", "description")';
+                        sql += ' ("chartId", "columnIndex", "rowIndex", "description", "selectionItemId")';
                         sql += ' VALUES ';
                         first = 1;
                         second = 2;
                         third = 3;
                         fourth = 4;
+                        fifth = 5;
                         for (var c = 0; c < resObj.spell.charts.length; c++) {
                             for (var e = 0; e < resObj.spell.charts[c].entries.length; e++) {
                                 if(!(c == 0 && e == 0)) {
                                     sql += ', ';
                                 }
                                 sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
-                                first = first + 4;
-                                second = second + 4;
-                                third = third + 4;
-                                fourth = fourth + 4;
+                                first = first + 5;
+                                second = second + 5;
+                                third = third + 5;
+                                fourth = fourth + 5;
+                                fifth = fifth + 5;
                                 vals.push(resObj.spell.charts[c].id);
                                 vals.push(resObj.spell.charts[c].entries[e].columnIndex);
                                 vals.push(resObj.spell.charts[c].entries[e].rowIndex);
                                 vals.push(resObj.spell.charts[c].entries[e].description);
+                                vals.push(resObj.spell.charts[c].entries[e].selectionItemId.id);
                             }
                         }
                         sql += 'returning "chartId", "rowIndex", "columnIndex", id AS "entryId";';

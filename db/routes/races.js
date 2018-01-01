@@ -1348,6 +1348,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '        GROUP BY d."id", d."itemId", suppdesc.title, d.description, suppdesc."orderIndex"';
             sql += '    ) AS "descriptions"';
             sql += ')  AS "supplementalDescriptions"';
+            sql += ', get_natural_weapons(i.id) AS "naturalWeapons"';
+            sql += ', get_breath_weapons(i.id) AS "breathWeapons"';
             sql += ' FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_race race ON race."raceId" = i.id';
             sql += ' LEFT OUTER JOIN adm_def_race_ability_score ability ON ability."raceId" = i.id';
@@ -1392,6 +1394,52 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                     if (results[q].parent == null) {
                         results[q].parent = {id: 0};
+                    }
+                    if (results[q].spellcasting.spellSelections.length == 1) {
+                        var clearSpellSelections = true;
+                        for (var e = 0; e < results[q].spellcasting.spellSelections[e].length; e++) {
+                            if (results[q].spellcasting.spellSelections[e].castingCount != null) {
+                                clearSpellSelections = false;
+                            }
+                            if (results[q].spellcasting.spellSelections[e].characterLevel != null) {
+                                clearSpellSelections = false;
+                            }
+                            if (results[q].spellcasting.spellSelections[e].rechargeType != null) {
+                                clearSpellSelections = false;
+                            }
+                            if (results[q].spellcasting.spellSelections[e].school != null) {
+                                clearSpellSelections = false;
+                            }
+                            if (results[q].spellcasting.spellSelections[e].selectionCount != null) {
+                                clearSpellSelections = false;
+                            }
+                            if (results[q].spellcasting.spellSelections[e].selectionType != null) {
+                                clearSpellSelections = false;
+                            }
+                            if (results[q].spellcasting.spellSelections[e].spell != null) {
+                                clearSpellSelections = false;
+                            }
+                            if (results[q].spellcasting.spellSelections[e].spellLevel != null) {
+                                clearSpellSelections = false;
+                            }
+                            if (results[q].spellcasting.spellSelections[e].spelllist != null) {
+                                clearSpellSelections = false;
+                            }
+                        }
+                        if (clearSpellSelections) {
+                            results[q].spellcasting.spellSelections = [];
+                        }
+                        if (results[q].spellcasting.abilityScore && results[q].spellcasting.abilityScore.name == null) {
+                            results[q].spellcasting.abilityScore = {};
+                        }
+                        if (results[q].mechanics && results[q].mechanics.base && results[q].mechanics.base.length != 0) {
+                            if (results[q].mechanics.base[0] == null) {
+                                results[q].mechanics.base = [];
+                            }
+                        }
+                        if (results[q].senses == null) {
+                            results[q].senses = [];
+                        }
                     }
                 }
                 return res.json(results);

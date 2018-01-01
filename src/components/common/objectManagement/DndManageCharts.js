@@ -5,6 +5,7 @@ import DndInput from '../inputs/DndInput';
 import DndDataEntryButtonBar from '../buttons/DndDataEntryButtonBar';
 //import DndCollapsibleTableRow from '../subcomponents/DndCollapsibleTableRow';
 import DndStandardChartForm from './charts/forms/DndStandardChartForm';
+import DndSelectionChartForm from './charts/forms/DndSelectionChartForm';
 import DndDieChartForm from './charts/forms/DndDieChartForm';
 import DndCollapsibleList from './DndCollapsibleList';
 
@@ -37,11 +38,11 @@ class DndManageCharts extends React.Component {
                     objects={charts}
                     onChange={this.props.onChange}
                     onSelectEditedItem={this.props.onSelectEdited}
-                    removeItemAction={util.dataTypes.action.CHART.REMOVE}
-                    selectItemAction={util.dataTypes.action.CHART.SELECT}
+                    removeItemAction={util.datatypes.action.CHART.REMOVE}
+                    selectItemAction={util.datatypes.action.CHART.SELECT}
                     onReset={this.props.onReset}
-                    moveItemDownAction={util.dataTypes.action.CHART.CHANGE_INDEX.DOWN}
-                    moveItemUpAction={util.dataTypes.action.CHART.CHANGE_INDEX.UP}
+                    moveItemDownAction={util.datatypes.action.CHART.CHANGE_INDEX.DOWN}
+                    moveItemUpAction={util.datatypes.action.CHART.CHANGE_INDEX.UP}
                     />
             );
         }
@@ -57,7 +58,7 @@ class DndManageCharts extends React.Component {
         return (this.props.selectedChartType.id != 0) ? (
             <div>
                 <DndInput
-                    dataType={util.dataTypes.string.STRING}
+                    dataType={util.datatypes.string.STRING}
                     label="Title"
                     name="title"
                     onChange={this.props.onChange}
@@ -70,18 +71,26 @@ class DndManageCharts extends React.Component {
     
     renderTypeSpecificForm(chart) {
         switch (this.props.selectedChartType.id) {
-            case util.itemTypes.CHARTS.DIE_ROLL:
+            case util.itemtypes.CHARTS.DIE_ROLL:
                 return (
                     <DndDieChartForm
                         chart={chart}
                         onChange={this.props.onChange}
                         />
                 );
-            case util.itemTypes.CHARTS.STANDARD:
+            case util.itemtypes.CHARTS.STANDARD:
                 return (
                     <DndStandardChartForm
                         chart={chart}
                         onChange={this.props.onChange}
+                        />
+                );
+            case util.itemtypes.CHARTS.SELECTION:
+                return (
+                    <DndSelectionChartForm
+                        chart={chart}
+                        onChange={this.props.onChange}
+                        picklists={this.props.picklists}
                         />
                 );
             default:
@@ -94,8 +103,8 @@ class DndManageCharts extends React.Component {
             <DndDataEntryButtonBar
                 onSave={this._onSaveClick}
                 onReset={this.props.onReset}
-                saveAction={util.dataTypes.action.CHART.ADD}
-                resetAction={util.dataTypes.action.CHART.RESET}
+                saveAction={util.datatypes.action.CHART.ADD}
+                resetAction={util.datatypes.action.CHART.RESET}
                 name="charts"
                 />
         );
@@ -104,11 +113,11 @@ class DndManageCharts extends React.Component {
     render() {
         const charts = this.props.charts;
         const chart = this.props.chart;
-        const chartTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemTypes.TYPES.CHART_TYPE);
+        const chartTypes = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.CHART_TYPE);
         return (
             <div>
                 <DndInput
-                    dataType={util.dataTypes.picklist.CHART_TYPE}
+                    dataType={util.datatypes.picklist.CHART_TYPE}
                     label="Type of Chart"
                     name="chartType"
                     onChange={this.props.onChange}

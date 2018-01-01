@@ -67,6 +67,36 @@ export function setObjectValue(obj, prop, val, action) {
     }
 }
 
+export function doesPropertyExist(obj, prop) {
+    let arr = prop.split('.');
+    let testObj = obj;
+    for (let e = 0; e < arr.length; e++) {
+        if (testObj[arr[e]] == undefined) {
+            return false;
+        } else {
+            testObj = testObj[arr[e]];
+        }
+    }
+    return true;
+}
+
+export function constructResetProperty(val) {
+    let retVal = 'reset';
+    retVal += val.charAt(0).toUpperCase();
+    retVal += val.substring(1);
+    return retVal;
+}
+
+export function removeResetProperties(obj) {
+    let retVal = obj;
+    for (let key in retVal) {
+        if (key.split('reset').length > 1) {
+            delete retVal[key];
+        }
+    }
+    return retVal;
+}
+
 export const resetObject = {
     background: function() {
         let retVal = Object.assign({}, util.objectModel.BACKGROUND);
@@ -78,6 +108,10 @@ export const resetObject = {
             description: ''
         };
         retVal.proficiencyGroups = [];
+        return retVal;
+    },
+    breathWeapon: function() {
+        const retVal = Object.assign({}, util.objectModel.BREATH_WEAPON);
         return retVal;
     },
     chart: function(emptyChartType, chartsLength) {
@@ -106,6 +140,20 @@ export const resetObject = {
         retVal.target = {id: 0, name: ''};
         retVal.type = {id: 0, name: ''};
         retVal.valueObject = {id: 0, name: ''};
+        return retVal;
+    },
+    naturalWeapon: function() {
+        const retVal = Object.assign({}, util.objectModel.NATURAL_WEAPON);
+        retVal.type = {id: 0, name: ''};
+        retVal.attack = {
+            abilityScore: {id: 0, name: ''},
+            count: 1
+        };
+        retVal.damage = {
+            abilityScore: {id: 0, name: ''},
+            dice: {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
+            type: {id: 0, name: ''}
+        };
         return retVal;
     },
     proficiencyGroup: function() {
@@ -247,6 +295,9 @@ export const formState = {
         
         return retVal;
     },
+    breathWeapon: function(event, obj) {
+        
+    },
     chartType: function(event, obj, picklists) {
         let chartType = obj;
         let dataType = formState.setDataTypeFromTarget(event);
@@ -283,12 +334,21 @@ export const formState = {
         if ((event.target.type !== undefined) && (event.target.type !== 'button')) {
             //this controls standard form elements
             switch (dataType) {
+                case util.datatypes.special.CHART_COLUMN_TITLE:
+                    if (field.split('_').length == 3) {
+                        changedEntryIndex = parseInt(field.split('_')[1]);
+                        subfield = field.split('_')[2];
+                        field = field.split('_')[0];
+                        retVal[field][changedEntryIndex][subfield] = event.target.value;
+                    }
+                    break;
                 case util.datatypes.picklist.SELECTION_CHART_ROW:
                 case util.datatypes.picklist.DATA_TYPE:
                 case util.datatypes.picklist.GENERAL:
                 case util.datatypes.string.EMPTY_PICKLIST_ITEM:
                     if (dataType == util.datatypes.string.EMPTY_PICKLIST_ITEM) {
-                        newSelectedValue = event.target.value;
+                        newSelectedValue.id = 0;
+                        newSelectedValue.name = event.target.value;
                     } else {
                         newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                         newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
@@ -687,6 +747,31 @@ export const formState = {
         }
         return retVal;
     },
+    naturalWeapon: function(event, obj) {
+        let retVal = obj;
+        let field = formState.setFieldFromTargetName(event);
+        let dataType = formState.setDataTypeFromTarget(event);
+        let newSelectedValue = {};
+        if (util.common.doesPropertyExist(obj, field)) {
+            switch (dataType) {
+                case util.datatypes.number.INT:
+                    util.common.setObjectValue(retVal, field, event.target.value);
+                    break;
+                case util.datatypes.picklist.ABILITY_SCORE:
+                case util.datatypes.picklist.DAMAGE_TYPE:
+                case util.datatypes.picklist.NATURAL_WEAPON_TYPE:
+                    newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                    newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                    util.common.setObjectValue(retVal, field, newSelectedValue);
+                    break;
+                case util.datatypes.special.DICE_ROLL:
+                    util.common.setObjectValue(retVal, field, formState.dice(event));
+                    break;
+                default:
+            }
+        }
+        return retVal;
+    },
     proficiencyGroup: function(event, obj, refObj, picklists, proficiencies, removeThisGroup) {
         let retVal = obj;
         let field = formState.setFieldFromTargetName(event);
@@ -834,8 +919,9 @@ export const formState = {
         
         return retVal;
     },
-    standard: function(event, obj, picklists) {
+    standard: function(event, obj, picklists, refObj) {
         let retVal = obj;
+        retVal = util.common.removeResetProperties(retVal);
         let field = formState.setFieldFromTargetName(event);
         let dataType = formState.setDataTypeFromTarget(event);
         let newSelectedValue = {};
@@ -853,196 +939,210 @@ export const formState = {
         let itemArrayId = 0;
         let newObject = {};
         let textboxArrayField = '';
-        switch (dataType) {
-            case util.datatypes.string.EMPTY_PICKLIST_ITEM:
-                if (field.split('_').length == 1) {
-                    newSelectedValue.id = 0;
-                    newSelectedValue.name = event.target.value;
-                    util.common.setObjectValue(retVal, field, newSelectedValue);
-                }
-                break;
-            case util.datatypes.array.ADVANCED_SENSE:
-            case util.datatypes.array.MOVEMENT:
-                if (dataType == util.datatypes.array.ADVANCED_SENSE) {
-                    refArray = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.ADVANCED_SENSE);
-                    textboxArrayField = 'range';
-                } else if (dataType == util.datatypes.array.MOVEMENT) {
-                    refArray = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.MOVEMENT_TYPE);
-                    textboxArrayField = 'speed';
-                }
-                if (refArray && refArray.length != 0) {
-                    itemArrayId = parseInt(field.split('_')[1]);
-                    field = field.split('_')[0];
-                    newIntValue = event.target.value.length == 0 ? 0 : parseInt(event.target.value);
-                    for (let q = 0; q < retVal[field].length; q++) {
-                        if (retVal[field][q].id == itemArrayId) {
-                            itemIndex = q;
-                            break;
-                        }
-                    }
-                    for (let q = 0; q < refArray.length; q++) {
-                        if (refArray[q].id == itemArrayId) {
-                            newObject.id = refArray[q].id;
-                            newObject.name = refArray[q].name;
-                            newObject[textboxArrayField] = newIntValue;
-                            break;
-                        }
-                    }
-                    if (newIntValue == 0) {
-                        //remove item from array
-                        if (itemIndex != -1) {
-                            retVal[field].splice(itemIndex, 1);
-                        }
-                    } else {
-                        if (itemIndex != -1) {
-                            //edit item array
-                            retVal[field][itemIndex][textboxArrayField] = newIntValue;
-                        } else {
-                            //add item to array
-                            retVal[field].push(newObject);
-                        }
-                    }
-                }
-                break;
-            case util.datatypes.string.DESCRIPTION:
-                tmpText = event.target.innerHTML;
-                util.common.setObjectValue(retVal, field, tmpText.trim());
-                break;
-            case util.datatypes.string.STRING:
-            case util.datatypes.string.LONG_STRING:
-            case util.datatypes.number.CHARACTER_LEVEL:
-            case util.datatypes.number.INT:
-            case util.datatypes.number.LENGTH:
-            case util.datatypes.number.DEC:
-            case util.datatypes.number.COIN:
-            case util.datatypes.number.SPELL_LEVEL:
-            case util.datatypes.number.WEIGHT:
-                util.common.setObjectValue(retVal, field, event.target.value);
-                break;
-            case util.datatypes.bool.BOOL:
-            case util.datatypes.HAS_DISADVANTAGE:
-            case util.datatypes.bool.YES_NO:
-                util.common.setObjectValue(retVal, field, event.target.checked);
-                break;
-            case util.datatypes.picklist.ABILITY_SCORE:
-            case util.datatypes.picklist.AMMUNITION_TYPE:
-            case util.datatypes.picklist.ARMOR_PROFICIENCY:
-            case util.datatypes.picklist.ATTACK_ROLL_TYPE:
-            case util.datatypes.picklist.CONDITION:
-            case util.datatypes.picklist.DAMAGE_TYPE:
-            case util.datatypes.picklist.EQUIPMENT_CATEGORY:
-            case util.datatypes.picklist.GENERAL:
-            case util.datatypes.picklist.LANGUAGE_RARITY:
-            case util.datatypes.picklist.LANGUAGE_SCRIPT:
-            case util.datatypes.picklist.MECHANIC_TARGET:
-            case util.datatypes.picklist.MECHANIC_TYPE:
-            case util.datatypes.picklist.MONSTER_TYPE:
-            case util.datatypes.picklist.PROFICIENCY_CATEGORY:
-            case util.datatypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
-            case util.datatypes.picklist.RECHARGE_TYPE:
-            case util.datatypes.picklist.RESOURCE:
-            case util.datatypes.picklist.SAVE_EFFECT:
-            case util.datatypes.picklist.SCHOOL_OF_MAGIC:
-            case util.datatypes.picklist.SIZE:
-            case util.datatypes.picklist.SPELL_CASTING_TIME:
-            case util.datatypes.picklist.SPELL_DURATION:
-            case util.datatypes.picklist.SPELL_RANGE:
-            case util.datatypes.picklist.WEAPON_CATEGORY:
-            case util.datatypes.picklist.WEAPON_PROFICIENCY:
-                if (field.split('_').length == 1) {
-                    if (inputType == 'text') {
+        if (util.common.doesPropertyExist(obj, field)) {
+            switch (dataType) {
+                case util.datatypes.action.NATURAL_WEAPON.ADD:
+                case util.datatypes.action.PROFICIENCY_GROUP.ADD:
+                    retVal[field].push(refObj);
+                    break;
+                case util.datatypes.action.NATURAL_WEAPON.REMOVE:
+                case util.datatypes.action.PROFICIENCY_GROUP.REMOVE:
+                    retVal[field].splice(refObj.removeIndex, 1);
+                    break;
+                case util.datatypes.action.NATURAL_WEAPON.RESET:
+                case util.datatypes.action.PROFICIENCY_GROUP.RESET:
+                    retVal[util.common.constructResetProperty(field)] = true;
+                    break;
+                case util.datatypes.string.EMPTY_PICKLIST_ITEM:
+                    if (field.split('_').length == 1) {
                         newSelectedValue.id = 0;
                         newSelectedValue.name = event.target.value;
-                    } else {
-                        newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
-                        newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                        util.common.setObjectValue(retVal, field, newSelectedValue);
                     }
-                    util.common.setObjectValue(retVal, field, newSelectedValue);
-                }
-                break;
-            case util.datatypes.special.DICE_ROLL:
-                util.common.setObjectValue(retVal, field, formState.dice(event));
-                break;
-            case util.datatypes.array.ASSIGNED_SPELLS:
-            case util.datatypes.array.MONSTER_TAGS:
-            case util.datatypes.array.PROFICIENCIES:
-            case util.datatypes.array.WEAPON_PROPERTIES:
-                if (isAssign) {
-                    field = field.replace('Unassigned', '');
-                    util.common.setObjectValue(retVal, field, referencePicklistItem, 'add');
-                } else {
-                    for (let b = 0; b < retVal[field].length; b++) {
-                        if (dataType == util.datatypes.array.PROFICIENCIES) {
-                            if (retVal.proficiencies[b].id == referencePicklistItem.id) {
-                                removeThisIndex = b;
-                                break;
-                            }
-                        } else if (dataType == util.datatypes.array.WEAPON_PROPERTIES) {
-                            if (retVal[field][b].requireDamage) {
-                                retVal.damage.versatile.dice = Object.assign({}, {rendered: ''});
-                            }
-                            if (retVal[field][b].requireDescription) {
-                                retVal.specialDescription = null;
-                            }
-                            if (retVal[field][b].requireRange) {
-                                retVal.ramge = {};
-                            }
-                            if (retVal[field][b].requireAmmunition) {
-                                retVal.ammunition = {};
-                            }
-                            removeThisIndex = b;
-                            break;
-                        } else if (dataType == util.datatypes.array.ASSIGNED_SPELLS) {
-                            if (retVal.spells[b].id == referencePicklistItem.id) {
-                                removeThisIndex = b;
+                    break;
+                case util.datatypes.array.ADVANCED_SENSE:
+                case util.datatypes.array.MOVEMENT:
+                    if (dataType == util.datatypes.array.ADVANCED_SENSE) {
+                        refArray = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.ADVANCED_SENSE);
+                        textboxArrayField = 'range';
+                    } else if (dataType == util.datatypes.array.MOVEMENT) {
+                        refArray = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.MOVEMENT_TYPE);
+                        textboxArrayField = 'speed';
+                    }
+                    if (refArray && refArray.length != 0) {
+                        itemArrayId = parseInt(field.split('_')[1]);
+                        field = field.split('_')[0];
+                        newIntValue = event.target.value.length == 0 ? 0 : parseInt(event.target.value);
+                        for (let q = 0; q < retVal[field].length; q++) {
+                            if (retVal[field][q].id == itemArrayId) {
+                                itemIndex = q;
                                 break;
                             }
                         }
-                    }
-                    util.common.setObjectValue(retVal, field, removeThisIndex, 'remove');
-                }
-                break;
-            case util.datatypes.special.WEAPON_RANGE:
-                util.common.setObjectValue(retVal, field, parseInt(event.target.value));
-                break;
-            case util.datatypes.picklist.SPELL_COMPONENT:
-                newComponentsArray = retVal[field.split('_')[0]];
-                if (inputType == 'text') {
-                    let tmp = field.split('_');
-                    field = tmp[0];
-                    subfield = tmp[1];
-                    let changedId = tmp[2];
-                    for (let e = 0; e < newComponentsArray.length; e++) {
-                        tmpText = event.target.value;
-                        if (tmpText.indexOf('(') != -1) {
-                            tmpText = tmpText.replace('(', '').trim();
+                        for (let q = 0; q < refArray.length; q++) {
+                            if (refArray[q].id == itemArrayId) {
+                                newObject.id = refArray[q].id;
+                                newObject.name = refArray[q].name;
+                                newObject[textboxArrayField] = newIntValue;
+                                break;
+                            }
                         }
-                        if (tmpText.indexOf(')') != -1) {
-                            tmpText = tmpText.replace(')', '').trim();
-                        }
-                        if (changedId == newComponentsArray[e].id) {
-                            retVal[field][e][subfield] = tmpText;
+                        if (newIntValue == 0) {
+                            //remove item from array
+                            if (itemIndex != -1) {
+                                retVal[field].splice(itemIndex, 1);
+                            }
+                        } else {
+                            if (itemIndex != -1) {
+                                //edit item array
+                                retVal[field][itemIndex][textboxArrayField] = newIntValue;
+                            } else {
+                                //add item to array
+                                retVal[field].push(newObject);
+                            }
                         }
                     }
-                } else {
-                    if (event.target.checked) {
-                        newComponentsArray.push({
-                            id: event.target.value,
-                            name: util.common.picklists.getPicklistItem(picklists, event.target.value).name
-                        });
+                    break;
+                case util.datatypes.string.DESCRIPTION:
+                    tmpText = event.target.innerHTML;
+                    util.common.setObjectValue(retVal, field, tmpText.trim());
+                    break;
+                case util.datatypes.string.STRING:
+                case util.datatypes.string.LONG_STRING:
+                case util.datatypes.number.CHARACTER_LEVEL:
+                case util.datatypes.number.INT:
+                case util.datatypes.number.LENGTH:
+                case util.datatypes.number.DEC:
+                case util.datatypes.number.COIN:
+                case util.datatypes.number.SPELL_LEVEL:
+                case util.datatypes.number.WEIGHT:
+                    util.common.setObjectValue(retVal, field, event.target.value);
+                    break;
+                case util.datatypes.bool.BOOL:
+                case util.datatypes.HAS_DISADVANTAGE:
+                case util.datatypes.bool.YES_NO:
+                    util.common.setObjectValue(retVal, field, event.target.checked);
+                    break;
+                case util.datatypes.picklist.ABILITY_SCORE:
+                case util.datatypes.picklist.AMMUNITION_TYPE:
+                case util.datatypes.picklist.ARMOR_PROFICIENCY:
+                case util.datatypes.picklist.ATTACK_ROLL_TYPE:
+                case util.datatypes.picklist.CONDITION:
+                case util.datatypes.picklist.DAMAGE_TYPE:
+                case util.datatypes.picklist.EQUIPMENT_CATEGORY:
+                case util.datatypes.picklist.GENERAL:
+                case util.datatypes.picklist.LANGUAGE_RARITY:
+                case util.datatypes.picklist.LANGUAGE_SCRIPT:
+                case util.datatypes.picklist.MECHANIC_TARGET:
+                case util.datatypes.picklist.MECHANIC_TYPE:
+                case util.datatypes.picklist.MONSTER_TYPE:
+                case util.datatypes.picklist.PROFICIENCY_CATEGORY:
+                case util.datatypes.picklist.PROFICIENCY_SELECTION_MECHANIC:
+                case util.datatypes.picklist.RECHARGE_TYPE:
+                case util.datatypes.picklist.RESOURCE:
+                case util.datatypes.picklist.SAVE_EFFECT:
+                case util.datatypes.picklist.SCHOOL_OF_MAGIC:
+                case util.datatypes.picklist.SIZE:
+                case util.datatypes.picklist.SPELL_CASTING_TIME:
+                case util.datatypes.picklist.SPELL_DURATION:
+                case util.datatypes.picklist.SPELL_RANGE:
+                case util.datatypes.picklist.WEAPON_CATEGORY:
+                case util.datatypes.picklist.WEAPON_PROFICIENCY:
+                    if (field.split('_').length == 1) {
+                        if (inputType == 'text') {
+                            newSelectedValue.id = 0;
+                            newSelectedValue.name = event.target.value;
+                        } else {
+                            newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                            newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                        }
+                        util.common.setObjectValue(retVal, field, newSelectedValue);
+                    }
+                    break;
+                case util.datatypes.special.DICE_ROLL:
+                    util.common.setObjectValue(retVal, field, formState.dice(event));
+                    break;
+                case util.datatypes.array.ASSIGNED_SPELLS:
+                case util.datatypes.array.MONSTER_TAGS:
+                case util.datatypes.array.PROFICIENCIES:
+                case util.datatypes.array.WEAPON_PROPERTIES:
+                    if (isAssign) {
+                        field = field.replace('Unassigned', '');
+                        util.common.setObjectValue(retVal, field, referencePicklistItem, 'add');
                     } else {
-                        let removeIndex = -1;
+                        for (let b = 0; b < retVal[field].length; b++) {
+                            if (dataType == util.datatypes.array.PROFICIENCIES) {
+                                if (retVal.proficiencies[b].id == referencePicklistItem.id) {
+                                    removeThisIndex = b;
+                                    break;
+                                }
+                            } else if (dataType == util.datatypes.array.WEAPON_PROPERTIES) {
+                                if (retVal[field][b].requireDamage) {
+                                    retVal.damage.versatile.dice = Object.assign({}, {rendered: ''});
+                                }
+                                if (retVal[field][b].requireDescription) {
+                                    retVal.specialDescription = null;
+                                }
+                                if (retVal[field][b].requireRange) {
+                                    retVal.ramge = {};
+                                }
+                                if (retVal[field][b].requireAmmunition) {
+                                    retVal.ammunition = {};
+                                }
+                                removeThisIndex = b;
+                                break;
+                            } else if (dataType == util.datatypes.array.ASSIGNED_SPELLS) {
+                                if (retVal.spells[b].id == referencePicklistItem.id) {
+                                    removeThisIndex = b;
+                                    break;
+                                }
+                            }
+                        }
+                        util.common.setObjectValue(retVal, field, removeThisIndex, 'remove');
+                    }
+                    break;
+                case util.datatypes.special.WEAPON_RANGE:
+                    util.common.setObjectValue(retVal, field, parseInt(event.target.value));
+                    break;
+                case util.datatypes.picklist.SPELL_COMPONENT:
+                    newComponentsArray = retVal[field.split('_')[0]];
+                    if (inputType == 'text') {
+                        let tmp = field.split('_');
+                        field = tmp[0];
+                        subfield = tmp[1];
+                        let changedId = tmp[2];
                         for (let e = 0; e < newComponentsArray.length; e++) {
-                            if (newComponentsArray[e].id == event.target.value) {
-                                removeIndex = e;
+                            tmpText = event.target.value;
+                            if (tmpText.indexOf('(') != -1) {
+                                tmpText = tmpText.replace('(', '').trim();
+                            }
+                            if (tmpText.indexOf(')') != -1) {
+                                tmpText = tmpText.replace(')', '').trim();
+                            }
+                            if (changedId == newComponentsArray[e].id) {
+                                retVal[field][e][subfield] = tmpText;
                             }
                         }
-                        newComponentsArray.splice(removeIndex, 1);
+                    } else {
+                        if (event.target.checked) {
+                            newComponentsArray.push({
+                                id: event.target.value,
+                                name: util.common.picklists.getPicklistItem(picklists, event.target.value).name
+                            });
+                        } else {
+                            let removeIndex = -1;
+                            for (let e = 0; e < newComponentsArray.length; e++) {
+                                if (newComponentsArray[e].id == event.target.value) {
+                                    removeIndex = e;
+                                }
+                            }
+                            newComponentsArray.splice(removeIndex, 1);
+                        }
                     }
-                }
-                retVal[field] = newComponentsArray;
-                break;
-            default:
+                    retVal[field] = newComponentsArray;
+                    break;
+                default:
+            }
         }
         return retVal;
     },
