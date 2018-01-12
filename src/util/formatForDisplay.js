@@ -267,6 +267,17 @@ obj.breathWeapon = function(val) {
     retVal += ' ' + val.damage.type.name + ' damage';
     return retVal;
 };
+obj.breathWeaponImprovement = {};
+obj.breathWeaponImprovement.Charges = function(val) {
+    let retVal = '';
+    retVal = '+' + val.count.toString() + ' uses at ' + util.format.forDisplay.number.ordinal(val.characterLevel) + ' level.';
+    return retVal;
+};
+obj.breathWeaponImprovement.Damage = function(val) {
+    let retVal = '';
+    retVal = '+' + val.dice.rendered + ' damage at ' + util.format.forDisplay.number.ordinal(val.characterLevel) + ' level.';
+    return retVal;
+};
 obj.breathWeaponDescription = function(val) {
     let retVal = val;
     
@@ -348,6 +359,13 @@ obj.mechanic = function(val) {
                 retVal = val.value.toString() + ' to ' + val.target.name;
             }
             break;
+        case util.itemtypes.MECHANIC_TYPE.BONUS_PER_LEVEL:
+            if (val.value >= 0) {
+                retVal = '+' + val.value.toString() + ' per character level to ' + val.target.name;
+            } else {
+                retVal = val.value.toString() + ' per character level to ' + val.target.name;
+            }
+            break;
         case util.itemtypes.MECHANIC_TYPE.DISADVANTAGE:
             retVal = 'Disadvantage to ' + val.target.name;
             break;
@@ -387,6 +405,11 @@ obj.mechanic = function(val) {
             break;
         default:
             retVal = 'need to add to switch in format.forDisplay.obj.mechanic';
+    }
+    if (val.type.id != util.itemtypes.MECHANIC_TYPE.SPECIAL_TEXT && val.type.id != util.itemtypes.MECHANIC_TYPE.DOUBLE_PROFICIENCY_BONUS) {
+        if (val.specialText && val.specialText.length != 0) {
+            retVal += ' (' + val.specialText + ')';
+        }
     }
     return retVal;
 };
@@ -444,7 +467,11 @@ obj.proficiencyGroup = function(val) {
                 }
             }
             break;
+        case util.itemtypes.SELECTION_MECHANIC.CONDITIONAL:
+            retVal = 'You gain proficiency with ' + val.proficiencies[0].name + ' (' + val.conditionalText + ')';
+            break;
         default:
+            retVal = 'Need to add new entry for slection mechanic';
     }
     return retVal;
 };
@@ -475,16 +502,20 @@ obj.spellLevelAndSchool = function(val) {
 };
 obj.spellSelection = function(val) {
     let retVal = '';
-    switch (val.type.id) {
+    switch (val.selectionType.id) {
         case util.itemtypes.SPELL_SELECTION.BY_LEVEL:
             if (val.characterLevel != 1) {
                 retVal += ' At ' + util.format.forDisplay.number.ordinal(val.characterLevel) + ' level, select';
             } else {
                 retVal += 'Select';
             }
-            retVal += ' ' + val.selectCount.toString();
-            retVal += 'Select ' + val.selectCount.toString();
-            retVal += ' ' + (val.spellLevel != 0) ? util.format.forDisplay.number.ordinal(val.spellLevel) + ' level ' + util.format.forDisplay.string.renderSingularPlural('spell', val.selectCount) : ' cantrips';
+            retVal += ' ' + val.selectCount.toString() + ' ';
+            if (val.spellLevel == 0) {
+                retVal += ' cantrip.';
+            } else {
+                retVal += util.format.forDisplay.number.ordinal(val.spellLevel) + ' level ' + util.format.forDisplay.string.renderSingularPlural('spell', val.selectCount);
+            }
+            //retVal += ' ' + (val.spellLevel != 0) ? util.format.forDisplay.number.ordinal(val.spellLevel) + ' level ' + util.format.forDisplay.string.renderSingularPlural('spell', val.selectCount) : ' cantrips';
             if (val.spellLevel != 0) {
                 retVal += ' You can cast ' + util.format.forDisplay.string.renderSingularPlural('this', val.selectCount) + ' ' + util.format.forDisplay.string.renderSingularPlural('spell', val.selectCount);
                 retVal += ' ' + val.castingCount.toString() + ' ' + util.format.forDisplay.string.renderSingularPlural('time', val.castingCount);

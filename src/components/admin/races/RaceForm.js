@@ -18,10 +18,16 @@ class RaceForm extends React.Component {
     constructor(props) {
         super(props);
         this.setFocus = this.setFocus.bind(this);
+        this._onChangeParentRace = this._onChangeParentRace.bind(this);
     }
     
     componentDidMount() {
         this.refs.name.setFocus();
+    }
+    
+    _onChangeParentRace(event) {
+        this.props.onChange(event);
+        this.props.onChangeParentRace(event);
     }
     
     setFocus() {
@@ -45,7 +51,7 @@ class RaceForm extends React.Component {
         return (
             <div>
                 <form>
-                    <Tabs defaultActiveKey={6} id="uncontrolled-tab-example">
+                    <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
                         <Tab eventKey={1} title="Size/Type" className={tabPaneStyle}>
                             <div>&nbsp;</div>
                             <DndUniversalInput
@@ -61,7 +67,7 @@ class RaceForm extends React.Component {
                                 label="Subrace Parent"
                                 checkboxName="chkParentId"
                                 picklistName="parent"
-                                onChange={this.props.onChange}
+                                onChange={this._onChangeParentRace}
                                 picklist={races}
                                 value={race.parent}
                                 onClick={this.props.onChangeSubrace}
@@ -314,7 +320,9 @@ class RaceForm extends React.Component {
                             <DndManageBreathWeapons
                                 breathWeapons={race.breathWeapons}
                                 editBreathWeapon={this.props.editBreathWeapon}
+                                editBreathWeaponImprovement={this.props.editBreathWeaponImprovement}
                                 onChange={this.props.onChangeBreathWeapon}
+                                onChangeImprovement={this.props.onChangeBreathWeaponImprovement}
                                 picklists={this.props.picklists}
                                 />
                         </Tab>
@@ -361,7 +369,11 @@ RaceForm.propTypes = {
     editNaturalWeapon: PropTypes.object.isRequired,
     onChangeNaturalWeapon: PropTypes.func.isRequired,
     editBreathWeapon: PropTypes.object.isRequired,
-    onChangeBreathWeapon: PropTypes.func.isRequired
+    editBreathWeaponImprovement: PropTypes.object.isRequired,
+    onChangeBreathWeapon: PropTypes.func.isRequired,
+    onChangeBreathWeaponImprovement: PropTypes.func.isRequired,
+    
+    onChangeParentRace: PropTypes.func.isRequired
 };
 
 export default RaceForm;

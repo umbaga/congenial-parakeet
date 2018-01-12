@@ -82,6 +82,7 @@ class DndManageItemGroups extends React.Component {
                     <tbody>
                         {itemGroups.map(function(group, idx) {
                             return (<DndAssignedItemRow
+                                        index={idx}
                                         key={idx}
                                         item={group}
                                         displayValue={this._formatText(group)}

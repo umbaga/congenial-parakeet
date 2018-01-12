@@ -64,21 +64,20 @@ export const BREATH_WEAPON = {
         improvement: [],
         type: {id: 0, name: ''}
     },
+    range: 0,
     savingThrow: {
         abilityScore: {id: 0, name: ''},
         dc: {
             abilityScore: {id: 0, name: ''},
             applyProficiencyBonus: true,
             base: 8
-        }
+        },
+        effect: {id: 0, name: ''}
     }
 };
-export const BREATH_WEAPON_DAMAGE_IMPROVEMENT = {
+export const IMPROVEMENT = {
     characterLevel: 0,
-    count: 1
-};
-export const BREATH_WEAPON_CHARGES_IMPROVEMENT = {
-    characterLevel: 0,
+    count: 1,
     dice: {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
 };
 export const CHART = {
@@ -286,9 +285,8 @@ export const RACE = {
     breathWeapons: [],
     charts: [],
     descriptions: [],
-    mechanics: {
-        base: []
-    },
+    mechanics: [],
+    //mechanics: {base: []},
     movement: [
         {id: 2275, name: 'Walking', speed: 30}
     ],

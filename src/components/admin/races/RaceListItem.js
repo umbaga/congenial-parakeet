@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import DndListItemButtonBar from '../../common/buttons/DndListItemButtonBar';
 import * as raceActions from '../../../actions/admin/raceActions';
+import util from '../../../util/util';
 
 class RaceListItem extends React.Component {
     constructor(props, context) {
@@ -14,6 +15,8 @@ class RaceListItem extends React.Component {
         this.editRace = this.editRace.bind(this);
         this.deleteRace = this.deleteRace.bind(this);
         this.viewRaceDetails = this.viewRaceDetails.bind(this);
+        this.renderNameCell = this.renderNameCell.bind(this);
+        this.renderIndentation = this.renderIndentation.bind(this);
     }
     editRace() {
         event.preventDefault();
@@ -35,10 +38,25 @@ class RaceListItem extends React.Component {
         this.props.onViewDetails();
         this.setState({selectedId: this.props.race.id, canEdit: false});
     }
+    
+    renderNameCell(race) {
+        let cellWidth = (race.parent.id == 0) ? '90%' : '88%';
+        let colspan = (race.parent.id == 0) ? '2' : '1';
+        return (<td colSpan={colspan} width={cellWidth}>{this.props.race.name}</td>);
+    }
+    
+    renderIndentation(race) {
+        return (race.parent.id == 0) ? null : (
+            <td width="2%">{util.unicode.punctuation.longDash}</td>
+        );
+    }
+    
     render() {
+        const race = this.props.race;
         return (
             <tr key={this.props.race.id}>
-                <td width="90%">{this.props.race.name}</td>
+                {this.renderIndentation(race)}
+                {this.renderNameCell(race)}
                 <td width="10%">
                     <DndListItemButtonBar
                         listItem={this.props.race}

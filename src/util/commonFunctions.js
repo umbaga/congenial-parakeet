@@ -68,7 +68,7 @@ export function setObjectValue(obj, prop, val, action) {
 }
 
 export function doesPropertyExist(obj, prop) {
-    let arr = prop.split('.');
+    let arr = prop.replace('Unassigned', '').split('.');
     let testObj = obj;
     for (let e = 0; e < arr.length; e++) {
         if (testObj[arr[e]] == undefined) {
@@ -112,6 +112,11 @@ export const resetObject = {
     },
     breathWeapon: function() {
         const retVal = Object.assign({}, util.objectModel.BREATH_WEAPON);
+        return retVal;
+    },
+    breathWeaponImprovement: function() {
+        const retVal = Object.assign({}, util.objectModel.IMPROVEMENT);
+        retVal.dice = {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0};
         return retVal;
     },
     chart: function(emptyChartType, chartsLength) {
@@ -190,6 +195,7 @@ export const resetObject = {
                 modifier: 0
             }
         };
+        retVal.proficiencyGroups = [];
         return retVal;
     },
     spell: function() {
@@ -228,6 +234,36 @@ export const resetObject = {
 };
 
 export const formState = {
+    actions: function(event, obj, picklist, refObj) {
+        let retVal = obj;
+        retVal = util.common.removeResetProperties(retVal);
+        let field = formState.setFieldFromTargetName(event);
+        let dataType = formState.setDataTypeFromTarget(event);
+        if (util.common.doesPropertyExist(obj, field)) {
+            switch (dataType) {
+                case util.datatypes.action.BREATH_WEAPON.ADD:
+                case util.datatypes.action.MECHANIC.ADD:
+                case util.datatypes.action.NATURAL_WEAPON.ADD:
+                case util.datatypes.action.PROFICIENCY_GROUP.ADD:
+                    retVal[field].push(refObj);
+                    retVal[util.common.constructResetProperty(field)] = true;
+                    break;
+                case util.datatypes.action.BREATH_WEAPON.REMOVE:
+                case util.datatypes.action.NATURAL_WEAPON.REMOVE:
+                case util.datatypes.action.MECHANIC.REMOVE:
+                case util.datatypes.action.PROFICIENCY_GROUP.REMOVE:
+                    retVal[field].splice(refObj.removeIndex, 1);
+                    break;
+                case util.datatypes.action.BREATH_WEAPON.RESET:
+                case util.datatypes.action.NATURAL_WEAPON.RESET:
+                case util.datatypes.action.PROFICIENCY_GROUP.RESET:
+                    retVal[util.common.constructResetProperty(field)] = true;
+                    break;
+                default:
+            }
+        }
+        return retVal;
+    },
     arrayProperty: function(event, obj, refObj) {
         let retVal = obj;
         let field = formState.setFieldFromTargetName(event);
@@ -296,7 +332,65 @@ export const formState = {
         return retVal;
     },
     breathWeapon: function(event, obj) {
-        
+        let retVal = obj;
+        let field = formState.setFieldFromTargetName(event);
+        let dataType = formState.setDataTypeFromTarget(event);
+        let newSelectedValue = {};
+        if (util.common.doesPropertyExist(obj, field)) {
+            switch (dataType) {
+                case util.datatypes.bool.BOOL:
+                    util.common.setObjectValue(retVal, field, event.target.value);
+                    break;
+                case util.datatypes.number.INT:
+                    util.common.setObjectValue(retVal, field, event.target.value);
+                    break;
+                case util.datatypes.picklist.ABILITY_SCORE:
+                case util.datatypes.picklist.AREA_OF_EFFECT_SHAPE:
+                case util.datatypes.picklist.DAMAGE_TYPE:
+                case util.datatypes.picklist.RECHARGE_TYPE:
+                case util.datatypes.picklist.SAVE_EFFECT:
+                    newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
+                    newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
+                    util.common.setObjectValue(retVal, field, newSelectedValue);
+                    break;
+                case util.datatypes.special.DICE_ROLL:
+                    util.common.setObjectValue(retVal, field, formState.dice(event));
+                    break;
+                default:
+            }
+        }
+        return retVal;
+    },
+    breathWeaponImprovement: function(event, obj, refObj) {
+        let retVal = obj;
+        let field = formState.setFieldFromTargetName(event);
+        let dataType = formState.setDataTypeFromTarget(event);
+        if (retVal.resetBreathWeaponImprovement) {
+            delete retVal.resetBreathWeaponImprovement;
+        }
+        if (util.common.doesPropertyExist(obj, field)) {
+            switch (dataType) {
+                case util.datatypes.number.INT:
+                case util.datatypes.number.CHARACTER_LEVEL:
+                    util.common.setObjectValue(retVal, field, event.target.value);
+                    break;
+                case util.datatypes.special.DICE_ROLL:
+                    util.common.setObjectValue(retVal, field, formState.dice(event));
+                    break;
+                case util.datatypes.action.BREATH_WEAPON.IMPROVEMENT.CHARGES.ADD:
+                case util.datatypes.action.BREATH_WEAPON.IMPROVEMENT.DAMAGE.ADD:
+                    util.common.setObjectValue(retVal, field, refObj, 'add');
+                    retVal.resetBreathWeaponImprovement = true;
+                    break;
+                case util.datatypes.action.BREATH_WEAPON.IMPROVEMENT.CHARGES.REMOVE:
+                case util.datatypes.action.BREATH_WEAPON.IMPROVEMENT.DAMAGE.REMOVE:
+                    util.common.setObjectValue(retVal, field, refObj.removeIndex, 'remove');
+                    retVal.resetBreathWeaponImprovement = true;
+                    break;
+                default:
+            }
+        }
+        return retVal;
     },
     chartType: function(event, obj, picklists) {
         let chartType = obj;
@@ -772,7 +866,7 @@ export const formState = {
         }
         return retVal;
     },
-    proficiencyGroup: function(event, obj, refObj, picklists, proficiencies, removeThisGroup) {
+    proficiencyGroup: function(event, obj, refObj, picklists, proficiencies) {
         let retVal = obj;
         let field = formState.setFieldFromTargetName(event);
         let isAssign = false;
@@ -824,27 +918,6 @@ export const formState = {
                     newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                     util.common.setObjectValue(retVal, field, newSelectedValue);
                     break;
-                case util.datatypes.action.PROFICIENCY_GROUP.ADD:
-                    retVal[field].push(refObj);
-                    retVal.resetProficiencyGroup = true;
-                    break;
-                case util.datatypes.action.PROFICIENCY_GROUP.REMOVE:
-                    if (removeThisGroup) {
-                        for (let e = 0; e < retVal[field].length; e++) {
-                            if (retVal[field][e].id == removeThisGroup.id) {
-                                removeThisIndex = e;
-                            }
-                        }
-                    }
-                    if (removeThisIndex != -1) {
-                        retVal[field].splice(removeThisIndex, 1);
-                    }
-                    break;
-                case util.datatypes.action.PROFICIENCY_GROUP.RESET:
-                    retVal.resetProficiencyGroup = true;
-                    break;
-                case util.datatypes.action.PROFICIENCY_GROUP.SELECT:
-                    break;
                 default:
                     util.common.setObjectValue(retVal, field, event.target.value);
             }
@@ -885,6 +958,7 @@ export const formState = {
                 case util.datatypes.picklist.GENERAL:
                 case util.datatypes.picklist.RECHARGE_TYPE:
                 case util.datatypes.picklist.SPELL_SELECTION:
+                case util.datatypes.picklist.SCHOOL_OF_MAGIC:
                     newSelectedValue.id = parseInt(event.target.options[event.target.selectedIndex].value);
                     newSelectedValue.name = event.target.options[event.target.selectedIndex].text;
                     util.common.setObjectValue(retVal, field, newSelectedValue);
@@ -919,7 +993,7 @@ export const formState = {
         
         return retVal;
     },
-    standard: function(event, obj, picklists, refObj) {
+    standard: function(event, obj, picklists) {
         let retVal = obj;
         retVal = util.common.removeResetProperties(retVal);
         let field = formState.setFieldFromTargetName(event);
@@ -941,66 +1015,11 @@ export const formState = {
         let textboxArrayField = '';
         if (util.common.doesPropertyExist(obj, field)) {
             switch (dataType) {
-                case util.datatypes.action.NATURAL_WEAPON.ADD:
-                case util.datatypes.action.PROFICIENCY_GROUP.ADD:
-                    retVal[field].push(refObj);
-                    break;
-                case util.datatypes.action.NATURAL_WEAPON.REMOVE:
-                case util.datatypes.action.PROFICIENCY_GROUP.REMOVE:
-                    retVal[field].splice(refObj.removeIndex, 1);
-                    break;
-                case util.datatypes.action.NATURAL_WEAPON.RESET:
-                case util.datatypes.action.PROFICIENCY_GROUP.RESET:
-                    retVal[util.common.constructResetProperty(field)] = true;
-                    break;
                 case util.datatypes.string.EMPTY_PICKLIST_ITEM:
                     if (field.split('_').length == 1) {
                         newSelectedValue.id = 0;
                         newSelectedValue.name = event.target.value;
                         util.common.setObjectValue(retVal, field, newSelectedValue);
-                    }
-                    break;
-                case util.datatypes.array.ADVANCED_SENSE:
-                case util.datatypes.array.MOVEMENT:
-                    if (dataType == util.datatypes.array.ADVANCED_SENSE) {
-                        refArray = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.ADVANCED_SENSE);
-                        textboxArrayField = 'range';
-                    } else if (dataType == util.datatypes.array.MOVEMENT) {
-                        refArray = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.MOVEMENT_TYPE);
-                        textboxArrayField = 'speed';
-                    }
-                    if (refArray && refArray.length != 0) {
-                        itemArrayId = parseInt(field.split('_')[1]);
-                        field = field.split('_')[0];
-                        newIntValue = event.target.value.length == 0 ? 0 : parseInt(event.target.value);
-                        for (let q = 0; q < retVal[field].length; q++) {
-                            if (retVal[field][q].id == itemArrayId) {
-                                itemIndex = q;
-                                break;
-                            }
-                        }
-                        for (let q = 0; q < refArray.length; q++) {
-                            if (refArray[q].id == itemArrayId) {
-                                newObject.id = refArray[q].id;
-                                newObject.name = refArray[q].name;
-                                newObject[textboxArrayField] = newIntValue;
-                                break;
-                            }
-                        }
-                        if (newIntValue == 0) {
-                            //remove item from array
-                            if (itemIndex != -1) {
-                                retVal[field].splice(itemIndex, 1);
-                            }
-                        } else {
-                            if (itemIndex != -1) {
-                                //edit item array
-                                retVal[field][itemIndex][textboxArrayField] = newIntValue;
-                            } else {
-                                //add item to array
-                                retVal[field].push(newObject);
-                            }
-                        }
                     }
                     break;
                 case util.datatypes.string.DESCRIPTION:
@@ -1140,6 +1159,53 @@ export const formState = {
                         }
                     }
                     retVal[field] = newComponentsArray;
+                    break;
+                default:
+            }
+        } else {
+            switch (dataType) {
+                case util.datatypes.array.ADVANCED_SENSE:
+                case util.datatypes.array.MOVEMENT:
+                    if (dataType == util.datatypes.array.ADVANCED_SENSE) {
+                        refArray = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.ADVANCED_SENSE);
+                        textboxArrayField = 'range';
+                    } else if (dataType == util.datatypes.array.MOVEMENT) {
+                        refArray = util.common.picklists.getPicklistItems(picklists, util.itemtypes.TYPES.MOVEMENT_TYPE);
+                        textboxArrayField = 'speed';
+                    }
+                    if (refArray && refArray.length != 0) {
+                        itemArrayId = parseInt(field.split('_')[1]);
+                        field = field.split('_')[0];
+                        newIntValue = event.target.value.length == 0 ? 0 : parseInt(event.target.value);
+                        for (let q = 0; q < retVal[field].length; q++) {
+                            if (retVal[field][q].id == itemArrayId) {
+                                itemIndex = q;
+                                break;
+                            }
+                        }
+                        for (let q = 0; q < refArray.length; q++) {
+                            if (refArray[q].id == itemArrayId) {
+                                newObject.id = refArray[q].id;
+                                newObject.name = refArray[q].name;
+                                newObject[textboxArrayField] = newIntValue;
+                                break;
+                            }
+                        }
+                        if (newIntValue == 0) {
+                            //remove item from array
+                            if (itemIndex != -1) {
+                                retVal[field].splice(itemIndex, 1);
+                            }
+                        } else {
+                            if (itemIndex != -1) {
+                                //edit item array
+                                retVal[field][itemIndex][textboxArrayField] = newIntValue;
+                            } else {
+                                //add item to array
+                                retVal[field].push(newObject);
+                            }
+                        }
+                    }
                     break;
                 default:
             }

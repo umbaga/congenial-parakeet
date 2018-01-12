@@ -21,8 +21,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteRaceTable(resObj, callback) {
@@ -35,8 +35,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteRaceAbilityScoreTable(resObj, callback) {
@@ -49,8 +49,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteMovementAndSenseLinkTable(resObj, callback) {
@@ -63,8 +63,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteMonsterTagsLinkTable(resObj, callback) {
@@ -77,8 +77,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteVitalsTable(resObj, callback) {
@@ -91,8 +91,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteProficiencyGroupItems(resObj, callback) {
@@ -108,8 +108,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteProficiencyGroupItemLinks(resObj, callback) {
@@ -125,8 +125,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteProficiencyGroup(resObj, callback) {
@@ -142,8 +142,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteProficiencyGroupLinks(resObj, callback) {
@@ -156,8 +156,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteMechanics(resObj, callback) {
@@ -170,8 +170,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteSpellcasting(resObj, callback) {
@@ -184,8 +184,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteSpellcastingSelections(resObj, callback) {
@@ -198,8 +198,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteChartEntriesTable(resObj, callback) {
@@ -212,8 +212,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteChartColumnsTable(resObj, callback) {
@@ -226,8 +226,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteChartRowsTable(resObj, callback) {
@@ -240,8 +240,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteChartDefTable(resObj, callback) {
@@ -254,8 +254,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteChartCoreTable(resObj, callback) {
@@ -268,8 +268,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteChartLinkTable(resObj, callback) {
@@ -282,8 +282,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteSupplementalDescriptionsLink(resObj, callback) {
@@ -299,8 +299,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteCoreDescriptions(resObj, callback) {
@@ -313,8 +313,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 }
             ], function(error, result) {
@@ -349,23 +349,23 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = req.body;
-                        tmp.race.hasMovementOrSenses = false;
-                        tmp.race.hasMovement = false;
-                        tmp.race.hasSenses = false;
-                        if ((tmp.race.movement && tmp.race.movement.length != 0)) {
-                            tmp.race.hasMovementOrSenses = true;
-                            tmp.race.hasMovement = true;
+                        var resObj = req.body;
+                        resObj.race.hasMovementOrSenses = false;
+                        resObj.race.hasMovement = false;
+                        resObj.race.hasSenses = false;
+                        if ((resObj.race.movement && resObj.race.movement.length != 0)) {
+                            resObj.race.hasMovementOrSenses = true;
+                            resObj.race.hasMovement = true;
                         }
-                        if ((tmp.race.sense && tmp.races.senses.length != 0)) {
-                            tmp.race.hasMovementOrSenses = true;
-                            tmp.race.hasSenses = true;
+                        if ((resObj.race.sense && resObj.races.senses.length != 0)) {
+                            resObj.race.hasMovementOrSenses = true;
+                            resObj.race.hasSenses = true;
                         }
-                        tmp.race.needsDice = false;
-                        if (tmp.race.vitals && tmp.race.vitals.height && tmp.race.vitals.height.base != 0) {
-                            tmp.race.needsDice = true;
+                        resObj.race.needsDice = false;
+                        if (resObj.race.vitals && resObj.race.vitals.height && resObj.race.vitals.height.base != 0) {
+                            resObj.race.needsDice = true;
                         }
-                        return callback(null, tmp);
+                        return callback(null, resObj);
                     });
                 },
                 function insertNeededDice(resObj, callback) {
@@ -529,7 +529,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     cb(null, req);
                 },
                 function insertItem(req, callback) {
-                    var first, second, third, fourth, fifth, sixth, seventh, eighth, ninth;
+                    var first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh, twelfth, thirteenth;
                     var needsComma = false;
                     vals = [];
                     results = [];
@@ -538,54 +538,88 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     sql += ' VALUES ($1, $2, $3) returning id AS "raceId";';
                     vals = [req.body.race.name, req.body.race.resource.id, itemtypes.TYPE.RACE];
                     var query = client.query(new pg.Query(sql, vals));
-                    console.log(query);
                     query.on('row', function(row) {
                         results.push(row);
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = req.body;
-                        tmp.race.hasMovementOrSenses = false;
-                        tmp.race.hasMovement = false;
-                        tmp.race.hasSenses = false;
-                        if ((tmp.race.movement && tmp.race.movement.length != 0)) {
-                            tmp.race.hasMovementOrSenses = true;
-                            tmp.race.hasMovement = true;
+                        var resObj = req.body;
+                        resObj.race.hasMovementOrSenses = false;
+                        resObj.race.hasMovement = false;
+                        resObj.race.hasSenses = false;
+                        if ((resObj.race.movement && resObj.race.movement.length != 0)) {
+                            resObj.race.hasMovementOrSenses = true;
+                            resObj.race.hasMovement = true;
                         }
-                        if ((tmp.race.sense && tmp.races.senses.length != 0)) {
-                            tmp.race.hasMovementOrSenses = true;
-                            tmp.race.hasSenses = true;
+                        if ((resObj.race.senses && resObj.race.senses.length != 0)) {
+                            resObj.race.hasMovementOrSenses = true;
+                            resObj.race.hasSenses = true;
                         }
-                        tmp.race.needsDice = false;
-                        if (tmp.race.vitals && tmp.race.vitals.height && tmp.race.vitals.height.base != 0) {
-                            tmp.race.needsDice = true;
+                        resObj.race.needsDice = false;
+                        if (resObj.race.vitals && resObj.race.vitals.height && resObj.race.vitals.height.base != 0) {
+                            resObj.race.needsDice = true;
                         }
-                        tmp.race.hasProficiencies = false;
-                        if (tmp.race.proficiencyGroups && tmp.race.proficiencyGroups.length != 0) {
-                            tmp.race.hasProficiencies = true;
+                        resObj.race.hasProficiencies = false;
+                        if (resObj.race.proficiencyGroups && resObj.race.proficiencyGroups.length != 0) {
+                            resObj.race.hasProficiencies = true;
                         }
-                        tmp.race.hasMechanics = false;
-                        if (tmp.race.mechanics && tmp.race.mechanics.base && tmp.race.mechanics.base.length != 0) {
-                            tmp.race.hasMechanics = true;
+                        resObj.race.hasMechanics = false;
+                        if (resObj.race.mechanics && resObj.race.mechanics.length != 0) {
+                            resObj.race.hasMechanics = true;
                         }
-                        tmp.race.hasSpellcasting = false;
-                        if (tmp.race.spellcasting && tmp.race.spellcasting.abilityScore && tmp.race.spellcasting.abilityScore.id != 0) {
-                            tmp.race.hasSpellcasting = true;
+                        resObj.race.hasSpellcasting = false;
+                        if (resObj.race.spellcasting && resObj.race.spellcasting.abilityScore && resObj.race.spellcasting.abilityScore.id != 0) {
+                            resObj.race.hasSpellcasting = true;
                         }
-                        tmp.race.hasSpecialMechanicText = false;
-                        if (tmp.race.mechanics && tmp.race.mechanics.base && tmp.race.mechanics.base.length != 0) {
-                            for (var e = 0; e < tmp.race.mechanics.base.length; e++) {
-                                tmp.race.mechanics.base[e].specialTextId = 0;
-                                if (tmp.race.mechanics.base[e].specialText && tmp.race.mechanics.base[e].specialText.length != 0) {
-                                    tmp.race.hasSpecialMechanicText = true;
+                        resObj.race.hasSpecialMechanicText = false;
+                        if (resObj.race.mechanics && resObj.race.mechanics && resObj.race.mechanics.length != 0) {
+                            for (var e = 0; e < resObj.race.mechanics.length; e++) {
+                                resObj.race.mechanics[e].specialTextId = 0;
+                                if (resObj.race.mechanics[e].specialText && resObj.race.mechanics[e].specialText.length != 0) {
+                                    resObj.race.hasSpecialMechanicText = true;
                                 }
                             }
                         }
-                        tmp.race.id = results[0].raceId;
-                        return callback(null, tmp);
+                        resObj.race.hasNaturalWeapons = false;
+                        if (resObj.race.naturalWeapons && resObj.race.naturalWeapons.length != 0) {
+                            resObj.race.hasNaturalWeapons = true;
+                        }
+                        resObj.race.hasBreathWeapons = false;
+                        resObj.race.hasBreathWeaponImprovement = false;
+                        if (resObj.race.breathWeapons && resObj.race.breathWeapons.length != 0) {
+                            resObj.race.hasBreathWeapons = true;
+                            if (resObj.race.breathWeapons.improvement && resObj.race.breathWeapons.improvement.length != 0) {
+                                resObj.race.hasBreathWeaponImprovement = true;
+                            }
+                        }
+                        resObj.race.hasAnyTypeOfChart = false;
+                        resObj.race.hasDieChart = false;
+                        resObj.race.hasStandardCharts = false;
+                        resObj.race.hasSelectionChart = false;
+                        resObj.race.needsNewItemTypeFromChart = false;
+                        if (resObj.race.charts && resObj.race.charts.length != 0) {
+                            resObj.race.hasAnyTypeOfChart = true;
+                            for (var c = 0; c < resObj.race.charts.length; c++) {
+                                if (resObj.race.charts[c].type.id == itemtypes.CHART.STANDARD) {
+                                    resObj.race.hasStandardCharts = true;
+                                }
+                                if (resObj.race.charts[c].type.id == itemtypes.CHART.DIE_ROLL) {
+                                    resObj.race.hasDieChart = true;
+                                }
+                                if (resObj.race.charts[c].type.id == itemtypes.CHART.SELECTION) {
+                                    resObj.race.hasSelectionChart = true;
+                                    if (resObj.race.charts[c].selectionItemType.id <= 0) {
+                                        resObj.race.needsNewItemTypeFromChart = true;
+                                    }
+                                }
+                            }
+                        }
+                        resObj.race.id = results[0].raceId;
+                        return callback(null, resObj);
                     });
                 },
                 function insertRaceTable(resObj, callback) {
+                    //console.log("01");
                     vals = [];
                     results = [];
                     sql = 'INSERT INTO adm_def_race';
@@ -608,7 +642,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                 },
                 function insertProficiencyGroupItem(resObj, callback) {
-                    console.log('prof group item');
+                    //console.log("02");
                     if (resObj.race.hasProficiencies) {
                         vals = [itemtypes.TYPE.ITEM_GROUP];
                         results = [];
@@ -645,7 +679,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertProficiencyGroups(resObj, callback) {
-                    console.log('prof group');
+                    //console.log("03");
                     if (resObj.race.hasProficiencies) {
                         vals = [];
                         results = [];
@@ -683,7 +717,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertProficiencies(resObj, callback) {
-                    console.log('prof');
+                    //console.log("04");
                     if (resObj.race.hasProficiencies) {
                         vals = [];
                         results = [];
@@ -731,7 +765,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertProficiencyGroupLinks(resObj, callback) {
-                    console.log('prof group link');
+                    //console.log("05");
                     if (resObj.race.hasProficiencies) {
                         vals = [resObj.race.id];
                         results = [];
@@ -747,8 +781,6 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             vals.push(resObj.race.proficiencyGroups[e].id);
                             first++;
                         }
-                        console.log(sql);
-                        console.log(vals);
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
@@ -762,7 +794,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertDice(resObj, callback) {
-                    console.log('insert dice');
+                    //console.log("06");
                     if (resObj.race.needsDice) {
                         var needUnion = false;
                         results = [];
@@ -811,6 +843,92 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             fourth = fourth + 5;
                             fifth = fifth + 5;
                         }
+                        if (resObj.race.hasDieChart) {
+                            for (var e = 0; e < resObj.race.charts.length; e++) {
+                                if (resObj.race.charts[e].type.id == itemtypes.CHART.DIE_ROLL) {
+                                    if (needUnion) {
+                                        sql += ' UNION ';
+                                    }
+                                    sql += 'select $' + first.toString() + ' :: bigint as "dieCount", $' + second.toString() + ' :: bigint as "dieType"';
+                                    sql += ', $' + third.toString() + ' :: bigint as "modifier", $' + fourth.toString() + ' :: bigint as "multiplie"';
+                                    sql += ', $' + fifth.toString() + ' :: bigint as "divisor"';
+                                    vals.push(resObj.race.charts[e].dice.dieCount);
+                                    vals.push(resObj.race.charts[e].dice.dieType);
+                                    vals.push(resObj.race.charts[e].dice.modifier);
+                                    vals.push(resObj.race.charts[e].dice.multiplier);
+                                    vals.push(resObj.race.charts[e].dice.divisor);
+                                    needUnion = true;
+                                    first = first + 5;
+                                    second = second + 5;
+                                    third = third + 5;
+                                    fourth = fourth + 5;
+                                    fifth = fifth + 5;
+                                }
+                            }
+                        }
+                        if (resObj.race.hasNaturalWeapons) {
+                            for (var e = 0; e < resObj.race.naturalWeapons.length; e++) {
+                                if (needUnion) {
+                                    sql += ' UNION ';
+                                }
+                                sql += 'select $' + first.toString() + ' :: bigint as "dieCount", $' + second.toString() + ' :: bigint as "dieType"';
+                                sql += ', $' + third.toString() + ' :: bigint as "modifier", $' + fourth.toString() + ' :: bigint as "multiplie"';
+                                sql += ', $' + fifth.toString() + ' :: bigint as "divisor"';
+                                vals.push(resObj.race.naturalWeapons[e].damage.dice.dieCount);
+                                vals.push(resObj.race.naturalWeapons[e].damage.dice.dieType);
+                                vals.push(resObj.race.naturalWeapons[e].damage.dice.modifier);
+                                vals.push(resObj.race.naturalWeapons[e].damage.dice.multiplier);
+                                vals.push(resObj.race.naturalWeapons[e].damage.dice.divisor);
+                                needUnion = true;
+                                first = first + 5;
+                                second = second + 5;
+                                third = third + 5;
+                                fourth = fourth + 5;
+                                fifth = fifth + 5;
+                            }
+                        }
+                        if (resObj.race.hasBreathWeapons) {
+                            for (var e = 0; e < resObj.race.breathWeapons.length; e++) {
+                                if (needUnion) {
+                                    sql += ' UNION ';
+                                }
+                                sql += 'select $' + first.toString() + ' :: bigint as "dieCount", $' + second.toString() + ' :: bigint as "dieType"';
+                                sql += ', $' + third.toString() + ' :: bigint as "modifier", $' + fourth.toString() + ' :: bigint as "multiplie"';
+                                sql += ', $' + fifth.toString() + ' :: bigint as "divisor"';
+                                vals.push(resObj.race.breathWeapons[e].damage.dice.dieCount);
+                                vals.push(resObj.race.breathWeapons[e].damage.dice.dieType);
+                                vals.push(resObj.race.breathWeapons[e].damage.dice.modifier);
+                                vals.push(resObj.race.breathWeapons[e].damage.dice.multiplier);
+                                vals.push(resObj.race.breathWeapons[e].damage.dice.divisor);
+                                needUnion = true;
+                                first = first + 5;
+                                second = second + 5;
+                                third = third + 5;
+                                fourth = fourth + 5;
+                                fifth = fifth + 5;
+                                if (resObj.race.hasBreathWeaponImprovement) {
+                                    for (var q = 0; q < resObj.race.breathWeapons[e].improvement.length; q++) {
+                                        if (needUnion) {
+                                            sql += ' UNION ';
+                                        }
+                                        sql += 'select $' + first.toString() + ' :: bigint as "dieCount", $' + second.toString() + ' :: bigint as "dieType"';
+                                        sql += ', $' + third.toString() + ' :: bigint as "modifier", $' + fourth.toString() + ' :: bigint as "multiplie"';
+                                        sql += ', $' + fifth.toString() + ' :: bigint as "divisor"';
+                                        vals.push(resObj.race.breathWeapons[e].damage.improvement[q].dice.dieCount);
+                                        vals.push(resObj.race.breathWeapons[e].damage.improvement[q].dice.dieType);
+                                        vals.push(resObj.race.breathWeapons[e].damage.improvement[q].dice.modifier);
+                                        vals.push(resObj.race.breathWeapons[e].damage.improvement[q].dice.multiplier);
+                                        vals.push(resObj.race.breathWeapons[e].damage.improvement[q].dice.divisor);
+                                        needUnion = true;
+                                        first = first + 5;
+                                        second = second + 5;
+                                        third = third + 5;
+                                        fourth = fourth + 5;
+                                        fifth = fifth + 5;
+                                    }
+                                }
+                            }
+                        }
                         sql += ')';
                         sql += ' insert into adm_core_dice ("dieCount", "dieType")';
                         sql += ' select v."dieCount", v."dieType"';
@@ -830,7 +948,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function assignDiceId(resObj, callback) {
-                    console.log('assign dice');
+                    //console.log("07");
                     if (resObj.race.needsDice) {
                         results = [];
                         vals = [];
@@ -883,6 +1001,100 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             vals.push(resObj.race.vitals.weight.dice.multiplier);
                             vals.push(resObj.race.vitals.weight.dice.divisor);
                         }
+                        if (resObj.race.hasDieChart) {
+                            for (var e = 0; e < resObj.race.charts.length; e++) {
+                                if (resObj.race.charts[e].type.id == itemtypes.CHART.DIE_ROLL) {
+                                    if (isOr) {
+                                        sql += ' OR ';
+                                    } else {
+                                        sql += ' WHERE ';
+                                    }
+                                    sql += '(dice."dieCount" = $' + first.toString() + ' AND dice."dieType" = $' + second.toString();
+                                    sql += ' AND dice.modifier = $' + third.toString() + ' AND dice.multiplier = $' + fourth.toString();
+                                    sql += ' AND dice.divisor = $' + fifth.toString() + ')';
+                                    isOr = true;
+                                    first = first + 5;
+                                    second = second + 5;
+                                    third = third + 5;
+                                    fourth = fourth + 5;
+                                    fifth = fifth + 5;
+                                    vals.push(resObj.race.charts[e].dice.dieCount);
+                                    vals.push(resObj.race.charts[e].dice.dieType);
+                                    vals.push(resObj.race.charts[e].dice.modifier);
+                                    vals.push(resObj.race.charts[e].dice.multiplier);
+                                    vals.push(resObj.race.charts[e].dice.divisor);
+                                }
+                            }
+                        }
+                        if (resObj.race.hasNaturalWeapons) {
+                            for (var e = 0; e < resObj.race.naturalWeapons.length; e++) {
+                                if (isOr) {
+                                    sql += ' OR ';
+                                } else {
+                                    sql += ' WHERE ';
+                                }
+                                sql += '(dice."dieCount" = $' + first.toString() + ' AND dice."dieType" = $' + second.toString();
+                                sql += ' AND dice.modifier = $' + third.toString() + ' AND dice.multiplier = $' + fourth.toString();
+                                sql += ' AND dice.divisor = $' + fifth.toString() + ')';
+                                isOr = true;
+                                first = first + 5;
+                                second = second + 5;
+                                third = third + 5;
+                                fourth = fourth + 5;
+                                fifth = fifth + 5;
+                                vals.push(resObj.race.naturalWeapons[e].damage.dice.dieCount);
+                                vals.push(resObj.race.naturalWeapons[e].damage.dice.dieType);
+                                vals.push(resObj.race.naturalWeapons[e].damage.dice.modifier);
+                                vals.push(resObj.race.naturalWeapons[e].damage.dice.multiplier);
+                                vals.push(resObj.race.naturalWeapons[e].damage.dice.divisor);
+                            }
+                        }
+                        if (resObj.race.hasBreathWeapons) {
+                            for (var e = 0; e < resObj.race.breathWeapons.length; e++) {
+                                if (isOr) {
+                                    sql += ' OR ';
+                                } else {
+                                    sql += ' WHERE ';
+                                }
+                                sql += '(dice."dieCount" = $' + first.toString() + ' AND dice."dieType" = $' + second.toString();
+                                sql += ' AND dice.modifier = $' + third.toString() + ' AND dice.multiplier = $' + fourth.toString();
+                                sql += ' AND dice.divisor = $' + fifth.toString() + ')';
+                                isOr = true;
+                                first = first + 5;
+                                second = second + 5;
+                                third = third + 5;
+                                fourth = fourth + 5;
+                                fifth = fifth + 5;
+                                vals.push(resObj.race.breathWeapons[e].damage.dice.dieCount);
+                                vals.push(resObj.race.breathWeapons[e].damage.dice.dieType);
+                                vals.push(resObj.race.breathWeapons[e].damage.dice.modifier);
+                                vals.push(resObj.race.breathWeapons[e].damage.dice.multiplier);
+                                vals.push(resObj.race.breathWeapons[e].damage.dice.divisor);
+                                if (resObj.race.hasBreathWeaponImprovement) {
+                                    for (var q = 0; q < resObj.race.breathWeapons[e].damage.improvement.length; q++) {
+                                        if (isOr) {
+                                            sql += ' OR ';
+                                        } else {
+                                            sql += ' WHERE ';
+                                        }
+                                        sql += '(dice."dieCount" = $' + first.toString() + ' AND dice."dieType" = $' + second.toString();
+                                        sql += ' AND dice.modifier = $' + third.toString() + ' AND dice.multiplier = $' + fourth.toString();
+                                        sql += ' AND dice.divisor = $' + fifth.toString() + ')';
+                                        isOr = true;
+                                        first = first + 5;
+                                        second = second + 5;
+                                        third = third + 5;
+                                        fourth = fourth + 5;
+                                        fifth = fifth + 5;
+                                        vals.push(resObj.race.breathWeapons[e].damage.improvement[q].dice.dieCount);
+                                        vals.push(resObj.race.breathWeapons[e].damage.improvement[q].dice.dieType);
+                                        vals.push(resObj.race.breathWeapons[e].damage.improvement[q].dice.modifier);
+                                        vals.push(resObj.race.breathWeapons[e].damage.improvement[q].dice.multiplier);
+                                        vals.push(resObj.race.breathWeapons[e].damage.improvement[q].dice.divisor);
+                                    }
+                                }
+                            }
+                        }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);
@@ -905,6 +1117,50 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                                        results[e].divisor == resObj.race.vitals.weight.dice.divisor) {
                                         resObj.race.vitals.weight.dice.id = results[e].id;
                                     }
+                                    if (resObj.race.hasDieChart) {
+                                        for (var w = 0; w < resObj.race.charts.length; w++) {
+                                            if (resObj.race.charts[w].type.id == itemtypes.CHART.DIE_ROLL) {
+                                                if (results[e].dieCount == resObj.race.charts[w].dice.dieCount &&
+                                                   results[e].dieType == resObj.race.charts[w].dice.dieType &&
+                                                   results[e].modifier == resObj.race.charts[w].dice.modifier &&
+                                                   results[e].multiplier == resObj.race.charts[w].dice.multiplier &&
+                                                   results[e].divisor == resObj.race.charts[w].dice.divisor) {
+                                                    resObj.race.charts[w].dice.id = results[e].id;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (resObj.race.hasNaturalWeapons) {
+                                        for (var w = 0; w < resObj.race.naturalWeapons.length; w++) {
+                                            if (results[e].dieCount == resObj.race.naturalWeapons[w].damage.dice.dieCount &&
+                                               results[e].dieType == resObj.race.naturalWeapons[w].damage.dice.dieType &&
+                                               results[e].modifier == resObj.race.naturalWeapons[w].damage.dice.modifier &&
+                                               results[e].multiplier == resObj.race.naturalWeapons[w].damage.dice.multiplier &&
+                                               results[e].divisor == resObj.race.naturalWeapons[w].damage.dice.divisor) {
+                                                resObj.race.naturalWeapons[w].damage.dice.id = results[e].id;
+                                            }
+                                        }
+                                    }
+                                    if (resObj.race.hasBreathWeapons) {
+                                        for (var w = 0; w < resObj.race.breathWeapons.length; w++) {
+                                            if (results[e].dieCount == resObj.race.breathWeapons[w].damage.dice.dieCount &&
+                                               results[e].dieType == resObj.race.breathWeapons[w].damage.dice.dieType &&
+                                               results[e].modifier == resObj.race.breathWeapons[w].damage.dice.modifier &&
+                                               results[e].multiplier == resObj.race.breathWeapons[w].damage.dice.multiplier &&
+                                               results[e].divisor == resObj.race.breathWeapons[w].damage.dice.divisor) {
+                                                resObj.race.breathWeapons[w].damage.dice.id = results[e].id;
+                                            }
+                                            for (var q = 0; q < resObj.race.breathWeapons[w].damage.improvement.length; q++) {
+                                                if (results[e].dieCount == resObj.race.breathWeapons[w].damage.improvement[q].dice.dieCount &&
+                                                   results[e].dieType == resObj.race.breathWeapons[w].damage.improvement[q].dice.dieType &&
+                                                   results[e].modifier == resObj.race.breathWeapons[w].damage.improvement[q].dice.modifier &&
+                                                   results[e].multiplier == resObj.race.breathWeapons[w].damage.improvement[q].dice.multiplier &&
+                                                   results[e].divisor == resObj.race.breathWeapons[w].damage.improvement[q].dice.divisor) {
+                                                    resObj.race.breathWeapons[w].improvement[q].damage.dice.id = results[e].id;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             return callback(null, resObj);
@@ -914,7 +1170,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertRaceAbilityScoreTable(resObj, callback) {
-                    console.log('ability score');
+                    //console.log("08");
                     vals = [];
                     results = [];
                     sql = 'INSERT INTO adm_def_race_ability_score';
@@ -942,7 +1198,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                 },
                 function insertMovementSenseLinkTable(resObj, callback) {
-                    console.log('movement/sense link');
+                    //console.log("09");
                     if (resObj.race.hasMovementOrSenses) {
                     //if (resObj.race.movement && resObj.race.movement.length != 0) {
                         vals = [resObj.race.id];
@@ -992,7 +1248,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertMonsterTagsLinkTable(resObj, callback) {
-                    console.log('monster tags link');
+                    ////console.log("10");
                     if (resObj.race.tags && resObj.race.tags.length != 0) {
                         vals = [resObj.race.id];
                         results = [];
@@ -1021,7 +1277,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertVitals(resObj, callback) {
-                    console.log('vitals');
+                    ////console.log("11");
                     if (resObj.race.vitals && resObj.race.vitals.height && resObj.race.vitals.height.base != 0) {
                         results = []
                         sql = 'INSERT INTO adm_def_race_vitals';
@@ -1047,6 +1303,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertSpecialMechanicText(resObj, callback) {
+                    //console.log("12");
                     if (resObj.race.hasSpecialMechanicText) {
                         vals = [
                             itemtypes.TYPE.SPECIAL_MECHANIC,
@@ -1058,14 +1315,14 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         sql += ' VALUES ';
                         first = 3;
                         needsComma = false;
-                        for (var e = 0; e < resObj.race.mechanics.base.length; e++) {
-                            if (resObj.race.mechanics.base[e].specialText && resObj.race.mechanics.base[e].specialText.length != 0) {
+                        for (var e = 0; e < resObj.race.mechanics.length; e++) {
+                            if (resObj.race.mechanics[e].specialText && resObj.race.mechanics[e].specialText.length != 0) {
                                 if (needsComma) {
                                     sql += ', ';
                                 }
                                 sql += ' ($1, $2, $' + first.toString() + ')';
                                 first++;
-                                vals.push(resObj.race.mechanics.base[e].specialText);
+                                vals.push(resObj.race.mechanics[e].specialText);
                                 needsComma = true;
                             }
                         }
@@ -1078,9 +1335,9 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             done();
                             if (results && results.length != 0) {
                                 for (var e = 0; e < results.length; e++) {
-                                    for (var m = 0; m < resObj.race.mechanics.base.length; m++) {
-                                        if (results[e].specialText == resObj.race.mechanics.base[m].specialText) {
-                                            resObj.race.mechanics.base[m].specialTextId = results[e].specialTextId;
+                                    for (var m = 0; m < resObj.race.mechanics.length; m++) {
+                                        if (results[e].specialText == resObj.race.mechanics[m].specialText) {
+                                            resObj.race.mechanics[m].specialTextId = results[e].specialTextId;
                                         }
                                     }
                                 }
@@ -1092,7 +1349,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertMechanics(resObj, callback) {
-                    console.log('mechanics');
+                    //console.log("13");
                     if (resObj.race.hasMechanics) {
                         results = [];
                         vals = [resObj.race.id];
@@ -1105,7 +1362,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         fourth = 5;
                         fifth = 6;
                         sixth = 7;
-                        for (var e = 0; e < resObj.race.mechanics.base.length; e++) {
+                        for (var e = 0; e < resObj.race.mechanics.length; e++) {
                             if (e != 0) {
                                 sql += ', ';
                             }
@@ -1117,12 +1374,12 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             fourth = fourth + 6;
                             fifth = fifth + 6;
                             sixth = sixth + 6;
-                            vals.push(resObj.race.mechanics.base[e].target.id);
-                            vals.push(resObj.race.mechanics.base[e].type.id);
-                            vals.push(resObj.race.mechanics.base[e].value);
-                            vals.push(resObj.race.mechanics.base[e].dice.id);
-                            vals.push(resObj.race.mechanics.base[e].valueObject.id);
-                            vals.push(resObj.race.mechanics.base[e].specialTextId)
+                            vals.push(resObj.race.mechanics[e].target.id);
+                            vals.push(resObj.race.mechanics[e].type.id);
+                            vals.push(resObj.race.mechanics[e].value);
+                            vals.push(resObj.race.mechanics[e].dice.id);
+                            vals.push(resObj.race.mechanics[e].valueObject.id);
+                            vals.push(resObj.race.mechanics[e].specialTextId)
                         }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -1137,7 +1394,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertSpellcasting(resObj, callback) {
-                    console.log('spellcasting');
+                    //console.log("14");
                     if (resObj.race.hasSpellcasting) {
                         results = [];
                         vals = [resObj.race.id, resObj.race.spellcasting.abilityScore.id];
@@ -1157,7 +1414,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertSpellcastingSelections(resObj, callback) {
-                    console.log('spell selections');
+                    //console.log("15");
                     if (resObj.race.hasSpellcasting) {
                         results = [];
                         vals = [resObj.race.id];
@@ -1213,7 +1470,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertSupplementalDescription(resObj, callback) {
-                    console.log('supplemental description - 1');
+                    //console.log("16");
                     if (resObj.race.supplementalDescriptions && resObj.race.supplementalDescriptions.length != 0) {
                         vals = [];
                         results = [];
@@ -1256,7 +1513,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertSupplementalDescriptionDef(resObj, callback) {
-                    console.log('supplemental description - 2');
+                    //console.log("17");
                     if (resObj.race.supplementalDescriptions && resObj.race.supplementalDescriptions.length != 0) {
                         vals = [];
                         results = [];
@@ -1284,7 +1541,778 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         });
                         query.on('end', function() {
                             done();
-                            console.log('done');
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartsCore(resObj, callback) {
+                    //console.log("18");
+                    if (resObj.race.hasAnyTypeOfChart) {
+                        sql = 'INSERT INTO adm_core_chart';
+                        sql += ' ("title", "typeId")';
+                        sql += ' VALUES ';
+                        vals = [];
+                        results = [];
+                        var addComma = false;
+                        first = 1;
+                        second = 2;
+                        if (resObj.race.charts && resObj.race.charts.length != 0) {
+                            for (var e = 0; e < resObj.race.charts.length; e++) {
+                                if (addComma) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
+                                vals.push(resObj.race.charts[e].title);
+                                vals.push(resObj.race.charts[e].type.id);
+                                first = first + 2;
+                                second = second + 2;
+                                addComma = true;
+                            }
+                        }
+                        sql += ' returning id AS "chartId", title;';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var d = 0; d < resObj.race.charts.length; d++) {
+                                    if (results[e].title == resObj.race.charts[d].title) {
+                                        resObj.race.charts[d].id = results[e].chartId;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartSelectionMissingType(resObj, callback) {
+                    //console.log("19");
+                    if (resObj.race.hasSelectionChart && resObj.race.needsNewItemTypeFromChart) {
+                        results = [];
+                        vals = [];
+                        addComma = false;
+                        first = 1;
+                        sql = 'INSERT INTO adm_core_type';
+                        sql += ' ("typeName")';
+                        sql += ' VALUES ';
+                        for (var e = 0; e < resObj.race.charts.length; e++) {
+                            if (resObj.race.charts[e].type.id == itemtypes.CHART.SELECTION) {
+                                if (resObj.race.charts[e].selectionItemType.id <= 0) {
+                                    if (addComma) {
+                                        sql += ', ';
+                                    }
+                                }
+                                sql += ' ($' + first.toString() + ')';
+                                first++;
+                                addComma = true;
+                            }
+                        }
+                        sql += ' returning "typeName" AS "name", "id" AS "typeId"';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var f = 0; f < resObj.race.charts.length; f++) {
+                                    if (resObj.race.charts[f].type.id == itemtypes.CHART.SELECTION) {
+                                        if (resObj.race.charts[f].selectionItemType.name == results[e].name) {
+                                            resObj.race.charts[f].selectionItemType.id = results[e].typeId;
+                                        }
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartSelectionMissingTypeItems(resObj, callback) {
+                    //console.log("20");
+                    if (resObj.race.hasSelectionChart && resObj.race.needsNewItemTypeFromChart) {
+                        results = [];
+                        vals = [];
+                        sql = 'INSERT INTO adm_core_item';
+                        sql += ' ("itemName", "itemTypeId", "resourceId")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        addComma = false;
+                        for (var c = 0; c < resObj.race.charts.length; c++) {
+                            if (resObj.race.charts[c].type.id == itemtypes.CHART.SELECTION) {
+                                for (var r = 0; r < resObj.race.charts[c].rows.length; r++) {
+                                    if (resObj.race.charts[c].rows[r].selectionItem && resObj.race.charts[c].rows[r].selectionItem.id && resObj.race.charts[c].rows[r].selectionItem.id == 0) {
+                                        if (addComma) {
+                                            sql += ', ';
+                                        }
+                                        sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                                        vals.push(resObj.race.charts[c].rows[r].selectionItem.name);
+                                        vals.push(resObj.race.charts[c].selectionItemType.id);
+                                        vals.push(resObj.race.resource.id);
+                                        first = first + 3;
+                                        second = second + 3;
+                                        third = third + 3;
+                                        addComma = true;
+                                    }
+                                }
+                            }
+                        }
+                        sql += ' returning "itemName", "id" AS "itemId"';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var f = 0; f < resObj.race.charts.length; f++) {
+                                    if (resObj.race.charts[f].type.id == itemtypes.CHART.SELECTION) {
+                                        for (var r = 0; r < resObj.race.charts[f].rows.length; r++) {
+                                            if (results[e].itemName == resObj.race.charts[f].rows[r].selectionItem.name) {
+                                                resObj.race.charts[f].rows[r].selectionItem.id = results[e].itemId;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartDefinitions_selection(resObj, callback) {
+                    //console.log("21");
+                    if (resObj.race.hasSelectionChart) {
+                        results = [];
+                        vals = [];
+                        first = 1;
+                        second = 2;
+                        addComma = false;
+                        sql = 'INSERT INTO adm_def_chart_selection';
+                        sql += ' ("chartId", "selectTypeId")';
+                        sql += ' VALUES ';
+                        for (var e = 0; e < resObj.race.charts.length; e++) {
+                            if (resObj.race.charts[e].type.id == itemtypes.CHART.SELECTION) {
+                                if (addComma) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
+                                first = first + 2;
+                                second = second + 2;
+                                vals.push(resObj.race.charts[e].id);
+                                vals.push(resObj.race.charts[e].selectionItemType.id);
+                                addComma = true;
+                            }
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var d = 0; d < resObj.race.charts.length; d++) {
+                                    if (results[e].title == resObj.race.charts[d].title) {
+                                        resObj.race.charts[d].id = results[e].chartId;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartDefinitions_standard(resObj, callback) {
+                    //console.log("22");
+                    if (resObj.race.hasStandardCharts) {
+                        sql = 'INSERT INTO adm_def_chart';
+                        sql += ' ("chartId", "columnCount", "rowCount")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        vals = [];
+                        results = [];
+                        for (var e = 0; e < resObj.race.charts.length; e++) {
+                            if (e != 0) {
+                                sql += ', ';
+                            }
+                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                            first = first + 3;
+                            second = second + 3;
+                            third = third + 3;
+                            vals.push(resObj.race.charts[e].id);
+                            vals.push(resObj.race.charts[e].columnCount);
+                            vals.push(resObj.race.charts[e].rowCount);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartDescriptions_both(resObj, callback) {
+                    //console.log("23");
+                    if (resObj.race.hasAnyTypeOfChart) {
+                        var hasDescriptions = false;
+                        for (var e = 0; e < resObj.race.charts.length; e++) {
+                            if (resObj.race.charts[e].description && resObj.race.charts[e].description.length != 0) {
+                                hasDescriptions = true;
+                                break;
+                            }
+                        }
+                        var includeComma = false;
+                        if (hasDescriptions) {
+                            sql = 'INSERT INTO adm_core_description';
+                            sql += ' ("itemId", "description", "descriptionTypeId")';
+                            sql += ' VALUES ';
+                            first = 1;
+                            second = 2;
+                            third = 3;
+                            vals = [];
+                            results = [];
+                            for (var e = 0; e < resObj.race.charts.length; e++) {
+                                if (resObj.race.charts[e].description && resObj.race.charts[e].description.length != 0) {
+                                    if (includeComma) {
+                                        sql += ', ';
+                                    }
+                                    sql += ' ($' + first.toString() + ', $' + second.toString() + ', ' + third.toString() + ')';
+                                    vals.push(resObj.race.charts[e].id);
+                                    vals.push(resObj.race.charts[e].description);
+                                    vals.push(itemtypes.DESCRIPTION.CHART);
+                                    first = first + 3;
+                                    second = second + 3;
+                                    third = third + 3;
+                                    includeComma = true;
+                                }
+                            }
+                            var query = client.query(new pg.Query(sql, vals));
+                            query.on('row', function(row) {
+                                results.push(row);
+                            });
+                            query.on('end', function() {
+                                done();
+                                return callback(null, resObj);
+                            });
+                        } else {
+                            return callback(null, resObj);
+                        }
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartDice_die(resObj, callback) {
+                    //console.log("24");
+                    if (resObj.race.hasDieChart) {
+                        results = [];
+                        vals = [];
+                        sql = 'INSERT INTO adm_def_chart_dice';
+                        sql += ' ("chartId", "diceId")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        for (var e = 0; e < resObj.race.charts.length; e++) {
+                            if (resObj.race.charts[e].type.id == itemtypes.CHART.DIE_ROLL) {
+                                if (e != 0) {
+                                    sql += ', ';
+                                }
+                                sql += '($' + first.toString() + ', $' + second.toString() + ')';
+                                first = first + 2;
+                                second = second + 2;
+                                vals.push(resObj.race.charts[e].id);
+                                vals.push(resObj.race.charts[e].dice.id);
+                            }
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var i = 0; i < results.length; i++) {
+                                for (var j = 0; j < resObj.race.charts.length; j++) {
+                                    if (results[i].title == resObj.race.charts[j].title) {
+                                        resObj.race.charts[j].id = results[i].chartId;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartDiceEntry_die(resObj, callback) {
+                    //console.log("25");
+                    if (resObj.race.hasDieChart) {
+                        results = [];
+                        vals = [];
+                        sql = 'INSERT INTO adm_def_chart_dice_entry';
+                        sql += ' ("chartId", "minimum", "maximum", "description")';
+                        sql += ' VALUES';
+                        var first = 1;
+                        var second = 2;
+                        var third = 3;
+                        var fourth = 4;
+                        var addComma = false;
+                        for (var i = 0; i < resObj.race.charts.length; i++) {
+                            if (resObj.race.charts[i].type.id == itemtypes.CHART.DIE_ROLL) {
+                                for (var j = 0; j < resObj.race.charts[i].entries.length; j++) {
+                                    if (addComma) {
+                                        sql += ', ';
+                                    }
+                                    sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
+                                    vals.push(resObj.race.charts[i].id);
+                                    vals.push(resObj.race.charts[i].entries[j].minimum);
+                                    vals.push(resObj.race.charts[i].entries[j].maximum);
+                                    vals.push(resObj.race.charts[i].entries[j].description);
+                                    first = first + 4;
+                                    second = second + 4;
+                                    third = third + 4;
+                                    fourth = fourth + 4;
+                                    addComma = true;
+                                }
+                            }
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartColumns_standard(resObj, callback) {
+                    //console.log("26");
+                    if (resObj.race.hasStandardCharts || resObj.race.hasSelectionChart) {
+                        vals = [];
+                        results = [];
+                        sql = 'INSERT INTO adm_def_chart_column';
+                        sql += ' ("chartId", "columnIndex", "title", "selectionItemId")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        fourth = 4;
+                        for (var c = 0; c < resObj.race.charts.length; c++) {
+                            for (var e = 0; e < resObj.race.charts[c].columns.length; e ++) {
+                                if (!(c == 0 && e == 0)) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
+                                first = first + 4;
+                                second = second + 4;
+                                third = third + 4;
+                                fourth = fourth + 4;
+                                vals.push(resObj.race.charts[c].id);
+                                vals.push(resObj.race.charts[c].columns[e].orderIndex);
+                                vals.push(resObj.race.charts[c].columns[e].title);
+                                vals.push(resObj.race.charts[c].columns[e].selectionItemType.id);
+                            }
+                        }
+                        sql += ' returning "chartId", "columnIndex", id AS "columnId";';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var r = 0; r < results.length; r++) {
+                                for (var c = 0; c < resObj.race.charts.length; c++) {
+                                    for (var e = 0; e < resObj.race.charts[c].columns.length; e++) {
+                                        if (results[r].chartId == resObj.race.charts[c].id) {
+                                            if (results[r].columnIndex == resObj.race.charts[c].columns[e].columnIndex) {
+                                                resObj.race.charts[c].columns[e].id = results[r].columnId;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartRows_standard(resObj, callback) {
+                    //console.log("27");
+                    if (resObj.race.hasStandardCharts || resObj.race.hasSelectionChart) {
+                        vals = [];
+                        results = [];
+                        var hasRowTitles = false;
+                        for (var c = 0; c < resObj.race.charts.length; c++) {
+                            for (var r = 0; r < resObj.race.charts[c].rows.length; r++) {
+                                if (resObj.race.charts[c].rows[r].title && resObj.race.charts[c].rows[r].title.length != 0) {
+                                    hasRowTitles = true;
+                                } else if (resObj.race.charts[c].rows[r].selectionItem && resObj.race.charts[c].rows[r].selectionItem.id && resObj.race.charts[c].rows[r].selectionItem.id != 0) {
+                                    hasRowTitles = true;
+                                }
+                            }
+                        }
+                        if (hasRowTitles) {
+                            sql = 'INSERT INTO adm_def_chart_row';
+                            sql += ' ("chartId", "rowIndex", "title", "selectionItemId")';
+                            sql += ' VALUES ';
+                            first = 1;
+                            second = 2;
+                            third = 3;
+                            fourth = 4;
+                            var addComma = false;
+                            for (var c = 0; c < resObj.race.charts.length; c++) {
+                                for (var r = 0; r < resObj.race.charts[c].rows.length; r++) {
+                                    if (resObj.race.charts[c].rows[r].title && resObj.race.charts[c].rows[r].title.length != 0) {
+                                        if (addComma) {
+                                            sql += ', ';
+                                        }
+                                        sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
+                                        first = first + 4;
+                                        second = second + 4;
+                                        third = third + 4;
+                                        fourth = fourth + 4;
+                                        vals.push(resObj.race.charts[c].id);
+                                        vals.push(resObj.race.charts[c].rows[r].orderIndex);
+                                        vals.push(resObj.race.charts[c].rows[r].title);
+                                        vals.push(resObj.race.charts[c].rows[r].selectionItem.id);
+                                        addComma = true;
+                                    }
+                                }
+                            }
+                            sql += ' returning "chartId", "rowIndex", id AS "rowId";';
+                            var query = client.query(new pg.Query(sql, vals));
+                            query.on('row', function(row) {
+                                results.push(row);
+                            });
+                            query.on('end', function() {
+                                done();
+                                for (var r = 0; r < results.length; r++) {
+                                    for (var c = 0; c < resObj.race.charts.length; c++) {
+                                        for (var e = 0; e < resObj.race.charts[c].rows.length; e++) {
+                                            if (results[r].chartId == resObj.race.charts[c].id) {
+                                                if (results[r].orderIndex == resObj.race.charts[c].rows[e].orderIndex) {
+                                                    resObj.race.charts[c].rows[r].id = results[r].rowId;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                return callback(null, resObj);
+                            });
+                        } else {
+                            return callback(null, resObj);
+                        }
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartEntries_standard(resObj, callback) {
+                    //console.log("28");
+                    if (resObj.race.hasStandardCharts || resObj.race.hasSelectionChart) {
+                        vals = [];
+                        results = [];
+                        sql = 'INSERT INTO adm_def_chart_entry';
+                        sql += ' ("chartId", "columnIndex", "rowIndex", "description", "selectionItemId")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        fourth = 4;
+                        fifth = 5;
+                        addComma = false;
+                        for (var c = 0; c < resObj.race.charts.length; c++) {
+                            for (var e = 0; e < resObj.race.charts[c].entries.length; e++) {
+                                if (resObj.race.charts[c].type.id == itemtypes.CHART.STANDARD ||
+                                   resObj.race.charts[c].type.id == itemtypes.CHART.SELECTION) {
+                                    if(addComma) {
+                                        sql += ', ';
+                                    }
+                                    sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString();
+                                    sql += ', $' + fourth.toString() + ', $' + fifth.toString() + ')';
+                                    first = first + 5;
+                                    second = second + 5;
+                                    third = third + 5;
+                                    fourth = fourth + 5;
+                                    fifth = fifth + 5;
+                                    addComma = true;
+                                    vals.push(resObj.race.charts[c].id);
+                                    vals.push(resObj.race.charts[c].entries[e].columnIndex);
+                                    vals.push(resObj.race.charts[c].entries[e].rowIndex);
+                                    vals.push(resObj.race.charts[c].entries[e].description);
+                                    vals.push(resObj.race.charts[c].entries[e].selectionItem.id);
+                                }
+                            }
+                        }
+                        sql += 'returning "chartId", "rowIndex", "columnIndex", id AS "entryId";';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var r = 0; r < results.length; r++) {
+                                for (var c = 0; c < resObj.race.charts.length; c++) {
+                                    for (var e = 0; e < resObj.race.charts[c].entries.length; e++) {
+                                        if (resObj.race.charts[c].type.id == itemtypes.CHART.STANDARD ||
+                                           resObj.race.charts[c].type.id == itemtypes.CHART.SELECTION) {
+                                            if (results[r].chartId == resObj.race.charts[c].id) {
+                                                if (results[r].orderIndex == resObj.race.charts[c].entries[e].orderIndex && results[r].columnIndex == resObj.race.charts[c].entries[e].orderIndex) {
+                                                    resObj.race.charts[c].entries[e].id = results[r].entryId;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertChartLinks_both(resObj, callback) {
+                    //console.log("29");
+                    if (resObj.race.hasAnyTypeOfChart) {
+                        vals = [];
+                        results = [];
+                        sql = 'INSERT INTO adm_link_chart';
+                        sql += ' ("referenceId", "chartId", "orderIndex")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        addComma = false
+                        for (var c = 0; c < resObj.race.charts.length; c++) {
+                            if (addComma) {
+                                sql += ', ';
+                            }
+                            sql += '($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                            first = first + 3;
+                            second = second + 3;
+                            third = third + 3;
+                            vals.push(resObj.race.id);
+                            vals.push(resObj.race.charts[c].id);
+                            vals.push(resObj.race.charts[c].orderIndex);
+                            addComma = true;
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertNaturalWeapons(resObj, callback){
+                    //console.log("30");
+                    if (resObj.race.hasNaturalWeapons) {
+                        vals = [resObj.race.id];
+                        results = [];
+                        first = 2;
+                        second = 3;
+                        third = 4;
+                        fourth = 5;
+                        fifth = 6;
+                        sixth = 7;
+                        addComma = false;
+                        sql = 'INSERT INTO adm_link_natural_weapon';
+                        sql += ' ("referenceId", "naturalWeaponTypeId", "damageTypeId", "damageDiceId", "damageAbilityScoreId", "hitAbilityScoreId", "attackCount")';
+                        sql += ' VALUES ';
+                        for (var e = 0; e < resObj.race.naturalWeapons.length; e++) {
+                            if (addComma) {
+                                sql += ', ';
+                            }
+                            sql += ' ($1, $' + first.toString() + ', $' + second.toString() + ', $' + third.toString();
+                            sql += ', $' + fourth.toString() + ', $' + fifth.toString() + ', $' + sixth.toString() + ')';
+                            addComma = true;
+                            first = first + 6;
+                            second = second + 6;
+                            third = third + 6;
+                            fourth = fourth + 6;
+                            fifth = fifth + 6;
+                            sixth = sixth + 6;
+                            vals.push(resObj.race.naturalWeapons[e].type.id);
+                            vals.push(resObj.race.naturalWeapons[e].damage.type.id);
+                            vals.push(resObj.race.naturalWeapons[e].damage.dice.id);
+                            vals.push(resObj.race.naturalWeapons[e].damage.abilityScore.id);
+                            vals.push(resObj.race.naturalWeapons[e].attack.abilityScore.id);
+                            vals.push(resObj.race.naturalWeapons[e].attack.count);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertBreathWeapon(resObj, callback) {
+                    //console.log("31");
+                    if (resObj.race.hasBreathWeapons) {
+                        vals = [resObj.race.id];
+                        results = [];
+                        first = 2;
+                        second = 3;
+                        third = 4;
+                        fourth = 5;
+                        fifth = 6;
+                        sixth = 7;
+                        seventh = 8;
+                        eighth = 9;
+                        ninth = 10;
+                        tenth = 11;
+                        eleventh = 12;
+                        twelfth = 13;
+                        addComma = false;
+                        sql = 'INSERT INTO adm_link_breath_weapon';
+                        sql += ' ("referenceId", "damageTypeId", "baseDamageDiceId", "range", "areaOfEffectId", "saveDCAbilityScoreId", "saveAbilityScoreId"';
+                        sql += ', "orderIndex", "baseSaveDC", "saveDCProficiencyBonus", "chargeCount", "rechargeTypeId", "savingThrowEffectId")';
+                        sql += ' VALUES ';
+                        for (var e = 0; e < resObj.race.breathWeapons.length; e++) {
+                            if (addComma) {
+                                sql += ', ';
+                            }
+                            sql += ' ($1, $' + first.toString() + ', $' + second.toString() + ', $' + third.toString();
+                            sql += ', $' + fourth.toString() + ', $' + fifth.toString() + ', $' + sixth.toString();
+                            sql += ', $' + seventh.toString() + ', $' + eighth.toString() + ', $' + ninth.toString();
+                            sql += ', $' + tenth.toString() + ', $' + eleventh.toString() + ', $' + twelfth.toString() + ')';
+                            addComma = true;
+                            first = first + 12;
+                            second = second + 12;
+                            third = third + 12;
+                            fourth = fourth + 12;
+                            fifth = fifth + 12;
+                            sixth = sixth + 12;
+                            seventh = seventh + 12;
+                            eighth = eighth + 12;
+                            ninth = ninth + 12;
+                            tenth = tenth + 12;
+                            eleventh = eleventh + 12;
+                            twelfth = twelfth + 12;
+                            vals.push(resObj.race.breathWeapons[e].damage.type.id);
+                            vals.push(resObj.race.breathWeapons[e].damage.dice.id);
+                            vals.push(resObj.race.breathWeapons[e].range);
+                            vals.push(resObj.race.breathWeapons[e].areaOfEffect.shape.id);
+                            vals.push(resObj.race.breathWeapons[e].savingThrow.dc.abilityScore.id);
+                            vals.push(resObj.race.breathWeapons[e].savingThrow.abilityScore.id);
+                            vals.push(e);
+                            vals.push(resObj.race.breathWeapons[e].savingThrow.dc.base);
+                            vals.push(resObj.race.breathWeapons[e].savingThrow.dc.applyProficiencyBonus);
+                            vals.push(resObj.race.breathWeapons[e].charges.count);
+                            vals.push(resObj.race.breathWeapons[e].charges.rechargeType.id);
+                            vals.push(resObj.race.breathWeapons[e].savingThrow.effect.id);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertBreathWeaponChargesImprovement(resObj, callback) {
+                    //console.log("32");
+                    if (resObj.race.hasBreathWeapons && resObj.race.breathWeapons && resObj.race.breathWeapons.charges && resObj.race.breathWeapons.charges.length != 0) {
+                        vals = [resObj.race.id];
+                        results = [];
+                        first = 2;
+                        second = 3;
+                        third = 4;
+                        addComma = false;
+                        sql = 'INSERT INTO adm_link_breath_weapon_charges';
+                        sql += ' ("referenceId", "orderIndex", "characterLevel", "chargeCount")';
+                        sql += ' VALUES ';
+                        for (var e = 0; e < resObj.race.breathWeapons.length; e++) {
+                            for (var w = 0; w < refObj.race.breathWeapons.charges.improvement.length; w++) {
+                                if (addComma) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($1, $' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                                addComma = true;
+                                first = first + 3;
+                                second = second + 3;
+                                third = third + 3;
+                                vals.push(e);
+                                vals.push(resObj.race.breathWeapons[e].charges.improvement[w].characterLevel);
+                                vals.push(resObj.race.breathWeapons[e].charges.improvement[w].count);
+                            }
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
+                function insertBreathWeaponDamageImprovement(resObj, callback) {
+                    //console.log("33");
+                    if (resObj.race.hasBreathWeapons && resObj.race.breathWeapons && resObj.race.breathWeapons.damage && resObj.race.breathWeapons.damage.length != 0) {
+                        vals = [resObj.race.id];
+                        results = [];
+                        first = 2;
+                        second = 3;
+                        third = 4;
+                        addComma = false;
+                        sql = 'INSERT INTO adm_link_breath_weapon_charges';
+                        sql += ' ("referenceId", "orderIndex", "characterLevel", "damageDiceId")';
+                        sql += ' VALUES ';
+                        for (var e = 0; e < resObj.race.breathWeapons.length; e++) {
+                            for (var w = 0; w < refObj.race.breathWeapons.damage.improvement.length; w++) {
+                                if (addComma) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($1, $' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                                addComma = true;
+                                first = first + 3;
+                                second = second + 3;
+                                third = third + 3;
+                                vals.push(e);
+                                vals.push(resObj.race.breathWeapons[e].damage.improvement[w].characterLevel);
+                                vals.push(resObj.race.breathWeapons[e].damage.improvement[w].damageDiceId);
+                            }
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
                             return callback(null, resObj);
                         });
                     } else {
@@ -1331,9 +2359,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ') AS "abilityScores"';
             sql += ', get_race_vitals(i.id) AS "vitals"';
             sql += ', get_proficiency_groups(i.id) AS "proficiencyGroups"';
-            sql += ', json_build_object(';
-            sql += '    \'base\', get_base_mechanics(i.id)';
-            sql += ') AS "mechanics"';
+            sql += ', get_base_mechanics(i.id) AS "mechanics"';
             sql += ', get_race_spellcasting(i.id) AS "spellcasting"';
             sql += ', (';
             sql += '    SELECT construct_chart_object_arrays(i.id)';
@@ -1350,6 +2376,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ')  AS "supplementalDescriptions"';
             sql += ', get_natural_weapons(i.id) AS "naturalWeapons"';
             sql += ', get_breath_weapons(i.id) AS "breathWeapons"';
+            sql += ', get_subrace_variant(i.id, false) AS "subraces"';
+            sql += ', get_subrace_variant(i.id, true) AS "variants"';
             sql += ' FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_race race ON race."raceId" = i.id';
             sql += ' LEFT OUTER JOIN adm_def_race_ability_score ability ON ability."raceId" = i.id';
@@ -1432,13 +2460,29 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         if (results[q].spellcasting.abilityScore && results[q].spellcasting.abilityScore.name == null) {
                             results[q].spellcasting.abilityScore = {};
                         }
-                        if (results[q].mechanics && results[q].mechanics.base && results[q].mechanics.base.length != 0) {
-                            if (results[q].mechanics.base[0] == null) {
-                                results[q].mechanics.base = [];
+                        if (results[q].mechanics && results[q].mechanics && results[q].mechanics.length != 0) {
+                            if (results[q].mechanics[0] == null) {
+                                results[q].mechanics = [];
                             }
                         }
                         if (results[q].senses == null) {
                             results[q].senses = [];
+                        }
+                        if (results[q].naturalWeapons && results[q].naturalWeapons.length != 0) {
+                            if (results[q].naturalWeapons[0] == null) {
+                                results[q].naturalWeapons = [];
+                            }
+                        }
+                        if (results[q].breathWeapons && results[q].breathWeapons.length != 0) {
+                            if (results[q].breathWeapons[0] == null) {
+                                results[q].breathWeapons = [];
+                            }
+                        }
+                        if (results[q].subraces == null || (results[q].subraces && results[q].subraces.length != 0 && results[q].subraces[0] == null)) {
+                            delete results[q].subraces;
+                        }
+                        if (results[q].variants == null || (results[q].variants && results[q].variants.length != 0 && results[q].variants[0] == null)) {
+                            delete results[q].variants;
                         }
                     }
                 }

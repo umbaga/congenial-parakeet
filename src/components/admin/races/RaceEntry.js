@@ -26,7 +26,8 @@ class RaceEntry extends React.Component {
             editChart: Object.assign({}, util.objectModel.CHART),
             selectedChartType: Object.assign({}, util.objectModel.CHART_TYPE),
             editNaturalWeapon: Object.assign({}, util.objectModel.NATURAL_WEAPON),
-            editBreathWeapon: Object.assign({}, util.objectModel.BREATH_WEAPON)
+            editBreathWeapon: Object.assign({}, util.objectModel.BREATH_WEAPON),
+            editBreathWeaponImprovement: Object.assign({}, util.objectModel.IMPROVEMENT)
         };
         this.cancelRace = this.cancelRace.bind(this);
         this.deleteRace = this.deleteRace.bind(this);
@@ -49,6 +50,8 @@ class RaceEntry extends React.Component {
         this.onResetNaturalWeapon = this.onResetNaturalWeapon.bind(this);
         this.updateBreathWeaponsFormState = this.updateBreathWeaponsFormState.bind(this);
         this.onResetBreathWeapon = this.onResetBreathWeapon.bind(this);
+        this.updateBreathWeaponImprovementFormState = this.updateBreathWeaponImprovementFormState.bind(this);
+        this.onChangeParentRace = this.onChangeParentRace.bind(this);
     }
     
     componentWillReceiveProps(nextProps) {
@@ -95,14 +98,14 @@ class RaceEntry extends React.Component {
     
     updateFormState(event) {
         const race = util.common.formState.standard(event, this.state.race, this.props.picklists);
-        //TODO: Need to check if parent is being edited, then populate size, monster type & tags, movement, and senses with parental values
         return this.setState({race: race});
     }
     
     updateProficiencyGroupFormState(event, refObj) {
         let editProficiencyGroup = util.common.formState.proficiencyGroup(event, this.state.editProficiencyGroup, this.state.race, this.props.picklists, this.props.proficiencies, refObj);
-        const race = util.common.formState.proficiencyGroup(event, this.state.race, this.state.editProficiencyGroup, this.props.picklists, this.props.proficiencies, refObj);
-        if (race.resetProficiencyGroup){
+        //const race = util.common.formState.proficiencyGroup(event, this.state.race, this.state.editProficiencyGroup, this.props.picklists, this.props.proficiencies, refObj);
+        const race = util.common.formState.actions(event, this.state.race, this.props.picklists, this.state.editProficiencyGroup);
+        if (race.resetProficiencyGroups){
             editProficiencyGroup = util.common.resetObject.proficiencyGroup();
         }
         race.proficiencyGroups = util.common.picklists.refactorUnsavedItemIds(race.proficiencyGroups);
@@ -111,11 +114,12 @@ class RaceEntry extends React.Component {
     
     updateMechanicsFormState(event, refObj) {
         let editMechanic = util.common.formState.mechanic(event, this.state.editMechanic, this.state.race, this.props.picklists, refObj);
-        let race = util.common.formState.mechanic(event, this.state.race, this.state.editMechanic, this.props.picklists, refObj);
-        if (race.resetMechanic){
+        //let race = util.common.formState.mechanic(event, this.state.race, this.state.editMechanic, this.props.picklists, refObj);
+        let race = util.common.formState.actions(event, this.state.race, this.props.picklists, this.state.editMechanic);
+        if (race.resetMechanics){
             editMechanic = util.common.resetObject.mechanic();
         }
-        race.mechanics.base = util.common.picklists.refactorUnsavedItemIds(race.mechanics.base);
+        race.mechanics = util.common.picklists.refactorUnsavedItemIds(race.mechanics);
         return this.setState({race: race, editMechanic: editMechanic});
     }
     
@@ -185,7 +189,7 @@ class RaceEntry extends React.Component {
     
     updateNaturalWeaponsFormState(event) {
         let editNaturalWeapon = util.common.formState.naturalWeapon(event, this.state.editNaturalWeapon, this.state.race);
-        let race = util.common.formState.standard(event, this.state.race, this.props.picklists, this.state.editNaturalWeapon);
+        let race = util.common.formState.actions(event, this.state.race, this.props.picklists, this.state.editNaturalWeapon);
         if (race.resetNaturalWeapons) {
             editNaturalWeapon = util.common.resetObject.naturalWeapon();
         }
@@ -198,7 +202,7 @@ class RaceEntry extends React.Component {
     
     updateBreathWeaponsFormState(event) {
         let editBreathWeapon = util.common.formState.breathWeapon(event, this.state.editBreathWeapon, this.state.race);
-        let race = util.common.formState.standard(event, this.state.race, this.props.picklists, this.state.editBreathWeapon);
+        let race = util.common.formState.actions(event, this.state.race, this.props.picklists, this.state.editBreathWeapon);
         if (race.resetBreathWeapons) {
             editBreathWeapon = util.common.resetObject.breathWeapon();
         }
@@ -207,6 +211,32 @@ class RaceEntry extends React.Component {
     
     onResetBreathWeapon() {
         this.setState({editBreathWeapon: util.common.resetObject.breathWeapon()});
+    }
+    
+    updateBreathWeaponImprovementFormState(event, removeThisItem) {
+        let editBreathWeaponImprovement = util.common.formState.breathWeaponImprovement(event, this.state.editBreathWeaponImprovement, this.state.editBreathWeapon);
+        if (removeThisItem && removeThisItem.removeIndex && removeThisItem.removeIndex > -1) {
+            editBreathWeaponImprovement.removeIndex = removeThisItem.removeIndex;
+        }
+        let editBreathWeapon = util.common.formState.breathWeaponImprovement(event, this.state.editBreathWeapon, this.state.editBreathWeaponImprovement);
+        if (editBreathWeapon.resetBreathWeaponImprovement) {
+            editBreathWeaponImprovement = util.common.resetObject.breathWeaponImprovement();
+        }
+        return this.setState({editBreathWeapon: editBreathWeapon, editBreathWeaponImprovement: editBreathWeaponImprovement});
+    }
+    
+    onChangeParentRace() {
+        const race = this.state.race;
+        const parentRace = this.props.races.filter(function(parentRace) {
+            return parentRace.id == race.parent.id;
+        })[0];
+        if (parentRace != undefined) {
+            race.resource = parentRace.resource;
+            race.size = parentRace.size;
+            race.type = parentRace.type;
+            race.tags = parentRace.tags;
+        }
+        return this.setState({race: race});
     }
     
     render() {
@@ -247,7 +277,11 @@ class RaceEntry extends React.Component {
                 editNaturalWeapon={this.state.editNaturalWeapon}
                 onChangeNaturalWeapon={this.updateNaturalWeaponsFormState}
                 editBreathWeapon={this.state.editBreathWeapon}
+                editBreathWeaponImprovement={this.state.editBreathWeaponImprovement}
                 onChangeBreathWeapon={this.updateBreathWeaponsFormState}
+                onChangeBreathWeaponImprovement={this.updateBreathWeaponImprovementFormState}
+                
+                onChangeParentRace={this.onChangeParentRace}
                 />
         ) : (
             <RaceDetails

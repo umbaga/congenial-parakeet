@@ -76,12 +76,12 @@ class RaceListPage extends React.Component {
                     <table className="table table-sm table-striped table-hover">
                         <thead>
                             <tr>
-                                <th colSpan="2">
+                                <th colSpan="3">
                                     <h2><span><DndButton onClick={this.backToAdminHome} buttonType="back" /></span>Races</h2>
                                 </th>
                             </tr>
                             <tr>
-                                <th>Name</th>
+                                <th colSpan="2">Name</th>
                                 <th style={{paddingRight: '25px'}}>
                                     <div className="pull-right">
                                         <DndButton onClick={this.onCreate} buttonType="create" />

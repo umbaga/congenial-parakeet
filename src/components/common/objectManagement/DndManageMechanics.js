@@ -13,16 +13,17 @@ class DndManageMechanics extends React.Component {
         this.renderFormInputs = this.renderFormInputs.bind(this);
         this.renderBaseAdvancementInput = this.renderBaseAdvancementInput.bind(this);
         this.renderValueInput = this.renderValueInput.bind(this);
+        this.renderConditionalText = this.renderConditionalText.bind(this);
     }
     
     renderMechanicLists(mechanics) {
-        return (mechanics && mechanics.base && mechanics.base.length != 0) ? (
+        return (mechanics && mechanics.length != 0) ? (
             <div>
-                {this.renderMechanicList(mechanics.base, 'Base')}
-                {this.renderMechanicList(mechanics.advancement, 'Advancement')}
+                {this.renderMechanicList(mechanics, 'Base')}
             </div>
         ) : null;
     }
+                //{this.renderMechanicList(mechanics.advancement, 'Advancement')}
     
     renderMechanicList(mechanics, title) {
         const retVal = (mechanics && mechanics.length != 0) ? (
@@ -39,7 +40,7 @@ class DndManageMechanics extends React.Component {
                                 key={idx}
                                 mechanic={mechanic}
                                 onRemoveMechanic={this.props.onChange}
-                                deleteButtonName={'mechanics.' + title.toLowerCase()}
+                                deleteButtonName={'mechanics'}
                                 deleteButtonAction={util.datatypes.action.MECHANIC.REMOVE}
                                 />
                         );
@@ -95,6 +96,7 @@ class DndManageMechanics extends React.Component {
                     />
                 {this.renderTargetInput(targets)}
                 {this.renderValueInput(valueObjects)}
+                {this.renderConditionalText()}
                 <DndDataEntryButtonBar
                     onCancel={this.props.onChange}
                     onSave={this.props.onChange}
@@ -127,6 +129,7 @@ class DndManageMechanics extends React.Component {
     renderValueInput(valueObjects) {
         if (this.props.editMechanic && this.props.editMechanic.type
             && (this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.BONUS
+                || this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.BONUS_PER_LEVEL
                 || this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.DIVIDE_STAT
                 || this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.MULTIPLY_STAT)) {
             return (
@@ -159,10 +162,13 @@ class DndManageMechanics extends React.Component {
                     onChange={this.props.onChange}
                     />
             );
-        } else if (this.props.editMechanic && this.props.editMechanic.type &&
-                  (this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.SPECIAL_TEXT ||
-                   this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.DOUBLE_PROFICIENCY_BONUS)) {
-            let specialTextLabel = (this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.SPECIAL_TEXT) ? 'Special Text' : 'Conditional Text';
+        }
+        return null;
+    }
+    
+    renderConditionalText() {
+        let specialTextLabel = (this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.SPECIAL_TEXT) ? 'Special Text' : 'Conditional Text';
+        if (this.props.editMechanic && this.props.editMechanic.type && this.props.editMechanic.type.id > 0) {
             return (
                 <DndInput
                     name="specialText"
@@ -186,6 +192,7 @@ class DndManageMechanics extends React.Component {
             case util.itemtypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT:
             case util.itemtypes.MECHANIC_TYPE.APPLY_ABILITY_SCORE_TO_STAT:
             case util.itemtypes.MECHANIC_TYPE.BONUS:
+            case util.itemtypes.MECHANIC_TYPE.BONUS_PER_LEVEL:
                 mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.ABILITY_SCORE)
                     .concat(util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.STAT))
                     .concat(util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.SKILL));
@@ -241,7 +248,7 @@ class DndManageMechanics extends React.Component {
 DndManageMechanics.propTypes = {
     onChange: PropTypes.func.isRequired,
     picklists: PropTypes.array.isRequired,
-    mechanics: PropTypes.object.isRequired,
+    mechanics: PropTypes.array.isRequired,
     editMechanic: PropTypes.object.isRequired,
     showAdvancement: PropTypes.bool
 };

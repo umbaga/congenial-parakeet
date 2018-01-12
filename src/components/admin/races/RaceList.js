@@ -5,19 +5,36 @@ import RaceListItem from './RaceListItem';
 
 
 const RaceList = ({races, openModal, selectedId, changeSelectedId, onEdit, onViewDetails}) => {
+    const notSubraces = races.filter(function(race) {
+        return race.parent.id == 0;
+    });
+    const subraces = races.filter(function(subrace) {
+        return subrace.parent.id != 0;
+    });
+    let finalRaces = [];
+    for (let r = 0; r < notSubraces.length; r++) {
+        finalRaces.push(notSubraces[r]);
+        for (let s = 0; s < subraces.length; s++) {
+            if (subraces[s].parent.id == notSubraces[r].id) {
+                finalRaces.push(subraces[s]);
+            }
+        }
+    }
     return (
         <tbody>
-            {races.map(race =>
-                             <RaceListItem
-                                 key={race.id}
-                                 race={race}
-                                 changeSelectedId={changeSelectedId}
-                                 onEdit={onEdit}
-                                 onViewDetails={onViewDetails}
-                                 openModal={openModal}
-                                 selectedId={selectedId}
-                                 />
-                            )}
+            {finalRaces.map(function(race, idx) {
+                return (
+                    <RaceListItem
+                        key={idx}
+                        race={race}
+                        changeSelectedId={changeSelectedId}
+                        onEdit={onEdit}
+                        onViewDetails={onViewDetails}
+                        openModal={openModal}
+                        selectedId={selectedId}
+                        />
+                );
+            })}
         </tbody>
     );
 };

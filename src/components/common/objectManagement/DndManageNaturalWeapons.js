@@ -24,7 +24,7 @@ class DndManageNaturalWeapons extends React.Component {
                                     onRemoveNaturalWeapon={this.props.onChange}
                                     deleteButtonName="naturalWeapons"
                                     deleteButtonAction={util.datatypes.action.NATURAL_WEAPON.REMOVE}
-                                    removeIndex={idx}
+                                    index={idx}
                                     />
                             );
                         }.bind(this))}
@@ -61,16 +61,6 @@ class DndManageNaturalWeapons extends React.Component {
                 </div>
                 <div className="col-sm-6">
                     <DndInput
-                        name="damage"
-                        label="Damage and Type"
-                        dataType={util.datatypes.combo.DAMAGE_AND_DAMAGE_TYPE}
-                        value={naturalWeapon.damage}
-                        onChange={this.props.onChange}
-                        picklist={damageTypes}
-                        />
-                </div>
-                <div className="col-sm-6">
-                    <DndInput
                         label="Attack modifier Ability Score"
                         name="attack.abilityScore"
                         dataType={util.datatypes.picklist.ABILITY_SCORE}
@@ -78,6 +68,16 @@ class DndManageNaturalWeapons extends React.Component {
                         onChange={this.props.onChange}
                         picklist={abilityScores}
                         placeholder="None"
+                        />
+                </div>
+                <div className="col-sm-6">
+                    <DndInput
+                        name="damage"
+                        label="Damage and Type"
+                        dataType={util.datatypes.combo.DAMAGE_AND_DAMAGE_TYPE}
+                        value={naturalWeapon.damage}
+                        onChange={this.props.onChange}
+                        picklist={damageTypes}
                         />
                 </div>
                 <div className="col-sm-6">

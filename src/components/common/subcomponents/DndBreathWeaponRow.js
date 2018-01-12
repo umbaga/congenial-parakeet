@@ -11,7 +11,9 @@ class DndBreathWeaponRow extends React.Component {
     
     _onRemove(event) {
         event.preventDefault();
-        this.props.onRemoveBreathWeapon(event, this.props.breathWeapon);
+        const breathWeapon = this.props.breathWeapon;
+        breathWeapon.removeIndex = this.props.index;
+        this.props.onRemoveBreathWeapon(event, breathWeapon);
     }
     
     render() {
@@ -36,7 +38,8 @@ DndBreathWeaponRow.propTypes = {
     breathWeapon: PropTypes.object.isRequired,
     onRemoveBreathWeapon: PropTypes.func.isRequired,
     deleteButtonName: PropTypes.string,
-    deleteButtonAction: PropTypes.string
+    deleteButtonAction: PropTypes.string,
+    index: PropTypes.number.isRequired
 };
 
 export default DndBreathWeaponRow;

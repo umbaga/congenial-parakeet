@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DndButton from '../buttons/DndButton';
-import util from '../../../util/util';
 
-class DndNaturalWeaponRow extends React.Component {
+class DndListRow extends React.Component {
     constructor(props, context) {
         super(props, context);
         this._onRemove = this._onRemove.bind(this);
@@ -11,13 +10,13 @@ class DndNaturalWeaponRow extends React.Component {
     
     _onRemove(event) {
         event.preventDefault();
-        const naturalWeapon = this.props.naturalWeapon;
-        naturalWeapon.removeIndex = this.props.index;
-        this.props.onRemoveNaturalWeapon(event, this.props.naturalWeapon);
+        let item = this.props.item;
+        item.removeIndex = this.props.index;
+        this.props.onRemoveItem(event, item);
     }
     
     render() {
-        const displayText = util.format.forDisplay.obj.naturalWeapon(this.props.naturalWeapon);
+        const displayText = this.props.displayValue;
         return (
             <tr>
                 <td>{displayText}</td>
@@ -34,12 +33,13 @@ class DndNaturalWeaponRow extends React.Component {
     }
 }
 
-DndNaturalWeaponRow.propTypes = {
-    naturalWeapon: PropTypes.object.isRequired,
-    onRemoveNaturalWeapon: PropTypes.func.isRequired,
+DndListRow.propTypes = {
+    item: PropTypes.object.isRequired,
+    onRemoveItem: PropTypes.func.isRequired,
+    displayValue: PropTypes.string,
     deleteButtonName: PropTypes.string,
     deleteButtonAction: PropTypes.string,
     index: PropTypes.number.isRequired
 };
 
-export default DndNaturalWeaponRow;
+export default DndListRow;

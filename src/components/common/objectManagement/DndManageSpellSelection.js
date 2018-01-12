@@ -293,10 +293,10 @@ class DndManageSpellSelection extends React.Component {
     render() {
         return (
             <div>
-                <div>
+                <div className="col-sm-12">
                     {this.renderForm()}
                 </div>
-                <div>
+                <div className="col-sm-12">
                     {this.renderList()}
                 </div>
             </div>

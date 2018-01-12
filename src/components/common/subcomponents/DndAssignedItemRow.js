@@ -13,6 +13,8 @@ class DndAssignedItemRow extends React.Component {
     
     _onRemove(event) {
         event.preventDefault();
+        let item = this.props.item;
+        item.removeIndex = this.props.index;
         this.props.onRemoveItem(event, this.props.item);
     }
     
@@ -37,7 +39,7 @@ class DndAssignedItemRow extends React.Component {
         ) : null;
         
     }
-    /**/
+    
     renderSupplementalText() {
         return this.props.supplementalText && this.props.supplementalText.length ? (
             <td>
@@ -74,7 +76,8 @@ DndAssignedItemRow.propTypes = {
     supplementalText: PropTypes.string,
     displayValue: PropTypes.string,
     deleteButtonName: PropTypes.string,
-    deleteButtonAction: PropTypes.string
+    deleteButtonAction: PropTypes.string,
+    index: PropTypes.number.isRequired
 };
 
 export default DndAssignedItemRow;

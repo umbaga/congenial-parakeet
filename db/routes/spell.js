@@ -1305,7 +1305,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         second = 2;
                         addComma = false;
                         sql = 'INSERT INTO adm_def_chart_selection';
-                        sql += ' ("chartId", "selectionTypeId")';
+                        sql += ' ("chartId", "selectTypeId")';
                         sql += ' VALUES ';
                         for (var e = 0; e < resObj.spell.charts.length; e++) {
                             if (resObj.spell.charts[e].type.id == itemtypes.CHART.SELECTION) {
@@ -1966,7 +1966,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '                , get_dice(ml."diceId") AS "dice"';
             sql += '                , json_build_object(';
             sql += '                    \'id\', valobj.id, \'name\', valobj."itemName"';
-            sql += '                ) AS "vaueObject"';
+            sql += '                ) AS "valueObject"';
             sql += '                FROM adm_link_mechanic ml ';
             sql += '                INNER JOIN adm_core_description ii ON ii.id = ml."referenceId"  ';
             sql += '                LEFT OUTER JOIN adm_core_item targ ON targ.id = ml."targetId"';
