@@ -15,6 +15,7 @@ module.exports = {
         DESCRIPTION_TYPE: 1233,
         EQUIPMENT: 49,
         EQUIPMENT_CATEGORY: 50,
+        FEAT: 2843,
         FEATURE: 120,
         ITEM_GROUP: 605,
         LANGUAGE: 394,
@@ -42,6 +43,7 @@ module.exports = {
         SPELL_LIST: 488,
         SPELL_RANGE: 74,
         STAT: 844,
+        TYPE: 0,
         VEHCILE: 395,
         WEAPON: 455,
         WEAPON_CATEGORY: 22,
@@ -63,6 +65,7 @@ module.exports = {
     DESCRIPTION: {
         CHART: 907,
         GENERAL: 171,
+        MECHANIC_TITLE: 2882,
         SUGGESTED_CHARACTERISTICS: 121,
         SUPPLEMENTAL_DESCRIPTION: 944,
         AT_HIGHER_LEVELS: 122
@@ -111,6 +114,7 @@ module.exports = {
         IMMUNITY: 872,
         MULTIPLY_STAT: 1617,
         RESISTANCE: 868,
+        SELECT_ITEM: 2842,
         SPECIAL_TEXT: 2321,
         VULNERABILITY: 869
     },

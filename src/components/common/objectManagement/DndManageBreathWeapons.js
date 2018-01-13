@@ -122,7 +122,7 @@ class DndManageBreathWeapons extends React.Component {
                 </div>
                 <div className="col-sm-8">
                     <DndInput
-                        name="areaOfEffect"
+                        name="areaOfEffect.shape"
                         label="Area of Effect Shape"
                         dataType={util.datatypes.picklist.AREA_OF_EFFECT_SHAPE}
                         value={breathWeapon.areaOfEffect}

@@ -36,7 +36,6 @@ class RaceEntry extends React.Component {
         this.saveAndNewRace = this.saveAndNewRace.bind(this);
         this.saveRace = this.saveRace.bind(this);
         this.updateFormState = this.updateFormState.bind(this);
-        this.onChangeSubrace = this.onChangeSubrace.bind(this);
         this.updateProficiencyGroupFormState = this.updateProficiencyGroupFormState.bind(this);
         this.updateMechanicsFormState = this.updateMechanicsFormState.bind(this);
         this.updateDescriptionsFormState = this.updateDescriptionsFormState.bind(this);
@@ -176,17 +175,6 @@ class RaceEntry extends React.Component {
         
     }
     
-    onChangeSubrace(event) {
-        let isSubrace = this.state.isSubrace;
-        const race = this.state.race;
-        if (event.target.name == 'chkParentId') {
-            isSubrace = !isSubrace;
-        } else {
-            race.parentId = parseInt(event.target.value);
-        }
-        return this.setState({isSubrace: isSubrace, race: race});
-    }
-    
     updateNaturalWeaponsFormState(event) {
         let editNaturalWeapon = util.common.formState.naturalWeapon(event, this.state.editNaturalWeapon, this.state.race);
         let race = util.common.formState.actions(event, this.state.race, this.props.picklists, this.state.editNaturalWeapon);
@@ -234,7 +222,6 @@ class RaceEntry extends React.Component {
             race.resource = parentRace.resource;
             race.size = parentRace.size;
             race.type = parentRace.type;
-            race.tags = parentRace.tags;
         }
         return this.setState({race: race});
     }
@@ -252,7 +239,6 @@ class RaceEntry extends React.Component {
                 saving={this.state.saving}
                 onChange={this.updateFormState}
                 isSubrace={this.state.isSubrace}
-                onChangeSubrace={this.onChangeSubrace}
                 editProficiencyGroup={this.state.editProficiencyGroup}
                 onChangeProficiencyGroup={this.updateProficiencyGroupFormState}
                 editMechanic={this.state.editMechanic}

@@ -345,66 +345,72 @@ obj.itemGroup = function(val) {
 };
 obj.mechanic = function(val) {
     let retVal = '';
+    if (val.title && val.title.length != 0) {
+        retVal += val.title + '. ';
+    }
     switch (val.type.id) {
         case util.itemtypes.MECHANIC_TYPE.ADVANTAGE:
-            retVal = 'Advantage to ' + val.target.name;
+            retVal += 'Advantage to ' + val.target.name;
             break;
         case util.itemtypes.MECHANIC_TYPE.ADVANTAGE_SAVING_THROW:
-            retVal = 'Advantage to Saving Throws vs ' + val.target.name;
+            retVal += 'Advantage to Saving Throws vs ' + val.target.name;
             break;
         case util.itemtypes.MECHANIC_TYPE.BONUS:
             if (val.value >= 0) {
-                retVal = '+' + val.value.toString() + ' to ' + val.target.name;
+                retVal += '+' + val.value.toString() + ' to ' + val.target.name;
             } else {
-                retVal = val.value.toString() + ' to ' + val.target.name;
+                retVal += val.value.toString() + ' to ' + val.target.name;
             }
             break;
         case util.itemtypes.MECHANIC_TYPE.BONUS_PER_LEVEL:
             if (val.value >= 0) {
-                retVal = '+' + val.value.toString() + ' per character level to ' + val.target.name;
+                retVal += '+' + val.value.toString() + ' per character level to ' + val.target.name;
             } else {
-                retVal = val.value.toString() + ' per character level to ' + val.target.name;
+                retVal += val.value.toString() + ' per character level to ' + val.target.name;
             }
             break;
         case util.itemtypes.MECHANIC_TYPE.DISADVANTAGE:
-            retVal = 'Disadvantage to ' + val.target.name;
+            retVal += 'Disadvantage to ' + val.target.name;
             break;
         case util.itemtypes.MECHANIC_TYPE.DISADVANTAGE_SAVING_THROW:
-            retVal = 'Disadvantage to Saving Throws vs ' + val.target.name;
+            retVal += 'Disadvantage to Saving Throws vs ' + val.target.name;
             break;
         case util.itemtypes.MECHANIC_TYPE.RESISTANCE:
-            retVal = 'Resistance to ' + val.target.name;
+            retVal += 'Resistance to ' + val.target.name;
             break;
         case util.itemtypes.MECHANIC_TYPE.VULNERABILITY:
-            retVal = 'Vulnerability to ' + val.target.name;
+            retVal += 'Vulnerability to ' + val.target.name;
             break;
         case util.itemtypes.MECHANIC_TYPE.IMMUNITY:
-            retVal = 'Immune to ' + val.target.name;
+            retVal += 'Immune to ' + val.target.name;
             break;
         case util.itemtypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT:
-            retVal = '+' + util.format.forDisplay.string.dieRoll(val.dice) + ' to ' + val.target.name;
+            retVal += '+' + util.format.forDisplay.string.dieRoll(val.dice) + ' to ' + val.target.name;
             break;
         case util.itemtypes.MECHANIC_TYPE.MULTIPLY_STAT:
-            retVal = 'x' + val.value.toString() + ' to ' + val.target.name;
+            retVal += 'x' + val.value.toString() + ' to ' + val.target.name;
             break;
         case util.itemtypes.MECHANIC_TYPE.DIVIDE_STAT:
-            retVal = 'divide ' + val.target.name + ' by ' + val.value.toString();
+            retVal += 'divide ' + val.target.name + ' by ' + val.value.toString();
             break;
         case util.itemtypes.MECHANIC_TYPE.APPLY_ABILITY_SCORE_TO_STAT:
-            retVal = '+' + val.valueObject.name + ' modifier to ' + val.target.name;
+            retVal += '+' + val.valueObject.name + ' modifier to ' + val.target.name;
             break;
         case util.itemtypes.MECHANIC_TYPE.SPECIAL_TEXT:
-            retVal = val.specialText;
+            retVal += val.specialText;
             break;
         case util.itemtypes.MECHANIC_TYPE.DOUBLE_PROFICIENCY_BONUS:
-            retVal = 'Double proficiency bonus with ' + val.target.name + ' checks';
+            retVal += 'Double proficiency bonus with ' + val.target.name + ' checks';
             if (val.specialText && val.specialText.length != 0) {
                 retVal += ' ' + val.specialText;
             }
             retVal += '.';
             break;
+        case util.itemtypes.MECHANIC_TYPE.SELECT_ITEM:
+            retVal += 'Select ' + val.value.toString() + ' ' + val.target.name + '.';
+            break;
         default:
-            retVal = 'need to add to switch in format.forDisplay.obj.mechanic';
+            retVal += 'need to add to switch in format.forDisplay.obj.mechanic';
     }
     if (val.type.id != util.itemtypes.MECHANIC_TYPE.SPECIAL_TEXT && val.type.id != util.itemtypes.MECHANIC_TYPE.DOUBLE_PROFICIENCY_BONUS) {
         if (val.specialText && val.specialText.length != 0) {

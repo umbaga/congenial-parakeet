@@ -64,13 +64,12 @@ class RaceForm extends React.Component {
                             <DndCheckboxPicklist
                                 checked={this.props.isSubrace}
                                 dataType={util.datatypes.picklist.GENERAL}
-                                label="Subrace Parent"
-                                checkboxName="chkParentId"
+                                label={((race.isVariant) ? 'Variant' : 'Subrace') + ' Parent'}
+                                checkboxName="isVariant"
                                 picklistName="parent"
                                 onChange={this._onChangeParentRace}
                                 picklist={races}
                                 value={race.parent}
-                                onClick={this.props.onChangeSubrace}
                                 placeholder="Select Parent Race"
                                 checkboxPlaceholder="Is a Subrace"
                                 />
@@ -344,7 +343,6 @@ RaceForm.propTypes = {
     picklists: PropTypes.array.isRequired,
     proficiencies: PropTypes.array.isRequired,
     isSubrace: PropTypes.bool.isRequired,
-    onChangeSubrace: PropTypes.func.isRequired,
     editProficiencyGroup: PropTypes.object.isRequired,
     onChangeProficiencyGroup: PropTypes.func.isRequired,
     editMechanic: PropTypes.object.isRequired,

@@ -564,8 +564,14 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             resObj.race.hasProficiencies = true;
                         }
                         resObj.race.hasMechanics = false;
+                        resObj.race.hasMechanicTitles = false;
                         if (resObj.race.mechanics && resObj.race.mechanics.length != 0) {
                             resObj.race.hasMechanics = true;
+                            for (var e = 0; e < resObj.race.mechanics.length; e++) {
+                                if (resObj.race.mechanics[e].title && resObj.race.mechanics[e].title.length != 0) {
+                                    resObj.race.hasMechanicTitles = true;
+                                }
+                            }
                         }
                         resObj.race.hasSpellcasting = false;
                         if (resObj.race.spellcasting && resObj.race.spellcasting.abilityScore && resObj.race.spellcasting.abilityScore.id != 0) {
@@ -623,14 +629,15 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     vals = [];
                     results = [];
                     sql = 'INSERT INTO adm_def_race';
-                    sql += ' ("raceId", "parentId", "sizeId", "monsterTypeId")';
+                    sql += ' ("raceId", "parentId", "sizeId", "monsterTypeId", "isVariant")';
                     sql += ' VALUES ';
-                    sql += ' ($1, $2, $3, $4)';
+                    sql += ' ($1, $2, $3, $4, $5)';
                     vals = [
                         resObj.race.id,
                         resObj.race.parent.id,
                         resObj.race.size.id,
-                        resObj.race.type.id
+                        resObj.race.type.id,
+                        resObj.race.isVariant
                     ];
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
@@ -1248,7 +1255,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertMonsterTagsLinkTable(resObj, callback) {
-                    ////console.log("10");
+                    //console.log("10");
                     if (resObj.race.tags && resObj.race.tags.length != 0) {
                         vals = [resObj.race.id];
                         results = [];
@@ -1277,7 +1284,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     }
                 },
                 function insertVitals(resObj, callback) {
-                    ////console.log("11");
+                    //console.log("11");
                     if (resObj.race.vitals && resObj.race.vitals.height && resObj.race.vitals.height.base != 0) {
                         results = []
                         sql = 'INSERT INTO adm_def_race_vitals';
@@ -1348,13 +1355,64 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, resObj);
                     }
                 },
+                function insertMechanicTitle(resObj, callback) {
+                    //console.log("12a");
+                    if (resObj.race.hasMechanicTitles) {
+                        results = [];
+                        vals = [];
+                        sql = 'INSERT INTO adm_core_item';
+                        sql += ' ("itemName", "itemTypeId", "resourceId")';
+                        sql += ' VALUES ';
+                        first = 1;
+                        second = 2;
+                        third = 3;
+                        needsComma = false;
+                        for (var e = 0; e < resObj.race.mechanics.length; e++) {
+                            if (resObj.race.mechanics[e].title && resObj.race.mechanics[e].title.length != 0) {
+                                if (needsComma) {
+                                    sql += ', ';
+                                }
+                                sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
+                                first = first + 3;
+                                second = second + 3;
+                                third = third + 3;
+                                needsComma = true;
+                                vals.push(resObj.race.mechanics[e].title);
+                                vals.push(itemtypes.DESCRIPTION.MECHANIC_TITLE);
+                                vals.push(resObj.race.resource.id);
+                            }
+                        }
+                        sql += ' returning "itemName" AS "title", id AS "titleId"';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var m = 0; m < resObj.race.mechanics.length; m++) {
+                                    if (resObj.race.mechanics[m].title && resObj.race.mechanics[m].title.length != 0) {
+                                        if (resObj.race.mechanics[m].title == results[e].title) {
+                                            resObj.race.mechanics[m].titleId = results[e].titleId;
+                                        }
+                                    } else {
+                                        resObj.race.mechanics[m].titleId = 0;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
+                },
                 function insertMechanics(resObj, callback) {
                     //console.log("13");
                     if (resObj.race.hasMechanics) {
                         results = [];
                         vals = [resObj.race.id];
                         sql = 'INSERT INTO adm_link_mechanic';
-                        sql += ' ("referenceId", "targetId", "typeId", "value", "diceId", "valueObjectId", "specialTextId")';
+                        sql += ' ("referenceId", "targetId", "typeId", "value", "diceId", "valueObjectId", "specialTextId", "titleId")';
                         sql += ' VALUES ';
                         first = 2;
                         second = 3;
@@ -1362,24 +1420,28 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         fourth = 5;
                         fifth = 6;
                         sixth = 7;
+                        seventh = 8;
                         for (var e = 0; e < resObj.race.mechanics.length; e++) {
                             if (e != 0) {
                                 sql += ', ';
                             }
                             sql += ' ($1, $' + first.toString() + ', $' + second.toString() + ', $' + third.toString();
-                            sql += ', $' + fourth.toString() + ', $' + fifth.toString() + ', $' + sixth.toString() + ')';
-                            first = first + 6;
-                            second = second + 6;
-                            third = third + 6;
-                            fourth = fourth + 6;
-                            fifth = fifth + 6;
-                            sixth = sixth + 6;
+                            sql += ', $' + fourth.toString() + ', $' + fifth.toString() + ', $' + sixth.toString();
+                            sql += ', $' + seventh.toString() + ')';
+                            first = first + 7;
+                            second = second + 7;
+                            third = third + 7;
+                            fourth = fourth + 7;
+                            fifth = fifth + 7;
+                            sixth = sixth + 7;
+                            seventh = seventh + 7;
                             vals.push(resObj.race.mechanics[e].target.id);
                             vals.push(resObj.race.mechanics[e].type.id);
                             vals.push(resObj.race.mechanics[e].value);
                             vals.push(resObj.race.mechanics[e].dice.id);
                             vals.push(resObj.race.mechanics[e].valueObject.id);
-                            vals.push(resObj.race.mechanics[e].specialTextId)
+                            vals.push(resObj.race.mechanics[e].specialTextId);
+                            vals.push(resObj.race.mechanics[e].titleId);
                         }
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -1965,7 +2027,9 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             for (var r = 0; r < resObj.race.charts[c].rows.length; r++) {
                                 if (resObj.race.charts[c].rows[r].title && resObj.race.charts[c].rows[r].title.length != 0) {
                                     hasRowTitles = true;
-                                } else if (resObj.race.charts[c].rows[r].selectionItem && resObj.race.charts[c].rows[r].selectionItem.id && resObj.race.charts[c].rows[r].selectionItem.id != 0) {
+                                } else if (resObj.race.charts[c].rows[r].selectionItem 
+                                           && resObj.race.charts[c].rows[r].selectionItem.id 
+                                           && resObj.race.charts[c].rows[r].selectionItem.id != 0) {
                                     hasRowTitles = true;
                                 }
                             }
@@ -1981,7 +2045,11 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             var addComma = false;
                             for (var c = 0; c < resObj.race.charts.length; c++) {
                                 for (var r = 0; r < resObj.race.charts[c].rows.length; r++) {
-                                    if (resObj.race.charts[c].rows[r].title && resObj.race.charts[c].rows[r].title.length != 0) {
+                                    if ((resObj.race.charts[c].rows[r].title 
+                                         && resObj.race.charts[c].rows[r].title.length != 0) 
+                                        || (resObj.race.charts[c].rows[r].selectionItem 
+                                            && resObj.race.charts[c].rows[r].selectionItem.id 
+                                            && resObj.race.charts[c].rows[r].selectionItem.id != 0)) {
                                         if (addComma) {
                                             sql += ', ';
                                         }
@@ -1992,7 +2060,11 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                                         fourth = fourth + 4;
                                         vals.push(resObj.race.charts[c].id);
                                         vals.push(resObj.race.charts[c].rows[r].orderIndex);
-                                        vals.push(resObj.race.charts[c].rows[r].title);
+                                        if (resObj.race.charts[c].rows[r].title && resObj.race.charts[c].rows[r].title.length != 0) {
+                                            vals.push(resObj.race.charts[c].rows[r].title);
+                                        } else {
+                                            vals.push(resObj.race.charts[c].rows[r].selectionItem.name);
+                                        }
                                         vals.push(resObj.race.charts[c].rows[r].selectionItem.id);
                                         addComma = true;
                                     }
@@ -2378,12 +2450,13 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ', get_breath_weapons(i.id) AS "breathWeapons"';
             sql += ', get_subrace_variant(i.id, false) AS "subraces"';
             sql += ', get_subrace_variant(i.id, true) AS "variants"';
+            sql += ', race."isVariant"';
             sql += ' FROM adm_core_item i';
             sql += ' INNER JOIN adm_def_race race ON race."raceId" = i.id';
             sql += ' LEFT OUTER JOIN adm_def_race_ability_score ability ON ability."raceId" = i.id';
             sql += ' WHERE i."itemTypeId" = $1';
             sql += ' GROUP BY i.id, i."itemName"';
-            sql += ', race."sizeId", race."monsterTypeId", race."parentId"';
+            sql += ', race."sizeId", race."monsterTypeId", race."parentId", race."isVariant"';
             sql += ', ability.strength, ability.dexterity, ability.constitution, ability.wisdom, ability.intelligence, ability.charisma';
             sql += ', ability."selectCount", ability."selectModifier"';
             sql += ' ORDER BY i."itemName"';

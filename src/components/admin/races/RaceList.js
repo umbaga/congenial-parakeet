@@ -10,12 +10,19 @@ const RaceList = ({races, openModal, selectedId, changeSelectedId, onEdit, onVie
     });
     const subraces = races.filter(function(subrace) {
         return subrace.parent.id != 0;
+    }).sort(function(a, b) {
+        return a.isVariant - b.isVariant || a.name - b.name;
     });
     let finalRaces = [];
+    let variantCount = 1;
     for (let r = 0; r < notSubraces.length; r++) {
         finalRaces.push(notSubraces[r]);
         for (let s = 0; s < subraces.length; s++) {
             if (subraces[s].parent.id == notSubraces[r].id) {
+                if (subraces[s].isVariant) {
+                    subraces[s].variantCount = variantCount;
+                    variantCount++;
+                }
                 finalRaces.push(subraces[s]);
             }
         }

@@ -14,6 +14,7 @@ class DndManageMechanics extends React.Component {
         this.renderBaseAdvancementInput = this.renderBaseAdvancementInput.bind(this);
         this.renderValueInput = this.renderValueInput.bind(this);
         this.renderConditionalText = this.renderConditionalText.bind(this);
+        this.renderTitleInput = this.renderTitleInput.bind(this);
     }
     
     renderMechanicLists(mechanics) {
@@ -96,6 +97,7 @@ class DndManageMechanics extends React.Component {
                     />
                 {this.renderTargetInput(targets)}
                 {this.renderValueInput(valueObjects)}
+                {this.renderTitleInput()}
                 {this.renderConditionalText()}
                 <DndDataEntryButtonBar
                     onCancel={this.props.onChange}
@@ -127,35 +129,42 @@ class DndManageMechanics extends React.Component {
     }
     
     renderValueInput(valueObjects) {
+        let inputLabel = 'Value';
         if (this.props.editMechanic && this.props.editMechanic.type
             && (this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.BONUS
                 || this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.BONUS_PER_LEVEL
                 || this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.DIVIDE_STAT
-                || this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.MULTIPLY_STAT)) {
+                || this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.MULTIPLY_STAT
+                || this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.SELECT_ITEM)) {
+            if (this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.SELECT_ITEM) {
+                inputLabel = 'Select #';
+            }
             return (
                 <DndInput
                     name="value"
-                    label="Value"
+                    label={inputLabel}
                     dataType={util.datatypes.number.INT}
                     value={this.props.editMechanic.value}
                     onChange={this.props.onChange}
                     />
             );
         } else if (this.props.editMechanic && this.props.editMechanic.type && this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.DIE_ROLL_BONUS_TO_STAT) {
+            inputLabel = 'Die Value';
             return (
                 <DndInput
                     name="dice"
-                    label="Die Value"
+                    label={inputLabel}
                     dataType={util.datatypes.special.DICE_ROLL}
                     value={this.props.editMechanic.dice}
                     onChange={this.props.onChange}
                     />
             );
         } else if (this.props.editMechanic && this.props.editMechanic.type && this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.APPLY_ABILITY_SCORE_TO_STAT) {
+            inputLabel = 'Ability Score Modifier';
             return (
                 <DndInput
                     name="valueObject"
-                    label="Ability Score Modifier"
+                    label={inputLabel}
                     dataType={util.datatypes.picklist.GENERAL}
                     value={this.props.editMechanic.valueObject}
                     picklist={valueObjects}
@@ -175,6 +184,21 @@ class DndManageMechanics extends React.Component {
                     label={specialTextLabel}
                     dataType={util.datatypes.string.STRING}
                     value={this.props.editMechanic.specialText}
+                    onChange={this.props.onChange}
+                    />
+            );
+        }
+        return null;
+    }
+    
+    renderTitleInput() {
+        if (this.props.editMechanic.type.id == util.itemtypes.MECHANIC_TYPE.SPECIAL_TEXT) {
+            return (
+                <DndInput
+                    name="title"
+                    label="Title"
+                    dataType={util.datatypes.string.STRING}
+                    value={this.props.editMechanic.title}
                     onChange={this.props.onChange}
                     />
             );
@@ -221,6 +245,9 @@ class DndManageMechanics extends React.Component {
                 break;
             case util.itemtypes.MECHANIC_TYPE.DOUBLE_PROFICIENCY_BONUS:
                 mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.SKILL);
+                break;
+            case util.itemtypes.MECHANIC_TYPE.SELECT_ITEM:
+                mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.TYPE);
                 break;
             default:
         }

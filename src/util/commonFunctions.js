@@ -170,19 +170,6 @@ export const resetObject = {
     },
     race: function() {
         const retVal = Object.assign({}, util.objectModel.RACE);
-        retVal.charts = [];
-        retVal.supplementalDescriptions = [];
-        retVal.mechanics = [];
-        retVal.vitals = {
-            height: {
-                base: 0,
-                dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
-            },
-            weight: {
-                base: 0,
-                dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
-            }
-        };
         retVal.abilityScores = {
             strength: 0,
             dexterity: 0,
@@ -195,7 +182,24 @@ export const resetObject = {
                 modifier: 0
             }
         };
+        retVal.charts = [];
+        retVal.mechanics = [];
+        retVal.movement = [{id: 2275, name: 'Walking', speed: 30}];
         retVal.proficiencyGroups = [];
+        retVal.senses = [];
+        retVal.size = {id: 2270, name: 'Medium'};
+        retVal.supplementalDescriptions = [];
+        retVal.tags = [];
+        retVal.vitals = {
+            height: {
+                base: 0,
+                dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+            },
+            weight: {
+                base: 0,
+                dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+            }
+        };
         return retVal;
     },
     spell: function() {

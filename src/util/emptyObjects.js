@@ -207,6 +207,8 @@ export const MECHANIC = {
     dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
     specialText: '',
     target: {id: 0, name: ''},
+    title: '',
+    titleId: 0,
     type: {id: 0, name: ''},
     value: 0,
     valueObject: {id: 0, name: ''}
@@ -285,6 +287,7 @@ export const RACE = {
     breathWeapons: [],
     charts: [],
     descriptions: [],
+    isVariant: false,
     mechanics: [],
     //mechanics: {base: []},
     movement: [

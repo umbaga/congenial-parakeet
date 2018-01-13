@@ -42,7 +42,8 @@ class RaceListItem extends React.Component {
     renderNameCell(race) {
         let cellWidth = (race.parent.id == 0) ? '90%' : '88%';
         let colspan = (race.parent.id == 0) ? '2' : '1';
-        return (<td colSpan={colspan} width={cellWidth}>{this.props.race.name}</td>);
+        let nameValue = (race.parent.id != 0 && race.isVariant) ? 'Variant ' + race.variantCount.toString() : race.name;
+        return (<td colSpan={colspan} width={cellWidth}>{nameValue}</td>);
     }
     
     renderIndentation(race) {

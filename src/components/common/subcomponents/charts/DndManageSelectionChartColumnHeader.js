@@ -66,7 +66,7 @@ class DndManageSelectionChartColumnHeader extends React.Component {
                                 </th>
                             );
                         }
-                        return null;
+                        return (<td key={idx}>&nbsp;</td>);
                     }.bind(this))}
                 </tr>
                 <tr>
