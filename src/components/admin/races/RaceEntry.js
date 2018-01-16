@@ -239,8 +239,10 @@ class RaceEntry extends React.Component {
                 saving={this.state.saving}
                 onChange={this.updateFormState}
                 isSubrace={this.state.isSubrace}
+                
                 editProficiencyGroup={this.state.editProficiencyGroup}
                 onChangeProficiencyGroup={this.updateProficiencyGroupFormState}
+                
                 editMechanic={this.state.editMechanic}
                 onChangeMechanics={this.updateMechanicsFormState}
                 

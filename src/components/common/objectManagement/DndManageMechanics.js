@@ -249,6 +249,9 @@ class DndManageMechanics extends React.Component {
             case util.itemtypes.MECHANIC_TYPE.SELECT_ITEM:
                 mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.TYPE);
                 break;
+            case util.itemtypes.MECHANIC_TYPE.BONUS_TO_COUNT_STATS_FROM_GROUP:
+                mechanicTargets = util.common.picklists.getPicklistItems(this.props.picklists, util.itemtypes.TYPES.ABILITY_SCORE);
+                break;
             default:
         }
         mechanicTargets.sort(function (a, b) {

@@ -7,6 +7,7 @@ import AdminHomePage from './components/admin/home/adminHomePage';
 import ArmorListPage from './components/admin/equipment/armor/ArmorListPage';
 import BackgroundListPage from './components/admin/background/BackgroundListPage';
 import EquipmentListPage from './components/admin/equipment/EquipmentListPage';
+import FeatListPage from './components/admin/feat/FeatListPage';
 import ItemtypeListPage from './components/admin/itemtypes/ItemtypeListPage';
 import PackListPage from './components/admin/equipment/pack/PackListPage';
 import PicklistListPage from './components/admin/picklists/PicklistListPage';
@@ -29,6 +30,7 @@ export default (
         <Route path="/admin/equipment/armors" component={ArmorListPage} />
         <Route path="/admin/equipment/packs" component={PackListPage} />
         <Route path="/admin/equipment/weapons" component={WeaponListPage} />
+        <Route path="/admin/feats" component={FeatListPage} />
         <Route path="/admin/itemtypes" component={ItemtypeListPage} />
         <Route path="/admin/picklists" component={PicklistListPage} />
         <Route path="/admin/proficiencies" component={ProficiencyListPage} />

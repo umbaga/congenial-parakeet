@@ -189,6 +189,15 @@ export const EQUIPMENT_PACK_ASSIGNED_EQUIPMENT = {
     unit: '',
     weight: '0'
 };
+export const FEAT = {
+    id: 0,
+    name: '',
+    description: '',
+    mechanics: [],
+    prerequisites: [],
+    proficiencyGroups: [],
+    resource: {id: 2, name: 'Player\'s Handbook'}
+};
 export const FEATURE = {
     id: 0,
     name: '',
@@ -205,8 +214,14 @@ export const MECHANIC = {
     id: 0,
     assignmentType: {id: 1},
     dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
+    maximumValue: 0,
     specialText: '',
     target: {id: 0, name: ''},
+    targetGroup: {
+        selectCount: 0,
+        itemType: {id: 0, name: ''},
+        items: []
+    },
     title: '',
     titleId: 0,
     type: {id: 0, name: ''},

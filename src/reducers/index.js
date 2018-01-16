@@ -4,6 +4,7 @@ import armors from './armorReducer';
 import backgrounds from './backgroundReducer';
 import dierolls from './dierollReducer';
 import equipments from './equipmentReducer';
+import feats from './featReducer';
 import itemtypes from './itemtypeReducer';
 import packs from './packReducer';
 import picklists from './picklistReducer';
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
     backgrounds,
     dierolls,
     equipments,
+    feats,
     itemtypes,
     packs,
     picklists,

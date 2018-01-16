@@ -3,6 +3,7 @@ export default {
     backgrounds: [],
     dierolls: [],
     equipments: [],
+    feats: [],
     itemtypes: [],
     packs: [],
     picklists: [],

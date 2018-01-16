@@ -20,6 +20,7 @@ class AdminHomePage extends React.Component {
                     <li><Link to="admin/spells">Spells</Link></li>
                     <li><Link to="admin/spelllists">Spell Lists</Link></li>
                     <li><Link to="admin/races">Races</Link></li>
+                    <li><Link to="admin/feats">Feats</Link></li>
                 </ul>
             </div>
         );

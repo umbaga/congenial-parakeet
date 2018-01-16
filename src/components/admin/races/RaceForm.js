@@ -343,8 +343,10 @@ RaceForm.propTypes = {
     picklists: PropTypes.array.isRequired,
     proficiencies: PropTypes.array.isRequired,
     isSubrace: PropTypes.bool.isRequired,
+    
     editProficiencyGroup: PropTypes.object.isRequired,
     onChangeProficiencyGroup: PropTypes.func.isRequired,
+    
     editMechanic: PropTypes.object.isRequired,
     onChangeMechanics: PropTypes.func.isRequired,
     
