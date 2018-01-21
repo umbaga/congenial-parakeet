@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import util from '../../../util/util';
-import DndChartDisplay from '../../common/display/DndChartDisplay';
+//import util from '../../../util/util';
+//import DndChartDisplay from '../../common/display/DndChartDisplay';
 
 class FeatDetails extends React.Component {
     constructor(props) {

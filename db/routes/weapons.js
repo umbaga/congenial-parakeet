@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool, itemtypes, modules) {
+module.exports = function(app, pg, async, pool, itemtypes, common) {
     app.delete('/api/adm/equipment/weapon/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -701,7 +701,20 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, tmp);
                     });
                 },
-                function insertDice(resObj, callback) {
+                function manageDice(resObj, callback) {
+                    var diceArr = [resObj.weapon.damage.dice];
+                    if (resObj.weapon.needsAltDamage) {
+                        diceArr.push(resObj.weapon.damage.versatile.dice);
+                    }
+                    common.getObjects.dice(diceArr, function(results) {
+                        resObj.weapon.damage.dice = common.datatypes.dice.getObject(results, resObj.weapon.damage.dice);
+                        if (resObj.weapon.needsAltDamage) {
+                            resObj.weapon.damage.versatile.dice = common.datatypes.dice.getObject(results, resObj.weapon.damage.versatile.dice);
+                        }
+                        return callback(null, resObj);
+                    });
+                },
+                /*function insertDice(resObj, callback) {
                     sql = 'with vals as (';
                     sql += 'select $1 :: bigint as "dieCount", $2 :: bigint as "dieType"';
                     if (resObj.weapon.needsAltDamage) {
@@ -756,7 +769,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         }
                         return callback(null, resObj);
                     });
-                },
+                },*/
                 function insertEquipment(resObj, callback) {
                     sql = 'INSERT INTO adm_def_equipment';
                     sql += ' ("equipmentId", "weight", "cost", "categoryId")';

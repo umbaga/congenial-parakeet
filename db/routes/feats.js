@@ -1,5 +1,5 @@
 
-module.exports = function(app, pg, async, pool, itemtypes, modules) {
+module.exports = function(app, pg, async, pool, itemtypes, common) {
     app.delete('/api/adm/feat/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -186,10 +186,10 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                 },
                 function testCommonFunction(resObj, callback) {
-                    modules.testFunction(resObj, function(testObj) {
-                        resObj.testing = testObj;
+                    //common.testFunction(resObj, function(testObj) {
+                        //resObj.testing = testObj;
                         return callback(null, resObj);
-                    });
+                    //});
                 }
             ], function(error, result) {
                 if (error) {

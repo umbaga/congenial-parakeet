@@ -98,7 +98,8 @@ class SpellEntry extends React.Component {
             effect: {id: 0, name: ''}
         };
         blankSpell.charts = [];
-        blankSpell.spells = {base: [], advancement: []};
+        //blankSpell.mechanics = {base: [], advancement: []};
+        blankSpell.mechanics = [];
         this.setState({spell: blankSpell});
     }
     
@@ -400,7 +401,8 @@ function getSpellById(spells, id) {
 }
 
 function mapStateToProps(state, ownProps) {
-    let spell = Object.assign({}, util.objectModel.SPELL);
+    let spell = Object.assign({}, util.objectModel.examples.SPELL);
+    //let spell = Object.assign({}, util.objectModel.SPELL);
     const spellId = ownProps.selectedId;
     let isCreate = true;
     if (ownProps.selecetdId != 0) {

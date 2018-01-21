@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import FeatListItem from './FeatListItem';
 
 const FeatList = ({feats, openModal, selectedId, changeSelectedId, onEdit, onViewDetails}) => {
-    console.log(feats);
     return (
         <tbody>
             {feats.map(feat =>

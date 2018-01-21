@@ -1,3 +1,15 @@
+import * as exampleObjects from './exampleObjects';
+
+const _ID_NAME_OBJECT = {id: 0, name: ''};
+const _ID_NAME_DESC_OBJECT = {id: 0, name: '', description: ''};
+
+const _DICE = {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0};
+const _FEATURE = _ID_NAME_DESC_OBJECT;
+const _PROFICIENCY = _ID_NAME_OBJECT;
+const _RESOURCE = {id: 2, name: 'Player\'s Handbook'};
+
+export const examples = exampleObjects;
+
 export const ARMOR = {
     id: 0,
     name: '',
@@ -9,11 +21,8 @@ export const ARMOR = {
     isCumulative: false,
     maxDexModifier: 0,
     minimumStrength: 0,
-    proficiency: {id: 0, name: ''},
-    resource: {
-        id: 0,
-        name: ''
-    },
+    proficiency: _PROFICIENCY,
+    resource: _RESOURCE,
     stealthDisadvantage: false,
     weight: '0'
 };
@@ -23,16 +32,9 @@ export const BACKGROUND = {
     assignedEquipment: [],
     charts: [],
     description: '',
-    feature: {
-        id: 0,
-        name: '',
-        description: ''
-    },
+    feature: _FEATURE,
     proficiencyGroups: [],
-    resource: {
-        id: 0,
-        name: ''
-    },
+    resource: _RESOURCE,
     startingGold: '0',
     suggestedCharacteristics: '',
     variants: []
@@ -40,51 +42,44 @@ export const BACKGROUND = {
 export const BACKGROUND_VARIANT = {
     id: 0,
     name: '',
-    feature: {
-        id: 0,
-        name: '',
-        description: ''
-    },
-    resource: {
-        id: 0,
-        name: ''
-    }
+    feature: _FEATURE,
+    resource: _RESOURCE
 };
 export const BREATH_WEAPON = {
     areaOfEffect: {
-        shape: {id: 0, name: ''}
+        shape: _ID_NAME_OBJECT
     },
     charges: {
         count: 1,
         improvement: [],
-        rechargeType: {id: 0, name: ''}
+        rechargeType: _ID_NAME_OBJECT
     },
     damage: {
-        dice: {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
+        dice: _DICE,
         improvement: [],
-        type: {id: 0, name: ''}
+        type: _ID_NAME_OBJECT
     },
     range: 0,
     savingThrow: {
-        abilityScore: {id: 0, name: ''},
+        abilityScore: _ID_NAME_OBJECT,
         dc: {
-            abilityScore: {id: 0, name: ''},
+            abilityScore: _ID_NAME_OBJECT,
             applyProficiencyBonus: true,
             base: 8
         },
-        effect: {id: 0, name: ''}
+        effect: _ID_NAME_OBJECT
     }
 };
 export const IMPROVEMENT = {
     characterLevel: 0,
     count: 1,
-    dice: {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+    dice: _DICE
 };
 export const CHART = {
     id: -1,
     title: '',
     description: '',
-    dice: {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
+    dice: _DICE,
     columnCount: 1,
     rowCount: 0,
     columns: [
@@ -92,7 +87,7 @@ export const CHART = {
             id: 0,
             title: '',
             orderIndex: 0,
-            selectionItemType: {id: 0, name: ''},
+            selectionItemType: _ID_NAME_OBJECT,
             selectionItemDataType: {id: 1, name: ''}
         }
     ],
@@ -100,21 +95,21 @@ export const CHART = {
     entries: [],
     orderIndex: -1,
     isCreateNewItemType: false,
-    selectionItemType: {id: 0, name: ''},
-    type: {id: 0, name: ''}
+    selectionItemType: _ID_NAME_OBJECT,
+    type: _ID_NAME_OBJECT
 };
 export const CHART_COLUMN = {
     id: 0,
     title: '',
     orderIndex: -1,
     selectionItemDataType: {id: 1, name: ''},
-    selectionItemType: {id: 0, name: ''}
+    selectionItemType: _ID_NAME_OBJECT
 };
 export const CHART_ROW = {
     id: 0,
     title: '',
     orderIndex: -1,
-    selectionItem: {id: 0, name: ''}
+    selectionItem: _ID_NAME_OBJECT
 };
 export const CHART_ENTRY = {
     id: 0,
@@ -123,14 +118,14 @@ export const CHART_ENTRY = {
     description: '',
     minimum: 0,
     maximum: 0,
-    selectionItem: {id: 0, name: ''}
+    selectionItem: _ID_NAME_OBJECT
 };
-export const CHART_TYPE = {id: 0, name: ''};
+export const CHART_TYPE = _ID_NAME_OBJECT;
 export const DAMAGE = {
-    dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
-    type: {id: 0, name: ''}
+    dice: _DICE,
+    type: _ID_NAME_OBJECT
 };
-export const DICE = {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0};
+export const DICE = _DICE;
 export const EQUIPMENT = {
     id: 0,
     name: '',
@@ -147,13 +142,10 @@ export const EQUIPMENT = {
     description: '',
     improvisedWeapon: {
         damage: {id: 0, dieCount: 0, dieType: 0, rendered: ''},
-        damageType: {id: 0, name: ''},
+        damageType: _ID_NAME_OBJECT,
         range: 0
     },
-    resource: {
-        id: 0,
-        name: ''
-    },
+    resource: _RESOURCE,
     unit: '',
     weight: '0'
 };
@@ -166,10 +158,7 @@ export const EQUIPMENT_PACK = {
         name: ''
     },
     cost: '0',
-    resource: {
-        id: 0,
-        name: ''
-    },
+    resource: _RESOURCE,
     weight: '0'
 };
 export const EQUIPMENT_PACK_ASSIGNED_EQUIPMENT = {
@@ -182,10 +171,7 @@ export const EQUIPMENT_PACK_ASSIGNED_EQUIPMENT = {
     },
     cost: '0',
     count: 0,
-    resource: {
-        id: 0,
-        name: ''
-    },
+    resource: _RESOURCE,
     unit: '',
     weight: '0'
 };
@@ -196,7 +182,7 @@ export const FEAT = {
     mechanics: [],
     prerequisites: [],
     proficiencyGroups: [],
-    resource: {id: 2, name: 'Player\'s Handbook'}
+    resource: _RESOURCE
 };
 export const FEATURE = {
     id: 0,
@@ -213,32 +199,32 @@ export const ITEMTYPE = {
 export const MECHANIC = {
     id: 0,
     assignmentType: {id: 1},
-    dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
+    dice: _DICE,
     maximumValue: 0,
     specialText: '',
-    target: {id: 0, name: ''},
+    target: _ID_NAME_OBJECT,
     targetGroup: {
         selectCount: 0,
-        itemType: {id: 0, name: ''},
+        itemType: _ID_NAME_OBJECT,
         items: []
     },
     title: '',
     titleId: 0,
-    type: {id: 0, name: ''},
+    type: _ID_NAME_OBJECT,
     value: 0,
-    valueObject: {id: 0, name: ''}
+    valueObject: _ID_NAME_OBJECT
 };
 export const NATURAL_WEAPON = {
     attack: {
-        abilityScore: {id: 0, name: ''},
+        abilityScore: _ID_NAME_OBJECT,
         count: 1
     },
     damage: {
-        abilityScore: {id: 0, name: ''},
-        dice: {dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0},
-        type: {id: 0, name: ''}
+        abilityScore: _ID_NAME_OBJECT,
+        dice: _DICE,
+        type: _ID_NAME_OBJECT
     },
-    type: {id: 0, name: ''}
+    type: _ID_NAME_OBJECT
 };
 export const PICKLIST = {id: 0, name: '', items: []};
 export const PICKLISTITEM = {id: 0, name: '', picklistId: 0, defaultSelected: false};
@@ -263,10 +249,7 @@ export const PROFICIENCY = {
             name: ''
         }
     },
-    resource: {
-        id: 0,
-        name: ''
-    }
+    resource: _RESOURCE
 };
 export const PROFICIENCY_GROUP = {
     id: 0,
@@ -311,11 +294,11 @@ export const RACE = {
     naturalWeapons: [],
     parent: {id: 0},
     proficiencyGroups: [],
-    resource: {id: 2, name: 'Player\'s Handbook'},
+    resource: _RESOURCE,
     senses: [],
     size: {id: 2270, name: 'Medium'},
     spellcasting: {
-        abilityScore: {id: 0, name: ''},
+        abilityScore: _ID_NAME_OBJECT,
         spellSelections: []
     },
     supplementalDescriptions: [],
@@ -324,75 +307,76 @@ export const RACE = {
     vitals: {
         height: {
             base: 0,
-            dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+            dice: _DICE
         },
         weight: {
             base: 0,
-            dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 0}
+            dice: _DICE
         }
     }
 };
-export const SCHOOL_OF_MAGIC = {id: 0, name: ''};
+export const SCHOOL_OF_MAGIC = _ID_NAME_OBJECT;
 export const SPELL = {
     id: 0,
     name: '',
     atHigherLevels: '',
     description: '',
-    castingTime: {id: 0, name: ''},
+    castingTime: _ID_NAME_OBJECT,
     charts: [],
     components: [],
     damage: {
-        dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
-        type: {id: 0, name: ''},
-        attackRollType: {id: 0, name: ''},
-        condition: {id: 0, name: ''},
+        dice: _DICE,
+        type: _ID_NAME_OBJECT,
+        attackRollType: _ID_NAME_OBJECT,
+        condition: _ID_NAME_OBJECT,
         improvement: {
-            dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1},
+            dice: _DICE,
             levelCount: 0,
             projectileCount: 0
         },
         supplemental: [],
         applyAbilityScoreModifier: false,
-        abilityScore: {id: 0, name: ''},
-        maximum: {dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}},
+        abilityScore: _ID_NAME_OBJECT,
+        maximum: {dice: _DICE},
         projectileCount: 0
     },
-    duration: {id: 0, name: ''},
+    duration: _ID_NAME_OBJECT,
     isRitual: false,
     level: 0,
-    mechanics: {
-        advancement: [],
-        base: []
-    },
-    range: {id: 0, name: ''},
-    resource: {id: 2, name: 'Player\'s Handbook'},
+    mechanics: [],
+//    mechanics: {
+//        advancement: [],
+//        base: []
+//    },
+    range: _ID_NAME_OBJECT,
+    resource: _RESOURCE,
     savingThrow: {
-        abilityScore: {id: 0, name: ''},
-        effect: {id: 0, name: ''}
+        abilityScore: _ID_NAME_OBJECT,
+        effect: _ID_NAME_OBJECT
     },
-    school: {id: 0, name: ''},
+    school: _ID_NAME_OBJECT,
     supplementalDescriptions: []
 };
-export const SPELL_CASTING_TIME = {id: 0, name: ''};
-export const SPELL_COMPONENT = {id: 0, name: ''};
-export const SPELL_DURATION = {id: 0, name: ''};
+export const SPELL_CASTING_TIME = _ID_NAME_OBJECT;
+export const SPELL_COMPONENT = _ID_NAME_OBJECT;
+export const SPELL_DURATION = _ID_NAME_OBJECT;
 export const SPELL_LIST = {
     id: 0,
     name: '',
-    resource: {id: 2, name: 'Player\'s Handbook'},
+    resource: _RESOURCE,
     spells: []
 };
-export const SPELL_RANGE = {id: 0, name: ''};
+export const SPELL_RANGE = _ID_NAME_OBJECT;
 export const SPELL_SELECTION = {
     castingCount: 1,
     characterLevel: 1,
-    rechargeType: {id: 0, name: ''},
-    school: {id: 0, name: ''},
+    rechargeType: _ID_NAME_OBJECT,
+    school: _ID_NAME_OBJECT,
     selectCount: 1,
-    selectionType: {id: 0, name: ''},
-    spell: {id: 0, name: ''},
+    selectionType: _ID_NAME_OBJECT,
+    spell: _ID_NAME_OBJECT,
     spellLevel: 0,
-    spelllist: {id: 0, name: ''}
+    spelllist: _ID_NAME_OBJECT
 };
 export const SUPPLEMENTAL_DESCRIPTION = {
     id: 0,
@@ -400,18 +384,14 @@ export const SUPPLEMENTAL_DESCRIPTION = {
     description: '',
     orderIndex: 0
 };
-export const TYPE = {id: 0, name: ''};
+export const TYPE = _ID_NAME_OBJECT;
 export const WEAPON = {
     id: 0,
     name: '',
-    ammunition: {id: 0, name: ''},
+    ammunition: _ID_NAME_OBJECT,
     cost: '0',
     damage: {
-        dice: {
-            dieCount: 0,
-            dieType: 0,
-            rendered: ''
-        },
+        dice: _DICE,
         type: {
             id: 0,
             name: ''
@@ -424,13 +404,10 @@ export const WEAPON = {
     requireRange: false,
     requireSpecialDescription: false,
     requireVersatileDamage: false,
-    resource: {
-        id: 0,
-        name: ''
-    },
+    resource: _RESOURCE,
     specialDescription: '',
-    category: {id: 0, name: ''},
-    proficiency: {id: 0, name: ''},
+    category: _ID_NAME_OBJECT,
+    proficiency: _ID_NAME_OBJECT,
     weaponProperties: [],
     weight: ''
 };

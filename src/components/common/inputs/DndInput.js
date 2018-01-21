@@ -35,6 +35,9 @@ class DndInput extends React.Component {
             size = this.props.selectBoxSize;
         }
         let placeholderText = '';
+        if (this.props.value == undefined) {
+            console.log(this.props.name);
+        }
         
         switch (this.props.dataType) {
             case util.datatypes.bool.BOOL:

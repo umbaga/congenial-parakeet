@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool, itemtypes, modules) {
+module.exports = function(app, pg, async, pool, itemtypes, common) {
     app.delete('/api/adm/background/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {

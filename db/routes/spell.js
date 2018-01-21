@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool, itemtypes, modules) {
+module.exports = function(app, pg, async, pool, itemtypes, common) {
     app.delete('/api/adm/spell/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -21,8 +21,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        var resObj = [req.params.id];
+                        return callback(null, resObj);
                     });
                 },
                 function deleteSpellDef(resObj, callback) {
@@ -35,22 +35,12 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        return callback(null, resObj);
                     });
                 },
-                function deleteSupplementalDescriptionDef(resObj, callback) {
-                    sql = 'DELETE FROM adm_def_supplemental_description';
-                    sql += ' WHERE "descriptionId" IN (SELECT id FROM adm_core_description WHERE "itemId" = $1)';
-                    vals = [req.params.id];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                function deleteSupplementalDescription(resObj, callback) {
+                    common.remove.supplementalDescriptions(req.params.id, function() {
+                        return callback(null, resObj);
                     });
                 },
                 function deleteDescription(resObj, callback) {
@@ -63,8 +53,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        return callback(null, resObj);
                     });
                 },
                 function deleteSpellComponentLinkDef(resObj, callback) {
@@ -77,8 +66,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        return callback(null, resObj);
                     });
                 },
                 function deleteDamageTable(resObj, callback) {
@@ -105,8 +93,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        return callback(null, resObj);
                     });
                 },
                 function deleteSavingThrowTable(resObj, callback) {
@@ -119,106 +106,17 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                        return callback(null, resObj);
                     });
                 },
                 function deleteMechanicsTable(resObj, callback) {
-                    sql = 'DELETE FROM adm_link_mechanic';
-                    sql += ' WHERE "referenceId" = $1';
-                    vals = [req.params.id];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                    common.remove.mechanics(req.params.id, function() {
+                        return callback(null, resObj);
                     });
                 },
-                function deleteChartEntriesTable(resObj, callback) {
-                    sql = 'DELETE FROM adm_def_chart_entry';
-                    sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
-                    vals = [req.params.id];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
-                    });
-                },
-                function deleteChartColumnsTable(resObj, callback) {
-                    sql = 'DELETE FROM adm_def_chart_column';
-                    sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
-                    vals = [req.params.id];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
-                    });
-                },
-                function deleteChartRowsTable(resObj, callback) {
-                    sql = 'DELETE FROM adm_def_chart_row';
-                    sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
-                    vals = [req.params.id];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
-                    });
-                },
-                function deleteChartDefTable(resObj, callback) {
-                    sql = 'DELETE FROM adm_def_chart';
-                    sql += ' WHERE "chartId" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
-                    vals = [req.params.id];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
-                    });
-                },
-                function deleteChartCoreTable(resObj, callback) {
-                    sql = 'DELETE FROM adm_core_chart';
-                    sql += ' WHERE "id" IN (SELECT "chartId" FROM adm_link_chart WHERE "referenceId" = $1)';
-                    vals = [req.params.id];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
-                    });
-                },
-                function deleteChartLinkTable(resObj, callback) {
-                    sql = 'DELETE FROM adm_link_chart';
-                    sql += ' WHERE "referenceId" = $1';
-                    vals = [req.params.id];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var tmp = [req.params.id];
-                        return callback(null, tmp);
+                function deleteCharts(resObj, callback) {
+                    common.remove.charts(req.params.id, function() {
+                        return callback(null, resObj);
                     });
                 }
             ], function(error, result) {
@@ -479,60 +377,99 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                     });
                     query.on('end', function() {
                         done();
-                        var tmp = req.body;
-                        tmp.spell.id = results[0].spellId;
-                        tmp.spell.needDamage = false;
-                        if (tmp.spell.damageType && tmp.spell.damageType.id != 0) {
-                            tmp.spell.needDamage = true;
+                        var resObj = req.body;
+                        resObj.spell.id = results[0].spellId;
+                        resObj.spell.needDamage = false;
+                        if (resObj.spell.damageType && resObj.spell.damageType.id != 0) {
+                            resObj.spell.needDamage = true;
                         }
-                        tmp.spell.needSavingThrow = false;
-                        if (tmp.spell.savingThrow && tmp.spell.savingThrow.abilityScore && tmp.spell.savingThrow.abilityScore.name && tmp.spell.savingThrow.abilityScore.name.length != 0) {
-                            tmp.spell.needSavingThrow = true;
+                        resObj.spell.needSavingThrow = false;
+                        if (resObj.spell.savingThrow && resObj.spell.savingThrow.abilityScore && resObj.spell.savingThrow.abilityScore.name && resObj.spell.savingThrow.abilityScore.name.length != 0) {
+                            resObj.spell.needSavingThrow = true;
                         }
-                        tmp.spell.hasAnyTypeOfChart = false;
-                        tmp.spell.hasDieChart = false;
-                        tmp.spell.hasStandardCharts = false;
-                        tmp.spell.hasSelectionChart = false;
-                        tmp.spell.needsNewItemTypeFromChart = false;
-                        if (tmp.spell.charts && tmp.spell.charts.length != 0) {
-                            tmp.spell.hasAnyTypeOfChart = true;
-                            for (var c = 0; c < tmp.spell.charts.length; c++) {
-                                if (tmp.spell.charts[c].type.id == itemtypes.CHART.STANDARD) {
-                                    tmp.spell.hasStandardCharts = true;
+                        resObj.spell.hasAnyTypeOfChart = false;
+                        resObj.spell.hasDieChart = false;
+                        resObj.spell.hasStandardCharts = false;
+                        resObj.spell.hasSelectionChart = false;
+                        resObj.spell.needsNewItemTypeFromChart = false;
+                        if (resObj.spell.charts && resObj.spell.charts.length != 0) {
+                            resObj.spell.hasAnyTypeOfChart = true;
+                            for (var c = 0; c < resObj.spell.charts.length; c++) {
+                                if (resObj.spell.charts[c].type.id == itemtypes.CHART.STANDARD) {
+                                    resObj.spell.hasStandardCharts = true;
                                 }
-                                if (tmp.spell.charts[c].type.id == itemtypes.CHART.DIE_ROLL) {
-                                    tmp.spell.hasDieChart = true;
+                                if (resObj.spell.charts[c].type.id == itemtypes.CHART.DIE_ROLL) {
+                                    resObj.spell.hasDieChart = true;
                                 }
-                                if (tmp.spell.charts[c].type.id == itemtypes.CHART.SELECTION) {
-                                    tmp.spell.hasSelectionChart = true;
-                                    if (tmp.spell.charts[c].selectionItemType.id <= 0) {
-                                        tmp.spell.needsNewItemTypeFromChart = true;
+                                if (resObj.spell.charts[c].type.id == itemtypes.CHART.SELECTION) {
+                                    resObj.spell.hasSelectionChart = true;
+                                    if (resObj.spell.charts[c].selectionItemType.id <= 0) {
+                                        resObj.spell.needsNewItemTypeFromChart = true;
                                     }
                                 }
                             }
                         }
-                        tmp.spell.needDiceCheck = false;
-                        if (tmp.spell.damage && tmp.spell.damage.dice && tmp.spell.damage.dice.dieCount != 0) {
-                            tmp.spell.needDiceCheck = true;
+                        resObj.spell.needDiceCheck = false;
+                        if (resObj.spell.damage && resObj.spell.damage.dice && resObj.spell.damage.dice.dieCount != 0) {
+                            resObj.spell.needDiceCheck = true;
                         }
-                        for (var m = 0; m < tmp.spell.mechanics.advancement.length; m++) {
-                            if (tmp.spell.mechanics.advancement[m].dice && tmp.spell.mechanics.advancement[m].dice.dieCount != 0) {
-                                tmp.spell.needDiceCheck = true;
+                        /*for (var m = 0; m < resObj.spell.mechanics.advancement.length; m++) {
+                            if (resObj.spell.mechanics.advancement[m].dice && resObj.spell.mechanics.advancement[m].dice.dieCount != 0) {
+                                resObj.spell.needDiceCheck = true;
                             }
                         }
-                        for (var m = 0; m < tmp.spell.mechanics.base.length; m++) {
-                            if (tmp.spell.mechanics.base[m].dice && tmp.spell.mechanics.base[m].dice.dieCount != 0) {
-                                tmp.spell.needDiceCheck = true;
+                        for (var m = 0; m < resObj.spell.mechanics.base.length; m++) {
+                            if (resObj.spell.mechanics.base[m].dice && resObj.spell.mechanics.base[m].dice.dieCount != 0) {
+                                resObj.spell.needDiceCheck = true;
+                            }
+                        }*/
+                        for (var m = 0; m < resObj.spell.mechanics.length; m++) {
+                            if (resObj.spell.mechanics[m].dice && resObj.spell.mechanics[m].dice.dieCount != 0) {
+                                resObj.spell.needDiceCheck = true;
                             }
                         }
-                        if (tmp.spell.damage && tmp.spell.damage.supplemental && tmp.spell.damage.supplemental.length != 0) {
-                            for (var s = 0; s < tmp.spell.damage.supplemental.length; s++) {
-                                if (tmp.spell.damage.supplemental[s].dice && tmp.spell.damage.supplemental[s].dice.dieCount != 0) {
-                                    tmp.spell.needDiceCheck = true;
+                        if (resObj.spell.damage && resObj.spell.damage.supplemental && resObj.spell.damage.supplemental.length != 0) {
+                            for (var s = 0; s < resObj.spell.damage.supplemental.length; s++) {
+                                if (resObj.spell.damage.supplemental[s].dice && resObj.spell.damage.supplemental[s].dice.dieCount != 0) {
+                                    resObj.spell.needDiceCheck = true;
                                 }
                             }
                         }
-                        return callback(null, tmp);
+                        resObj.spell.hasDamage = false;
+                        resObj.spell.hasImprovementDamage = false;
+                        resObj.spell.hasMaximumDamage = false;
+                        resObj.spell.hasSupplementalDamage = false;
+                        if (resObj.spell.damage && resObj.spell.damage.dice.dieCount && resObj.spell.damage.dice.dieCount != 0) {
+                            resObj.spell.hasDamage = true;
+                            if (resObj.spell.damage.improvement && resObj.spell.damage.improvement.dice.dieCount && resObj.spell.damage.improvement.dice.dieCount != 0) {
+                                resObj.spell.hasImprovementDamage = true;
+                            }
+                            if (resObj.spell.damage && resObj.spell.damage.maximum && resObj.spell.damage.maximum.dice.dieCount && resObj.spell.damage.maximum.dice.dieCount != 0) {
+                                resObj.spell.hasMaximumDamage = true;
+                            }
+                            if (resObj.spell.damage && resObj.spell.damage.supplemental && resObj.spell.damage.supplemental.length != 0) {
+                                resObj.spell.hasSupplementalDamage = true;
+                            }
+                        }
+                        resObj.spell.hasMechanics = false;
+                        resObj.spell.hasBaseMechanics = false;
+                        resObj.spell.hasAdvancementMechanics = false;
+                        if (resObj.spell.mechanics && resObj.spell.mechanics.length != 0) {
+                            resObj.spell.hasMechanics = true;
+                        }
+                        /*if (resObj.spell.mechanics && resObj.spell.mechanics.base && resObj.spell.mechanics.base.length != 0) {
+                            resObj.spell.hasBaseMechanics = true;
+                            if (resObj.spell.atHigherLevelsId && resObj.spell.atHigherLevelsId != 0) {
+                                if (resObj.spell.mechanics.advancement && resObj.spell.mechanics.advancement.length != 0) {
+                                    resObj.spell.hasAdvancementMechanics = false;
+                                }
+                            }
+                        }*/
+                        resObj.spell.hasSupplementalDescriptions = false;
+                        if (resObj.spell.supplementalDescriptions && resObj.spell.supplementalDescriptions.length != 0) {
+                            resObj.spell.hasSupplementalDescriptions = true;
+                        }
+                        return callback(null, resObj);
                     });
                 },
                 function insertSpellTable(resObj, callback) {
@@ -626,348 +563,36 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, resObj);
                     });
                 },
-                function insertMissingDamageDice(resObj, callback) {
-                    if (resObj.spell.needDiceCheck) {
-                        var first = 1;
-                        var second = 2;
-                        var third = 3;
-                        var fourth = 4;
-                        var fifth = 5;
-                        vals = [];
-                        var includeUnion = false;
-                        sql = 'with vals as ';
-                        sql += ' (';
-                        if (resObj.spell.damage && resObj.spell.damage.dice.dieCount && resObj.spell.damage.dice.dieCount != 0) {
-                            sql += 'select $' + first.toString() +' :: bigint as "dieCount", $' + second.toString() +' :: bigint as "dieType"';
-                            sql += ', $' + third.toString() +' :: smallint as "modifier", $' + fourth.toString() +' :: smallint as "multiplier"';
-                            sql += ', $' + fifth.toString() +' :: smallint as "divisor"';
-                            first = first + 5;
-                            second = second + 5;
-                            third = third + 5;
-                            fourth = fourth + 5;
-                            fifth = fifth + 5;
-                            includeUnion = true;
-                            vals.push(resObj.spell.damage.dice.dieCount);
-                            vals.push(resObj.spell.damage.dice.dieType);
-                            vals.push(resObj.spell.damage.dice.modifier);
-                            vals.push(resObj.spell.damage.dice.multiplier);
-                            vals.push(resObj.spell.damage.dice.divisor);
-                        }
-                        if (resObj.spell.damage && resObj.spell.damage.improvement && resObj.spell.damage.improvement.dice.dieCount && resObj.spell.damage.improvement.dice.dieCount != 0) {
-                            if (includeUnion) {
-                                sql += ' UNION ';
-                            }
-                            sql += 'select $' + first.toString() +' :: bigint as "dieCount", $' + second.toString() +' :: bigint as "dieType"';
-                            sql += ', $' + third.toString() +' :: smallint as "modifier", $' + fourth.toString() +' :: smallint as "multiplier"';
-                            sql += ', $' + fifth.toString() +' :: smallint as "divisor"';
-                            first = first + 5;
-                            second = second + 5;
-                            third = third + 5;
-                            fourth = fourth + 5;
-                            fifth = fifth + 5;
-                            includeUnion = true;
-                            vals.push(resObj.spell.damage.improvement.dice.dieCount);
-                            vals.push(resObj.spell.damage.improvement.dice.dieType);
-                            vals.push(resObj.spell.damage.improvement.dice.modifier);
-                            vals.push(resObj.spell.damage.improvement.dice.multiplier);
-                            vals.push(resObj.spell.damage.improvement.dice.divisor);
-                        }
-                        if (resObj.spell.damage && resObj.spell.damage.maximum && resObj.spell.damage.maximum.dice.dieCount && resObj.spell.damage.maximum.dice.dieCount != 0) {
-                            if (includeUnion) {
-                                sql += ' UNION ';
-                            }
-                            sql += 'select $' + first.toString() +' :: bigint as "dieCount", $' + second.toString() +' :: bigint as "dieType"';
-                            sql += ', $' + third.toString() +' :: smallint as "modifier", $' + fourth.toString() +' :: smallint as "multiplier"';
-                            sql += ', $' + fifth.toString() +' :: smallint as "divisor"';
-                            first = first + 5;
-                            second = second + 5;
-                            third = third + 5;
-                            fourth = fourth + 5;
-                            fifth = fifth + 5;
-                            vals.push(resObj.spell.damage.maximum.dice.dieCount);
-                            vals.push(resObj.spell.damage.maximum.dice.dieType);
-                            vals.push(resObj.spell.damage.maximum.dice.modifier);
-                            vals.push(resObj.spell.damage.maximum.dice.multiplier);
-                            vals.push(resObj.spell.damage.maximum.dice.divisor);
-                        }
-                        if (resObj.spell.mechanics && resObj.spell.mechanics.base && resObj.spell.mechanics.base.length != 0) {
-                            for (var m = 0; m < resObj.spell.mechanics.base.length; m++) {
-                                if (resObj.spell.mechanics.base[m].dice && resObj.spell.mechanics.base[m].dice.dieCount != 0) {
-                                    if (includeUnion) {
-                                        sql += ' UNION ';
-                                    }
-                                    sql += 'select $' + first.toString() +' :: bigint as "dieCount", $' + second.toString() +' :: bigint as "dieType"';
-                                    sql += ', $' + third.toString() +' :: smallint as "modifier", $' + fourth.toString() +' :: smallint as "multiplier"';
-                                    sql += ', $' + fifth.toString() +' :: smallint as "divisor"';
-                                    first = first + 5;
-                                    second = second + 5;
-                                    third = third + 5;
-                                    fourth = fourth + 5;
-                                    fifth = fifth + 5;
-                                    includeUnion = true;
-                                    vals.push(resObj.spell.mechanics.base[m].dice.dieCount);
-                                    vals.push(resObj.spell.mechanics.base[m].dice.dieType);
-                                    vals.push(resObj.spell.mechanics.base[m].dice.modifier);
-                                    vals.push(resObj.spell.mechanics.base[m].dice.multiplier);
-                                    vals.push(resObj.spell.mechanics.base[m].dice.divisor);
-                                }
-                            }
-                        }
-                        if (resObj.spell.mechanics && resObj.spell.mechanics.advacement && resObj.spell.mechanics.advacement.length != 0) {
-                            for (var m = 0; m < resObj.spell.mechanics.advacement.length; m++) {
-                                if (resObj.spell.mechanics.advacement[m].dice && resObj.spell.mechanics.advacement[m].dice.dieCount != 0) {
-                                    if (includeUnion) {
-                                        sql += ' UNION ';
-                                    }
-                                    sql += 'select $' + first.toString() +' :: bigint as "dieCount", $' + second.toString() +' :: bigint as "dieType"';
-                                    sql += ', $' + third.toString() +' :: smallint as "modifier", $' + fourth.toString() +' :: smallint as "multiplier"';
-                                    sql += ', $' + fifth.toString() +' :: smallint as "divisor"';
-                                    first = first + 5;
-                                    second = second + 5;
-                                    third = third + 5;
-                                    fourth = fourth + 5;
-                                    fifth = fifth + 5;
-                                    includeUnion = true;
-                                    vals.push(resObj.spell.mechanics.advacement[m].dice.dieCount);
-                                    vals.push(resObj.spell.mechanics.advacement[m].dice.dieType);
-                                    vals.push(resObj.spell.mechanics.advacement[m].dice.modifier);
-                                    vals.push(resObj.spell.mechanics.advacement[m].dice.multiplier);
-                                    vals.push(resObj.spell.mechanics.advacement[m].dice.divisor);
-                                }
-                            }
-                        }
-                        if (resObj.spell.damage && resObj.spell.damage.supplemental && resObj.spell.damage.supplemental.length != 0) {
-                            for (var s = 0; s < resObj.spell.damage.supplemental.length; s++) {
-                                if (resObj.spell.damage.supplemental[s].dice && resObj.spell.damage.supplemental[s].dice.dieCount != 0) {
-                                    if (includeUnion) {
-                                        sql += ' UNION ';
-                                    }
-                                    sql += 'select $' + first.toString() +' :: bigint as "dieCount", $' + second.toString() +' :: bigint as "dieType"';
-                                    sql += ', $' + third.toString() +' :: smallint as "modifier", $' + fourth.toString() +' :: smallint as "multiplier"';
-                                    sql += ', $' + fifth.toString() +' :: smallint as "divisor"';
-                                    first = first + 5;
-                                    second = second + 5;
-                                    third = third + 5;
-                                    fourth = fourth + 5;
-                                    fifth = fifth + 5;
-                                    includeUnion = true;
-                                    vals.push(resObj.spell.damage.supplemental[s].dice.dieCount);
-                                    vals.push(resObj.spell.damage.supplemental[s].dice.dieType);
-                                    vals.push(resObj.spell.damage.supplemental[s].dice.modifier);
-                                    vals.push(resObj.spell.damage.supplemental[s].dice.multiplier);
-                                    vals.push(resObj.spell.damage.supplemental[s].dice.divisor);
-                                }
-                            }
-                        }
-                        sql += ')';
-                        sql += ' insert into adm_core_dice ("dieCount", "dieType", "modifier", "multiplier", "divisor") ';
-                        sql += ' select v."dieCount", v."dieType", v."modifier", v."multiplier", v."divisor" from vals as v ';
-                        sql += ' where not exists (';
-                        sql += ' select * from adm_core_dice as t ';
-                        sql += ' where t."dieCount" = v."dieCount" ';
-                        sql += ' and t."dieType" = v."dieType"';
-                        sql += ' and t."modifier" = v."modifier"';
-                        sql += ' and t."multiplier" = v."multiplier"';
-                        sql += ' and t."divisor" = v."divisor")';
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
+                function manageDamageDice(resObj, callback) {
+                    var diceArr = [];
+                    if (resObj.spell.hasDamage) {
+                        diceArr.push(resObj.spell.damage.dice);
                     }
-                },
-                function assignDamageIds(resObj, callback) {
-                    if (resObj.spell.needDiceCheck) {
-                        vals = [];
-                        results = [];
-                        first = 1;
-                        second = 2;
-                        third = 3;
-                        fourth = 4;
-                        fifth = 5;
-                        var usesOrClause = false;
-                        sql = 'SELECT * FROM adm_core_dice';
-                        if (resObj.spell.damage && resObj.spell.damage.dice.dieCount && resObj.spell.damage.dice.dieCount != 0) {
-                            sql += usesOrClause ? ' OR ' : ' WHERE ';
-                            sql += ' ("dieCount" = $' + first.toString() + ' AND "dieType" = $' + second.toString();
-                            sql += ' AND "modifier" = $' + third.toString() + ' AND "multiplier" = $' + fourth.toString();
-                            sql += ' AND "divisor" = $' + fifth.toString() + ')';
-                            first = first + 5;
-                            second = second + 5;
-                            third = third + 5;
-                            fourth = fourth + 5;
-                            fifth = fifth + 5;
-                            vals.push(resObj.spell.damage.dice.dieCount);
-                            vals.push(resObj.spell.damage.dice.dieType);
-                            vals.push(resObj.spell.damage.dice.modifier);
-                            vals.push(resObj.spell.damage.dice.multiplier);
-                            vals.push(resObj.spell.damage.dice.divisor);
-                            usesOrClause = true;
+                    if (resObj.spell.hasImprovementDamage) {
+                        diceArr.push(resObj.spell.damage.improvement.dice);
+                    }
+                    if (resObj.spell.hasMaximumDamage) {
+                        diceArr.push(resObj.spell.damage.maximum.dice);
+                    }
+                    if (resObj.spell.hasSupplementalDamage) {
+                        for (var s = 0; s < resObj.spell.damage.supplemental.length; s++) {
+                            diceArr.push(resObj.spell.damage.supplemental[s].dice);
                         }
-                        if (resObj.spell.damage && resObj.spell.damage.improvement && resObj.spell.damage.improvement.dice.dieCount && resObj.spell.damage.improvement.dice.dieCount != 0) {
-                            sql += usesOrClause ? ' OR ' : ' WHERE ';
-                            sql += ' ("dieCount" = $' + first.toString() + ' AND "dieType" = $' + second.toString();
-                            sql += ' AND "modifier" = $' + third.toString() + ' AND "multiplier" = $' + fourth.toString();
-                            sql += ' AND "divisor" = $' + fifth.toString() + ')';
-                            first = first + 5;
-                            second = second + 5;
-                            third = third + 5;
-                            fourth = fourth + 5;
-                            fifth = fifth + 5;
-                            vals.push(resObj.spell.damage.improvement.dice.dieCount);
-                            vals.push(resObj.spell.damage.improvement.dice.dieType);
-                            vals.push(resObj.spell.damage.improvement.dice.modifier);
-                            vals.push(resObj.spell.damage.improvement.dice.multiplier);
-                            vals.push(resObj.spell.damage.improvement.dice.divisor);
-                            usesOrClause = true;
-                        }
-                        if (resObj.spell.damage && resObj.spell.damage.maximum && resObj.spell.damage.maximum.dice.dieCount && resObj.spell.damage.maximum.dice.dieCount != 0) {
-                            sql += usesOrClause ? ' OR ' : ' WHERE ';
-                            sql += ' ("dieCount" = $' + first.toString() + ' AND "dieType" = $' + second.toString();
-                            sql += ' AND "modifier" = $' + third.toString() + ' AND "multiplier" = $' + fourth.toString();
-                            sql += ' AND "divisor" = $' + fifth.toString() + ')';
-                            first = first + 5;
-                            second = second + 5;
-                            third = third + 5;
-                            fourth = fourth + 5;
-                            fifth = fifth + 5;
-                            vals.push(resObj.spell.damage.maximum.dice.dieCount);
-                            vals.push(resObj.spell.damage.maximum.dice.dieType);
-                            vals.push(resObj.spell.damage.maximum.dice.modifier);
-                            vals.push(resObj.spell.damage.maximum.dice.multiplier);
-                            vals.push(resObj.spell.damage.maximum.dice.divisor);
-                            usesOrClause = true;
-                        }
-                        if (resObj.spell.damage && resObj.spell.damage.supplemental && resObj.spell.damage.supplemental.length != 0) {
-                            for (var s = 0; s < resObj.spell.damage.supplemental.length; s++) {
-                                if (resObj.spell.damage.supplemental[s].dice && resObj.spell.damage.supplemental[s].dice.dieCount != 0) {
-                                    sql += usesOrClause ? ' OR ' : ' WHERE ';
-                                    sql += ' ("dieCount" = $' + first.toString() + ' AND "dieType" = $' + second.toString();
-                                    sql += ' AND "modifier" = $' + third.toString() + ' AND "multiplier" = $' + fourth.toString();
-                                    sql += ' AND "divisor" = $' + fifth.toString() + ')';
-                                    first = first + 5;
-                                    second = second + 5;
-                                    third = third + 5;
-                                    fourth = fourth + 5;
-                                    fifth = fifth + 5;
-                                    vals.push(resObj.spell.damage.supplemental[s].dice.dieCount);
-                                    vals.push(resObj.spell.damage.supplemental[s].dice.dieType);
-                                    vals.push(resObj.spell.damage.supplemental[s].dice.modifier);
-                                    vals.push(resObj.spell.damage.supplemental[s].dice.multiplier);
-                                    vals.push(resObj.spell.damage.supplemental[s].dice.divisor);
-                                    usesOrClause = true;
-                                }
+                    }
+                    if (diceArr.length != 0) {
+                        common.getObjects.dice(diceArr, function(results) {
+                            if (resObj.spell.hasDamage) {
+                                resObj.spell.damage.dice = common.datatypes.dice.getObject(results.objectArray, resObj.spell.damage.dice);
                             }
-                        }
-                        if (resObj.spell.mechanics && resObj.spell.mechanics.base && resObj.spell.mechanics.base.length != 0) {
-                            for (var m = 0; m < resObj.spell.mechanics.base.length; m++) {
-                                if (resObj.spell.mechanics.base[m].dice && resObj.spell.mechanics.base[m].dice.dieCount != 0) {
-                                    sql += usesOrClause ? ' OR ' : ' WHERE ';
-                                    sql += ' ("dieCount" = $' + first.toString() + ' AND "dieType" = $' + second.toString();
-                                    sql += ' AND "modifier" = $' + third.toString() + ' AND "multiplier" = $' + fourth.toString();
-                                    sql += ' AND "divisor" = $' + fifth.toString() + ')';
-                                    first = first + 5;
-                                    second = second + 5;
-                                    third = third + 5;
-                                    fourth = fourth + 5;
-                                    fifth = fifth + 5;
-                                    vals.push(resObj.spell.mechanics.base[m].dice.dieCount);
-                                    vals.push(resObj.spell.mechanics.base[m].dice.dieType);
-                                    vals.push(resObj.spell.mechanics.base[m].dice.modifier);
-                                    vals.push(resObj.spell.mechanics.base[m].dice.multiplier);
-                                    vals.push(resObj.spell.mechanics.base[m].dice.divisor);
-                                    usesOrClause = true;
-                                }
+                            if (resObj.spell.hasImprovementDamage) {
+                                resObj.spell.damage.improvement.dice = common.datatypes.dice.getObject(results.objectArray, resObj.spell.damage.improvement.dice);
                             }
-                        }
-                        if (resObj.spell.mechanics && resObj.spell.mechanics.advacement && resObj.spell.mechanics.advacement.length != 0) {
-                            for (var m = 0; m < resObj.spell.mechanics.advacement.length; m++) {
-                                if (resObj.spell.mechanics.advacement[m].dice && resObj.spell.mechanics.advacement[m].dice.dieCount != 0) {
-                                    sql += usesOrClause ? ' OR ' : ' WHERE ';
-                                    sql += ' ("dieCount" = $' + first.toString() + ' AND "dieType" = $' + second.toString();
-                                    sql += ' AND "modifier" = $' + third.toString() + ' AND "multiplier" = $' + fourth.toString();
-                                    sql += ' AND "divisor" = $' + fifth.toString() + ')';
-                                    first = first + 5;
-                                    second = second + 5;
-                                    third = third + 5;
-                                    fourth = fourth + 5;
-                                    fifth = fifth + 5;
-                                    vals.push(resObj.spell.mechanics.advacement[m].dice.dieCount);
-                                    vals.push(resObj.spell.mechanics.advacement[m].dice.dieType);
-                                    vals.push(resObj.spell.mechanics.advacement[m].dice.modifier);
-                                    vals.push(resObj.spell.mechanics.advacement[m].dice.multiplier);
-                                    vals.push(resObj.spell.mechanics.advacement[m].dice.divisor);
-                                    usesOrClause = true;
-                                }
+                            if (resObj.spell.hasMaximumDamage) {
+                                resObj.spell.damage.maximum.dice = common.datatypes.dice.getObject(results.objectArray, resObj.spell.damage.maximum.dice);
                             }
-                        }
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            for (var e = 0; e < results.length; e++) {
-                                if (resObj.spell.damage && resObj.spell.damage.dice && resObj.spell.damage.dice.dieCount != 0) {
-                                    if (resObj.spell.damage.dice.dieCount == results[e].dieCount && resObj.spell.damage.dice.dieType == results[e].dieType
-                                       && resObj.spell.damage.dice.modifier == results[e].modifier && resObj.spell.damage.dice.multiplier == results[e].multiplier
-                                       && resObj.spell.damage.dice.divisor == results[e].divisor) {
-                                        resObj.spell.damage.dice.id = results[e].id;
-                                    }
-                                }
-                                if (resObj.spell.damage && resObj.spell.damage.improvement && resObj.spell.damage.improvement.dice && resObj.spell.damage.improvement.dice.dieCount != 0) {
-                                    if (resObj.spell.damage.improvement.dice.dieCount == results[e].dieCount && resObj.spell.damage.improvement.dice.dieType == results[e].dieType
-                                       && resObj.spell.damage.improvement.dice.modifier == results[e].modifier && resObj.spell.damage.improvement.dice.multiplier == results[e].multiplier
-                                       && resObj.spell.damage.improvement.dice.divisor == results[e].divisor) {
-                                        resObj.spell.damage.improvement.dice.id = results[e].id;
-                                    } 
-                                }
-                                if (resObj.spell.damage && resObj.spell.damage.maximum && resObj.spell.damage.maximum.dice && resObj.spell.damage.maximum.dice.dieCount != 0) {
-                                    if (resObj.spell.damage.maximum.dice.dieCount == results[e].dieCount && resObj.spell.damage.maximum.dice.dieType == results[e].dieType
-                                       && resObj.spell.damage.maximum.dice.modifier == results[e].modifier && resObj.spell.damage.maximum.dice.multiplier == results[e].multiplier
-                                       && resObj.spell.damage.maximum.dice.divisor == results[e].divisor) {
-                                        resObj.spell.damage.maximum.dice.id = results[e].id;
-                                    } 
-                                }
-                                if (resObj.spell.mechanics && resObj.spell.mechanics.base && resObj.spell.mechanics.base.length != 0) {
-                                    for (var m = 0; m < resObj.spell.mechanics.base.length; m++) {
-                                        if (resObj.spell.mechanics.base[m] && resObj.spell.mechanics.base[m].dice && resObj.spell.mechanics.base[m].dice.dieCount != 0) {
-                                            if (resObj.spell.mechanics.base[m].dice.dieCount == results[e].dieCount && resObj.spell.mechanics.base[m].dice.dieType == results[e].dieType
-                                               && resObj.spell.mechanics.base[m].dice.modifier == results[e].modifier && resObj.spell.mechanics.base[m].dice.multiplier == results[e].multiplier
-                                               && resObj.spell.mechanics.base[m].dice.divisor == results[e].divisor) {
-                                                resObj.spell.mechanics.base[m].dice.id = results[e].id;
-                                            }
-                                        }
-                                    }
-                                }
-                                if (resObj.spell.mechanics && resObj.spell.mechanics.advancement && resObj.spell.mechanics.advancement.length != 0) {
-                                    for (var m = 0; m < resObj.spell.mechanics.advancement.length; m++) {
-                                        if (resObj.spell.mechanics.advancement[m] && resObj.spell.mechanics.advancement[m].dice && resObj.spell.mechanics.advancement[m].dice.dieCount != 0) {
-                                            if (resObj.spell.mechanics.advancement[m].dice.dieCount == results[e].dieCount && resObj.spell.mechanics.advancement[m].dice.dieType == results[e].dieType
-                                               && resObj.spell.mechanics.advancement[m].dice.modifier == results[e].modifier && resObj.spell.mechanics.advancement[m].dice.multiplier == results[e].multiplier
-                                               && resObj.spell.mechanics.advancement[m].dice.divisor == results[e].divisor) {
-                                                resObj.spell.mechanics.advancement[m].dice.id = results[e].id;
-                                            }
-                                        }
-                                    }
-                                }
-                                if (resObj.spell.damage && resObj.spell.damage.supplemental && resObj.spell.damage.supplemental.length != 0) {
-                                    for (var s = 0; s < resObj.spell.damage.supplemental.length; s++) {
-                                        if (resObj.spell.damage.supplemental[s].dice && resObj.spell.damage.supplemental[s].dice.dieCount != 0) {
-                                            if (resObj.spell.damage.supplemental[s].dice.dieCount == results[e].dieCount
-                                               && resObj.spell.damage.supplemental[s].dice.dieType == results[e].dieType
-                                               && resObj.spell.damage.supplemental[s].dice.modifier == results[e].modifier
-                                               && resObj.spell.damage.supplemental[s].dice.multiplier == results[e].multiplier
-                                               && resObj.spell.damage.supplemental[s].dice.divisor == results[e].divisor) {
-                                                resObj.spell.damage.supplemental[s].dice.id = results[e].id;
-                                            }
-                                        }
-                                    }
+                            if (resObj.spell.hasSupplementalDamage) {
+                                for (var s = 0; s < resObj.spell.damage.supplemental.length; s++) {
+                                   resObj.spell.damage.supplemental[s].dice = common.datatypes.dice.getObject(results.objectArray, resObj.spell.damage.supplemental[s].dice); 
                                 }
                             }
                             return callback(null, resObj);
@@ -1096,729 +721,40 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         return callback(null, resObj);
                     }
                 },
-                function insertMechanics(resObj, callback) {
-                    if (resObj.spell.mechanics && resObj.spell.mechanics.base && resObj.spell.mechanics.base.length != 0) {
-                        sql = 'INSERT INTO adm_link_mechanic';
-                        sql += ' ("referenceId", "targetId", "typeId", "value", "diceId", "valueObjectId")';
-                        sql += ' VALUES ';
-                        var first = 1;
-                        var second = 2;
-                        var third = 3;
-                        var fourth = 4;
-                        var fifth = 5;
-                        var sixth = 6;
-                        vals = [];
-                        for (var e = 0; e < resObj.spell.mechanics.base.length; e++) {
-                            if (e != 0) {
-                                sql += ', ';
-                            }
-                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ', $' + fifth.toString() + ', $' + sixth.toString() + ')';
-                            first = first + 6;
-                            second = second + 6;
-                            third = third + 6;
-                            fourth = fourth + 6;
-                            fifth = fifth + 6;
-                            sixth = sixth + 6;
-                            vals.push(resObj.spell.id);
-                            vals.push(resObj.spell.mechanics.base[e].target.id);
-                            vals.push(resObj.spell.mechanics.base[e].type.id);
-                            vals.push(resObj.spell.mechanics.base[e].value);
-                            vals.push(resObj.spell.mechanics.base[e].dice.id);
-                            vals.push(resObj.spell.mechanics.base[e].valueObject.id);
-                        }
-                        if (resObj.spell.atHigherLevelsId && resObj.spell.atHigherLevelsId != 0) {
-                            if (resObj.spell.mechanics.advancement && resObj.spell.mechanics.advancement.length != 0) {
-                                for (var e = 0; e < resObj.spell.mechanics.advancement.length; e++) {
-                                    sql += ', ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ', $' + fifth.toString() + ', $' + sixth.toString() + ')';
-                                    first = first + 6;
-                                    second = second + 6;
-                                    third = third + 6;
-                                    fourth = fourth + 6;
-                                    fifth = fifth + 6;
-                                    sixth = sixth + 6;
-                                    vals.push(resObj.spell.atHigherLevelsId);
-                                    vals.push(resObj.spell.mechanics.advancement[e].target.id);
-                                    vals.push(resObj.spell.mechanics.advancement[e].type.id);
-                                    vals.push(resObj.spell.mechanics.advancement[e].value);
-                                    vals.push(resObj.spell.mechanics.advancement[e].dice.id);
-                                    vals.push(resObj.spell.mechanics.advancement[e].valueObject.id);
-                                }
-                            }
-                        }
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
+                function manageBaseMechanics(resObj, callback) {
+                    //if (resObj.spell.hasBaseMechanics) {
+                    if (resObj.spell.hasMechanics) {
+                        common.insert.mechanics(resObj.spell.mechanics, resObj.spell.id, function(results) {
                             return callback(null, resObj);
                         });
                     } else {
                         return callback(null, resObj);
                     }
                 },
-                function insertChartsCore(resObj, callback) {
+                function manageAdvancementMechanics(resObj, callback) {
+                    /*if (resObj.spell.hasAdvancementMechanics) {
+                        common.insert.mechanics(resObj.spell.mechanics.advancement, resObj.spell.atHigherLevelsId, function(results) {
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }*/
+                    return callback(null, resObj);
+                },
+                function manageCharts(resObj, callback) {
                     if (resObj.spell.hasAnyTypeOfChart) {
-                        sql = 'INSERT INTO adm_core_chart';
-                        sql += ' ("title", "typeId")';
-                        sql += ' VALUES ';
-                        vals = [];
-                        results = [];
-                        var addComma = false;
-                        first = 1;
-                        second = 2;
-                        if (resObj.spell.charts && resObj.spell.charts.length != 0) {
-                            for (var e = 0; e < resObj.spell.charts.length; e++) {
-                                if (addComma) {
-                                    sql += ', ';
-                                }
-                                sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
-                                vals.push(resObj.spell.charts[e].title);
-                                vals.push(resObj.spell.charts[e].type.id);
-                                first = first + 2;
-                                second = second + 2;
-                                addComma = true;
-                            }
-                        }
-                        sql += ' returning id AS "chartId", title;';
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            for (var e = 0; e < results.length; e++) {
-                                for (var d = 0; d < resObj.spell.charts.length; d++) {
-                                    if (results[e].title == resObj.spell.charts[d].title) {
-                                        resObj.spell.charts[d].id = results[e].chartId;
-                                    }
-                                }
-                            }
+                        common.insert.charts(resObj.spell.charts, resObj.spell.id, function(charts) {
+                            resObj.spell.charts = charts;
                             return callback(null, resObj);
                         });
                     } else {
                         return callback(null, resObj);
                     }
                 },
-                function insertChartSelectionMissingType(resObj, callback) {
-                    if (resObj.spell.hasSelectionChart && resObj.spell.needsNewItemTypeFromChart) {
-                        results = [];
-                        vals = [];
-                        addComma = false;
-                        first = 1;
-                        sql = 'INSERT INTO adm_core_type';
-                        sql += ' ("typeName")';
-                        sql += ' VALUES ';
-                        for (var e = 0; e < resObj.spell.charts.length; e++) {
-                            if (resObj.spell.charts[e].type.id == itemtypes.CHART.SELECTION) {
-                                if (resObj.spell.charts[e].selectionItemType.id <= 0) {
-                                    if (addComma) {
-                                        sql += ', ';
-                                    }
-                                }
-                                sql += ' ($' + first.toString() + ')';
-                                first++;
-                                addComma = true;
-                            }
-                        }
-                        sql += ' returning "typeName" AS "name", "id" AS "typeId"';
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            for (var e = 0; e < results.length; e++) {
-                                for (var f = 0; f < resObj.spell.charts.length; f++) {
-                                    if (resObj.spell.charts[f].type.id == itemtypes.CHART.SELECTION) {
-                                        if (resObj.spell.charts[f].selectionItemType.name == results[e].name) {
-                                            resObj.spell.charts[f].selectionItemType.id = results[e].typeId;
-                                        }
-                                    }
-                                }
-                            }
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function insertChartSelectionMissingTypeItems(resObj, callback) {
-                    if (resObj.spell.hasSelectionChart && resObj.spell.needsNewItemTypeFromChart) {
-                        results = [];
-                        vals = [];
-                        sql = 'INSERT INTO adm_core_item';
-                        sql += ' ("itemName", "itemTypeId", "resourceId")';
-                        sql += ' VALUES ';
-                        first = 1;
-                        second = 2;
-                        third = 3;
-                        addComma = false;
-                        for (var c = 0; c < resObj.spell.charts.length; c++) {
-                            if (resObj.spell.charts[c].type.id == itemtypes.CHART.SELECTION) {
-                                for (var r = 0; r < resObj.spell.charts[c].rows.length; r++) {
-                                    if (resObj.spell.charts[c].rows[r].selectionItem && resObj.spell.charts[c].rows[r].selectionItem.id && resObj.spell.charts[c].rows[r].selectionItem.id == 0) {
-                                        if (addComma) {
-                                            sql += ', ';
-                                        }
-                                        sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
-                                        vals.push(resObj.spell.charts[c].rows[r].selectionItem.name);
-                                        vals.push(resObj.spell.charts[c].selectionItemType.id);
-                                        vals.push(resObj.spell.resource.id);
-                                        first = first + 3;
-                                        second = second + 3;
-                                        third = third + 3;
-                                        addComma = true;
-                                    }
-                                }
-                            }
-                        }
-                        sql += ' returning "itemName", "id" AS "itemId"';
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            for (var e = 0; e < results.length; e++) {
-                                for (var f = 0; f < resObj.spell.charts.length; f++) {
-                                    if (resObj.spell.charts[f].type.id == itemtypes.CHART.SELECTION) {
-                                        for (var r = 0; r < resObj.spell.charts[f].rows.length; r++) {
-                                            if (results[e].itemName == resObj.spell.charts[f].rows[r].selectionItem.name) {
-                                                resObj.spell.charts[f].rows[r].selectionItem.id = results[e].itemId;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function insertChartDefinitions_selection(resObj, callback) {
-                    if (resObj.spell.hasSelectionChart) {
-                        results = [];
-                        vals = [];
-                        first = 1;
-                        second = 2;
-                        addComma = false;
-                        sql = 'INSERT INTO adm_def_chart_selection';
-                        sql += ' ("chartId", "selectTypeId")';
-                        sql += ' VALUES ';
-                        for (var e = 0; e < resObj.spell.charts.length; e++) {
-                            if (resObj.spell.charts[e].type.id == itemtypes.CHART.SELECTION) {
-                                if (addComma) {
-                                    sql += ', ';
-                                }
-                                sql += ' ($' + first.toString() + ', $' + second.toString() + ')';
-                                first = first + 2;
-                                second = second + 2;
-                                vals.push(resObj.spell.charts[e].id);
-                                vals.push(resObj.spell.charts[e].selectionItemType.id);
-                                addComma = true;
-                            }
-                        }
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            for (var e = 0; e < results.length; e++) {
-                                for (var d = 0; d < resObj.spell.charts.length; d++) {
-                                    if (results[e].title == resObj.spell.charts[d].title) {
-                                        resObj.spell.charts[d].id = results[e].chartId;
-                                    }
-                                }
-                            }
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function insertChartDefinitions_standard(resObj, callback) {
-                    if (resObj.spell.hasStandardCharts) {
-                        sql = 'INSERT INTO adm_def_chart';
-                        sql += ' ("chartId", "columnCount", "rowCount")';
-                        sql += ' VALUES ';
-                        first = 1;
-                        second = 2;
-                        third = 3;
-                        vals = [];
-                        results = [];
-                        for (var e = 0; e < resObj.spell.charts.length; e++) {
-                            if (e != 0) {
-                                sql += ', ';
-                            }
-                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
-                            first = first + 3;
-                            second = second + 3;
-                            third = third + 3;
-                            vals.push(resObj.spell.charts[e].id);
-                            vals.push(resObj.spell.charts[e].columnCount);
-                            vals.push(resObj.spell.charts[e].rowCount);
-                        }
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function insertChartDescriptions_both(resObj, callback) {
-                    if (resObj.spell.hasAnyTypeOfChart) {
-                        var hasDescriptions = false;
-                        for (var e = 0; e < resObj.spell.charts.length; e++) {
-                            if (resObj.spell.charts[e].description && resObj.spell.charts[e].description.length != 0) {
-                                hasDescriptions = true;
-                                break;
-                            }
-                        }
-                        var includeComma = false;
-                        if (hasDescriptions) {
-                            sql = 'INSERT INTO adm_core_description';
-                            sql += ' ("itemId", "description", "descriptionTypeId")';
-                            sql += ' VALUES ';
-                            first = 1;
-                            second = 2;
-                            third = 3;
-                            vals = [];
-                            results = [];
-                            for (var e = 0; e < resObj.spell.charts.length; e++) {
-                                if (resObj.spell.charts[e].description && resObj.spell.charts[e].description.length != 0) {
-                                    if (includeComma) {
-                                        sql += ', ';
-                                    }
-                                    sql += ' ($' + first.toString() + ', $' + second.toString() + ', ' + third.toString() + ')';
-                                    vals.push(resObj.spell.charts[e].id);
-                                    vals.push(resObj.spell.charts[e].description);
-                                    vals.push(itemtypes.DESCRIPTION.CHART);
-                                    first = first + 3;
-                                    second = second + 3;
-                                    third = third + 3;
-                                    includeComma = true;
-                                }
-                            }
-                            var query = client.query(new pg.Query(sql, vals));
-                            query.on('row', function(row) {
-                                results.push(row);
-                            });
-                            query.on('end', function() {
-                                done();
-                                return callback(null, resObj);
-                            });
-                        } else {
-                            return callback(null, resObj);
-                        }
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function assignExistentDiceId(resObj, callback) {
-                    results = [];
-                    vals = [];
-                    if (resObj.spell.hasDieChart) {
-                        sql = 'SELECT dice.*';
-                        sql += ' FROM adm_core_dice dice';
-                        var first = 1;
-                        var second = 2;
-                        for (var e = 0; e < resObj.spell.charts.length; e++) {
-                            sql += (e == 0) ? ' WHERE' : ' OR';
-                            sql += ' (dice."dieCount" = $' + first.toString();
-                            sql += ' AND dice."dieType" = $' + second.toString() + ')';
-                            vals.push(resObj.spell.charts[e].dice.dieCount);
-                            vals.push(resObj.spell.charts[e].dice.dieType);
-                            first = first + 2;
-                            second = second + 2;
-                        }
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            for (var i = 0; i < results.length; i++) {
-                                for (var j = 0; j < resObj.spell.charts.length; j++) {
-                                    if (resObj.spell.charts[j].dice.dieCount == results[i].dieCount &&
-                                       resObj.spell.charts[j].dice.dieType == results[i].dieType) {
-                                        resObj.spell.charts[j].dice.id = results[i].id;
-                                    }
-                                }
-                            }
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
-                    
-                },
-                function insertChartDice_die(resObj, callback) {
-                    if (resObj.spell.hasDieChart) {
-                        results = [];
-                        vals = [];
-                        sql = 'INSERT INTO adm_def_chart_dice';
-                        sql += ' ("chartId", "diceId")';
-                        sql += ' VALUES ';
-                        first = 1;
-                        second = 2;
-                        for (var e = 0; e < resObj.spell.charts.length; e++) {
-                            if (e != 0) {
-                                sql += ', ';
-                            }
-                            sql += '($' + first.toString() + ', $' + second.toString() + ')';
-                            first = first + 2;
-                            second = second + 2;
-                            vals.push(resObj.spell.charts[e].id);
-                            vals.push(resObj.spell.charts[e].dice.id);
-                        }
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            for (var i = 0; i < results.length; i++) {
-                                for (var j = 0; j < resObj.spell.charts.length; j++) {
-                                    if (results[i].title == resObj.spell.charts[j].title) {
-                                        resObj.spell.charts[j].id = results[i].chartId;
-                                    }
-                                }
-                            }
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function insertChartDiceEntry_die(resObj, callback) {
-                    if (resObj.spell.hasDieChart) {
-                        results = [];
-                        vals = [];
-                        sql = 'INSERT INTO adm_def_chart_dice_entry';
-                        sql += ' ("chartId", "minimum", "maximum", "description")';
-                        sql += ' VALUES';
-                        var first = 1;
-                        var second = 2;
-                        var third = 3;
-                        var fourth = 4;
-                        var addComma = false;
-                        for (var i = 0; i < resObj.spell.charts.length; i++) {
-                            for (var j = 0; j < resObj.spell.charts[i].entries.length; j++) {
-                                if (addComma) {
-                                    sql += ', ';
-                                }
-                                sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
-                                vals.push(resObj.spell.charts[i].id);
-                                vals.push(resObj.spell.charts[i].entries[j].minimum);
-                                vals.push(resObj.spell.charts[i].entries[j].maximum);
-                                vals.push(resObj.spell.charts[i].entries[j].description);
-                                first = first + 4;
-                                second = second + 4;
-                                third = third + 4;
-                                fourth = fourth + 4;
-                                addComma = true;
-                            }
-                        }
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function insertChartColumns_standard(resObj, callback) {
-                    if (resObj.spell.hasStandardCharts || resObj.spell.hasSelectionChart) {
-                        vals = [];
-                        results = [];
-                        sql = 'INSERT INTO adm_def_chart_column';
-                        sql += ' ("chartId", "columnIndex", "title", "selectionItemId")';
-                        sql += ' VALUES ';
-                        first = 1;
-                        second = 2;
-                        third = 3;
-                        fourth = 4;
-                        for (var c = 0; c < resObj.spell.charts.length; c++) {
-                            for (var e = 0; e < resObj.spell.charts[c].columns.length; e ++) {
-                                if (!(c == 0 && e == 0)) {
-                                    sql += ', ';
-                                }
-                                sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
-                                first = first + 4;
-                                second = second + 4;
-                                third = third + 4;
-                                fourth = fourth + 4;
-                                vals.push(resObj.spell.charts[c].id);
-                                vals.push(resObj.spell.charts[c].columns[e].columnIndex);
-                                vals.push(resObj.spell.charts[c].columns[e].title);
-                                vals.push(resObj.spell.charts[c].columns[e].selectionItemId.id);
-                            }
-                        }
-                        sql += ' returning "chartId", "columnIndex", id AS "columnId";';
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            for (var r = 0; r < results.length; r++) {
-                                for (var c = 0; c < resObj.spell.charts.length; c++) {
-                                    for (var e = 0; e < resObj.spell.charts[c].columns.length; e++) {
-                                        if (results[r].chartId == resObj.spell.charts[c].id) {
-                                            if (results[r].columnIndex == resObj.spell.charts[c].columns[e].columnIndex) {
-                                                resObj.spell.charts[c].columns[e].id = results[r].columnId;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function insertChartRows_standard(resObj, callback) {
-                    if (resObj.spell.hasStandardCharts || resObj.spell.hasSelectionChart) {
-                        vals = [];
-                        results = [];
-                        var hasRowTitles = false;
-                        for (var c = 0; c < resObj.spell.charts.length; c++) {
-                            for (var r = 0; r < resObj.spell.charts[c].rows.length; r++) {
-                                if (resObj.spell.charts[c].rows[r].title && resObj.spell.charts[c].rows[r].title.length != 0) {
-                                    hasRowTitles = true;
-                                } else if (resObj.spell.charts[c].rows[r].selectionItemId && resObj.spell.charts[c].rows[r].selectionItemId != 0) {
-                                    hasRowTitles = true;
-                                }
-                            }
-                        }
-                        if (hasRowTitles) {
-                            sql = 'INSERT INTO adm_def_chart_row';
-                            sql += ' ("chartId", "rowIndex", "title", "selectionItemId")';
-                            sql += ' VALUES ';
-                            first = 1;
-                            second = 2;
-                            third = 3;
-                            fourth = 4;
-                            var addComma = false;
-                            for (var c = 0; c < resObj.spell.charts.length; c++) {
-                                for (var r = 0; r < resObj.spell.charts[c].rows.length; r++) {
-                                    if (resObj.spell.charts[c].rows[r].title && resObj.spell.charts[c].rows[r].title.length != 0) {
-                                        if (addComma) {
-                                            sql += ', ';
-                                        }
-                                        sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
-                                        first = first + 4;
-                                        second = second + 4;
-                                        third = third + 4;
-                                        fourth = fourth + 4;
-                                        vals.push(resObj.spell.charts[c].id);
-                                        vals.push(resObj.spell.charts[c].rows[r].rowIndex);
-                                        vals.push(resObj.spell.charts[c].rows[r].title);
-                                        vals.push(resObj.spell.charts[c].rows[e].selectionItemId.id);
-                                        addComma = true;
-                                    }
-                                }
-                            }
-                            sql += ' returning "chartId", "rowIndex", id AS "rowId";';
-                            var query = client.query(new pg.Query(sql, vals));
-                            query.on('row', function(row) {
-                                results.push(row);
-                            });
-                            query.on('end', function() {
-                                done();
-                                for (var r = 0; r < results.length; r++) {
-                                    for (var c = 0; c < resObj.spell.charts.length; c++) {
-                                        for (var e = 0; e < resObj.spell.charts[c].rows.length; e++) {
-                                            if (results[r].chartId == resObj.spell.charts[c].id) {
-                                                if (results[r].rowIndex == resObj.spell.charts[c].rows[e].rowIndex) {
-                                                    resObj.spell.charts[c].rows[e].id = results[r].rowId;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                return callback(null, resObj);
-                            });
-                        } else {
-                            return callback(null, resObj);
-                        }
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function insertChartEntries_standard(resObj, callback) {
-                    if (resObj.spell.hasStandardCharts || resObj.spell.hasSelectionChart) {
-                        vals = [];
-                        results = [];
-                        sql = 'INSERT INTO adm_def_chart_entry';
-                        sql += ' ("chartId", "columnIndex", "rowIndex", "description", "selectionItemId")';
-                        sql += ' VALUES ';
-                        first = 1;
-                        second = 2;
-                        third = 3;
-                        fourth = 4;
-                        fifth = 5;
-                        for (var c = 0; c < resObj.spell.charts.length; c++) {
-                            for (var e = 0; e < resObj.spell.charts[c].entries.length; e++) {
-                                if(!(c == 0 && e == 0)) {
-                                    sql += ', ';
-                                }
-                                sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ', $' + fourth.toString() + ')';
-                                first = first + 5;
-                                second = second + 5;
-                                third = third + 5;
-                                fourth = fourth + 5;
-                                fifth = fifth + 5;
-                                vals.push(resObj.spell.charts[c].id);
-                                vals.push(resObj.spell.charts[c].entries[e].columnIndex);
-                                vals.push(resObj.spell.charts[c].entries[e].rowIndex);
-                                vals.push(resObj.spell.charts[c].entries[e].description);
-                                vals.push(resObj.spell.charts[c].entries[e].selectionItemId.id);
-                            }
-                        }
-                        sql += 'returning "chartId", "rowIndex", "columnIndex", id AS "entryId";';
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            for (var r = 0; r < results.length; r++) {
-                                for (var c = 0; c < resObj.spell.charts.length; c++) {
-                                    for (var e = 0; e < resObj.spell.charts[c].entries.length; e++) {
-                                        if (results[r].chartId == resObj.spell.charts[c].id) {
-                                            if (results[r].rowIndex == resObj.spell.charts[c].entries[e].rowIndex && results[r].columnIndex == resObj.spell.charts[c].entries[e].columnIndex) {
-                                                resObj.spell.charts[c].entries[e].id = results[r].entryId;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function insertChartLinks_both(resObj, callback) {
-                    if (resObj.spell.hasAnyTypeOfChart) {
-                        vals = [];
-                        results = [];
-                        sql = 'INSERT INTO adm_link_chart';
-                        sql += ' ("referenceId", "chartId", "orderIndex")';
-                        sql += ' VALUES ';
-                        first = 1;
-                        second = 2;
-                        third = 3;
-                        addComma = false
-                        for (var c = 0; c < resObj.spell.charts.length; c++) {
-                            if (addComma) {
-                                sql += ', ';
-                            }
-                            sql += '($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
-                            first = first + 3;
-                            second = second + 3;
-                            third = third + 3;
-                            vals.push(resObj.spell.id);
-                            vals.push(resObj.spell.charts[c].id);
-                            vals.push(resObj.spell.charts[c].orderIndex);
-                            addComma = true;
-                        }
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function insertSupplementalDescription(resObj, callback) {
-                    if (resObj.spell.supplementalDescriptions && resObj.spell.supplementalDescriptions.length != 0) {
-                        vals = [];
-                        results = [];
-                        sql = 'INSERT INTO adm_core_description';
-                        sql += ' ("itemId", "description", "descriptionTypeId")';
-                        sql += ' VALUES ';
-                        first = 1;
-                        second = 2;
-                        third = 3;
-                        for (var d = 0; d < resObj.spell.supplementalDescriptions.length; d++) {
-                            if (d != 0) {
-                                sql += ', ';
-                            }
-                            sql += '($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
-                            first = first + 3;
-                            second = second + 3;
-                            third = third + 3;
-                            vals.push(resObj.spell.id);
-                            vals.push(resObj.spell.supplementalDescriptions[d].description);
-                            vals.push(itemtypes.DESCRIPTION.SUPPLEMENTAL_DESCRIPTION);
-                        }
-                        sql += ' returning "description", id AS "descriptionId"';
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
-                            for (var r= 0; r < results.length; r++) {
-                                for (var d = 0; d < resObj.spell.supplementalDescriptions.length; d++) {
-                                    if (results[r].description == resObj.spell.supplementalDescriptions[d].description) {
-                                        resObj.spell.supplementalDescriptions[d].id = results[r].descriptionId;
-                                    }
-                                }
-                            }
-                            return callback(null, resObj);
-                        });
-                    } else {
-                        return callback(null, resObj);
-                    }
-                },
-                function insertSupplementalDescriptionDef(resObj, callback) {
-                    if (resObj.spell.supplementalDescriptions && resObj.spell.supplementalDescriptions.length != 0) {
-                        vals = [];
-                        results = [];
-                        first = 1;
-                        second = 2;
-                        third = 3;
-                        sql = 'INSERT INTO adm_def_supplemental_description';
-                        sql += ' ("descriptionId", "title", "orderIndex")';
-                        sql += ' VALUES ';
-                        for (var d = 0; d < resObj.spell.supplementalDescriptions.length; d++) {
-                            if (d != 0) {
-                                sql += ', ';
-                            }
-                            sql += ' ($' + first.toString() + ', $' + second.toString() + ', $' + third.toString() + ')';
-                            first = first + 3;
-                            second = second + 3;
-                            third = third + 3;
-                            vals.push(resObj.spell.supplementalDescriptions[d].id);
-                            vals.push(resObj.spell.supplementalDescriptions[d].title);
-                            vals.push(resObj.spell.supplementalDescriptions[d].orderIndex);
-                        }
-                        var query = client.query(new pg.Query(sql, vals));
-                        query.on('row', function(row) {
-                            results.push(row);
-                        });
-                        query.on('end', function() {
-                            done();
+                function manageSupplementalDescriptons(resObj, callback) {
+                    if (resObj.spell.hasSupplementalDescriptions) {
+                        common.insert.supplementalDescriptions(resObj.spell.supplementalDescriptions, resObj.spell.id, function(suppDesc) {
+                            resObj.spell.supplementalDescriptions = suppDesc;
                             return callback(null, resObj);
                         });
                     } else {
@@ -1922,7 +858,8 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += ', json_build_object(';
             sql += '    \'id\', resource.id, \'name\', resource."itemName"';
             sql += ') AS "resource"   ';
-            sql += ', json_build_object(';
+            sql += ', get_base_mechanics(i.id) AS "mechanics"';
+            /*sql += ', json_build_object(';
             sql += '    \'base\', (';
             sql += '        SELECT r.mechanics FROM (';
             sql += '            SELECT json_agg(mechanic_row) AS mechanics,';
@@ -1976,7 +913,7 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
             sql += '            GROUP BY d.id';
             sql += '        ) r(mechanics, id) WHERE id = i.id';
             sql += '    )';
-            sql += ') AS mechanics ';
+            sql += ') AS mechanics ';*/
             sql += ', (';
             sql += '    SELECT construct_chart_object_arrays(i.id)';
             sql += ') AS charts ';
@@ -2084,7 +1021,16 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         results[t].damage.improvement = {dice: {rendered: ''}};
                         results[t].damage.type = {};
                     }
-                    if (results[t].mechanics.base[0] == null && results[t].mechanics.advancement[0] == null) {
+                    if (results[t].damage && results[t].damage.supplemental && results[t].damage.supplemental.length != 0) {
+                        if (results[t].damage.supplemental[0] == null) {
+                            results[t].damage.supplemental = [];
+                        }
+                    }
+                    if (results[t].damage && results[t].damage.abilityScore
+                       && (results[t].damage.abilityScore.id == null || results[t].damage.abilityScore.name == null)) {
+                        results[t].damage.abilityScore = {id: 0};
+                    }
+                    /*if (results[t].mechanics.base[0] == null && results[t].mechanics.advancement[0] == null) {
                         delete results[t].mechanics;
                     } else {
                         if (results[t].mechanics.base[0] == null) {
@@ -2093,6 +1039,9 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         if (results[t].mechanics.advancement[0] == null) {
                             delete results[t].mechanics.advancement;
                         }
+                    }*/
+                    if (results[t].mechanics == null || results[t].mechanics == undefined) {
+                        delete results[t].mechanics;
                     }
                     results[t].components = results[t].components.sort(function (a, b) {
                         if (a.name > b.name) return -1;

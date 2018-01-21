@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import DndListItemButtonBar from '../../common/buttons/DndListItemButtonBar';
 import * as featActions from '../../../actions/admin/featActions';
-import util from '../../../util/util';
+//import util from '../../../util/util';
 
 class FeatListItem extends React.Component {
     constructor(props, context) {

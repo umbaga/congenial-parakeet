@@ -1,4 +1,4 @@
-module.exports = function(app, pg, async, pool, itemtypes, modules) {
+module.exports = function(app, pg, async, pool, itemtypes, common) {
     app.delete('/api/adm/race/:id', function(req, res) {
         var results = [];
         pool.connect(function(err, client, done) {
@@ -556,8 +556,10 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                             resObj.race.hasSenses = true;
                         }
                         resObj.race.needsDice = false;
+                        resObj.race.hasVitals = false;
                         if (resObj.race.vitals && resObj.race.vitals.height && resObj.race.vitals.height.base != 0) {
                             resObj.race.needsDice = true;
+                            resObj.race.hasVitals = true;
                         }
                         resObj.race.hasProficiencies = false;
                         if (resObj.race.proficiencyGroups && resObj.race.proficiencyGroups.length != 0) {
@@ -623,6 +625,24 @@ module.exports = function(app, pg, async, pool, itemtypes, modules) {
                         resObj.race.id = results[0].raceId;
                         return callback(null, resObj);
                     });
+                },
+                function manageDamageDice(resObj, callback) {
+                    var diceArr = [];
+                    if (resObj.race.hasDamage) {
+                        diceArr.push(resObj.race.vitals.height.dice);
+                        diceArr.push(resObj.race.vitals.weight.dice);
+                    }
+                    if (diceArr.length != 0) {
+                        common.getObjects.dice(diceArr, function(results) {
+                            if (resObj.race.hasDamage) {
+                                resObj.race.vitals.height.dice = common.datatypes.dice.getObject(results, resObj.race.vitals.height.dice);
+                                resObj.race.vitals.weigth.dice = common.datatypes.dice.getObject(results, resObj.race.vitals.weigth.dice);
+                            }
+                            return callback(null, resObj);
+                        });
+                    } else {
+                        return callback(null, resObj);
+                    }
                 },
                 function insertRaceTable(resObj, callback) {
                     //console.log("01");

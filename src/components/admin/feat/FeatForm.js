@@ -1,24 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DndButton from '../../common/buttons/DndButton';
-import DndInput from '../../common/inputs/DndInput';
-import DndInputWrapper from '../../common/inputs/DndInputWrapper';
 import DndUniversalInput from '../../common/inputs/DndUniversalInput';
-import DndPicklistAddSelect from '../../common/inputs/DndPicklistAddSelect';
-import DndCheckboxList from '../../common/inputs/DndCheckboxList';
-import DndCheckboxPicklist from '../../common/inputs/DndCheckboxPicklist';
 import util from '../../../util/util';
 import { Tabs, Tab } from 'react-bootstrap';
-import DndManageMechanics from '../../common/objectManagement/DndManageMechanics';
-import DndManageCharts from '../../common/objectManagement/DndManageCharts';
-import DndManageSupplementalDescriptions from '../../common/objectManagement/DndManageSupplementalDescriptions';
 import DndManageItemGroups from '../../common/objectManagement/DndManageItemGroups';
 
 class FeatForm extends React.Component {
     constructor(props) {
         super(props);
         this.setFocus = this.setFocus.bind(this);
-        this.renderSupplementalDamages = this.renderSupplementalDamages.bind(this);
     }
     
     componentDidMount() {
@@ -27,30 +17,6 @@ class FeatForm extends React.Component {
     
     setFocus() {
         this.refs.name.setFocus();
-    }
-    
-    renderSupplementalDamages(feat) {
-        return feat.damage.supplemental && feat.damage.supplemental.length != 0 ? (
-            <DndInputWrapper
-                label="Supplemental Damage"
-                >
-                <div>
-                    {feat.damage.supplemental.map(function(suppDamage, idx) {
-                        return (
-                            <div key={idx}>
-                                {util.format.forDisplay.obj.damage(suppDamage)}
-                                <DndButton
-                                    buttonType="removeitem"
-                                    onClick={this.props.onRemoveDamageGrouping}
-                                    dataType={util.datatypes.action.DAMAGE_GROUPING.REMOVE}
-                                    name={idx + '_removeDamageGroupButton'}
-                                    />
-                            </div>
-                        );
-                    }.bind(this))}
-                </div>
-            </DndInputWrapper>
-        ) : null;
     }
     
     render() {
