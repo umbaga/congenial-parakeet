@@ -187,7 +187,7 @@ var common = {
                             for (var w = 0; w < resObj.objectArray.length; w++) {
                                 resObj.objectArray[w] = common.datatypes.dice.getObject(results, resObj.objectArray[w]);
                             }
-                            return callback(null, resObj);
+                            return callback(null, resObj.objectArray);
                         });
                     }
                 ], function(error, result) {
@@ -201,6 +201,182 @@ var common = {
         }
     },
     insert: {
+        breathWeapons: function(referenceArray, referenceId, cb) {
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    done();
+                    console.error(err);
+                    return res.status(500).json({ success: false, data: err});
+                }
+                async.waterfall([
+                    function init(callback) {
+                        var resObj = {};
+                        resObj.objectArray = referenceArray;
+                        resObj.referenceId = referenceId;
+                        resObj.permissions = {};
+                        resObj.permissions.hasChargeImprovement = false;
+                        resObj.permissions.hasDamageImprovement = false;
+                        if (resObj.objectArray && resObj.objectArray.charges
+                            && resObj.objectArray.charges.improvement && resObj.objectArray.charges.improvement.length != 0) {
+                            resObj.permissions.hasChargeImprovement = true;
+                        }
+                        if (resObj.objectArray && resObj.objectArray.damage 
+                            && resObj.objectArray.damage.improvement && resObj.objectArray.damage.improvement.length != 0) {
+                            resObj.permissions.hasDamageImprovement = true;
+                        }
+                        callback(null, resObj);
+                    },
+                    function manageDice(resObj, callback) {
+                        //console.log('breath-00');
+                        var referenceArray = [];
+                        for (var e = 0; e < resObj.objectArray.length; e++) {
+                            referenceArray.push(resObj.objectArray[e].damage.dice);
+                            if (resObj.objectArray[e].damage.improvement && resObj.objectArray[e].damage.improvement.length != 0) {
+                                for (var w = 0; w < resObj.objectArray[e].damage.improvement.length; w++) {
+                                    referenceArray.push(resObj.objectArray[e].damage.improvement[w].dice);
+                                }
+                            }
+                        }
+                        common.getObjects.dice(referenceArray, function(dice) {
+                            for (var e = 0; e < resObj.objectArray.length; e++) {
+                                resObj.objectArray[e].damage.dice = common.datatypes.dice.getObject(dice, resObj.objectArray[e].damage.dice);
+                                if (resObj.objectArray[e].damage.improvement && resObj.objectArray[e].damage.improvement.length != 0) {
+                                    for (var w = 0; w < resObj.objectArray[e].damage.improvement.length; w++) {
+                                        resObj.objectArray[e].damage.improvement[w].dice = common.datatypes.dice.getObject(dice, resObj.objectArray[e].damage.improvement[w].dice);
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    },
+                    function insertBreathWeaponTable(resObj, callback) {
+                        //console.log('breath-01');
+                        vals = [];
+                        results = [];
+                        addComma = false;
+                        sql = 'INSERT INTO adm_link_breath_weapon';
+                        sql += ' ("referenceId", "damageTypeId", "baseDamageDiceId", "range", "areaOfEffectId", "saveDCAbilityScoreId", "saveAbilityScoreId"';
+                        sql += ', "orderIndex", "baseSaveDC", "saveDCProficiencyBonus", "chargeCount", "rechargeTypeId", "savingThrowEffectId")';
+                        sql += ' VALUES ';
+                        parameterArray = common.parameterArray.resetValues(13);
+                        for (var e = 0; e < resObj.objectArray.length; e++) {
+                            if (addComma) {
+                                sql += ', ';
+                            }
+                            sql += common.parameterArray.sql(parameterArray);
+                            vals.push(resObj.referenceId);
+                            vals.push(resObj.objectArray[e].damage.type.id);
+                            vals.push(resObj.objectArray[e].damage.dice.id);
+                            vals.push(resObj.objectArray[e].range);
+                            vals.push(resObj.objectArray[e].areaOfEffect.shape.id);
+                            vals.push(resObj.objectArray[e].savingThrow.dc.abilityScore.id);
+                            vals.push(resObj.objectArray[e].savingThrow.abilityScore.id);
+                            vals.push(e);
+                            vals.push(resObj.objectArray[e].savingThrow.dc.base);
+                            vals.push(resObj.objectArray[e].savingThrow.dc.applyProficiencyBonus);
+                            vals.push(resObj.objectArray[e].charges.count);
+                            vals.push(resObj.objectArray[e].charges.rechargeType.id);
+                            vals.push(resObj.objectArray[e].savingThrow.effect.id);
+                            addComma = true;
+                            parameterArray = common.parameterArray.incrementValues(parameterArray);
+                        }
+                        sql += ' returning id, "orderIndex"';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var w = 0; w < resObj.objectArray.length; w++) {
+                                    if (resObj.objectArray[w].orderIndex == results[e].orderIndex) {
+                                        resObj.objectArray[w].id = results[e].id;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    },
+                    function insertChargeIMprovement(resObj, callback) {
+                        //console.log('breath-02');
+                        if (resObj.permissions.hasChargeImprovement) {
+                            vals = [];
+                            results = [];
+                            addComma = false;
+                            sql = 'INSERT INTO adm_link_breath_weapon_charges';
+                            sql += ' ("referenceId", "orderIndex", "characterLevel", "chargeCount")';
+                            sql += ' VALUES ';
+                            parameterArray = common.parameterArray.resetValues(4);
+                            for (var e = 0; e < resObj.objectArray.length; e++) {
+                                for (var w = 0; w < resObj.objectArray[e].charges.improvement.length; w++) {
+                                    if (addComma) {
+                                        sql += ', ';
+                                    }
+                                    sql += common.parameterArray.sql(parameterArray);
+                                    vals.push(resObj.referenceId);
+                                    vals.push(e);
+                                    vals.push(resObj.objectArray[e].charges.improvement[w].characterLevel);
+                                    vals.push(resObj.objectArray[e].charges.improvement[w].count);
+                                    addComma = true;
+                                    parameterArray = common.parameterArray.incrementValues(parameterArray);
+                                }
+                            }
+                            var query = client.query(new pg.Query(sql, vals));
+                            query.on('row', function(row) {
+                                results.push(row);
+                            });
+                            query.on('end', function() {
+                                done();
+                                return callback(null, resObj);
+                            });
+                        } else {
+                            return callback(null, resObj);
+                        }
+                    },
+                    function insertDamageImprovement(resObj, callback) {
+                        //console.log('breath-03');
+                        if (resObj.permissions.hasDamageImprovement) {
+                            vals = [];
+                            results = [];
+                            addComma = false;
+                            sql = 'INSERT INTO adm_link_breath_weapon_charges';
+                            sql += ' ("referenceId", "orderIndex", "characterLevel", "damageDiceId")';
+                            sql += ' VALUES ';
+                            parameterArray = common.parameterArray.resetValues(4);
+                            for (var e = 0; e < resObj.objectArray.length; e++) {
+                                for (var w = 0; w < resObj.objectArray[e].damage.improvement.length; w++) {
+                                    if (addComma) {
+                                        sql += ', ';
+                                    }
+                                    sql += common.parameterArray.sql(parameterArray);
+                                    vals.push(resObj.referenceId);
+                                    vals.push(e);
+                                    vals.push(resObj.objectArray[e].damage.improvement[w].characterLevel);
+                                    vals.push(resObj.objectArray[e].damage.improvement[w].damageDiceId);
+                                    addComma = true;
+                                    parameterArray = common.parameterArray.incrementValues(parameterArray);
+                                }
+                            }
+                            var query = client.query(new pg.Query(sql, vals));
+                            query.on('row', function(row) {
+                                results.push(row);
+                            });
+                            query.on('end', function() {
+                                done();
+                                return callback(null, resObj);
+                            });
+                        } else {
+                            return callback(null, resObj);
+                        }
+                    }
+                ], function(error, result) {
+                    if (error) {
+                        console.error(error);
+                    }
+                    return cb(result);
+                });
+            });
+        },
         charts: function(referenceArray, referenceId, cb) {
             pool.connect(function(err, client, done) {
                 if (err) {
@@ -253,6 +429,7 @@ var common = {
                         callback(null, resObj);
                     },
                     function insertCoreTable(resObj, callback) {
+                        //console.log('chart-01');
                         vals = [];
                         results = [];
                         addComma = false;
@@ -288,6 +465,7 @@ var common = {
                         });
                     },
                     function insertChartDescriptions(resObj, callback) {
+                        //console.log('chart-02');
                         if (resObj.permissions.hasDescriptions) {
                             vals = [];
                             results = [];
@@ -322,6 +500,7 @@ var common = {
                         }
                     },
                     function insertSelectionMissingTypes(resObj, callback) {
+                        //console.log('chart-03');
                         if (resObj.permissions.hasMissingSelectionType) {
                             vals = [];
                             results = [];
@@ -366,6 +545,7 @@ var common = {
                         }
                     },
                     function insertSelectionMissingTypeItems(resObj, callback) {
+                        //console.log('chart-04');
                         if (resObj.permissions.hasMissingSelectionType) {
                             vals = [];
                             results = [];
@@ -416,6 +596,7 @@ var common = {
                         }
                     },
                     function insertChartDef_selection(resObj, callback) {
+                        //console.log('chart-05');
                         if (resObj.permissions.hasSelectionChart) {
                             vals = [];
                             results = [];
@@ -449,6 +630,7 @@ var common = {
                         }
                     },
                     function insertChartDef_standard(resObj, callback) {
+                        //console.log('chart-06');
                         if (resObj.permissions.hasStandardChart) {
                             vals = [];
                             results = [];
@@ -481,6 +663,7 @@ var common = {
                         }
                     },
                     function manageDice(resObj, callback) {
+                        //console.log('chart-07');
                         if (resObj.permissions.hasDieChart) {
                             var referenceArray = [];
                             for (var e = 0; e < resObj.objectArray.length; e++) {
@@ -501,6 +684,7 @@ var common = {
                         }
                     },
                     function insertChartDice(resObj, callback) {
+                        //console.log('chart-08');
                         if (resObj.permissions.hasDieChart) {
                             vals = [];
                             results = [];
@@ -534,6 +718,7 @@ var common = {
                         }
                     },
                     function insertChartEntry_dice(resObj, callback) {
+                        //console.log('chart-09');
                         if (resObj.permissions.hasDieChart) {
                             vals = [];
                             results = [];
@@ -571,6 +756,7 @@ var common = {
                         }
                     },
                     function insertChartEntry_standard_selection(resObj, callback) {
+                        //console.log('chart-10');
                         if (resObj.permissions.hasStandardChart || resObj.permissions.hasSelectionChart) {
                             vals = [];
                             results = [];
@@ -620,6 +806,7 @@ var common = {
                         }
                     },
                     function insertChartColumns_standard_selection(resObj, callback) {
+                        //console.log('chart-11');
                         if (resObj.permissions.hasSelectionChart && resObj.permissions.hasStandardChart) {
                             vals = [];
                             results = [];
@@ -668,6 +855,7 @@ var common = {
                         }
                     },
                     function insertChartRows_standard_selection(resObj, callback) {
+                        //console.log('chart-12');
                         if ((resObj.permissions.hasSelectionChart || resObj.permissions.hasStandardChart) && resObj.permissions.hasRowTitles) {
                             vals = [];
                             results = [];
@@ -716,6 +904,7 @@ var common = {
                         }
                     },
                     function insertChartLinks(resObj, callback) {
+                        //console.log('chart-13');
                         vals = [];
                         results = [];
                         addComma = false;
@@ -763,17 +952,122 @@ var common = {
                         var resObj = {};
                         resObj.objectArray = referenceArray;
                         resObj.permissions = {};
-
+                        resObj.permissions.hasSpecialText = false;
+                        resObj.permissions.hasTitleText = false;
+                        
+                        if (resObj.objectArray && resObj.objectArray.length != 0) {
+                            for (var e = 0; e < resObj.objectArray.length; e++) {
+                                resObj.objectArray[e].specialTextId = 0;
+                                resObj.objectArray[e].titleId = 0;
+                                if (resObj.objectArray[e].title && resObj.objectArray[e].title.length != 0) {
+                                    resObj.permissions.hasTitleText = true;
+                                }
+                                if (resObj.objectArray[e].specialText && resObj.objectArray[e].specialText.length != 0) {
+                                    resObj.permissions.hasSpecialText = true;
+                                }
+                            }
+                        }
                         callback(null, resObj);
                     },
+                    function insertSpecialText(resObj, callback) {
+                        //console.log('mechanic-01');
+                        if (resObj.permissions.hasSpecialText) {
+                            vals = [];
+                            results = [];
+                            addComma = false;
+                            sql = 'INSERT INTO adm_core_item';
+                            sql += ' ("itemTypeId", "resourceId", "itemName")';
+                            sql += ' VALUES ';
+                            parameterArray = common.parameterArray.resetValues(3);
+                            for (var e = 0; e < resObj.objectArray.length; e++) {
+                                if (resObj.objectArray[e].specialText && resObj.objectArray[e].specialText.length != 0) {
+                                    if (addComma) {
+                                        sql += ', ';
+                                    }
+                                    sql += common.parameterArray.sql(parameterArray);
+                                    vals.push(itemtypes.TYPE.SPECIAL_MECHANIC);
+                                    vals.push(0);
+                                    vals.push(resObj.objectArray[e].specialText);
+                                    addComma = true;
+                                    parameterArray = common.parameterArray.incrementValues(parameterArray);
+                                }
+                            }
+                            sql += ' returning id AS "specialTextId", "itemName" AS "specialText";';
+                            var query = client.query(new pg.Query(sql, vals));
+                            query.on('row', function(row) {
+                                results.push(row);
+                            });
+                            query.on('end', function() {
+                                done();
+                                if (results && results.length != 0) {
+                                    for (var e = 0; e < results.length; e++) {
+                                        for (var m = 0; m < resObj.objectArray.length; m++) {
+                                            if (results[e].specialText == resObj.objectArray[m].specialText) {
+                                                resObj.objectArray[m].specialTextId = results[e].specialTextId;
+                                            }
+                                        }
+                                    }
+                                }
+                                return callback(null, resObj);
+                            });
+                        } else {
+                            callback(null, resObj);
+                        }
+                    },
+                    function insertTitleText(resObj, callback) {
+                        //console.log('mechanic-02');
+                        if (resObj.permissions.hasTitleText) {
+                            vals = [];
+                            results = [];
+                            addComma = false;
+                            sql = 'INSERT INTO adm_core_item';
+                            sql += ' ("itemName", "itemTypeId", "resourceId")';
+                            sql += ' VALUES ';
+                            parameterArray = common.parameterArray.resetValues(3);
+                            for (var e = 0; e < resObj.objectArray.length; e++) {
+                                if (resObj.objectArray[e].title && resObj.objectArray[e].title.length != 0) {
+                                    if (addComma) {
+                                        sql += ', ';
+                                    }
+                                    sql += common.parameterArray.sql(parameterArray);
+                                    vals.push(resObj.objectArray[e].title);
+                                    vals.push(itemtypes.DESCRIPTION.MECHANIC_TITLE);
+                                    vals.push(0);
+                                    addComma = true;
+                                    parameterArray = common.parameterArray.incrementValues(parameterArray);
+                                }
+                            }
+                            sql += ' returning "itemName" AS "title", id AS "titleId"';
+                            var query = client.query(new pg.Query(sql, vals));
+                            query.on('row', function(row) {
+                                results.push(row);
+                            });
+                            query.on('end', function() {
+                                done();
+                                for (var m = 0; m < resObj.objectArray.length; m++) {
+                                    if (resObj.objectArray[m].title && resObj.objectArray[m].title.length != 0) {
+                                        for (var e = 0; e < results.length; e++) {
+                                            if (resObj.objectArray[m].title == results[e].title) {
+                                                resObj.objectArray[m].titleId = results[e].titleId;
+                                            }
+                                        }
+                                    }
+                                }
+                                return callback(null, resObj);
+                            });
+                        } else {
+                            callback(null, resObj);
+                        }
+                    },
                     function insertLinkTable(resObj, callback) {
+                        //console.log('mechanic-03');
                         vals = [];
                         results = [];
                         addComma = false;
                         sql = 'INSERT INTO adm_link_mechanic';
-                        sql += ' ("referenceId", "targetId", "typeId", "value", "diceId", "valueObjectId")';
+                        sql += ' ("referenceId", "targetId", "typeId", "value", "diceId", "valueObjectId", "specialTextId", "titleId")';
                         sql += ' VALUES ';
-                        parameterArray = common.parameterArray.resetValues(6);
+                        parameterArray = common.parameterArray.resetValues(8);
                         for (var e = 0; e < resObj.objectArray.length; e++) {
                             if (addComma) {
                                 sql += ', ';
@@ -785,6 +1079,8 @@ var common = {
                             vals.push(resObj.objectArray[e].value);
                             vals.push(resObj.objectArray[e].dice.id);
                             vals.push(resObj.objectArray[e].valueObject.id);
+                            vals.push(resObj.objectArray[e].specialTextId);
+                            vals.push(resObj.objectArray[e].titleId);
                             addComma = true;
                             parameterArray = common.parameterArray.incrementValues(parameterArray);
                         }
@@ -806,8 +1102,316 @@ var common = {
                 });
             });
         },
+        naturalWeapons: function(referenceArray, referenceId, cb) {
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    done();
+                    console.error(err);
+                    return res.status(500).json({ success: false, data: err});
+                }
+                async.waterfall([
+                    function init(callback) {
+                        var resObj = {};
+                        resObj.objectArray = referenceArray;
+                        resObj.referenceId = referenceId;
+                        resObj.permissions = {};
+                        callback(null, resObj);
+                    },
+                    function manageDice(resObj, callback) {
+                        var referenceArray = [];
+                        for (var e = 0; e < resObj.objectArray.length; e++) {
+                            referenceArray.push(resObj.objectArray[e].damage.dice);
+                        }
+                        common.getObjects.dice(referenceArray, function(dice) {
+                            for (var e = 0; e < resObj.objectArray.length; e++) {
+                                resObj.objectArray[e].damage.dice = common.datatypes.dice.getObject(dice, resObj.objectArray[e].damage.dice);
+                            }
+                            return callback(null, resObj);
+                        });
+                    },
+                    function insertCoreTable(resObj, callback) {
+                        //console.log('natural weapons-01');
+                        vals = [];
+                        results = [];
+                        addComma = false;
+                        sql = 'INSERT INTO adm_link_natural_weapon';
+                        sql += ' ("referenceId", "naturalWeaponTypeId", "damageTypeId", "damageDiceId", "damageAbilityScoreId", "hitAbilityScoreId", "attackCount")';
+                        sql += ' VALUES ';
+                        parameterArray = common.parameterArray.resetValues(7);
+                        for (var e = 0; e < resObj.objectArray.length; e++) {
+                            if (addComma) {
+                                sql += ', ';
+                            }
+                            sql += common.parameterArray.sql(parameterArray);
+                            vals.push(resObj.referenceId);
+                            vals.push(resObj.objectArray[e].type.id);
+                            vals.push(resObj.objectArray[e].damage.type.id);
+                            vals.push(resObj.objectArray[e].damage.dice.id);
+                            vals.push(resObj.objectArray[e].damage.abilityScore.id);
+                            vals.push(resObj.objectArray[e].attack.abilityScore.id);
+                            vals.push(resObj.objectArray[e].attack.count);
+                            addComma = true;
+                            parameterArray = common.parameterArray.incrementValues(parameterArray);
+                        }
+                        sql += ' returning "id", "naturalWeaponTypeId"';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var w = 0; w < resObj.objectArray.length; w++) {
+                                    if (resObj.objectArray[w].type.id == results[e].naturalWeaponTypeId) {
+                                        resObj.objectArray[w].id = results[e].chartId;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    }
+                ], function(error, result) {
+                    if (error) {
+                        console.error(error);
+                    }
+                    return cb(result);
+                });
+            });
+        },
         proficiencyGroups: function(referenceArray, referenceId, cb) {
-            
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    done();
+                    console.error(err);
+                    return res.status(500).json({ success: false, data: err});
+                }
+                async.waterfall([
+                    function init(callback) {
+                        var resObj = {};
+                        resObj.objectArray = referenceArray;
+                        resObj.referenceId = referenceId;
+                        resObj.permissions = {};
+                        callback(null, resObj);
+                    },
+                    function insertItemTable(resObj, callback) {
+                        //console.log('proficiency-01');
+                        vals = [];
+                        results = [];
+                        addComma = false;
+                        sql = 'INSERT INTO adm_core_item';
+                        sql += ' ("itemTypeId", "itemName", "resourceId")';
+                        sql += ' VALUES ';
+                        parameterArray = common.parameterArray.resetValues(3);
+                        for (var e = 0; e < resObj.objectArray.length; e++) {
+                            if (addComma) {
+                                sql += ', ';
+                            }
+                            sql += common.parameterArray.sql(parameterArray);
+                            resObj.objectArray.itemName = referenceId.toString() + ' proficiency groups ' + e.toString();
+                            vals.push(itemtypes.TYPE.ITEM_GROUP);
+                            vals.push(resObj.objectArray.itemName);
+                            vals.push(0);
+                            addComma = true;
+                            parameterArray = common.parameterArray.incrementValues(parameterArray);
+                        }
+                        sql += ' returning "id", "itemName";';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            for (var e = 0; e < results.length; e++) {
+                                for (var w = 0; w < resObj.objectArray.length; w++) {
+                                    if (results[e].itemName == resObj.objectArray[w].itemName) {
+                                        resObj.objectArray[w].id = results[e].id;
+                                    }
+                                }
+                            }
+                            return callback(null, resObj);
+                        });
+                    },
+                    function insertGroupTable(resObj, callback) {
+                        //console.log('proficiency-02');
+                        vals = [];
+                        results = [];
+                        addComma = false;
+                        sql = 'INSERT INTO adm_def_item_group';
+                        sql += ' ("itemGroupId", "mechanicTypeId", "selectCount", "conditionalText")';
+                        sql += ' VALUES';
+                        parameterArray = common.parameterArray.resetValues(4);
+                        for (var e = 0; e < resObj.objectArray.length; e++) {
+                            if (addComma) {
+                                sql += ', ';
+                            }
+                            sql += common.parameterArray.sql(parameterArray);
+                            vals.push(resObj.objectArray[e].id);
+                            vals.push(resObj.objectArray[e].mechanic.id);
+                            vals.push(resObj.objectArray[e].selectCount);
+                            vals.push(resObj.objectArray[e].conditionalText);
+                            addComma = true;
+                            parameterArray = common.parameterArray.incrementValues(parameterArray);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    },
+                    function insertProficiencies(resObj, callback) {
+                        //console.log('proficiency-03');
+                        vals = [];
+                        results = [];
+                        addComma = false;
+                        sql = 'INSERT INTO adm_link_item_group_assignment';
+                        sql += ' ("itemGroupId", "itemId")';
+                        sql += ' VALUES';
+                        parameterArray = common.parameterArray.resetValues(2);
+                        for (var e = 0; e < resObj.objectArray.length; e++) {
+                            if (resObj.objectArray[e].proficiencies.length != 0) {
+                                for (var w = 0; w < resObj.objectArray[e].proficiencies.length; w++) {
+                                    if (addComma) {
+                                        sql += ', ';
+                                    }
+                                    sql += common.parameterArray.sql(parameterArray);
+                                    vals.push(resObj.objectArray[e].id);
+                                    vals.push(resObj.objectArray[e].proficiencies[w].id);
+                                    addComma = true;
+                                    parameterArray = common.parameterArray.incrementValues(parameterArray);
+                                }
+                            } else {
+                                if (addComma) {
+                                    sql += ', ';
+                                }
+                                sql += common.parameterArray.sql(parameterArray);
+                                vals.push(resObj.objectArray[e].id);
+                                vals.push(resObj.objectArray[e].category.id);
+                                addComma = true;
+                                parameterArray = common.parameterArray.incrementValues(parameterArray);
+                            }
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    },
+                    function insertLinkTable(resObj, callback) {
+                        //console.log('proficiency-04');
+                        vals = [];
+                        results = [];
+                        addComma = false;
+                        sql = 'INSERT INTO adm_link_item_group';
+                        sql += ' ("referenceId", "itemGroupId")';
+                        sql += ' VALUES ';
+                        parameterArray = common.parameterArray.resetValues(2);
+                        for (var e = 0; e < resObj.objectArray.length; e++) {
+                            if (addComma) {
+                                sql += ', ';
+                            }
+                            sql += common.parameterArray.sql(parameterArray);
+                            vals.push(resObj.referenceId);
+                            vals.push(resObj.objectArray[e].id);
+                            addComma = true;
+                            parameterArray = common.parameterArray.incrementValues(parameterArray);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    }
+                ], function(error, result) {
+                    if (error) {
+                        console.error(error);
+                    }
+                    return cb(result);
+                });
+            });
+        },
+        spellcasting: function(referenceObject, referenceId, cb) {
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    done();
+                    console.error(err);
+                    return res.status(500).json({ success: false, data: err});
+                }
+                async.waterfall([
+                    function init(callback) {
+                        var resObj = {};
+                        resObj.referenceObject = referenceObject;
+                        resObj.referenceId = referenceId;
+                        resObj.permissions = {};
+                        callback(null, resObj);
+                    },
+                    function insertSpellcastingTable(resObj, callback) {
+                        console.log('spellcasting-01');
+                        results = [];
+                        vals = [resObj.referenceId, resObj.referenceObject.abilityScore.id];
+                        sql = 'INSERT INTO adm_def_race_spellcasting';
+                        sql += ' ("raceId", "abilityScoreId")';
+                        sql += ' VALUES ($1, $2)';
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    },
+                    function insertSpellcastingSelections(resObj, callback) {
+                        //console.log('spellcasting-02');
+                        vals = [];
+                        results = [];
+                        addComma = false;
+                        sql = 'INSERT INTO adm_link_spell_selection';
+                        sql += ' ("referenceId", "selectCount", "schoolId", "characterLevel", "rechargeTypeId", "castingCount", "spellId", "selectionTypeId", "spellLevel", "spelllistId")';
+                        sql += ' VALUES ';
+                        parameterArray = common.parameterArray.resetValues(10);
+                        for (var e = 0; e < resObj.referenceObject.spellSelections.length; e++) {
+                            if (addComma) {
+                                sql += ', ';
+                            }
+                            sql += common.parameterArray.sql(parameterArray);
+                            vals.push(resObj.referenceId);
+                            vals.push(resObj.referenceObject.spellSelections[e].selectCount);
+                            vals.push(resObj.referenceObject.spellSelections[e].school.id);
+                            vals.push(resObj.referenceObject.spellSelections[e].characterLevel);
+                            vals.push(resObj.referenceObject.spellSelections[e].rechargeType.id);
+                            vals.push(resObj.referenceObject.spellSelections[e].castingCount);
+                            vals.push(resObj.referenceObject.spellSelections[e].spell.id);
+                            vals.push(resObj.referenceObject.spellSelections[e].selectionType.id);
+                            vals.push(resObj.referenceObject.spellSelections[e].spellLevel);
+                            vals.push(resObj.referenceObject.spellSelections[e].spelllist.id);
+                            addComma = true;
+                            parameterArray = common.parameterArray.incrementValues(parameterArray);
+                        }
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, resObj);
+                        });
+                    }
+                ], function(error, result) {
+                    if (error) {
+                        console.error(error);
+                    }
+                    return cb(result);
+                });
+            });
         },
         supplementalDescriptions: function(referenceArray, referenceId, cb) {
             pool.connect(function(err, client, done) {
@@ -825,6 +1429,7 @@ var common = {
                         callback(null, resObj);
                     },
                     function insertCoreTable(resObj, callback) {
+                        //console.log('supp desc-01');
                         vals = [];
                         results = [];
                         addComma = false;
@@ -861,6 +1466,7 @@ var common = {
                         });
                     },
                     function insertDefTable(resObj, callback) {
+                        //console.log('supp desc-02');
                         vals = [];
                         results = [];
                         addComma = false;
@@ -1052,6 +1658,12 @@ var common = {
 
                         callback(null, refId);
                     },
+                    function deleteSpecialText(resObj, callback) {
+                        console.log('TODO: delete mechanics special text.');
+                    },
+                    function deleteTitleText(resObj, callback) {
+                        console.log('TODO: delete mechanics title text.');
+                    },
                     function deleteLinkTable(refId, callback) {
                         sql = 'DELETE FROM adm_link_mechanic';
                         sql += ' WHERE "referenceId" = $1';
@@ -1136,8 +1748,8 @@ var common = {
                     function init(callback) {
                         var resObj = {};
                         resObj.objectArray = referenceArray;
+                        resObj.referenceId = referenceId;
                         resObj.permissions = {};
-
                         callback(null, resObj);
                     },
                     function insertCoreTable(resObj, callback) {

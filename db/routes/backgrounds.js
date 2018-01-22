@@ -352,9 +352,9 @@ module.exports = function(app, pg, async, pool, itemtypes, common) {
                     vals = [];
                     if (resObj.background.description && resObj.background.description.length != 0) {
                         sql = 'INSERT INTO adm_core_description';
-                        sql += '("itemId", "description")';
+                        sql += '("itemId", "description", "descriptionTypeId")';
                         sql += ' VALUES ($1, $2)';
-                        vals = [resObj.background.id, resObj.background.description];
+                        vals = [resObj.background.id, resObj.background.description, itemtypes.DESCRIPTION.GENERAL];
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
                             results.push(row);

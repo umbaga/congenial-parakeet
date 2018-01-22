@@ -580,19 +580,19 @@ module.exports = function(app, pg, async, pool, itemtypes, common) {
                         }
                     }
                     if (diceArr.length != 0) {
-                        common.getObjects.dice(diceArr, function(results) {
+                        common.getObjects.dice(diceArr, function(dice) {
                             if (resObj.spell.hasDamage) {
-                                resObj.spell.damage.dice = common.datatypes.dice.getObject(results.objectArray, resObj.spell.damage.dice);
+                                resObj.spell.damage.dice = common.datatypes.dice.getObject(dice, resObj.spell.damage.dice);
                             }
                             if (resObj.spell.hasImprovementDamage) {
-                                resObj.spell.damage.improvement.dice = common.datatypes.dice.getObject(results.objectArray, resObj.spell.damage.improvement.dice);
+                                resObj.spell.damage.improvement.dice = common.datatypes.dice.getObject(dice, resObj.spell.damage.improvement.dice);
                             }
                             if (resObj.spell.hasMaximumDamage) {
-                                resObj.spell.damage.maximum.dice = common.datatypes.dice.getObject(results.objectArray, resObj.spell.damage.maximum.dice);
+                                resObj.spell.damage.maximum.dice = common.datatypes.dice.getObject(dice, resObj.spell.damage.maximum.dice);
                             }
                             if (resObj.spell.hasSupplementalDamage) {
                                 for (var s = 0; s < resObj.spell.damage.supplemental.length; s++) {
-                                   resObj.spell.damage.supplemental[s].dice = common.datatypes.dice.getObject(results.objectArray, resObj.spell.damage.supplemental[s].dice); 
+                                   resObj.spell.damage.supplemental[s].dice = common.datatypes.dice.getObject(dice, resObj.spell.damage.supplemental[s].dice); 
                                 }
                             }
                             return callback(null, resObj);

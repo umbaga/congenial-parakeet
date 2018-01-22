@@ -401,8 +401,7 @@ function getSpellById(spells, id) {
 }
 
 function mapStateToProps(state, ownProps) {
-    let spell = Object.assign({}, util.objectModel.examples.SPELL);
-    //let spell = Object.assign({}, util.objectModel.SPELL);
+    let spell = Object.assign({}, util.objectModel.SPELL);
     const spellId = ownProps.selectedId;
     let isCreate = true;
     if (ownProps.selecetdId != 0) {

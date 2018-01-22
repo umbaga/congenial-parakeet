@@ -8,16 +8,9 @@ export default function raceReducer(state = initialState.races, action) {
             return action.races;
         case types.CREATE_RACE_SUCCESS:
             return [
-                ...state.filter(race => race.id !== action.race.id),
-                Object.assign({}, action.race)
-            ].sort(function(a, b) {
-                if (a.name < b.name) {
-                    return -1;
-                } else if (a.name > b.name) {
-                    return 1;
-                }
-                return 0;
-            });
+                Object.assign({}, action.race),
+                ...state.filter(race => race.id !== action.race.id)
+            ];
         case types.UPDATE_RACE_SUCCESS:
             return [
                 Object.assign({}, action.race),
