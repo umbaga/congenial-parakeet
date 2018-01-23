@@ -28,7 +28,7 @@ module.exports = function(app, pg, async, pool, itemtypes, common) {
                 function deleteRaceTable(resObj, callback) {
                     sql = 'DELETE FROM adm_def_race';
                     sql += ' WHERE "raceId" = $1';
-                    vals = [resObj];
+                    vals = resObj;
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -42,7 +42,7 @@ module.exports = function(app, pg, async, pool, itemtypes, common) {
                 function deleteRaceAbilityScoreTable(resObj, callback) {
                     sql = 'DELETE FROM adm_def_race_ability_score';
                     sql += ' WHERE "raceId" = $1';
-                    vals = [resObj];
+                    vals = resObj;
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -56,7 +56,7 @@ module.exports = function(app, pg, async, pool, itemtypes, common) {
                 function deleteMovementAndSenseLinkTable(resObj, callback) {
                     sql = 'DELETE FROM adm_link_array_with_int_value';
                     sql += ' WHERE "referenceId" = $1';
-                    vals = [resObj];
+                    vals = resObj;
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -70,7 +70,7 @@ module.exports = function(app, pg, async, pool, itemtypes, common) {
                 function deleteMonsterTagsLinkTable(resObj, callback) {
                     sql = 'DELETE FROM adm_link_monster_tag';
                     sql += ' WHERE "referenceId" = $1';
-                    vals = [resObj];
+                    vals = resObj;
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -84,7 +84,7 @@ module.exports = function(app, pg, async, pool, itemtypes, common) {
                 function deleteVitalsTable(resObj, callback) {
                     sql = 'DELETE FROM adm_def_race_vitals';
                     sql += ' WHERE "raceId" = $1';
-                    vals = [resObj];
+                    vals = resObj;
                     var query = client.query(new pg.Query(sql, vals));
                     query.on('row', function(row) {
                         results.push(row);
@@ -92,6 +92,16 @@ module.exports = function(app, pg, async, pool, itemtypes, common) {
                     query.on('end', function() {
                         done();
                         var resObj = [req.params.id];
+                        return callback(null, resObj);
+                    });
+                },
+                function deleteBreathWeapons(resObj, callback) {
+                    common.remove.breathWeapons(req.params.id, function() {
+                        return callback(null, resObj);
+                    });
+                },
+                function deleteNaturalWeapons(resObj, callback) {
+                    common.remove.naturalWeapons(req.params.id, function() {
                         return callback(null, resObj);
                     });
                 },
@@ -106,30 +116,7 @@ module.exports = function(app, pg, async, pool, itemtypes, common) {
                     });
                 },
                 function deleteSpellcasting(resObj, callback) {
-                    sql = 'DELETE FROM adm_def_race_spellcasting';
-                    sql += ' WHERE "raceId" = $1';
-                    vals = [resObj];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var resObj = [req.params.id];
-                        return callback(null, resObj);
-                    });
-                },
-                function deleteSpellcastingSelections(resObj, callback) {
-                    sql = 'DELETE FROM adm_link_spell_selection';
-                    sql += ' WHERE "referenceId" = $1';
-                    vals = [resObj];
-                    var query = client.query(new pg.Query(sql, vals));
-                    query.on('row', function(row) {
-                        results.push(row);
-                    });
-                    query.on('end', function() {
-                        done();
-                        var resObj = [req.params.id];
+                    common.remove.mechanics(req.params.id, function() {
                         return callback(null, resObj);
                     });
                 },
@@ -684,7 +671,7 @@ module.exports = function(app, pg, async, pool, itemtypes, common) {
             sql += ', get_race_vitals(i.id) AS "vitals"';
             sql += ', get_proficiency_groups(i.id) AS "proficiencyGroups"';
             sql += ', get_base_mechanics(i.id) AS "mechanics"';
-            sql += ', get_race_spellcasting(i.id) AS "spellcasting"';
+            sql += ', get_spellcasting(i.id) AS "spellcasting"';
             sql += ', (';
             sql += '    SELECT construct_chart_object_arrays(i.id)';
             sql += ') AS charts ';

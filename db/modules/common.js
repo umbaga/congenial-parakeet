@@ -216,13 +216,15 @@ var common = {
                         resObj.permissions = {};
                         resObj.permissions.hasChargeImprovement = false;
                         resObj.permissions.hasDamageImprovement = false;
-                        if (resObj.objectArray && resObj.objectArray.charges
-                            && resObj.objectArray.charges.improvement && resObj.objectArray.charges.improvement.length != 0) {
-                            resObj.permissions.hasChargeImprovement = true;
+                        for (var e = 0; e < resObj.objectArray.length; e++) {
+                            if (resObj.objectArray[e].charges && resObj.objectArray[e].charges.improvement && resObj.objectArray[e].charges.improvement.length != 0) {
+                                resObj.permissions.hasChargeImprovement = true;
+                            }
                         }
-                        if (resObj.objectArray && resObj.objectArray.damage 
-                            && resObj.objectArray.damage.improvement && resObj.objectArray.damage.improvement.length != 0) {
-                            resObj.permissions.hasDamageImprovement = true;
+                        for (var e = 0; e < resObj.objectArray.length; e++) {
+                            if (resObj.objectArray[e].damage && resObj.objectArray[e].damage.improvement && resObj.objectArray[e].damage.improvement.length != 0) {
+                                resObj.permissions.hasDamageImprovement = true;
+                            }
                         }
                         callback(null, resObj);
                     },
@@ -339,7 +341,7 @@ var common = {
                             vals = [];
                             results = [];
                             addComma = false;
-                            sql = 'INSERT INTO adm_link_breath_weapon_charges';
+                            sql = 'INSERT INTO adm_link_breath_weapon_damage';
                             sql += ' ("referenceId", "orderIndex", "characterLevel", "damageDiceId")';
                             sql += ' VALUES ';
                             parameterArray = common.parameterArray.resetValues(4);
@@ -352,7 +354,7 @@ var common = {
                                     vals.push(resObj.referenceId);
                                     vals.push(e);
                                     vals.push(resObj.objectArray[e].damage.improvement[w].characterLevel);
-                                    vals.push(resObj.objectArray[e].damage.improvement[w].damageDiceId);
+                                    vals.push(resObj.objectArray[e].damage.improvement[w].dice.id);
                                     addComma = true;
                                     parameterArray = common.parameterArray.incrementValues(parameterArray);
                                 }
@@ -866,14 +868,27 @@ var common = {
                             sql += ' VALUES ';
                             for (var c = 0; c < resObj.objectArray.length; c++) {
                                 for (var r = 0; r < resObj.objectArray[c].rows.length; r++) {
-                                    if (resObj.objectArray[c].rows[r].title && resObj.objectArray[c].rows[r].title.length != 0) {
+                                    if ((resObj.objectArray[c].rows[r].title && resObj.objectArray[c].rows[r].title.length != 0) || (resObj.objectArray[c].rows[r].selectionItem
+                                                   && resObj.objectArray[c].rows[r].selectionItem.name
+                                                   && resObj.objectArray[c].rows[r].selectionItem.name.length != 0)){
                                         if (addComma) {
                                             sql += ', ';
                                         }
                                         sql += common.parameterArray.sql(parameterArray);
                                         vals.push(resObj.objectArray[c].id);
                                         vals.push(resObj.objectArray[c].rows[r].orderIndex);
-                                        vals.push(resObj.objectArray[c].rows[r].title);
+                                        if (resObj.objectArray[c].type == itemtypes.CHART.STANDARD
+                                            && resObj.objectArray[c].rows[r].title
+                                            && resObj.objectArray[c].rows[r].title.length != 0) {
+                                            vals.push(resObj.objectArray[c].rows[r].title);
+                                        } else if (resObj.objectArray[c].type == itemtypes.CHART.SELECTION
+                                                   && resObj.objectArray[c].rows[r].selectionItem
+                                                   && resObj.objectArray[c].rows[r].selectionItem.name
+                                                   && resObj.objectArray[c].rows[r].selectionItem.name.length != 0) {
+                                            vals.push(resObj.objectArray[c].rows[r].selectionItem.name);
+                                        } else {
+                                            vals.push('');
+                                        }
                                         vals.push(resObj.objectArray[c].rows[r].selectionItem.id);
                                         parameterArray = common.parameterArray.incrementValues(parameterArray);
                                         addComma = true;
@@ -1207,9 +1222,9 @@ var common = {
                                 sql += ', ';
                             }
                             sql += common.parameterArray.sql(parameterArray);
-                            resObj.objectArray.itemName = referenceId.toString() + ' proficiency groups ' + e.toString();
+                            resObj.objectArray[e].itemName = referenceId.toString() + ' proficiency groups ' + e.toString();
                             vals.push(itemtypes.TYPE.ITEM_GROUP);
-                            vals.push(resObj.objectArray.itemName);
+                            vals.push(resObj.objectArray[e].itemName);
                             vals.push(0);
                             addComma = true;
                             parameterArray = common.parameterArray.incrementValues(parameterArray);
@@ -1354,11 +1369,11 @@ var common = {
                         callback(null, resObj);
                     },
                     function insertSpellcastingTable(resObj, callback) {
-                        console.log('spellcasting-01');
+                        //console.log('spellcasting-01');
                         results = [];
                         vals = [resObj.referenceId, resObj.referenceObject.abilityScore.id];
-                        sql = 'INSERT INTO adm_def_race_spellcasting';
-                        sql += ' ("raceId", "abilityScoreId")';
+                        sql = 'INSERT INTO adm_def_spellcasting';
+                        sql += ' ("referenceId", "abilityScoreId")';
                         sql += ' VALUES ($1, $2)';
                         var query = client.query(new pg.Query(sql, vals));
                         query.on('row', function(row) {
@@ -1504,6 +1519,66 @@ var common = {
         }
     },
     remove: {
+        breathWeapons: function(referenceId, cb) {
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    done();
+                    console.error(err);
+                    return res.status(500).json({ success: false, data: err});
+                }
+                async.waterfall([
+                    function init(callback) {
+                        var refId = [referenceId];
+
+                        return callback(null, refId);
+                    },
+                    function deleteLinkTable(refId, callback) {
+                        sql = 'DELETE FROM adm_link_breath_weapon';
+                        sql += ' WHERE "referenceId" = $1';
+                        vals = refId;
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, refId);
+                        });
+                    },
+                    function deleteChargesLinkTable(refId, callback) {
+                        sql = 'DELETE FROM adm_link_breath_weapon_charges';
+                        sql += ' WHERE "referenceId" = $1';
+                        vals = refId;
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, refId);
+                        });
+                    },
+                    function deleteDamageLinkTable(refId, callback) {
+                        sql = 'DELETE FROM adm_link_breath_weapon_damage';
+                        sql += ' WHERE "referenceId" = $1';
+                        vals = refId;
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, refId);
+                        });
+                    }
+                ], function(error, result) {
+                    if (error) {
+                        console.error(error);
+                    }
+                    return cb(result);
+                });
+            });
+        },
         charts: function(referenceId, cb) {
             pool.connect(function(err, client, done) {
                 if (err) {
@@ -1658,11 +1733,19 @@ var common = {
 
                         callback(null, refId);
                     },
-                    function deleteSpecialText(resObj, callback) {
-                        console.log('TODO: delete mechanics special text.');
-                    },
-                    function deleteTitleText(resObj, callback) {
-                        console.log('TODO: delete mechanics title text.');
+                    function deleteSpecialTextAndTitle(refId, callback) {
+                        sql = 'DELETE FROM adm_core_item';
+                        sql += ' WHERE "id" IN (SELECT "specialTextId" FROM adm_link_mechanic WHERE "referenceId" = $1)';
+                        sql += ' OR "id" IN (SELECT "titleId" FROM adm_link_mechanic WHERE "referenceId" = $1)';
+                        vals = refId;
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, refId);
+                        });
                     },
                     function deleteLinkTable(refId, callback) {
                         sql = 'DELETE FROM adm_link_mechanic';
@@ -1685,8 +1768,159 @@ var common = {
                 });
             });
         },
+        naturalWeapons: function(referenceId, cb) {
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    done();
+                    console.error(err);
+                    return res.status(500).json({ success: false, data: err});
+                }
+                async.waterfall([
+                    function init(callback) {
+                        var refId = [referenceId];
+
+                        return callback(null, refId);
+                    },
+                    function deleteLinkTable(refId, callback) {
+                        sql = 'DELETE FROM adm_link_natural_weapon';
+                        sql += ' WHERE "referenceId" = $1';
+                        vals = refId;
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, refId);
+                        });
+                    }
+                ], function(error, result) {
+                    if (error) {
+                        console.error(error);
+                    }
+                    return cb(result);
+                });
+            });
+        },
         proficiencyGroups: function(referenceId, cb) {
-            
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    done();
+                    console.error(err);
+                    return res.status(500).json({ success: false, data: err});
+                }
+                async.waterfall([
+                    function init(callback) {
+                        var refId = [referenceId];
+
+                        return callback(null, refId);
+                    },
+                    function deleteCoreTable(refId, callback) {
+                        sql = 'DELETE FROM adm_core_item';
+                        sql += ' WHERE "id" IN (SELECT "itemGroupId" FROM adm_link_item_group WHERE "referenceId" = $1)';
+                        vals = refId;
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, refId);
+                        });
+                    },
+                    function deleteGroupTable(refId, callback) {
+                        sql = 'DELETE FROM adm_def_item_group';
+                        sql += ' WHERE "itemGroupId" IN (SELECT "itemGroupId" FROM adm_link_item_group WHERE "referenceId" = $1)';
+                        vals = refId;
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, refId);
+                        });
+                    },
+                    function deleteProficiencyTable(refId, callback) {
+                        sql = 'DELETE FROM adm_link_item_group_assignment';
+                        sql += ' WHERE "itemGroupId" IN (SELECT "itemGroupId" FROM adm_link_item_group WHERE "referenceId" = $1)';
+                        vals = refId;
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, refId);
+                        });
+                    },
+                    function deleteLinkTable(refId, callback) {
+                        sql = 'DELETE FROM adm_link_item_group';
+                        sql += ' WHERE "referenceId" = $1';
+                        vals = refId;
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, refId);
+                        });
+                    }
+                ], function(error, result) {
+                    if (error) {
+                        console.error(error);
+                    }
+                    return cb(result);
+                });
+            });
+        },
+        spellcasting: function(referenceId, cb) {
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    done();
+                    console.error(err);
+                    return res.status(500).json({ success: false, data: err});
+                }
+                async.waterfall([
+                    function init(callback) {
+                        var refId = [referenceId];
+
+                        return callback(null, refId);
+                    },
+                    function deleteLinkTable(refId, callback) {
+                        sql = 'DELETE FROM adm_def_spellcasting';
+                        sql += ' WHERE "referenceId" = $1';
+                        vals = refId;
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, refId);
+                        });
+                    },
+                    function deleteChargesLinkTable(refId, callback) {
+                        sql = 'DELETE FROM adm_link_spell_selection';
+                        sql += ' WHERE "referenceId" = $1';
+                        vals = refId;
+                        var query = client.query(new pg.Query(sql, vals));
+                        query.on('row', function(row) {
+                            results.push(row);
+                        });
+                        query.on('end', function() {
+                            done();
+                            return callback(null, refId);
+                        });
+                    }
+                ], function(error, result) {
+                    if (error) {
+                        console.error(error);
+                    }
+                    return cb(result);
+                });
+            });
         },
         supplementalDescriptions: function(referenceId, cb) {
             pool.connect(function(err, client, done) {

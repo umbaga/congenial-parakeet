@@ -221,6 +221,16 @@ const _MECHANIC = {
         value: 0,
         valueObject: {id: 0, name: ''}
     },
+    SPECIAL_TEXT_AND_TITLE: {
+        assignmentType: {id: 1},
+        dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}, id: -13,
+        specialText: 'Special Text mechanic',
+        target: {id: 0, name: ''},
+        title: 'Mechanic Title',
+        type: {id: 2321, name: 'Special (Text)'},
+        value: 0,
+        valueObject: {id: 0, name: ''}
+    },
     VULERABILITY: {
         assignmentType: {id: 1},
         dice: {id: 0, dieCount: 0, dieType: 0, rendered: '', modifier: 0, multiplier: 1, divisor: 1}, id: -14,
@@ -242,7 +252,7 @@ const _PROFICIENCY_GROUP = {
 const _ONE_OF_EACH = {
     ASSIGNED_EQUIPMENT: [_ASSIGNED_EQUIPMENT.SINGLE.NO_UNIT, _ASSIGNED_EQUIPMENT.SINGLE.HAS_COUNT, _ASSIGNED_EQUIPMENT.SINGLE.NO_UNIT, _ASSIGNED_EQUIPMENT.SINGLE.HAS_UNIT_COUNT, _ASSIGNED_EQUIPMENT.MULTIPLE.NO_UNIT, _ASSIGNED_EQUIPMENT.MULTIPLE.HAS_COUNT, _ASSIGNED_EQUIPMENT.MULTIPLE.NO_UNIT, _ASSIGNED_EQUIPMENT.MULTIPLE.HAS_UNIT_COUNT],
     CHART: [_CHART.DICE, _CHART.SELECTION, _CHART.STANDARD],
-    MECHANIC: [_MECHANIC.ADVANTAGE, _MECHANIC.ADVANTAGE_SAVING_THROW, _MECHANIC.ABILITY_SCORE_MOD_STAT, _MECHANIC.BONUS_TO_STAT, _MECHANIC.DIE_ROLL_BONUS_TO_STAT, _MECHANIC.DISADVANTAGE, _MECHANIC.DISADVANTAGE_SAVING_THROW, _MECHANIC.DIVIDE_STAT, _MECHANIC.DOUBLE_PROFICIENCY_BONUS, _MECHANIC.IMMUNITY, _MECHANIC.MULTIPLY_STAT, _MECHANIC.RESISTANCE, _MECHANIC.SPECIAL_TEXT, _MECHANIC.VULERABILITY],
+    MECHANIC: [_MECHANIC.ADVANTAGE, _MECHANIC.ADVANTAGE_SAVING_THROW, _MECHANIC.ABILITY_SCORE_MOD_STAT, _MECHANIC.BONUS_TO_STAT, _MECHANIC.DIE_ROLL_BONUS_TO_STAT, _MECHANIC.DISADVANTAGE, _MECHANIC.DISADVANTAGE_SAVING_THROW, _MECHANIC.DIVIDE_STAT, _MECHANIC.DOUBLE_PROFICIENCY_BONUS, _MECHANIC.IMMUNITY, _MECHANIC.MULTIPLY_STAT, _MECHANIC.RESISTANCE, _MECHANIC.SPECIAL_TEXT, _MECHANIC.VULERABILITY, _MECHANIC.SPECIAL_TEXT_AND_TITLE],
     PROFICIENCY_GROUP: [_PROFICIENCY_GROUP.ASSIGN, _PROFICIENCY_GROUP.SELECT_FROM.CATEGORY, _PROFICIENCY_GROUP.SELECT_FROM.LIST]
 };
 
@@ -288,43 +298,6 @@ export const RACE = {
         strength: 0,
         wisdom: 0
     },
-    movement: [
-        {id: 2275, name: 'Walking', speed: 25},
-        {id: 2277, name: 'Climbing', speed: 5}
-    ],
-    description: '',
-    name: '',
-    parent: {id: 0},
-    resource: _RESOURCE,
-    senses: [
-        {id: 2284, name: 'Darkvision', range: 60}
-    ],
-    size: {id: 2270, name: 'Medium'},
-    tags: [
-        {id: 2323, name: 'Dwarf'}
-    ],
-    type: {id: 2263, name: 'Humanoid'},
-    vitals: {
-        height: {
-            base: '50',
-            dice: {modifier: 0, multiplier: 1, divisor: 1, dieCount: 2, dieType: 6, id: 0, rendered: '2d6'}
-        },
-        weight: {
-            base: '100',
-            dice: {modifier: 0, multiplier: 1, divisor: 1, dieCount: 1, dieType: 4, id: 0, rendered: '1d4'}
-        }
-    },
-    naturalWeapons: [
-        {
-            attack: {abilityScore: {id: 25, name: 'Strength'}, count: 1},
-            damage: {
-                abilityScore: {id: 25, name: 'Strength'},
-                dice: {dieCount: 1, dieType: 4, divisor: 1, modifier: 0, multiplier: 1, rendered: '1d4'},
-                type: {id: 8, name: 'Piercing'}
-            },
-            type: {id: 2374, name: 'Bite'}
-        }
-    ],
     breathWeapons: [
         {
             areaOfEffect: {shape: {id: 1481, name: 'Cone'}},
@@ -357,6 +330,27 @@ export const RACE = {
             }
         }
     ],
+    charts: _ONE_OF_EACH.CHART,
+    description: '',
+    isVariant: false,
+    mechanics: _ONE_OF_EACH.MECHANIC,
+    movement: [
+        {id: 2275, name: 'Walking', speed: 25},
+        {id: 2277, name: 'Climbing', speed: 5}
+    ],
+    name: '`Test Race',
+    naturalWeapons: [
+        {
+            attack: {abilityScore: {id: 25, name: 'Strength'}, count: 1},
+            damage: {
+                abilityScore: {id: 25, name: 'Strength'},
+                dice: {dieCount: 1, dieType: 4, divisor: 1, modifier: 0, multiplier: 1, rendered: '1d4'},
+                type: {id: 8, name: 'Piercing'}
+            },
+            type: {id: 2374, name: 'Bite'}
+        }
+    ],
+    parent: {id: 0},
     proficiencyGroups: [
         {
             category: {id: 95, name: 'Language'},
@@ -404,8 +398,11 @@ export const RACE = {
             selectCount: 1
         }
     ],
-    charts: _ONE_OF_EACH.CHART,
-    mechanics: _ONE_OF_EACH.MECHANIC,
+    resource: _RESOURCE,
+    senses: [
+        {id: 2284, name: 'Darkvision', range: 60}
+    ],
+    size: {id: 2270, name: 'Medium'},
     spellcasting: {
         abilityScore: {id: 28, name: 'Intelligence'},
         spellSelections: [
@@ -508,7 +505,21 @@ export const RACE = {
             description: 'eroewu royoewrt oewirt opwerhurhrhp erhfphuvfhvpeurhf urh puh uhfpeurhf puehf peruhf hufriufh vbhvb erv djk bzhcvhcuxih zvx b nsfb,af,bfrh krhe.', id: -2,
             orderIndex: 1,
             title: 'Test Title 2'}
-    ]
+    ],
+    tags: [
+        {id: 2323, name: 'Dwarf'}
+    ],
+    type: {id: 2263, name: 'Humanoid'},
+    vitals: {
+        height: {
+            base: '50',
+            dice: {modifier: 0, multiplier: 1, divisor: 1, dieCount: 2, dieType: 6, id: 0, rendered: '2d6'}
+        },
+        weight: {
+            base: '100',
+            dice: {modifier: 0, multiplier: 1, divisor: 1, dieCount: 1, dieType: 4, id: 0, rendered: '1d4'}
+        }
+    }
 };
 export const SPELL = {
     atHigherLevels: 'At higher Levels`test test test.',
